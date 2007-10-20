@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+#include "protocol.h"
+
 static GstElement *pipeline, *gstplay;
 
 GtkWidget *window, *play, *stop, *next, *hbox;
@@ -78,6 +80,21 @@ main (int   argc,
   GMainLoop *loop;
   GstBus *bus;
 
+  /* check input arguments */
+  if (argc != 1) {
+    g_print ("Usage: %s\n", argv[0]);
+    return -1;
+  }
+
+  GHashTable *response = lastfm_handshake();
+  char *stream_url = g_hash_table_lookup(response, "stream_url");
+  if (stream_url == NULL) {
+    puts("Handshake failed!");
+    return -1;
+  }
+  stream_url = g_strdup(stream_url);
+  g_hash_table_destroy(response);
+
   /* Gtk */
   gtk_init (&argc, &argv);
 
@@ -85,15 +102,9 @@ main (int   argc,
   gst_init (&argc, &argv);
   loop = g_main_loop_new (NULL, FALSE);
 
-  /* check input arguments */
-  if (argc != 2) {
-    g_print ("Usage: %s URI\n", argv[0]);
-    return -1;
-  }
-
   /* set up */
   gstplay = gst_element_factory_make ("playbin", "play");
-  g_object_set (G_OBJECT (gstplay), "uri", argv[1], NULL);
+  g_object_set (G_OBJECT (gstplay), "uri", stream_url, NULL);
 
   bus = gst_pipeline_get_bus (GST_PIPELINE (gstplay));
   gst_bus_add_watch (bus, bus_call, loop);
