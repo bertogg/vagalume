@@ -84,6 +84,7 @@ lastfm_parse_handshake(const char *filename)
         while (fgets(buf, bufsize, file)) {
                 char *c;
                 size_t last = strlen(buf) - 1;
+                if (last < 2) continue; /* Good lines should have len>2 */
                 while (buf[last] == '\n' || buf[last] == ' ') {
                         buf[last--] = '\0'; /* Remove trailing whitespace */
                 }
