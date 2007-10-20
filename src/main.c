@@ -86,14 +86,11 @@ main (int   argc,
     return -1;
   }
 
-  GHashTable *response = lastfm_handshake();
-  char *stream_url = g_hash_table_lookup(response, "stream_url");
-  if (stream_url == NULL) {
+  lastfm_session *session = lastfm_handshake();
+  if (!session || session->stream_url == NULL) {
     puts("Handshake failed!");
     return -1;
   }
-  stream_url = g_strdup(stream_url);
-  g_hash_table_destroy(response);
 
   /* Gtk */
   gtk_init (&argc, &argv);
@@ -104,7 +101,9 @@ main (int   argc,
 
   /* set up */
   gstplay = gst_element_factory_make ("playbin", "play");
-  g_object_set (G_OBJECT (gstplay), "uri", stream_url, NULL);
+  g_object_set (G_OBJECT (gstplay), "uri", session->stream_url, NULL);
+
+  lastfm_session_destroy(session);
 
   bus = gst_pipeline_get_bus (GST_PIPELINE (gstplay));
   gst_bus_add_watch (bus, bus_call, loop);
