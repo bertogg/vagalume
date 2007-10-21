@@ -73,7 +73,7 @@ http_get_file(const char *url)
         return filename;
 }
 
-GHashTable *
+static GHashTable *
 lastfm_parse_handshake(const char *filename)
 {
         const size_t bufsize = 256;
@@ -142,7 +142,7 @@ lastfm_handshake(void)
         return s;
 }
 
-char *
+static char *
 lastfm_request_xsfp(lastfm_session *s)
 {
         char *url, *filename;
