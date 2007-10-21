@@ -2,7 +2,6 @@
 #include <gst/gst.h>
 
 #include "protocol.h"
-#include "playlist.h"
 
 static GstElement *pipeline, *gstplay;
 static lastfm_session *session;
@@ -65,13 +64,13 @@ update_track_labels(lastfm_track *track)
 static void
 play_clicked(GtkWidget *widget, gpointer data)
 {
-  if (lastfm_pls_size() == 0) {
+  if (lastfm_pls_size(session->playlist) == 0) {
           if (!lastfm_request_playlist(session)) {
                   g_debug("No more content to play");
                   return;
           }
   }
-  lastfm_track *track = lastfm_pls_get_track();
+  lastfm_track *track = lastfm_pls_get_track(session->playlist);
   g_object_set (G_OBJECT (gstplay), "uri", track->stream_url, NULL);
   update_track_labels(track);
   lastfm_track_destroy(track);

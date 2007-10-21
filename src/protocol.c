@@ -8,7 +8,6 @@
 #include <libxml/parser.h>
 
 #include "protocol.h"
-#include "playlist.h"
 #include "userconfig.h"
 
 #define CLIENT_VERSION "0.1"
@@ -99,6 +98,14 @@ lastfm_parse_handshake(const char *filename)
         return hash;
 }
 
+static lastfm_session *
+lastfm_session_new(void)
+{
+        lastfm_session *s = g_new0(lastfm_session, 1);
+        s->playlist = lastfm_pls_new(NULL);
+        return s;
+}
+
 void
 lastfm_session_destroy(lastfm_session *session)
 {
@@ -107,6 +114,7 @@ lastfm_session_destroy(lastfm_session *session)
         g_free(session->stream_url);
         g_free(session->base_url);
         g_free(session->base_path);
+        lastfm_pls_destroy(session->playlist);
         g_free(session);
 }
 
@@ -132,7 +140,7 @@ lastfm_handshake(void)
         unlink(filename);
         g_free(filename);
 
-        lastfm_session *s = g_new0(lastfm_session, 1);
+        lastfm_session *s = lastfm_session_new();
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
         s->stream_url = g_strdup(g_hash_table_lookup(response, "stream_url"));
         s->base_url = g_strdup(g_hash_table_lookup(response, "base_url"));
@@ -164,9 +172,9 @@ lastfm_request_xsfp(lastfm_session *s)
 }
 
 static gboolean
-lastfm_parse_track(xmlDoc *doc, xmlNode *node)
+lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
 {
-        g_return_val_if_fail(node != NULL, FALSE);
+        g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
 
         const xmlChar *name;
         char *val;
@@ -200,17 +208,18 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node)
                 lastfm_track_destroy(track);
                 return FALSE;
         } else {
-                lastfm_pls_add_track(track);
+                lastfm_pls_add_track(pls, track);
                 return TRUE;
         }
 }
 
 static gboolean
-lastfm_parse_playlist(xmlDoc *doc)
+lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
 {
         xmlNode *node, *tracklist;
+        const xmlChar *name;
         gint pls_size;
-        g_return_val_if_fail(doc != NULL, FALSE);
+        g_return_val_if_fail(doc != NULL && pls != NULL, FALSE);
 
         node = xmlDocGetRootElement(doc);
         if (xmlStrcmp(node->name, (const xmlChar *) "playlist")) {
@@ -220,7 +229,12 @@ lastfm_parse_playlist(xmlDoc *doc)
         tracklist = NULL;
         node = node->xmlChildrenNode;
         while (node != NULL) {
-                if (!xmlStrcmp(node->name, (const xmlChar *) "trackList")) {
+                name = node->name;
+                if (!xmlStrcmp(name, (const xmlChar *) "title")) {
+                        char *title = (char *) xmlNodeListGetString(doc,
+                                               node->xmlChildrenNode, 1);
+                        lastfm_pls_set_title(pls, title);
+                } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {
                         tracklist = node;
                 }
                 node = node->next;
@@ -230,21 +244,21 @@ lastfm_parse_playlist(xmlDoc *doc)
                 return FALSE;
         }
         node = tracklist->xmlChildrenNode;
-        pls_size = lastfm_pls_size();
+        pls_size = lastfm_pls_size(pls);
         while (node != NULL) {
                 if (!xmlStrcmp(node->name, (const xmlChar *) "track")) {
-                        lastfm_parse_track(doc, node->xmlChildrenNode);
+                        lastfm_parse_track(doc, node->xmlChildrenNode, pls);
                 }
                 node = node->next;
         }
         /* Return TRUE if the playlist has grown */
-        return (pls_size < lastfm_pls_size());
+        return (pls_size < lastfm_pls_size(pls));
 }
 
 gboolean
 lastfm_request_playlist(lastfm_session *s)
 {
-        g_return_val_if_fail(s != NULL, FALSE);
+        g_return_val_if_fail(s != NULL && s->playlist != NULL, FALSE);
 
         char *xmlfilename;
         xmlDoc *doc;
@@ -253,7 +267,7 @@ lastfm_request_playlist(lastfm_session *s)
         xmlfilename = lastfm_request_xsfp(s);
         doc = xmlParseFile(xmlfilename);
         if (doc != NULL) {
-                retval = lastfm_parse_playlist(doc);
+                retval = lastfm_parse_playlist(doc, s->playlist);
                 xmlFreeDoc(doc);
         }
 

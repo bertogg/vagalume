@@ -40,7 +40,6 @@ cfg_get_val(const char *line, const char *key)
                 regoff_t first = pmatch[1].rm_so;
                 regoff_t last = pmatch[1].rm_eo;
                 value = g_strndup(line+first, last-first);
-                g_debug("Found value %s for key %s", value, key);
         }
         regfree(&creg);
         return value;
