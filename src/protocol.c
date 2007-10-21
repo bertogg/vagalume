@@ -5,8 +5,10 @@
 #include <unistd.h>
 #include <curl/curl.h>
 #include <gcrypt.h>
+#include <libxml/parser.h>
 
 #include "protocol.h"
+#include "playlist.h"
 
 #define CLIENT_VERSION "0.1"
 #define CLIENT_PLATFORM "linux"
@@ -102,6 +104,7 @@ lastfm_parse_handshake(const char *filename)
 void
 lastfm_session_destroy(lastfm_session *session)
 {
+        if (session == NULL) return;
         g_free(session->id);
         g_free(session->stream_url);
         g_free(session->base_url);
@@ -155,4 +158,104 @@ lastfm_request_xsfp(lastfm_session *s)
         g_free(url);
 
         return filename;
+}
+
+static gboolean
+lastfm_parse_track(xmlDoc *doc, xmlNode *node)
+{
+        g_return_val_if_fail(node != NULL, FALSE);
+
+        const xmlChar *name;
+        char *val;
+        lastfm_track *track = g_new0(lastfm_track, 1);
+
+        while (node != NULL) {
+                name = node->name;
+                val = (char *) xmlNodeListGetString(doc,
+                                                    node->xmlChildrenNode,
+                                                    1);
+                if (!xmlStrcmp(name, (xmlChar *) "location")) {
+                        track->stream_url = g_strdup(val);
+                } else if (!xmlStrcmp(name, (xmlChar *) "title")) {
+                        track->title = g_strdup(val);
+                } else if (!xmlStrcmp(name, (xmlChar *) "id")) {
+                        track->id = g_ascii_strtoll(val, NULL, 10);
+                } else if (!xmlStrcmp(name, (xmlChar *) "creator")) {
+                        track->artist = g_strdup(val);
+                } else if (!xmlStrcmp(name, (xmlChar *) "album")) {
+                        track->album = g_strdup(val);
+                } else if (!xmlStrcmp(name, (xmlChar *) "duration")) {
+                        track->duration = g_ascii_strtoll(val, NULL, 10);
+                } else if (!xmlStrcmp(name, (xmlChar *) "image")) {
+                        track->image_url = g_strdup(val);
+                }
+                xmlFree((xmlChar *)val);
+                node = node->next;
+        }
+        if (track->stream_url == NULL || strlen(track->stream_url) == 0) {
+                g_debug("Found track with no stream URL, discarding it");
+                lastfm_track_destroy(track);
+                return FALSE;
+        } else {
+                lastfm_pls_add_track(track);
+                return TRUE;
+        }
+}
+
+static gboolean
+lastfm_parse_playlist(xmlDoc *doc)
+{
+        xmlNode *node, *tracklist;
+        gint pls_size;
+        g_return_val_if_fail(doc != NULL, FALSE);
+
+        node = xmlDocGetRootElement(doc);
+        if (xmlStrcmp(node->name, (const xmlChar *) "playlist")) {
+                g_warning("Playlist file not in the expected format");
+                return FALSE;
+        }
+        tracklist = NULL;
+        node = node->xmlChildrenNode;
+        while (node != NULL) {
+                if (!xmlStrcmp(node->name, (const xmlChar *) "trackList")) {
+                        tracklist = node;
+                }
+                node = node->next;
+        }
+        if (tracklist == NULL) {
+                g_warning("No tracks found in playlist");
+                return FALSE;
+        }
+        node = tracklist->xmlChildrenNode;
+        pls_size = lastfm_pls_size();
+        while (node != NULL) {
+                if (!xmlStrcmp(node->name, (const xmlChar *) "track")) {
+                        lastfm_parse_track(doc, node->xmlChildrenNode);
+                }
+                node = node->next;
+        }
+        /* Return TRUE if the playlist has grown */
+        return (pls_size < lastfm_pls_size());
+}
+
+gboolean
+lastfm_request_playlist(lastfm_session *s)
+{
+        g_return_val_if_fail(s != NULL, FALSE);
+
+        char *xmlfilename;
+        xmlDoc *doc;
+        gboolean retval = FALSE;
+
+        xmlfilename = lastfm_request_xsfp(s);
+        doc = xmlParseFile(xmlfilename);
+        if (doc != NULL) {
+                retval = lastfm_parse_playlist(doc);
+                xmlFreeDoc(doc);
+        }
+
+        xmlCleanupParser();
+        unlink(xmlfilename);
+        g_free(xmlfilename);
+        return retval;
 }

@@ -12,7 +12,7 @@ typedef struct {
 } lastfm_session;
 
 lastfm_session *lastfm_handshake(void);
-char *lastfm_request_xsfp(lastfm_session *s);
+gboolean lastfm_request_playlist(lastfm_session *s);
 void lastfm_session_destroy(lastfm_session *session);
 
 #endif
