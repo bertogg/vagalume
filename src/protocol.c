@@ -9,12 +9,10 @@
 
 #include "protocol.h"
 #include "playlist.h"
+#include "userconfig.h"
 
 #define CLIENT_VERSION "0.1"
 #define CLIENT_PLATFORM "linux"
-
-const char *username = "username";
-const char *password = "password";
 
 static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
@@ -115,6 +113,11 @@ lastfm_session_destroy(lastfm_session *session)
 lastfm_session *
 lastfm_handshake(void)
 {
+        if (!read_user_cfg()) {
+                return NULL;
+        }
+        const char *username = user_cfg_get_usename();
+        const char *password = user_cfg_get_password();
         char *md5password = get_md5_hash(password);
         char *url = g_strconcat(handshake_url, "&username=", username,
                                 "&passwordmd5=", md5password, NULL);
