@@ -1,6 +1,10 @@
 
 #include "playlist.h"
 
+/**
+ * Destroy a lastfm_track object freeing all its allocated memory
+ * @param track Track to be destroyed, or NULL
+ */
 void
 lastfm_track_destroy(lastfm_track *track)
 {
@@ -13,6 +17,11 @@ lastfm_track_destroy(lastfm_track *track)
         g_free(track);
 }
 
+/**
+ * Get the size of a playlist
+ * @param pls The playlist
+ * @return The number of tracks in the playlist
+ */
 guint
 lastfm_pls_size(lastfm_pls *pls)
 {
@@ -20,6 +29,13 @@ lastfm_pls_size(lastfm_pls *pls)
         return g_slist_length(pls->tracks);
 }
 
+/**
+ * Get the next track in a playlist. Note that this function removes
+ * the track from the playlist (as it can only be played once).
+ * @param pls The playlist
+ * @return The next track (or NULL if the list is empty). It should be
+ * destroyed with lastfm_track_destroy() when no longer used.
+ */
 lastfm_track *
 lastfm_pls_get_track(lastfm_pls *pls)
 {
@@ -31,6 +47,11 @@ lastfm_pls_get_track(lastfm_pls *pls)
         return track;
 }
 
+/**
+ * Append a track to the end of a playlist.
+ * @param pls The playlist
+ * @param track The track to be appended
+ */
 void
 lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track)
 {
@@ -38,6 +59,11 @@ lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track)
         pls->tracks = g_slist_append(pls->tracks, track);
 }
 
+/**
+ * Set the title of a playlist
+ * @param pls The playlist
+ * @param title Title to set (the playlist will store a copy)
+ */
 void
 lastfm_pls_set_title(lastfm_pls *pls, const char *title)
 {
@@ -46,6 +72,12 @@ lastfm_pls_set_title(lastfm_pls *pls, const char *title)
         pls->title = g_strdup(title);
 }
 
+/**
+ * Create a new, empty playlist
+ * @param title The title of this playlist, or NULL
+ * @return A new playlist. It should be destroyed with
+ * lastfm_pls_destroy() when no longer used
+ */
 lastfm_pls *
 lastfm_pls_new(const char *title)
 {
@@ -54,6 +86,10 @@ lastfm_pls_new(const char *title)
         return pls;
 }
 
+/**
+ * Destroy a playlist, including all the tracks that it contains
+ * @param pls The playlist to be destroyed, or NULL.
+ */
 void
 lastfm_pls_destroy(lastfm_pls *pls)
 {
