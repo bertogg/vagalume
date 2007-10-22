@@ -91,7 +91,7 @@ read_user_cfg(void)
 gboolean
 write_user_cfg(void)
 {
-        if (username == NULL || password == NULL) return FALSE;
+        g_return_val_if_fail(username != NULL && password != NULL, FALSE);
         gboolean retval = TRUE;
         char *cfgfile;
         FILE *fd = NULL;
