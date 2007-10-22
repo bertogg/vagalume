@@ -67,7 +67,6 @@ lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track)
 void
 lastfm_pls_set_title(lastfm_pls *pls, const char *title)
 {
-        int i;
         g_return_if_fail(pls != NULL);
         g_free(pls->title);
         pls->title = g_strdup(title);

@@ -45,23 +45,29 @@ cfg_get_val(const char *line, const char *key)
         return value;
 }
 
+static char *
+get_cfg_filename(void)
+{
+        const char *homedir = getenv("HOME");
+        if (homedir == NULL) {
+                g_warning("HOME environment variable not set");
+                return NULL;
+        }
+        return g_strconcat(homedir, "/" CONFIG_FILE, NULL);
+}
+
 gboolean
 read_user_cfg(void)
 {
         if (username != NULL || password != NULL) return TRUE;
         const int bufsize = 256;
         char buf[bufsize];
-        const char *homedir = getenv("HOME");
         char *cfgfile;
-        FILE *fd;
-        if (homedir == NULL) {
-                g_warning("HOME environment variable not set");
-                return FALSE;
-        }
-        cfgfile = g_strconcat(homedir, "/" CONFIG_FILE, NULL);
-        fd = fopen(cfgfile, "r");
+        FILE *fd = NULL;
+        cfgfile = get_cfg_filename();
+        if (cfgfile != NULL) fd = fopen(cfgfile, "r");
         g_free(cfgfile);
-        if  (fd == NULL) {
+        if (fd == NULL) {
                 g_debug("Config file not found");
                 return FALSE;
         }
@@ -80,4 +86,27 @@ read_user_cfg(void)
         }
         fclose(fd);
         return TRUE;
+}
+
+gboolean
+write_user_cfg(void)
+{
+        if (username == NULL || password == NULL) return FALSE;
+        gboolean retval = TRUE;
+        char *cfgfile;
+        FILE *fd = NULL;
+        cfgfile = get_cfg_filename();
+        if (cfgfile != NULL) fd = fopen(cfgfile, "w");
+        g_free(cfgfile);
+        if (fd == NULL) {
+                g_warning("Unable to write config file");
+                return FALSE;
+        }
+        if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n",
+                    username, password) <= 0) {
+                g_warning("Error writing to config file");
+                retval = FALSE;
+        }
+        fclose(fd);
+        return retval;
 }
