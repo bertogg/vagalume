@@ -13,6 +13,11 @@
 #define CLIENT_VERSION "0.1"
 #define CLIENT_PLATFORM "linux"
 
+typedef struct {
+        char *buffer;
+        size_t size;
+} curl_buffer;
+
 static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
        "?version=" CLIENT_VERSION
@@ -44,57 +49,66 @@ init_curl(void)
         }
 }
 
-static char *
-http_get_file(const char *url)
+static size_t
+http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
 {
-        g_return_val_if_fail(url != NULL, NULL);
+        curl_buffer *dstbuf = (curl_buffer *) dest;
+        size_t datasize = size*nmemb;
+        size_t writefrom = dstbuf->size;;
+        if (datasize == 0) return 0;
+        dstbuf->size += datasize;
+        /* Allocate an extra byte to place the final \0 */
+        dstbuf->buffer = g_realloc(dstbuf->buffer, dstbuf->size + 1);
+        memcpy(dstbuf->buffer + writefrom, src, datasize);
+        return datasize;
+}
+
+static void
+http_get_buffer(const char *url, char **buffer, size_t *bufsize)
+{
+        g_return_if_fail(url != NULL && buffer != NULL);
+        curl_buffer dstbuf = { NULL, 0 };
         CURL *handle;
-        char *filename = g_strdup("/tmp/lastfm.XXXXXX");
-        int fd = mkstemp(filename);
-        if (fd == -1) {
-                g_free(filename);
-                g_critical("Unable to create temporary file");
-                return NULL;
-        }
-        FILE *file = fdopen(fd, "w");
 
         g_debug("Requesting URL %s", url);
         init_curl();
         handle = curl_easy_init();
         curl_easy_setopt(handle, CURLOPT_URL, url);
-        curl_easy_setopt(handle, CURLOPT_WRITEDATA, file);
+        curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, http_copy_buffer);
+        curl_easy_setopt(handle, CURLOPT_WRITEDATA, &dstbuf);
         curl_easy_perform(handle);
         curl_easy_cleanup(handle);
-        fclose(file);
 
-        return filename;
+        if (dstbuf.buffer == NULL) {
+                g_warning("Error getting URL %s", url);
+                return;
+        }
+
+        dstbuf.buffer[dstbuf.size] = '\0';
+        *buffer = dstbuf.buffer;
+        if (bufsize != NULL) {
+                *bufsize = dstbuf.size;
+        }
 }
 
 static GHashTable *
-lastfm_parse_handshake(const char *filename)
+lastfm_parse_handshake(const char *buffer)
 {
-        const size_t bufsize = 256;
-        char buf[bufsize];
-        FILE *file;
         GHashTable *hash;
+        int i;
+        char **lines = g_strsplit(buffer, "\n", 50);
         hash = g_hash_table_new_full(g_str_hash, g_str_equal,
                                      g_free, g_free);
-        file = fopen(filename, "r");
-        while (fgets(buf, bufsize, file)) {
-                char *c;
-                size_t last = strlen(buf) - 1;
-                if (last < 2) continue; /* Good lines should have len>2 */
-                while (buf[last] == '\n' || buf[last] == ' ') {
-                        buf[last--] = '\0'; /* Remove trailing whitespace */
-                }
-                c = strchr(buf, '=');
-                if (c != NULL && c[1] != '\0') {
-                        char *key = g_strndup(buf, c-buf);
-                        char *val = g_strdup(c+1);
+        for (i = 0; lines[i] != NULL; i++) {
+                char **line = g_strsplit(lines[i], "=", 2);
+                if (line[0] != NULL && line[1] != NULL) {
+                        char *key = g_strstrip(g_strdup(line[0]));
+                        char *val = g_strstrip(g_strdup(line[1]));
                         g_hash_table_insert(hash, key, val);
                 }
+                g_strfreev(line);
         }
-        fclose(file);
+        g_strfreev(lines);
         return hash;
 }
 
@@ -126,19 +140,19 @@ lastfm_handshake(void)
         }
         const char *username = user_cfg_get_usename();
         const char *password = user_cfg_get_password();
+        char *buffer = NULL;
         char *md5password = get_md5_hash(password);
         char *url = g_strconcat(handshake_url, "&username=", username,
                                 "&passwordmd5=", md5password, NULL);
 
-        char *filename = http_get_file(url);
+        http_get_buffer(url, &buffer, NULL);
         g_free(md5password);
         g_free(url);
-        g_return_val_if_fail(filename != NULL, NULL);
+        g_return_val_if_fail(buffer != NULL, NULL);
 
-        GHashTable *response = lastfm_parse_handshake(filename);
+        GHashTable *response = lastfm_parse_handshake(buffer);
 
-        unlink(filename);
-        g_free(filename);
+        g_free(buffer);
 
         lastfm_session *s = lastfm_session_new();
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
@@ -153,22 +167,19 @@ lastfm_handshake(void)
         return s;
 }
 
-static char *
-lastfm_request_xsfp(lastfm_session *s)
+static void
+lastfm_request_xsfp(lastfm_session *s, char **buffer, size_t *size)
 {
-        char *url, *filename;
-        g_return_val_if_fail(s != NULL, NULL);
-        g_return_val_if_fail(s->id != NULL &&
-                             s->base_url != NULL &&
-                             s->base_path != NULL, NULL);
+        char *url;
+        g_return_if_fail(s != NULL);
+        g_return_if_fail(s->id != NULL && s->base_url != NULL &&
+                         s->base_path != NULL);
 
         url = g_strconcat("http://", s->base_url, s->base_path,
                           "/xspf.php?sk=", s->id,
                           "&discovery=0&desktop=" CLIENT_VERSION, NULL);
-        filename = http_get_file(url);
+        http_get_buffer(url, buffer, size);
         g_free(url);
-
-        return filename;
 }
 
 static gboolean
@@ -265,20 +276,18 @@ gboolean
 lastfm_request_playlist(lastfm_session *s)
 {
         g_return_val_if_fail(s != NULL && s->playlist != NULL, FALSE);
-
-        char *xmlfilename;
-        xmlDoc *doc;
+        char *buffer = NULL;
+        size_t bufsize = 0;
+        xmlDoc *doc = NULL;
         gboolean retval = FALSE;
 
-        xmlfilename = lastfm_request_xsfp(s);
-        doc = xmlParseFile(xmlfilename);
+        lastfm_request_xsfp(s, &buffer, &bufsize);
+        if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
                 retval = lastfm_parse_playlist(doc, s->playlist);
                 xmlFreeDoc(doc);
         }
-
         xmlCleanupParser();
-        unlink(xmlfilename);
-        g_free(xmlfilename);
+        g_free(buffer);
         return retval;
 }
