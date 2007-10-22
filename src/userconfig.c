@@ -80,8 +80,12 @@ read_user_cfg(void)
                         g_free(username);
                         username = val;
                 } else if ((val = cfg_get_val(buf, "password")) != NULL) {
+                        gsize len;
                         g_free(password);
-                        password = val;
+                        password = (gchar *) g_base64_decode(val, &len);
+                        password = g_realloc(password, len+1);
+                        password[len] = '\0';
+                        g_free(val);
                 }
         }
         fclose(fd);
@@ -93,7 +97,7 @@ write_user_cfg(void)
 {
         g_return_val_if_fail(username != NULL && password != NULL, FALSE);
         gboolean retval = TRUE;
-        char *cfgfile;
+        char *cfgfile, *base64pw;
         FILE *fd = NULL;
         cfgfile = get_cfg_filename();
         if (cfgfile != NULL) fd = fopen(cfgfile, "w");
@@ -102,11 +106,13 @@ write_user_cfg(void)
                 g_warning("Unable to write config file");
                 return FALSE;
         }
+        base64pw = g_base64_encode((guchar *)password, strlen(password));
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n",
-                    username, password) <= 0) {
+                    username, base64pw) <= 0) {
                 g_warning("Error writing to config file");
                 retval = FALSE;
         }
+        g_free(base64pw);
         fclose(fd);
         return retval;
 }
