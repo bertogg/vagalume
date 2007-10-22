@@ -49,14 +49,18 @@ init_curl(void)
 }
 
 static char *
-escape_url(const char *url)
+escape_url(const char *url, gboolean escape)
 {
         g_return_val_if_fail(url != NULL, NULL);
         CURL *handle;
         char *str, *curl_str;
         init_curl();
         handle = curl_easy_init();
-        curl_str = curl_easy_escape(handle, url, 0);
+        if (escape) {
+                curl_str = curl_easy_escape(handle, url, 0);
+        } else {
+                curl_str = curl_easy_unescape(handle, url, 0, NULL);
+        }
         str = g_strdup(curl_str);
         curl_free(curl_str);
         curl_easy_cleanup(handle);
@@ -247,7 +251,13 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
                 if (!xmlStrcmp(name, (const xmlChar *) "title")) {
                         char *title = (char *) xmlNodeListGetString(doc,
                                                node->xmlChildrenNode, 1);
-                        lastfm_pls_set_title(pls, title);
+                        char *unescaped = escape_url(title, FALSE);
+                        int i;
+                        for (i = 0; unescaped[i] != 0; i++) {
+                                if (unescaped[i] == '+') unescaped[i] = ' ';
+                        }
+                        lastfm_pls_set_title(pls, unescaped);
+                        g_free(unescaped);
                 } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {
                         tracklist = node;
                 }
@@ -298,7 +308,7 @@ lastfm_set_radio(lastfm_session *s, const char *radio_url)
         char *buffer = NULL;
         gboolean retval = FALSE;
         char *url;
-        char *radio_url_escaped = escape_url(radio_url);
+        char *radio_url_escaped = escape_url(radio_url, TRUE);
 
         url = g_strconcat("http://", s->base_url, s->base_path,
                           "/adjust.php?session=", s->id,

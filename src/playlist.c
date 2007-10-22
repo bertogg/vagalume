@@ -71,11 +71,6 @@ lastfm_pls_set_title(lastfm_pls *pls, const char *title)
         g_return_if_fail(pls != NULL);
         g_free(pls->title);
         pls->title = g_strdup(title);
-        if (title != NULL) {
-                for (i = 0; pls->title[i] != 0; i++) {
-                        if (pls->title[i] == '+') pls->title[i] = ' ';
-                }
-        }
 }
 
 /**

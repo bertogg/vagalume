@@ -3,6 +3,7 @@
 
 #include "protocol.h"
 #include "userconfig.h"
+#include "radio.h"
 
 static GstElement *pipeline, *gstplay;
 static lastfm_session *session;
@@ -139,6 +140,12 @@ main (int   argc,
     puts("Handshake failed!");
     return -1;
   }
+  char *radio = lastfm_neighbours_radio_url(user_cfg_get_usename());
+  if (!lastfm_set_radio(session, radio)) {
+          printf("Unable to set radio %s!\n", radio);
+          return -1;
+  }
+  g_free(radio);
   if (!lastfm_request_playlist(session)) {
           puts("No playlist found!");
           return -1;
