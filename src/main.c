@@ -8,7 +8,7 @@ static lastfm_session *session;
 
 static struct {
         GtkWidget *window, *play, *stop, *next, *hbox, *vbox;
-        GtkWidget *artist, *track, *album;
+        GtkWidget *playlist, *artist, *track, *album;
 } win;
 
 static gboolean
@@ -47,6 +47,7 @@ static void
 update_track_labels(lastfm_track *track)
 {
         char *text;
+        const char *playlist = session->playlist->title;
         const char *artist = track ? track->artist : NULL;
         const char *title = track ? track->title : NULL;
         const char *album = track ? track->album : NULL;
@@ -59,6 +60,13 @@ update_track_labels(lastfm_track *track)
         text = g_strconcat("Album: ", album, NULL);
         gtk_label_set_text(GTK_LABEL(win.album), text);
         g_free(text);
+        if (track != NULL) {
+                text = g_strconcat("Listening to ", playlist, NULL);
+                gtk_label_set_text(GTK_LABEL(win.playlist), text);
+                g_free(text);
+        } else {
+                gtk_label_set_text(GTK_LABEL(win.playlist), "Stopped");
+        }
 }
 
 static void
@@ -154,10 +162,12 @@ main (int   argc,
   win.play = gtk_button_new_from_stock (GTK_STOCK_MEDIA_PLAY);
   win.stop = gtk_button_new_from_stock (GTK_STOCK_MEDIA_STOP);
   win.next = gtk_button_new_from_stock (GTK_STOCK_MEDIA_NEXT);
+  win.playlist = gtk_label_new(NULL);
   win.artist = gtk_label_new(NULL);
   win.track = gtk_label_new(NULL);
   win.album = gtk_label_new(NULL);
   update_track_labels(NULL);
+  gtk_misc_set_alignment(GTK_MISC(win.playlist), 0, 0);
   gtk_misc_set_alignment(GTK_MISC(win.artist), 0, 0);
   gtk_misc_set_alignment(GTK_MISC(win.track), 0, 0);
   gtk_misc_set_alignment(GTK_MISC(win.album), 0, 0);
@@ -173,6 +183,7 @@ main (int   argc,
   gtk_box_pack_start (GTK_BOX (win.hbox), win.play, TRUE, TRUE, 5);
   gtk_box_pack_start (GTK_BOX (win.hbox), win.stop, TRUE, TRUE, 5);
   gtk_box_pack_start (GTK_BOX (win.hbox), win.next, TRUE, TRUE, 5);
+  gtk_box_pack_start (GTK_BOX (win.vbox), win.playlist, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (win.vbox), win.hbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (win.vbox), win.artist, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (win.vbox), win.track, FALSE, FALSE, 0);

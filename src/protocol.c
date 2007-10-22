@@ -231,9 +231,15 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
         while (node != NULL) {
                 name = node->name;
                 if (!xmlStrcmp(name, (const xmlChar *) "title")) {
-                        char *title = (char *) xmlNodeListGetString(doc,
-                                               node->xmlChildrenNode, 1);
+                        char *title = g_strdup((char *)
+                                               xmlNodeListGetString(doc,
+                                               node->xmlChildrenNode, 1));
+                        int i;
+                        for (i = 0; title[i] != 0; i++) {
+                                if (title[i] == '+') title[i] = ' ';
+                        }
                         lastfm_pls_set_title(pls, title);
+                        g_free(title);
                 } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {
                         tracklist = node;
                 }
