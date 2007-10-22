@@ -2,6 +2,7 @@
 #include <gst/gst.h>
 
 #include "protocol.h"
+#include "userconfig.h"
 
 static GstElement *pipeline, *gstplay;
 static lastfm_session *session;
@@ -128,7 +129,12 @@ main (int   argc,
     return -1;
   }
 
-  session = lastfm_handshake();
+  if (!read_user_cfg()) {
+          return -1;
+  }
+
+  session = lastfm_session_new(user_cfg_get_usename(),
+                               user_cfg_get_password());
   if (!session || session->stream_url == NULL) {
     puts("Handshake failed!");
     return -1;

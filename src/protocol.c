@@ -8,7 +8,6 @@
 #include <libxml/parser.h>
 
 #include "protocol.h"
-#include "userconfig.h"
 
 #define CLIENT_VERSION "0.1"
 #define CLIENT_PLATFORM "linux"
@@ -127,14 +126,6 @@ lastfm_parse_handshake(const char *buffer)
         return hash;
 }
 
-static lastfm_session *
-lastfm_session_new(void)
-{
-        lastfm_session *s = g_new0(lastfm_session, 1);
-        s->playlist = lastfm_pls_new(NULL);
-        return s;
-}
-
 void
 lastfm_session_destroy(lastfm_session *session)
 {
@@ -148,13 +139,9 @@ lastfm_session_destroy(lastfm_session *session)
 }
 
 lastfm_session *
-lastfm_handshake(void)
+lastfm_session_new(const char *username, const char *password)
 {
-        if (!read_user_cfg()) {
-                return NULL;
-        }
-        const char *username = user_cfg_get_usename();
-        const char *password = user_cfg_get_password();
+        g_return_val_if_fail(username != NULL && password != NULL, NULL);
         char *buffer = NULL;
         char *md5password = get_md5_hash(password);
         char *url = g_strconcat(handshake_url, "&username=", username,
@@ -169,7 +156,8 @@ lastfm_handshake(void)
 
         g_free(buffer);
 
-        lastfm_session *s = lastfm_session_new();
+        lastfm_session *s = g_new0(lastfm_session, 1);
+        s->playlist = lastfm_pls_new(NULL);
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
         s->stream_url = g_strdup(g_hash_table_lookup(response, "stream_url"));
         s->base_url = g_strdup(g_hash_table_lookup(response, "base_url"));

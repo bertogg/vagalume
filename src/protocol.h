@@ -14,7 +14,7 @@ typedef struct {
         lastfm_pls *playlist;
 } lastfm_session;
 
-lastfm_session *lastfm_handshake(void);
+lastfm_session *lastfm_session_new(const char *username,const char *password);
 gboolean lastfm_request_playlist(lastfm_session *s);
 void lastfm_session_destroy(lastfm_session *session);
 gboolean lastfm_set_radio(lastfm_session *s, const char *radio_url);
