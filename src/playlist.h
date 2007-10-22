@@ -25,6 +25,7 @@ void lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track);
 guint lastfm_pls_size(lastfm_pls *pls);
 lastfm_pls *lastfm_pls_new(const char *title);
 void lastfm_pls_set_title(lastfm_pls *pls, const char *title);
+void lastfm_pls_clear(lastfm_pls *pls);
 void lastfm_pls_destroy(lastfm_pls *pls);
 
 #endif

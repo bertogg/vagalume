@@ -67,9 +67,15 @@ lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track)
 void
 lastfm_pls_set_title(lastfm_pls *pls, const char *title)
 {
+        int i;
         g_return_if_fail(pls != NULL);
         g_free(pls->title);
         pls->title = g_strdup(title);
+        if (title != NULL) {
+                for (i = 0; pls->title[i] != 0; i++) {
+                        if (pls->title[i] == '+') pls->title[i] = ' ';
+                }
+        }
 }
 
 /**
@@ -87,6 +93,20 @@ lastfm_pls_new(const char *title)
 }
 
 /**
+ * Remove all tracks from a playlist
+ * @param pls The playlist to be cleared
+ */
+void
+lastfm_pls_clear(lastfm_pls *pls)
+{
+        g_return_if_fail (pls != NULL);
+        lastfm_track *track;
+        while ((track = lastfm_pls_get_track(pls)) != NULL) {
+                lastfm_track_destroy(track);
+        }
+}
+
+/**
  * Destroy a playlist, including all the tracks that it contains
  * @param pls The playlist to be destroyed, or NULL.
  */
@@ -94,10 +114,7 @@ void
 lastfm_pls_destroy(lastfm_pls *pls)
 {
         if (pls == NULL) return;
-        lastfm_track *track;
-        while ((track = lastfm_pls_get_track(pls)) != NULL) {
-                lastfm_track_destroy(track);
-        }
+        lastfm_pls_clear(pls);
         g_free(pls->title);
         g_free(pls);
 }

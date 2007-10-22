@@ -49,6 +49,21 @@ init_curl(void)
         }
 }
 
+static char *
+escape_url(const char *url)
+{
+        g_return_val_if_fail(url != NULL, NULL);
+        CURL *handle;
+        char *str, *curl_str;
+        init_curl();
+        handle = curl_easy_init();
+        curl_str = curl_easy_escape(handle, url, 0);
+        str = g_strdup(curl_str);
+        curl_free(curl_str);
+        curl_easy_cleanup(handle);
+        return str;
+}
+
 static size_t
 http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
 {
@@ -242,15 +257,9 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
         while (node != NULL) {
                 name = node->name;
                 if (!xmlStrcmp(name, (const xmlChar *) "title")) {
-                        char *title = g_strdup((char *)
-                                               xmlNodeListGetString(doc,
-                                               node->xmlChildrenNode, 1));
-                        int i;
-                        for (i = 0; title[i] != 0; i++) {
-                                if (title[i] == '+') title[i] = ' ';
-                        }
+                        char *title = (char *) xmlNodeListGetString(doc,
+                                               node->xmlChildrenNode, 1);
                         lastfm_pls_set_title(pls, title);
-                        g_free(title);
                 } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {
                         tracklist = node;
                 }
@@ -289,5 +298,34 @@ lastfm_request_playlist(lastfm_session *s)
         }
         xmlCleanupParser();
         g_free(buffer);
+        return retval;
+}
+
+gboolean
+lastfm_set_radio(lastfm_session *s, const char *radio_url)
+{
+        g_return_val_if_fail(s != NULL && s->playlist != NULL &&
+                             s->id != NULL && s->base_url != NULL &&
+                             s->base_path && radio_url != NULL, FALSE);
+        char *buffer = NULL;
+        gboolean retval = FALSE;
+        char *url;
+        char *radio_url_escaped = escape_url(radio_url);
+
+        url = g_strconcat("http://", s->base_url, s->base_path,
+                          "/adjust.php?session=", s->id,
+                          "&lang=en&url=", radio_url_escaped, NULL);
+        http_get_buffer(url, &buffer, NULL);
+        g_free(url);
+        g_free(radio_url_escaped);
+
+        if (buffer != NULL) {
+                if (g_strrstr(buffer, "OK")) {
+                        lastfm_pls_clear(s->playlist);
+                        retval = TRUE;
+                }
+        }
+        g_free(buffer);
+
         return retval;
 }
