@@ -1,9 +1,13 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
+#include <string.h>
 
 #include "protocol.h"
 #include "userconfig.h"
 #include "radio.h"
+
+static void stop_clicked(GtkWidget *widget, gpointer data);
+static void next_clicked(GtkWidget *widget, gpointer data);
 
 static GstElement *pipeline, *gstplay;
 static lastfm_session *session;
@@ -22,8 +26,10 @@ bus_call (GstBus     *bus,
 
   switch (GST_MESSAGE_TYPE (msg)) {
     case GST_MESSAGE_EOS:
-      g_print ("End-of-stream\n");
       g_main_loop_quit (loop);
+      gdk_threads_enter ();
+      next_clicked(NULL, NULL);
+      gdk_threads_leave ();
       break;
     case GST_MESSAGE_ERROR: {
       gchar *debug;
@@ -36,6 +42,9 @@ bus_call (GstBus     *bus,
       g_error_free (err);
 
       g_main_loop_quit (loop);
+      gdk_threads_enter ();
+      stop_clicked(NULL, NULL);
+      gdk_threads_leave ();
       break;
     }
     default:
@@ -123,11 +132,14 @@ main (int   argc,
 {
   GMainLoop *loop;
   GstBus *bus;
+  char *radio;
 
   /* check input arguments */
   if (argc != 1) {
-    g_print ("Usage: %s\n", argv[0]);
-    return -1;
+          if (argc != 2 || strncmp("lastfm://", argv[1], 9)) {
+                  g_print ("Usage: %s [lastfm radio url]\n", argv[0]);
+                  return -1;
+          }
   }
 
   if (!read_user_cfg()) {
@@ -140,7 +152,11 @@ main (int   argc,
     puts("Handshake failed!");
     return -1;
   }
-  char *radio = lastfm_neighbours_radio_url(user_cfg_get_usename());
+  if (argc == 1) {
+          radio = lastfm_neighbours_radio_url(user_cfg_get_usename());
+  } else {
+          radio = g_strdup(argv[1]);
+  }
   if (!lastfm_set_radio(session, radio)) {
           printf("Unable to set radio %s!\n", radio);
           return -1;
@@ -152,6 +168,9 @@ main (int   argc,
   }
 
   /* Gtk */
+  g_thread_init (NULL);
+  gdk_threads_init ();
+  gdk_threads_enter ();
   gtk_init (&argc, &argv);
 
   /* initialize GStreamer */
@@ -206,6 +225,7 @@ main (int   argc,
   gtk_widget_show_all (win.window);
 
   gtk_main();
+  gdk_threads_leave ();
 
   return 0;
 }
