@@ -122,7 +122,12 @@ lastfm_parse_handshake(const char *buffer)
                 if (line[0] != NULL && line[1] != NULL) {
                         char *key = g_strstrip(g_strdup(line[0]));
                         char *val = g_strstrip(g_strdup(line[1]));
-                        g_hash_table_insert(hash, key, val);
+                        if (key[0] != '\0' && val[0] != '\0') {
+                                g_hash_table_insert(hash, key, val);
+                        } else {
+                                g_free(key);
+                                g_free(val);
+                        }
                 }
                 g_strfreev(line);
         }
@@ -170,6 +175,12 @@ lastfm_session_new(const char *username, const char *password)
         s->subscriber = (subs != NULL && *subs == '1');
 
         g_hash_table_destroy(response);
+
+        if (s->id == NULL || s->base_url == NULL || s->base_path == NULL) {
+                g_warning("Error building Last.fm session");
+                lastfm_session_destroy(s);
+                s = NULL;
+        }
 
         return s;
 }
