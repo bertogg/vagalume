@@ -159,7 +159,10 @@ lastfm_session_new(const char *username, const char *password)
         http_get_buffer(url, &buffer, NULL);
         g_free(md5password);
         g_free(url);
-        g_return_val_if_fail(buffer != NULL, NULL);
+        if (buffer == NULL) {
+                g_warning("Unable to initiate handshake");
+                return NULL;
+        }
 
         GHashTable *response = lastfm_parse_handshake(buffer);
 
