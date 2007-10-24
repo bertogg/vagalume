@@ -1,0 +1,76 @@
+
+#include <gtk/gtk.h>
+
+#include "controller.h"
+#include "protocol.h"
+#include "playlist.h"
+#include "mainwin.h"
+#include "audio.h"
+
+static lastfm_session *session = NULL;
+static lastfm_mainwin *mainwin = NULL;
+
+static void
+ui_update_track_info(lastfm_track *track)
+{
+        g_return_if_fail(session != NULL && track != NULL && mainwin != NULL);
+        const char *playlist = session->playlist->title;
+        const char *artist = track->artist;
+        const char *title = track->title;
+        const char *album = track->album;
+        mainwin_update_track_info(mainwin, playlist, artist, title, album);
+}
+
+void
+controller_stop_playing(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
+        lastfm_audio_stop();
+}
+
+void
+controller_start_playing(void)
+{
+        g_return_if_fail(session != NULL && mainwin != NULL);
+        if (lastfm_pls_size(session->playlist) == 0) {
+                if (!lastfm_request_playlist(session)) {
+                        g_debug("No more content to play");
+                        return;
+                }
+        }
+        lastfm_track *track = lastfm_pls_get_track(session->playlist);
+        lastfm_audio_play(track->stream_url);
+        ui_update_track_info(track);
+        lastfm_track_destroy(track);
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING);
+}
+
+void
+controller_skip_track(void)
+{
+        controller_stop_playing();
+        controller_start_playing();
+}
+
+void
+controller_quit_app(void)
+{
+        lastfm_audio_clear();
+        lastfm_session_destroy(session);
+        gtk_main_quit();
+}
+
+void
+controller_set_mainwin(lastfm_mainwin *win)
+{
+        g_return_if_fail(win != NULL && mainwin == NULL);
+        mainwin = win;
+}
+
+void
+controller_set_session(lastfm_session *s)
+{
+        g_return_if_fail(s != NULL && session == NULL);
+        session = s;
+}

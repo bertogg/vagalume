@@ -6,7 +6,8 @@ LDFLAGS=$(shell pkg-config --libs gtk+-2.0 gstreamer-0.10 \
 
 default: main
 
-main: main.o protocol.o playlist.o userconfig.o radio.o md5.o http.o
+main: main.o protocol.o playlist.o userconfig.o radio.o md5.o http.o \
+	audio.o mainwin.o controller.o
 
 clean:
 	rm -f main *.o

@@ -42,7 +42,7 @@ http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
 {
         curl_buffer *dstbuf = (curl_buffer *) dest;
         size_t datasize = size*nmemb;
-        size_t writefrom = dstbuf->size;;
+        size_t writefrom = dstbuf->size;
         if (datasize == 0) return 0;
         dstbuf->size += datasize;
         /* Allocate an extra byte to place the final \0 */
