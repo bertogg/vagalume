@@ -9,7 +9,7 @@
 static void stop_clicked(GtkWidget *widget, gpointer data);
 static void next_clicked(GtkWidget *widget, gpointer data);
 
-static GstElement *pipeline, *gstplay;
+static GstElement *gstplay, *source, *decoder, *sink;
 static lastfm_session *session;
 
 static struct {
@@ -90,7 +90,7 @@ play_clicked(GtkWidget *widget, gpointer data)
           }
   }
   lastfm_track *track = lastfm_pls_get_track(session->playlist);
-  g_object_set (G_OBJECT (gstplay), "uri", track->stream_url, NULL);
+  g_object_set (G_OBJECT (source), "location", track->stream_url, NULL);
   update_track_labels(track);
   lastfm_track_destroy(track);
   gst_element_set_state (gstplay, GST_STATE_PLAYING);
@@ -178,12 +178,31 @@ main (int   argc,
   loop = g_main_loop_new (NULL, FALSE);
 
   /* set up */
-  gstplay = gst_element_factory_make ("playbin", "play");
-//  g_object_set (G_OBJECT (gstplay), "uri", session->stream_url, NULL);
+  gstplay = gst_pipeline_new (NULL);
+  source = gst_element_factory_make ("gnomevfssrc", NULL);
+#ifdef MAEMO
+  sink = gst_element_factory_make ("dspmp3sink", NULL);
+  decoder = sink; /* Not used, this is only for the next if */
+#else
+  decoder = gst_element_factory_make ("mad", NULL);
+  sink = gst_element_factory_make ("autoaudiosink", NULL);
+#endif
+  if (!gstplay || !source || !decoder || !sink) {
+          puts("Error creating GStreamer elements");
+          return -1;
+  }
 
   bus = gst_pipeline_get_bus (GST_PIPELINE (gstplay));
   gst_bus_add_watch (bus, bus_call, loop);
   gst_object_unref (bus);
+
+#ifdef MAEMO
+  gst_bin_add_many (GST_BIN (gstplay), source, sink, NULL);
+  gst_element_link_many (source, sink, NULL);
+#else
+  gst_bin_add_many (GST_BIN (gstplay), source, decoder, sink, NULL);
+  gst_element_link_many (source, decoder, sink, NULL);
+#endif
 
   /* Gtk */
   win.window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
