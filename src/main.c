@@ -28,14 +28,14 @@ main (int argc, char **argv)
           return -1;
   }
 
-  session = lastfm_session_new(user_cfg_get_usename(),
+  session = lastfm_session_new(user_cfg_get_username(),
                                user_cfg_get_password());
   if (!session || session->stream_url == NULL) {
     puts("Handshake failed!");
     return -1;
   }
   if (argc == 1) {
-          radio = lastfm_neighbours_radio_url(user_cfg_get_usename());
+          radio = lastfm_neighbours_radio_url(user_cfg_get_username());
   } else {
           radio = g_strdup(argv[1]);
   }

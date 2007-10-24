@@ -13,7 +13,7 @@ static char *username = NULL;
 static char *password = NULL;
 
 const char *
-user_cfg_get_usename(void)
+user_cfg_get_username(void)
 {
         return username;
 }
