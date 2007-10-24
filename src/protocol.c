@@ -4,9 +4,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <curl/curl.h>
-#include <gcrypt.h>
 #include <libxml/parser.h>
 
+#include "md5.h"
 #include "protocol.h"
 
 #define CLIENT_VERSION "0.1"
@@ -26,15 +26,19 @@ static char *
 get_md5_hash(const char *str)
 {
         g_return_val_if_fail(str != NULL, NULL);
+        const int digestlen = 16;
+        md5_state_t state;
+        md5_byte_t digest[digestlen];
         int i;
-        int digestlen = gcry_md_get_algo_dlen (GCRY_MD_MD5);
-        unsigned char *digest = g_malloc(digestlen);
+
+        md5_init(&state);
+        md5_append(&state, (const md5_byte_t *)str, strlen(str));
+        md5_finish(&state, digest);
+
         char *hexdigest = g_malloc(digestlen*2 + 1);
-        gcry_md_hash_buffer(GCRY_MD_MD5, digest, str, strlen(str));
         for (i = 0; i < digestlen; i++) {
                 sprintf(hexdigest + 2*i, "%02x", digest[i]);
         }
-        g_free(digest);
         return hexdigest;
 }
 
