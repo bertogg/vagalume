@@ -5,9 +5,6 @@
 typedef struct {
         GtkWidget *window;
         GtkWidget *play, *stop, *next;
-        GtkWidget *hbox;
-        GtkWidget *vbox;
-        GtkWidget *menubar;
         GtkWidget *playlist, *artist, *track, *album;
 } lastfm_mainwin;
 

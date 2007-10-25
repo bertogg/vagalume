@@ -190,13 +190,15 @@ lastfm_mainwin *
 lastfm_mainwin_create(void)
 {
         lastfm_mainwin *w = g_new0(lastfm_mainwin, 1);
+        GtkBox *hbox, *vbox;
+        GtkWidget *menubar;
         /* Window */
         w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(w->window), "Last.fm");
         gtk_container_set_border_width(GTK_CONTAINER(w->window), 10);
         /* Boxes */
-        w->hbox = gtk_hbox_new(TRUE, 5);
-        w->vbox = gtk_vbox_new(TRUE, 0);
+        hbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
+        vbox = GTK_BOX(gtk_vbox_new(TRUE, 0));
         /* Buttons */
         w->play = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
         w->stop = gtk_button_new_from_stock(GTK_STOCK_MEDIA_STOP);
@@ -207,22 +209,22 @@ lastfm_mainwin_create(void)
         w->track = gtk_label_new(NULL);
         w->album = gtk_label_new(NULL);
         /* Menu */
-        w->menubar = create_menu_bar(w);
+        menubar = create_menu_bar(w);
         /* Layout */
         gtk_misc_set_alignment(GTK_MISC(w->playlist), 0, 0);
         gtk_misc_set_alignment(GTK_MISC(w->artist), 0, 0);
         gtk_misc_set_alignment(GTK_MISC(w->track), 0, 0);
         gtk_misc_set_alignment(GTK_MISC(w->album), 0, 0);
-        gtk_container_add(GTK_CONTAINER(w->window), w->vbox);
-        gtk_box_pack_start(GTK_BOX(w->hbox), w->play, TRUE, TRUE, 5);
-        gtk_box_pack_start(GTK_BOX(w->hbox), w->stop, TRUE, TRUE, 5);
-        gtk_box_pack_start(GTK_BOX(w->hbox), w->next, TRUE, TRUE, 5);
-        gtk_box_pack_start(GTK_BOX(w->vbox), w->menubar, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(w->vbox), w->playlist, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(w->vbox), w->hbox, TRUE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(w->vbox), w->artist, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(w->vbox), w->track, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(w->vbox), w->album, FALSE, FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(w->window), GTK_WIDGET(vbox));
+        gtk_box_pack_start(hbox, w->play, TRUE, TRUE, 5);
+        gtk_box_pack_start(hbox, w->stop, TRUE, TRUE, 5);
+        gtk_box_pack_start(hbox, w->next, TRUE, TRUE, 5);
+        gtk_box_pack_start(vbox, menubar, FALSE, FALSE, 0);
+        gtk_box_pack_start(vbox, w->playlist, FALSE, FALSE, 0);
+        gtk_box_pack_start(vbox, GTK_WIDGET(hbox), TRUE, TRUE, 0);
+        gtk_box_pack_start(vbox, w->artist, FALSE, FALSE, 0);
+        gtk_box_pack_start(vbox, w->track, FALSE, FALSE, 0);
+        gtk_box_pack_start(vbox, w->album, FALSE, FALSE, 0);
         /* Signals */
         g_signal_connect(G_OBJECT(w->play), "clicked",
                          G_CALLBACK(play_clicked), NULL);
