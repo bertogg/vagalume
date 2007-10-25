@@ -68,6 +68,19 @@ controller_skip_track(void)
 }
 
 void
+controller_play_radio_by_url(const char *url)
+{
+        g_return_if_fail(session != NULL);
+        if (url == NULL) {
+                g_critical("Attempted to play a NULL radio URL");
+                controller_stop_playing();
+        } else {
+                lastfm_set_radio(session, url);
+                controller_skip_track();
+        }
+}
+
+void
 controller_play_radio(lastfm_radio type)
 {
         g_return_if_fail(session != NULL && usercfg != NULL);
@@ -78,14 +91,8 @@ controller_play_radio(lastfm_radio type)
         } else {
                 url = lastfm_radio_url(type, usercfg->username);
         }
-        if (url == NULL) {
-                g_critical("Unable to build radio URL");
-                controller_stop_playing();
-        } else {
-                lastfm_set_radio(session, url);
-                controller_skip_track();
-                g_free(url);
-        }
+        controller_play_radio_by_url(url);
+        g_free(url);
 }
 
 void

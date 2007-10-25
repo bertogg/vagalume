@@ -7,6 +7,7 @@
 #include "radio.h"
 #include "controller.h"
 #include "mainwin.h"
+#include "http.h"
 
 int
 main (int argc, char **argv)
@@ -16,6 +17,7 @@ main (int argc, char **argv)
   lastfm_mainwin *mainwin;
   lastfm_usercfg *usercfg;
 
+  http_init();
   /* check input arguments */
   if (argc != 1) {
           if (argc != 2 || strncmp("lastfm://", argv[1], 9)) {
