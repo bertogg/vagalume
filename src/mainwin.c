@@ -14,6 +14,20 @@ static const char *appname = "Last.fm player";
 static const char *appdescr = "A small (and still unnamed) Last.fm player";
 
 void
+ui_show_info_dialog(GtkWindow *parent, const char *text)
+{
+        g_return_if_fail(text != NULL);
+        GtkDialogFlags flags = GTK_DIALOG_MODAL |
+                GTK_DIALOG_DESTROY_WITH_PARENT;
+        GtkWidget *dialog = gtk_message_dialog_new(parent, flags,
+                                                   GTK_MESSAGE_INFO,
+                                                   GTK_BUTTONS_OK,
+                                                   "%s", text);
+        gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
+}
+
+void
 mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
                           const char *artist, const char *track,
                           const char *album)

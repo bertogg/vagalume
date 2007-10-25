@@ -11,6 +11,14 @@
 static lastfm_session *session = NULL;
 static lastfm_mainwin *mainwin = NULL;
 
+
+static void
+show_info_dialog(const char *text)
+{
+        g_return_if_fail(mainwin != NULL);
+        ui_show_info_dialog(GTK_WINDOW(mainwin->window), text);
+}
+
 static void
 ui_update_track_info(lastfm_track *track)
 {
@@ -36,7 +44,8 @@ controller_start_playing(void)
         g_return_if_fail(session != NULL && mainwin != NULL);
         if (lastfm_pls_size(session->playlist) == 0) {
                 if (!lastfm_request_playlist(session)) {
-                        g_debug("No more content to play");
+                        show_info_dialog("No more content to play");
+                        controller_stop_playing();
                         return;
                 }
         }

@@ -145,7 +145,9 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
                 val = (char *) xmlNodeListGetString(doc,
                                                     node->xmlChildrenNode,
                                                     1);
-                if (!xmlStrcmp(name, (xmlChar *) "location")) {
+                if (val == NULL) {
+                        /* Ignore empty nodes */;
+                } else if (!xmlStrcmp(name, (xmlChar *) "location")) {
                         track->stream_url = g_strdup(val);
                 } else if (!xmlStrcmp(name, (xmlChar *) "title")) {
                         track->title = g_strdup(val);
@@ -193,13 +195,17 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
                 if (!xmlStrcmp(name, (const xmlChar *) "title")) {
                         char *title = (char *) xmlNodeListGetString(doc,
                                                node->xmlChildrenNode, 1);
-                        char *unescaped = escape_url(title, FALSE);
-                        int i;
-                        for (i = 0; unescaped[i] != 0; i++) {
-                                if (unescaped[i] == '+') unescaped[i] = ' ';
+                        if (title != NULL) {
+                                char *unescaped = escape_url(title, FALSE);
+                                int i;
+                                for (i = 0; unescaped[i] != 0; i++) {
+                                        if (unescaped[i] == '+')
+                                                unescaped[i] = ' ';
+                                }
+                                lastfm_pls_set_title(pls, unescaped);
+                                g_free(unescaped);
                         }
-                        lastfm_pls_set_title(pls, unescaped);
-                        g_free(unescaped);
+                        xmlFree((xmlChar *)title);
                 } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {
                         tracklist = node;
                 }
