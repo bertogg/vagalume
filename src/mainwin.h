@@ -6,6 +6,7 @@ typedef struct {
         GtkWidget *window;
         GtkWidget *play, *stop, *next;
         GtkWidget *playlist, *artist, *track, *album;
+        GtkWidget *radiomenu;
 } lastfm_mainwin;
 
 typedef enum {

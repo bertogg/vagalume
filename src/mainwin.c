@@ -52,12 +52,14 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->play, TRUE);
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
+                gtk_widget_set_sensitive (w->radiomenu, TRUE);
                 break;
         case LASTFM_UI_STATE_PLAYING:
                 dim_labels = FALSE;
                 gtk_widget_set_sensitive (w->play, FALSE);
                 gtk_widget_set_sensitive (w->stop, TRUE);
                 gtk_widget_set_sensitive (w->next, TRUE);
+                gtk_widget_set_sensitive (w->radiomenu, TRUE);
                 break;
         case LASTFM_UI_STATE_CONNECTING:
                 dim_labels = TRUE;
@@ -65,6 +67,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->play, FALSE);
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
+                gtk_widget_set_sensitive (w->radiomenu, FALSE);
                 break;
         default:
                 g_critical("Unknown ui state received: %d", state);
@@ -204,6 +207,7 @@ create_menu_bar(lastfm_mainwin *w)
         g_signal_connect(G_OBJECT(about), "activate",
                          G_CALLBACK(show_about_dialog), w->window);
 
+        w->radiomenu = GTK_WIDGET(radio);
         return GTK_WIDGET(bar);
 }
 
