@@ -44,8 +44,8 @@ controller_start_playing(void)
         g_return_if_fail(session != NULL && mainwin != NULL);
         if (lastfm_pls_size(session->playlist) == 0) {
                 if (!lastfm_request_playlist(session)) {
-                        show_info_dialog("No more content to play");
                         controller_stop_playing();
+                        show_info_dialog("No more content to play");
                         return;
                 }
         }
