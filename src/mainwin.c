@@ -1,9 +1,11 @@
 
 #include <gtk/gtk.h>
+#include <string.h>
 
 #include "controller.h"
 #include "mainwin.h"
 #include "radio.h"
+#include "uimisc.h"
 
 static const char *authors[] = {
         "Alberto Garcia <agarcia@igalia.com>",
@@ -12,20 +14,6 @@ static const char *authors[] = {
 
 static const char *appname = "Last.fm player";
 static const char *appdescr = "A small (and still unnamed) Last.fm player";
-
-void
-ui_show_info_dialog(GtkWindow *parent, const char *text)
-{
-        g_return_if_fail(text != NULL);
-        GtkDialogFlags flags = GTK_DIALOG_MODAL |
-                GTK_DIALOG_DESTROY_WITH_PARENT;
-        GtkWidget *dialog = gtk_message_dialog_new(parent, flags,
-                                                   GTK_MESSAGE_INFO,
-                                                   GTK_BUTTONS_OK,
-                                                   "%s", text);
-        gtk_dialog_run (GTK_DIALOG (dialog));
-        gtk_widget_destroy (dialog);
-}
 
 void
 mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
@@ -122,9 +110,29 @@ radio_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+url_radio_selected(GtkWidget *widget, gpointer data)
+{
+        GtkWindow *win = GTK_WINDOW(data);
+        char *url;
+        url = ui_input_dialog(win, "Enter radio URL",
+                              "Enter the URL of the Last.fm radio",
+                              "lastfm://");
+        if (url != NULL) {
+                if (!strncmp(url, "lastfm://", 9)) {
+                        controller_play_radio_by_url(url);
+                } else {
+                        ui_info_dialog(win,
+                                       "Last.fm radio URLs must start with "
+                                       "lastfm://");
+                }
+                g_free(url);
+        }
+}
+
+static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
-        GtkWindow *win = (GtkWindow *) data;
+        GtkWindow *win = GTK_WINDOW(data);
         gtk_show_about_dialog(win, "name", appname, "authors", authors,
                               "comments", appdescr, NULL);
 }
@@ -135,7 +143,7 @@ create_menu_bar(lastfm_mainwin *w)
         GtkMenuItem *lastfm, *radio, *help;
         GtkMenuShell *lastfmsub, *radiosub, *helpsub;
         GtkWidget *settings, *quit;
-        GtkWidget *personal, *neigh, *loved, *playlist, *recomm;
+        GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *urlradio;
         GtkWidget *about;
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_bar_new());
 
@@ -159,6 +167,7 @@ create_menu_bar(lastfm_mainwin *w)
         loved = gtk_menu_item_new_with_mnemonic("_Loved tracks");
         playlist = gtk_menu_item_new_with_mnemonic("Pl_aylist");
         recomm = gtk_menu_item_new_with_mnemonic("R_ecommendations");
+        urlradio = gtk_menu_item_new_with_mnemonic("Enter _URL...");
         gtk_menu_shell_append(bar, GTK_WIDGET(radio));
         gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
         gtk_menu_shell_append(radiosub, personal);
@@ -166,6 +175,7 @@ create_menu_bar(lastfm_mainwin *w)
         gtk_menu_shell_append(radiosub, loved);
         gtk_menu_shell_append(radiosub, playlist);
         gtk_menu_shell_append(radiosub, recomm);
+        gtk_menu_shell_append(radiosub, urlradio);
         g_signal_connect(G_OBJECT(personal), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_PERSONAL_RADIO));
@@ -181,6 +191,8 @@ create_menu_bar(lastfm_mainwin *w)
         g_signal_connect(G_OBJECT(recomm), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_RECOMMENDED_RADIO));
+        g_signal_connect(G_OBJECT(urlradio), "activate",
+                         G_CALLBACK(url_radio_selected), w->window);
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));

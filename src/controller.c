@@ -7,6 +7,7 @@
 #include "mainwin.h"
 #include "audio.h"
 #include "userconfig.h"
+#include "uimisc.h"
 
 static lastfm_session *session = NULL;
 static lastfm_mainwin *mainwin = NULL;
@@ -17,7 +18,7 @@ static void
 show_info_dialog(const char *text)
 {
         g_return_if_fail(mainwin != NULL);
-        ui_show_info_dialog(GTK_WINDOW(mainwin->window), text);
+        ui_info_dialog(GTK_WINDOW(mainwin->window), text);
 }
 
 static void
@@ -74,9 +75,11 @@ controller_play_radio_by_url(const char *url)
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
-        } else {
-                lastfm_set_radio(session, url);
+        } else if (lastfm_set_radio(session, url)) {
                 controller_skip_track();
+        } else {
+                show_info_dialog("Invalid radio URL");
+                controller_stop_playing();
         }
 }
 

@@ -20,6 +20,5 @@ void mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
                                const char *artist, const char *track,
                                const char *album);
 void mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state s);
-void ui_show_info_dialog(GtkWindow *parent, const char *text);
 
 #endif
