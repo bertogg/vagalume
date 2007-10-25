@@ -8,14 +8,10 @@ typedef struct {
         size_t size;
 } curl_buffer;
 
-static void
-init_curl(void)
+void
+http_init(void)
 {
-        static gboolean initialized = FALSE;
-        if (!initialized) {
-                curl_global_init(CURL_GLOBAL_ALL);
-                initialized = TRUE;
-        }
+        curl_global_init(CURL_GLOBAL_ALL);
 }
 
 char *
@@ -24,7 +20,6 @@ escape_url(const char *url, gboolean escape)
         g_return_val_if_fail(url != NULL, NULL);
         CURL *handle;
         char *str, *curl_str;
-        init_curl();
         handle = curl_easy_init();
         if (escape) {
                 curl_str = curl_easy_escape(handle, url, 0);
@@ -59,7 +54,6 @@ http_get_buffer(const char *url, char **buffer, size_t *bufsize)
         CURL *handle;
 
         g_debug("Requesting URL %s", url);
-        init_curl();
         handle = curl_easy_init();
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, http_copy_buffer);
