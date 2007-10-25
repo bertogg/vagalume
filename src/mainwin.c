@@ -54,6 +54,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
         g_return_if_fail(w != NULL);
         gboolean dim_labels = FALSE;
         switch (state) {
+        case LASTFM_UI_STATE_DISCONNECTED:
         case LASTFM_UI_STATE_STOPPED:
                 dim_labels = FALSE;
                 gtk_label_set_text(GTK_LABEL(w->playlist), "Stopped");
@@ -80,6 +81,9 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
         default:
                 g_critical("Unknown ui state received: %d", state);
                 break;
+        }
+        if (state == LASTFM_UI_STATE_DISCONNECTED) {
+                gtk_label_set_text(GTK_LABEL(w->playlist), "Disconnected");
         }
         gtk_widget_set_sensitive (w->artist, !dim_labels);
         gtk_widget_set_sensitive (w->track, !dim_labels);
@@ -240,6 +244,6 @@ lastfm_mainwin_create(void)
         g_signal_connect(G_OBJECT(w->window), "destroy",
                          G_CALLBACK(close_app), NULL);
         /* Initial state */
-        mainwin_set_ui_state(w, LASTFM_UI_STATE_STOPPED);
+        mainwin_set_ui_state(w, LASTFM_UI_STATE_DISCONNECTED);
         return w;
 }

@@ -9,6 +9,7 @@ typedef struct {
 } lastfm_mainwin;
 
 typedef enum {
+        LASTFM_UI_STATE_DISCONNECTED,
         LASTFM_UI_STATE_STOPPED,
         LASTFM_UI_STATE_PLAYING,
         LASTFM_UI_STATE_CONNECTING
