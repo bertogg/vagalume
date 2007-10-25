@@ -14,6 +14,7 @@ main (int argc, char **argv)
   char *radio;
   lastfm_session *session;
   lastfm_mainwin *mainwin;
+  lastfm_usercfg *usercfg;
 
   /* check input arguments */
   if (argc != 1) {
@@ -24,19 +25,19 @@ main (int argc, char **argv)
   }
 
   /* Check user configuration */
-  if (!read_user_cfg()) {
+  usercfg = read_user_cfg();
+  if (usercfg == NULL) {
           return -1;
   }
 
-  session = lastfm_session_new(user_cfg_get_username(),
-                               user_cfg_get_password());
+  session = lastfm_session_new(usercfg->username, usercfg->password);
   if (!session || session->stream_url == NULL) {
     puts("Handshake failed!");
     return -1;
   }
   if (argc == 1) {
           radio = lastfm_radio_url(LASTFM_NEIGHBOURS_RADIO,
-                                   user_cfg_get_username());
+                                   usercfg->username);
   } else {
           radio = g_strdup(argv[1]);
   }
@@ -60,6 +61,7 @@ main (int argc, char **argv)
   lastfm_audio_init();
   controller_set_session(session);
   controller_set_mainwin(mainwin);
+  controller_set_usercfg(usercfg);
   gtk_widget_show_all(mainwin->window);
 
   gtk_main();

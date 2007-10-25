@@ -10,6 +10,7 @@
 
 static lastfm_session *session = NULL;
 static lastfm_mainwin *mainwin = NULL;
+static lastfm_usercfg *usercfg = NULL;
 
 
 static void
@@ -69,13 +70,13 @@ controller_skip_track(void)
 void
 controller_play_radio(lastfm_radio type)
 {
-        g_return_if_fail(session != NULL);
+        g_return_if_fail(session != NULL && usercfg != NULL);
         char *url;
         if (type == LASTFM_RECOMMENDED_RADIO) {
                 url = lastfm_recommended_radio_url(
-                        user_cfg_get_username(), 100);
+                        usercfg->username, 100);
         } else {
-                url = lastfm_radio_url(type, user_cfg_get_username());
+                url = lastfm_radio_url(type, usercfg->username);
         }
         if (url == NULL) {
                 g_critical("Unable to build radio URL");
@@ -107,4 +108,11 @@ controller_set_session(lastfm_session *s)
 {
         g_return_if_fail(s != NULL && session == NULL);
         session = s;
+}
+
+void
+controller_set_usercfg(lastfm_usercfg *cfg)
+{
+        g_return_if_fail(cfg != NULL && usercfg == NULL);
+        usercfg = cfg;
 }

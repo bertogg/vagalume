@@ -9,21 +9,6 @@
 
 #define CONFIG_FILE ".lastfmrc"
 
-static char *username = NULL;
-static char *password = NULL;
-
-const char *
-user_cfg_get_username(void)
-{
-        return username;
-}
-
-const char *
-user_cfg_get_password(void)
-{
-        return password;
-}
-
 static char *
 cfg_get_val(const char *line, const char *key)
 {
@@ -56,10 +41,10 @@ get_cfg_filename(void)
         return g_strconcat(homedir, "/" CONFIG_FILE, NULL);
 }
 
-gboolean
+lastfm_usercfg *
 read_user_cfg(void)
 {
-        if (username != NULL || password != NULL) return TRUE;
+        lastfm_usercfg *cfg = NULL;
         const int bufsize = 256;
         char buf[bufsize];
         char *cfgfile;
@@ -71,31 +56,40 @@ read_user_cfg(void)
                 g_debug("Config file not found");
                 return FALSE;
         }
+        cfg = g_new0(lastfm_usercfg, 1);
         while (fgets(buf, bufsize, fd)) {
                 int len = strlen(buf);
+                char *val;
                 if (len == 0) continue;
                 if (buf[len-1] == '\n') buf[len-1] = '\0';
-                char *val;
                 if ((val = cfg_get_val(buf, "username")) != NULL) {
-                        g_free(username);
-                        username = val;
+                        g_free(cfg->username);
+                        cfg->username = val;
                 } else if ((val = cfg_get_val(buf, "password")) != NULL) {
                         gsize len;
-                        g_free(password);
-                        password = (gchar *) g_base64_decode(val, &len);
-                        password = g_realloc(password, len+1);
-                        password[len] = '\0';
+                        g_free(cfg->password);
+                        cfg->password = (gchar *) g_base64_decode(val, &len);
+                        cfg->password = g_realloc(cfg->password, len+1);
+                        cfg->password[len] = '\0';
                         g_free(val);
+                } else if ((val = cfg_get_val(buf, "discovery")) != NULL) {
+                        if (!strcmp(val, "1")) {
+                                cfg->discovery_mode = TRUE;
+                        } else {
+                                cfg->discovery_mode = FALSE;
+                        }
                 }
         }
         fclose(fd);
-        return TRUE;
+        if (cfg->username == NULL) cfg->username = g_strdup("");
+        if (cfg->password == NULL) cfg->password = g_strdup("");
+        return cfg;
 }
 
 gboolean
-write_user_cfg(void)
+write_user_cfg(lastfm_usercfg *cfg)
 {
-        g_return_val_if_fail(username != NULL && password != NULL, FALSE);
+        g_return_val_if_fail(cfg && cfg->username && cfg->password, FALSE);
         gboolean retval = TRUE;
         char *cfgfile, *base64pw;
         FILE *fd = NULL;
@@ -106,9 +100,10 @@ write_user_cfg(void)
                 g_warning("Unable to write config file");
                 return FALSE;
         }
-        base64pw = g_base64_encode((guchar *)password, strlen(password));
+        base64pw = g_base64_encode((guchar *)cfg->password,
+                                   strlen(cfg->password));
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n",
-                    username, base64pw) <= 0) {
+                    cfg->username, base64pw) <= 0) {
                 g_warning("Error writing to config file");
                 retval = FALSE;
         }
