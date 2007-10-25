@@ -38,16 +38,29 @@ controller_open_usercfg(void)
 }
 
 static gboolean
+check_usercfg(void)
+{
+        if (usercfg == NULL) usercfg = read_usercfg();
+        if (usercfg == NULL) controller_open_usercfg();
+        return (usercfg != NULL);
+}
+
+static gboolean
 check_session(void)
 {
         if (session != NULL) return TRUE;
-        g_return_val_if_fail(usercfg != NULL, FALSE);
-        session = lastfm_session_new(usercfg->username, usercfg->password);
+        gboolean retvalue = FALSE;
+        check_usercfg();
+        if (usercfg != NULL) {
+                session = lastfm_session_new(usercfg->username,
+                                             usercfg->password);
+        }
         if (session == NULL || session->id == NULL) {
                 show_info_dialog("Unable to login to Last.fm");
-                return FALSE;
+        } else {
+                retvalue = TRUE;
         }
-        return TRUE;
+        return retvalue;
 }
 
 static void
@@ -116,7 +129,6 @@ controller_play_radio_by_url(const char *url)
 void
 controller_play_radio(lastfm_radio type)
 {
-        g_return_if_fail(usercfg != NULL);
         if (!check_session()) return;
         char *url;
         if (type == LASTFM_RECOMMENDED_RADIO) {
@@ -138,15 +150,11 @@ controller_quit_app(void)
 }
 
 void
-controller_set_mainwin(lastfm_mainwin *win)
+controller_run_app(lastfm_mainwin *win)
 {
         g_return_if_fail(win != NULL && mainwin == NULL);
         mainwin = win;
-}
+        gtk_widget_show_all(mainwin->window);
 
-void
-controller_set_usercfg(lastfm_usercfg *cfg)
-{
-        g_return_if_fail(cfg != NULL && usercfg == NULL);
-        usercfg = cfg;
+        gtk_main();
 }

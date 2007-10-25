@@ -11,7 +11,6 @@ int
 main (int argc, char **argv)
 {
   lastfm_mainwin *mainwin;
-  lastfm_usercfg *usercfg;
 
   /* check input arguments */
   if (argc != 1) {
@@ -21,17 +20,10 @@ main (int argc, char **argv)
           }
   }
 
-  /* Check user configuration */
-  usercfg = read_usercfg();
-  if (usercfg == NULL) {
-          return -1;
-  }
-
 /*   if (argc == 2) { */
 /*           radio = g_strdup(argv[1]); */
 /*   } */
 
-  /* Gtk */
   g_thread_init (NULL);
   gdk_threads_init ();
   gdk_threads_enter ();
@@ -41,11 +33,8 @@ main (int argc, char **argv)
   lastfm_audio_init();
 
   mainwin = lastfm_mainwin_create();
-  controller_set_mainwin(mainwin);
-  controller_set_usercfg(usercfg);
-  gtk_widget_show_all(mainwin->window);
+  controller_run_app(mainwin);
 
-  gtk_main();
   gdk_threads_leave ();
 
   return 0;
