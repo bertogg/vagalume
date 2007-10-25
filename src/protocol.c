@@ -76,7 +76,8 @@ lastfm_session_destroy(lastfm_session *session)
 }
 
 lastfm_session *
-lastfm_session_new(const char *username, const char *password)
+lastfm_session_new(const char *username, const char *password,
+                   lastfm_err *err)
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
         char *buffer = NULL;
@@ -89,6 +90,7 @@ lastfm_session_new(const char *username, const char *password)
         g_free(url);
         if (buffer == NULL) {
                 g_warning("Unable to initiate handshake");
+                if (err != NULL) *err = LASTFM_ERR_CONN;
                 return NULL;
         }
 
@@ -109,8 +111,11 @@ lastfm_session_new(const char *username, const char *password)
 
         if (s->id == NULL || s->base_url == NULL || s->base_path == NULL) {
                 g_warning("Error building Last.fm session");
+                if (err != NULL) *err = LASTFM_ERR_LOGIN;
                 lastfm_session_destroy(s);
                 s = NULL;
+        } else if (err != NULL) {
+                *err = LASTFM_ERR_NONE;
         }
 
         return s;

@@ -49,14 +49,21 @@ static gboolean
 check_session(void)
 {
         if (session != NULL) return TRUE;
+        lastfm_err err = LASTFM_ERR_NONE;
         gboolean retvalue = FALSE;
         check_usercfg();
         if (usercfg != NULL) {
                 session = lastfm_session_new(usercfg->username,
-                                             usercfg->password);
+                                             usercfg->password,
+                                             &err);
         }
         if (session == NULL || session->id == NULL) {
-                show_info_dialog("Unable to login to Last.fm");
+                if (err == LASTFM_ERR_LOGIN) {
+                        show_info_dialog("Unable to login to Last.fm\n"
+                                         "Check user and password");
+                } else {
+                        show_info_dialog("Network connection error");
+                }
         } else {
                 retvalue = TRUE;
         }
@@ -150,11 +157,15 @@ controller_quit_app(void)
 }
 
 void
-controller_run_app(lastfm_mainwin *win)
+controller_run_app(lastfm_mainwin *win, const char *radio_url)
 {
         g_return_if_fail(win != NULL && mainwin == NULL);
         mainwin = win;
         gtk_widget_show_all(mainwin->window);
+
+        if (radio_url) {
+                controller_play_radio_by_url(radio_url);
+        }
 
         gtk_main();
 }

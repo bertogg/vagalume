@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "audio.h"
-#include "userconfig.h"
 #include "controller.h"
 #include "mainwin.h"
 #include "http.h"
@@ -11,6 +10,7 @@ int
 main (int argc, char **argv)
 {
   lastfm_mainwin *mainwin;
+  char *radio = NULL;
 
   /* check input arguments */
   if (argc != 1) {
@@ -19,10 +19,9 @@ main (int argc, char **argv)
                   return -1;
           }
   }
-
-/*   if (argc == 2) { */
-/*           radio = g_strdup(argv[1]); */
-/*   } */
+  if (argc == 2) {
+          radio = g_strdup(argv[1]);
+  }
 
   g_thread_init (NULL);
   gdk_threads_init ();
@@ -30,10 +29,14 @@ main (int argc, char **argv)
   gtk_init (&argc, &argv);
 
   http_init();
-  lastfm_audio_init();
+  if (!lastfm_audio_init()) {
+          g_critical("Unable to initialize audio system");
+          return -1;
+  }
 
   mainwin = lastfm_mainwin_create();
-  controller_run_app(mainwin);
+  controller_run_app(mainwin, radio);
+  g_free(radio);
 
   gdk_threads_leave ();
 
