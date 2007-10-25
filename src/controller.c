@@ -13,12 +13,41 @@ static lastfm_session *session = NULL;
 static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
 
-
 static void
 show_info_dialog(const char *text)
 {
         g_return_if_fail(mainwin != NULL);
         ui_info_dialog(GTK_WINDOW(mainwin->window), text);
+}
+
+void
+controller_open_usercfg(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        gboolean changed;
+        changed = ui_usercfg_dialog(GTK_WINDOW(mainwin->window), &usercfg);
+        if (usercfg != NULL) {
+                write_usercfg(usercfg);
+        }
+        if (changed && session != NULL) {
+                lastfm_session_destroy(session);
+                session = NULL;
+                controller_stop_playing();
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED);
+        }
+}
+
+static gboolean
+check_session(void)
+{
+        if (session != NULL) return TRUE;
+        g_return_val_if_fail(usercfg != NULL, FALSE);
+        session = lastfm_session_new(usercfg->username, usercfg->password);
+        if (session == NULL || session->id == NULL) {
+                show_info_dialog("Unable to login to Last.fm");
+                return FALSE;
+        }
+        return TRUE;
 }
 
 static void
@@ -43,7 +72,8 @@ controller_stop_playing(void)
 void
 controller_start_playing(void)
 {
-        g_return_if_fail(session != NULL && mainwin != NULL);
+        g_return_if_fail(mainwin != NULL);
+        if (!check_session()) return;
         if (lastfm_pls_size(session->playlist) == 0) {
                 if (!lastfm_request_playlist(session)) {
                         controller_stop_playing();
@@ -71,7 +101,7 @@ controller_skip_track(void)
 void
 controller_play_radio_by_url(const char *url)
 {
-        g_return_if_fail(session != NULL);
+        if (!check_session()) return;
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
@@ -86,7 +116,8 @@ controller_play_radio_by_url(const char *url)
 void
 controller_play_radio(lastfm_radio type)
 {
-        g_return_if_fail(session != NULL && usercfg != NULL);
+        g_return_if_fail(usercfg != NULL);
+        if (!check_session()) return;
         char *url;
         if (type == LASTFM_RECOMMENDED_RADIO) {
                 url = lastfm_recommended_radio_url(
@@ -111,13 +142,6 @@ controller_set_mainwin(lastfm_mainwin *win)
 {
         g_return_if_fail(win != NULL && mainwin == NULL);
         mainwin = win;
-}
-
-void
-controller_set_session(lastfm_session *s)
-{
-        g_return_if_fail(s != NULL && session == NULL);
-        session = s;
 }
 
 void

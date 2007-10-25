@@ -53,6 +53,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
+                gtk_widget_set_sensitive (w->settings, TRUE);
                 break;
         case LASTFM_UI_STATE_PLAYING:
                 dim_labels = FALSE;
@@ -60,6 +61,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, TRUE);
                 gtk_widget_set_sensitive (w->next, TRUE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
+                gtk_widget_set_sensitive (w->settings, TRUE);
                 break;
         case LASTFM_UI_STATE_CONNECTING:
                 dim_labels = TRUE;
@@ -68,6 +70,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, FALSE);
+                gtk_widget_set_sensitive (w->settings, FALSE);
                 break;
         default:
                 g_critical("Unknown ui state received: %d", state);
@@ -140,6 +143,12 @@ show_about_dialog(GtkWidget *widget, gpointer data)
                               "comments", appdescr, NULL);
 }
 
+static void
+open_user_settings(GtkWidget *widget, gpointer data)
+{
+        controller_open_usercfg();
+}
+
 static GtkWidget *
 create_menu_bar(lastfm_mainwin *w)
 {
@@ -159,6 +168,8 @@ create_menu_bar(lastfm_mainwin *w)
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);
         gtk_menu_shell_append(lastfmsub, quit);
+        g_signal_connect(G_OBJECT(settings), "activate",
+                         G_CALLBACK(open_user_settings), NULL);
         g_signal_connect(G_OBJECT(quit), "activate",
                          G_CALLBACK(close_app), NULL);
 
@@ -208,6 +219,7 @@ create_menu_bar(lastfm_mainwin *w)
                          G_CALLBACK(show_about_dialog), w->window);
 
         w->radiomenu = GTK_WIDGET(radio);
+        w->settings = GTK_WIDGET(settings);
         return GTK_WIDGET(bar);
 }
 
