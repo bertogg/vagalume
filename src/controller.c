@@ -8,16 +8,17 @@
 #include "audio.h"
 #include "userconfig.h"
 #include "uimisc.h"
+#include "http.h"
 
 static lastfm_session *session = NULL;
 static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
 
 static void
-show_info_dialog(const char *text)
+show_dialog(const char *text, GtkMessageType type)
 {
         g_return_if_fail(mainwin != NULL);
-        ui_info_dialog(GTK_WINDOW(mainwin->window), text);
+        ui_info_dialog(GTK_WINDOW(mainwin->window), text, type);
 }
 
 void
@@ -59,10 +60,12 @@ check_session(void)
         }
         if (session == NULL || session->id == NULL) {
                 if (err == LASTFM_ERR_LOGIN) {
-                        show_info_dialog("Unable to login to Last.fm\n"
-                                         "Check user and password");
+                        show_dialog("Unable to login to Last.fm\n"
+                                    "Check user and password",
+                                    GTK_MESSAGE_WARNING);
                 } else {
-                        show_info_dialog("Network connection error");
+                        show_dialog("Network connection error",
+                                    GTK_MESSAGE_WARNING);
                 }
         } else {
                 retvalue = TRUE;
@@ -97,7 +100,8 @@ controller_start_playing(void)
         if (lastfm_pls_size(session->playlist) == 0) {
                 if (!lastfm_request_playlist(session)) {
                         controller_stop_playing();
-                        show_info_dialog("No more content to play");
+                        show_dialog("No more content to play",
+                                    GTK_MESSAGE_INFO);
                         return;
                 }
         }
@@ -128,8 +132,8 @@ controller_play_radio_by_url(const char *url)
         } else if (lastfm_set_radio(session, url)) {
                 controller_skip_track();
         } else {
-                show_info_dialog("Invalid radio URL");
                 controller_stop_playing();
+                show_dialog("Invalid radio URL", GTK_MESSAGE_INFO);
         }
 }
 
@@ -163,7 +167,12 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         mainwin = win;
         gtk_widget_show_all(mainwin->window);
 
-        if (radio_url) {
+        http_init();
+        if (!lastfm_audio_init()) {
+                show_dialog("Error initializing audio system",
+                            GTK_MESSAGE_ERROR);
+                return;
+        } else if (radio_url) {
                 controller_play_radio_by_url(radio_url);
         }
 

@@ -5,13 +5,12 @@
 #include "userconfig.h"
 
 void
-ui_info_dialog(GtkWindow *parent, const char *text)
+ui_info_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
 {
         g_return_if_fail(text != NULL);
         GtkDialogFlags flags = GTK_DIALOG_MODAL |
                 GTK_DIALOG_DESTROY_WITH_PARENT;
-        GtkWidget *dialog = gtk_message_dialog_new(parent, flags,
-                                                   GTK_MESSAGE_INFO,
+        GtkWidget *dialog = gtk_message_dialog_new(parent, flags, type,
                                                    GTK_BUTTONS_OK,
                                                    "%s", text);
         gtk_dialog_run (GTK_DIALOG (dialog));

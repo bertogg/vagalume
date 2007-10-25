@@ -1,10 +1,8 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include "audio.h"
 #include "controller.h"
 #include "mainwin.h"
-#include "http.h"
 
 int
 main (int argc, char **argv)
@@ -27,12 +25,6 @@ main (int argc, char **argv)
   gdk_threads_init ();
   gdk_threads_enter ();
   gtk_init (&argc, &argv);
-
-  http_init();
-  if (!lastfm_audio_init()) {
-          g_critical("Unable to initialize audio system");
-          return -1;
-  }
 
   mainwin = lastfm_mainwin_create();
   controller_run_app(mainwin, radio);
