@@ -4,38 +4,32 @@
 #include "radio.h"
 
 char *
-lastfm_globaltag_radio_url(const char* tag)
+lastfm_radio_url(lastfm_radio type, const char *data)
 {
-        g_return_val_if_fail(tag != NULL, NULL);
-        return g_strconcat("lastfm://globaltags/", tag, NULL);
-}
-
-char *
-lastfm_group_radio_url(const char* group)
-{
-        g_return_val_if_fail(group != NULL, NULL);
-        return g_strconcat("lastfm://group/", group, NULL);
-}
-
-char *
-lastfm_lovedtracks_radio_url(const char* user)
-{
-        g_return_val_if_fail(user != NULL, NULL);
-        return g_strconcat("lastfm://user/", user, "/loved", NULL);
-}
-
-char *
-lastfm_neighbours_radio_url(const char* user)
-{
-        g_return_val_if_fail(user != NULL, NULL);
-        return g_strconcat("lastfm://user/", user, "/neighbours", NULL);
-}
-
-char *
-lastfm_personal_radio_url(const char* user)
-{
-        g_return_val_if_fail(user != NULL, NULL);
-        return g_strconcat("lastfm://user/", user, "/personal", NULL);
+        g_return_val_if_fail(data != NULL, NULL);
+        switch (type) {
+        case LASTFM_GLOBALTAG_RADIO:
+                return g_strconcat("lastfm://globaltags/", data, NULL);
+        case LASTFM_GROUP_RADIO:
+                return g_strconcat("lastfm://group/", data, NULL);
+        case LASTFM_LOVEDTRACKS_RADIO:
+                return g_strconcat("lastfm://user/", data, "/loved", NULL);
+        case LASTFM_NEIGHBOURS_RADIO:
+                return g_strconcat("lastfm://user/", data,
+                                   "/neighbours", NULL);
+        case LASTFM_PERSONAL_RADIO:
+                return g_strconcat("lastfm://user/", data,
+                                   "/personal", NULL);
+        case LASTFM_SIMILAR_ARTIST_RADIO:
+                return g_strconcat("lastfm://artist/", data, NULL);
+        case LASTFM_RECOMMENDED_RADIO:
+        case LASTFM_USERTAG_RADIO:
+                g_critical("Radio type %d is not handled here", type);
+                return NULL;
+        default:
+                g_critical("Unknown radio type %d", type);
+                return NULL;
+        }
 }
 
 char *
@@ -46,13 +40,6 @@ lastfm_recommended_radio_url(const char *user, int val)
         g_snprintf(value, 4, "%d", val);
         return g_strconcat("lastfm://user/", user,
                            "/recommended/", value, NULL);
-}
-
-char *
-lastfm_similar_artist_radio_url(const char* artist)
-{
-        g_return_val_if_fail(artist != NULL, NULL);
-        return g_strconcat("lastfm://artist/", artist, NULL);
 }
 
 char *

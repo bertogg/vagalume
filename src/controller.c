@@ -6,6 +6,7 @@
 #include "playlist.h"
 #include "mainwin.h"
 #include "audio.h"
+#include "userconfig.h"
 
 static lastfm_session *session = NULL;
 static lastfm_mainwin *mainwin = NULL;
@@ -49,8 +50,32 @@ controller_start_playing(void)
 void
 controller_skip_track(void)
 {
-        controller_stop_playing();
+        g_return_if_fail(mainwin != NULL);
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
+        lastfm_audio_stop();
+        while (gtk_events_pending()) gtk_main_iteration();
         controller_start_playing();
+}
+
+void
+controller_play_radio(lastfm_radio type)
+{
+        g_return_if_fail(session != NULL);
+        char *url;
+        if (type == LASTFM_RECOMMENDED_RADIO) {
+                url = lastfm_recommended_radio_url(
+                        user_cfg_get_username(), 100);
+        } else {
+                url = lastfm_radio_url(type, user_cfg_get_username());
+        }
+        if (url == NULL) {
+                g_critical("Unable to build radio URL");
+                controller_stop_playing();
+        } else {
+                lastfm_set_radio(session, url);
+                controller_skip_track();
+                g_free(url);
+        }
 }
 
 void

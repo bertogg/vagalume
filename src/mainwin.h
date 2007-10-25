@@ -7,12 +7,14 @@ typedef struct {
         GtkWidget *play, *stop, *next;
         GtkWidget *hbox;
         GtkWidget *vbox;
+        GtkWidget *menubar;
         GtkWidget *playlist, *artist, *track, *album;
 } lastfm_mainwin;
 
 typedef enum {
         LASTFM_UI_STATE_STOPPED,
-        LASTFM_UI_STATE_PLAYING
+        LASTFM_UI_STATE_PLAYING,
+        LASTFM_UI_STATE_CONNECTING
 } lastfm_ui_state;
 
 lastfm_mainwin *lastfm_mainwin_create(void);

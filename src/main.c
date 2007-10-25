@@ -35,7 +35,8 @@ main (int argc, char **argv)
     return -1;
   }
   if (argc == 1) {
-          radio = lastfm_neighbours_radio_url(user_cfg_get_username());
+          radio = lastfm_radio_url(LASTFM_NEIGHBOURS_RADIO,
+                                   user_cfg_get_username());
   } else {
           radio = g_strdup(argv[1]);
   }
