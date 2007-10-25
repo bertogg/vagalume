@@ -131,7 +131,7 @@ create_menu_bar(lastfm_mainwin *w)
         GtkMenuItem *lastfm, *radio, *help;
         GtkMenuShell *lastfmsub, *radiosub, *helpsub;
         GtkWidget *settings, *quit;
-        GtkWidget *personal, *neigh, *loved, *recomm;
+        GtkWidget *personal, *neigh, *loved, *playlist, *recomm;
         GtkWidget *about;
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_bar_new());
 
@@ -153,12 +153,14 @@ create_menu_bar(lastfm_mainwin *w)
         personal = gtk_menu_item_new_with_mnemonic("_Personal");
         neigh = gtk_menu_item_new_with_mnemonic("_Neighbours");
         loved = gtk_menu_item_new_with_mnemonic("_Loved tracks");
+        playlist = gtk_menu_item_new_with_mnemonic("Pl_aylist");
         recomm = gtk_menu_item_new_with_mnemonic("R_ecommendations");
         gtk_menu_shell_append(bar, GTK_WIDGET(radio));
         gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
         gtk_menu_shell_append(radiosub, personal);
         gtk_menu_shell_append(radiosub, neigh);
         gtk_menu_shell_append(radiosub, loved);
+        gtk_menu_shell_append(radiosub, playlist);
         gtk_menu_shell_append(radiosub, recomm);
         g_signal_connect(G_OBJECT(personal), "activate",
                          G_CALLBACK(radio_selected),
@@ -169,6 +171,9 @@ create_menu_bar(lastfm_mainwin *w)
         g_signal_connect(G_OBJECT(loved), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_LOVEDTRACKS_RADIO));
+        g_signal_connect(G_OBJECT(playlist), "activate",
+                         G_CALLBACK(radio_selected),
+                         GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
         g_signal_connect(G_OBJECT(recomm), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_RECOMMENDED_RADIO));

@@ -34,7 +34,7 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 
                 g_main_loop_quit (loop);
                 gdk_threads_enter ();
-                controller_stop_playing();
+                controller_skip_track();
                 gdk_threads_leave ();
                 break;
         }
