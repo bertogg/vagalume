@@ -203,6 +203,8 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
                 return;
         } else if (radio_url) {
                 controller_play_radio_by_url(radio_url);
+        } else {
+                check_usercfg();
         }
 
         gtk_main();
