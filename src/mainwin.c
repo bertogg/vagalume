@@ -219,10 +219,10 @@ lastfm_mainwin_create(void)
         /* Window */
         w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(w->window), "Last.fm");
-        gtk_container_set_border_width(GTK_CONTAINER(w->window), 10);
+        gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
         /* Boxes */
         hbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
-        vbox = GTK_BOX(gtk_vbox_new(TRUE, 0));
+        vbox = GTK_BOX(gtk_vbox_new(FALSE, 0));
         /* Buttons */
         w->play = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
         w->stop = gtk_button_new_from_stock(GTK_STOCK_MEDIA_STOP);
@@ -239,16 +239,20 @@ lastfm_mainwin_create(void)
         gtk_misc_set_alignment(GTK_MISC(w->artist), 0, 0);
         gtk_misc_set_alignment(GTK_MISC(w->track), 0, 0);
         gtk_misc_set_alignment(GTK_MISC(w->album), 0, 0);
+        gtk_misc_set_padding(GTK_MISC(w->playlist), 10, 0);
+        gtk_misc_set_padding(GTK_MISC(w->artist), 10, 0);
+        gtk_misc_set_padding(GTK_MISC(w->track), 10, 0);
+        gtk_misc_set_padding(GTK_MISC(w->album), 10, 0);
         gtk_container_add(GTK_CONTAINER(w->window), GTK_WIDGET(vbox));
         gtk_box_pack_start(hbox, w->play, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->stop, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->next, TRUE, TRUE, 5);
         gtk_box_pack_start(vbox, menubar, FALSE, FALSE, 0);
-        gtk_box_pack_start(vbox, w->playlist, FALSE, FALSE, 0);
-        gtk_box_pack_start(vbox, GTK_WIDGET(hbox), TRUE, TRUE, 0);
-        gtk_box_pack_start(vbox, w->artist, FALSE, FALSE, 0);
-        gtk_box_pack_start(vbox, w->track, FALSE, FALSE, 0);
-        gtk_box_pack_start(vbox, w->album, FALSE, FALSE, 0);
+        gtk_box_pack_start(vbox, w->playlist, TRUE, TRUE, 5);
+        gtk_box_pack_start(vbox, GTK_WIDGET(hbox), TRUE, TRUE, 5);
+        gtk_box_pack_start(vbox, w->artist, TRUE, TRUE, 5);
+        gtk_box_pack_start(vbox, w->track, TRUE, TRUE, 5);
+        gtk_box_pack_start(vbox, w->album, TRUE, TRUE, 5);
         /* Signals */
         g_signal_connect(G_OBJECT(w->play), "clicked",
                          G_CALLBACK(play_clicked), NULL);
