@@ -38,7 +38,14 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
                 gdk_threads_leave ();
                 break;
         }
+        case GST_MESSAGE_STATE_CHANGED:
+        case GST_MESSAGE_TAG:
+        case GST_MESSAGE_CLOCK_PROVIDE:
+        case GST_MESSAGE_NEW_CLOCK:
+                break;
         default:
+                g_debug ("GStreamer message received: %d",
+                         GST_MESSAGE_TYPE(msg));
                 break;
         }
 
