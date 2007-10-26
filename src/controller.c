@@ -55,12 +55,20 @@ check_session(void)
         gboolean retvalue = FALSE;
         check_usercfg();
         if (usercfg != NULL) {
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
+                while (gtk_events_pending()) gtk_main_iteration();
                 session = lastfm_session_new(usercfg->username,
                                              usercfg->password,
                                              &err);
         }
         if (session == NULL || session->id == NULL) {
-                if (err == LASTFM_ERR_LOGIN) {
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED);
+                if (usercfg == NULL) {
+                        show_dialog("You need to enter your Last.fm\n"
+                                    "username and password to be able\n"
+                                    "to use this program.",
+                                    GTK_MESSAGE_WARNING);
+                } else if (err == LASTFM_ERR_LOGIN) {
                         show_dialog("Unable to login to Last.fm\n"
                                     "Check user and password",
                                     GTK_MESSAGE_WARNING);
