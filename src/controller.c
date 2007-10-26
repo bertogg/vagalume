@@ -1,5 +1,6 @@
 
 #include <gtk/gtk.h>
+#include <string.h>
 
 #include "controller.h"
 #include "protocol.h"
@@ -149,6 +150,26 @@ controller_play_radio(lastfm_radio type)
                 url = lastfm_radio_url(type, usercfg->username);
         }
         controller_play_radio_by_url(url);
+        g_free(url);
+}
+
+void
+controller_play_radio_ask_url(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        char *url = NULL;
+        url = ui_input_dialog(GTK_WINDOW(mainwin->window),
+                              "Enter radio URL",
+                              "Enter the URL of the Last.fm radio",
+                              "lastfm://");
+        if (url != NULL) {
+                if (!strncmp(url, "lastfm://", 9)) {
+                        controller_play_radio_by_url(url);
+                } else {
+                        show_dialog("Last.fm radio URLs must start with "
+                                    "lastfm://", GTK_MESSAGE_INFO);
+                }
+        }
         g_free(url);
 }
 

@@ -1,6 +1,5 @@
 
 #include <gtk/gtk.h>
-#include <string.h>
 
 #include "controller.h"
 #include "mainwin.h"
@@ -14,6 +13,7 @@ static const char *authors[] = {
 
 static const char *appname = "Last.fm player";
 static const char *appdescr = "A small (and still unnamed) Last.fm player";
+static const char *copyright = "(c) 2007 Alberto Garcia Gonzalez";
 
 void
 mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
@@ -118,21 +118,7 @@ radio_selected(GtkWidget *widget, gpointer data)
 static void
 url_radio_selected(GtkWidget *widget, gpointer data)
 {
-        GtkWindow *win = GTK_WINDOW(data);
-        char *url;
-        url = ui_input_dialog(win, "Enter radio URL",
-                              "Enter the URL of the Last.fm radio",
-                              "lastfm://");
-        if (url != NULL) {
-                if (!strncmp(url, "lastfm://", 9)) {
-                        controller_play_radio_by_url(url);
-                } else {
-                        ui_info_dialog(win,
-                                       "Last.fm radio URLs must start with "
-                                       "lastfm://");
-                }
-                g_free(url);
-        }
+        controller_play_radio_ask_url();
 }
 
 static void
@@ -140,7 +126,8 @@ show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
         gtk_show_about_dialog(win, "name", appname, "authors", authors,
-                              "comments", appdescr, NULL);
+                              "comments", appdescr, "copyright", copyright,
+                              NULL);
 }
 
 static void
@@ -206,7 +193,7 @@ create_menu_bar(lastfm_mainwin *w)
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_RECOMMENDED_RADIO));
         g_signal_connect(G_OBJECT(urlradio), "activate",
-                         G_CALLBACK(url_radio_selected), w->window);
+                         G_CALLBACK(url_radio_selected), NULL);
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));
