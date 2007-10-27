@@ -98,12 +98,16 @@ read_usercfg(void)
                 if ((val = cfg_get_val(buf, "username")) != NULL) {
                         lastfm_usercfg_set_username(cfg, val);
                 } else if ((val = cfg_get_val(buf, "password")) != NULL) {
+#ifdef MAEMO
+                        lastfm_usercfg_set_password(cfg, val);
+#else
                         gsize len;
                         char *pw = (char *) g_base64_decode(val, &len);
                         pw = g_realloc(pw, len+1);
                         pw[len] = '\0';
                         lastfm_usercfg_set_password(cfg, pw);
                         g_free(pw);
+#endif
                 } else if ((val = cfg_get_val(buf, "discovery")) != NULL) {
                         if (!strcmp(val, "1")) {
                                 cfg->discovery_mode = TRUE;
@@ -131,8 +135,12 @@ write_usercfg(lastfm_usercfg *cfg)
                 g_warning("Unable to write config file");
                 return FALSE;
         }
+#ifdef MAEMO
+        base64pw = g_strdup(cfg->password);
+#else
         base64pw = g_base64_encode((guchar *)cfg->password,
                                    strlen(cfg->password));
+#endif
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n",
                     cfg->username, base64pw) <= 0) {
                 g_warning("Error writing to config file");
