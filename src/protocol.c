@@ -157,13 +157,13 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
                 } else if (!xmlStrcmp(name, (xmlChar *) "title")) {
                         track->title = g_strdup(val);
                 } else if (!xmlStrcmp(name, (xmlChar *) "id")) {
-                        track->id = g_ascii_strtoll(val, NULL, 10);
+                        track->id = strtoll(val, NULL, 10);
                 } else if (!xmlStrcmp(name, (xmlChar *) "creator")) {
                         track->artist = g_strdup(val);
                 } else if (!xmlStrcmp(name, (xmlChar *) "album")) {
                         track->album = g_strdup(val);
                 } else if (!xmlStrcmp(name, (xmlChar *) "duration")) {
-                        track->duration = g_ascii_strtoll(val, NULL, 10);
+                        track->duration = strtoll(val, NULL, 10);
                 } else if (!xmlStrcmp(name, (xmlChar *) "image")) {
                         track->image_url = g_strdup(val);
                 }
