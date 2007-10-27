@@ -75,7 +75,7 @@ check_session(void)
                                     GTK_MESSAGE_WARNING);
                 } else if (err == LASTFM_ERR_LOGIN) {
                         show_dialog("Unable to login to Last.fm\n"
-                                    "Check user and password",
+                                    "Check username and password",
                                     GTK_MESSAGE_WARNING);
                 } else {
                         show_dialog("Network connection error",
@@ -202,14 +202,13 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         gtk_widget_show_all(mainwin->window);
 
         http_init();
+        usercfg = read_usercfg();
         if (!lastfm_audio_init()) {
                 show_dialog("Error initializing audio system",
                             GTK_MESSAGE_ERROR);
                 return;
         } else if (radio_url) {
                 controller_play_radio_by_url(radio_url);
-        } else {
-                check_usercfg();
         }
 
         gtk_main();
