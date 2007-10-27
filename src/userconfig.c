@@ -104,7 +104,6 @@ read_usercfg(void)
                         pw[len] = '\0';
                         lastfm_usercfg_set_password(cfg, pw);
                         g_free(pw);
-                        g_free(val);
                 } else if ((val = cfg_get_val(buf, "discovery")) != NULL) {
                         if (!strcmp(val, "1")) {
                                 cfg->discovery_mode = TRUE;
@@ -112,6 +111,7 @@ read_usercfg(void)
                                 cfg->discovery_mode = FALSE;
                         }
                 }
+                g_free(val);
         }
         fclose(fd);
         return cfg;
