@@ -230,7 +230,6 @@ lastfm_mainwin_create(void)
 #else
         w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 #endif
-        gtk_window_set_title(GTK_WINDOW(w->window), "Last.fm");
         gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
         /* Boxes */
         hbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
