@@ -1,4 +1,6 @@
-MAEMO=yes
+ifeq ($(shell uname -m),arm)
+	MAEMO=yes
+endif
 
 CFLAGS=-O0 -g -Wall $(shell pkg-config --cflags gtk+-2.0 \
 	gstreamer-0.10 libxml-2.0)
