@@ -1,6 +1,10 @@
 
 #include <gtk/gtk.h>
 
+#ifdef MAEMO
+#include <hildon-widgets/hildon-program.h>
+#endif
+
 #include "controller.h"
 #include "mainwin.h"
 #include "radio.h"
@@ -137,14 +141,18 @@ open_user_settings(GtkWidget *widget, gpointer data)
 }
 
 static GtkWidget *
-create_menu_bar(lastfm_mainwin *w)
+create_main_menu(lastfm_mainwin *w)
 {
         GtkMenuItem *lastfm, *radio, *help;
         GtkMenuShell *lastfmsub, *radiosub, *helpsub;
         GtkWidget *settings, *quit;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *urlradio;
         GtkWidget *about;
+#ifdef MAEMO
+        GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_new());
+#else
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_bar_new());
+#endif
 
         /* Last.fm */
         lastfm = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Last.fm"));
@@ -215,9 +223,13 @@ lastfm_mainwin_create(void)
 {
         lastfm_mainwin *w = g_new0(lastfm_mainwin, 1);
         GtkBox *hbox, *vbox;
-        GtkWidget *menubar;
+        GtkWidget *menu;
         /* Window */
+#ifdef MAEMO
+        w->window = hildon_window_new();
+#else
         w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+#endif
         gtk_window_set_title(GTK_WINDOW(w->window), "Last.fm");
         gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
         /* Boxes */
@@ -233,7 +245,7 @@ lastfm_mainwin_create(void)
         w->track = gtk_label_new(NULL);
         w->album = gtk_label_new(NULL);
         /* Menu */
-        menubar = create_menu_bar(w);
+        menu = create_main_menu(w);
         /* Layout */
         gtk_misc_set_alignment(GTK_MISC(w->playlist), 0, 0);
         gtk_misc_set_alignment(GTK_MISC(w->artist), 0, 0);
@@ -247,7 +259,11 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(hbox, w->play, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->stop, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->next, TRUE, TRUE, 5);
-        gtk_box_pack_start(vbox, menubar, FALSE, FALSE, 0);
+#ifdef MAEMO
+        hildon_window_set_menu(HILDON_WINDOW(w->window), GTK_MENU(menu));
+#else
+        gtk_box_pack_start(vbox, menu, FALSE, FALSE, 0);
+#endif
         gtk_box_pack_start(vbox, w->playlist, TRUE, TRUE, 5);
         gtk_box_pack_start(vbox, GTK_WIDGET(hbox), TRUE, TRUE, 5);
         gtk_box_pack_start(vbox, w->artist, TRUE, TRUE, 5);

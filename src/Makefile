@@ -1,8 +1,14 @@
+MAEMO=yes
 
 CFLAGS=-O0 -g -Wall $(shell pkg-config --cflags gtk+-2.0 \
 	gstreamer-0.10 libxml-2.0)
 LDFLAGS=$(shell pkg-config --libs gtk+-2.0 gstreamer-0.10 \
 	libcurl libxml-2.0)
+
+ifeq ($(MAEMO),yes)
+	CFLAGS+=$(shell pkg-config --cflags hildon-libs) -DMAEMO
+	LDFLAGS+=$(shell pkg-config --libs hildon-libs)
+endif
 
 default: main
 
