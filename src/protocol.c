@@ -8,14 +8,11 @@
 #include "http.h"
 #include "md5.h"
 #include "protocol.h"
-
-#define CLIENT_VERSION "0.1"
-#define CLIENT_PLATFORM "linux"
+#include "globaldefs.h"
 
 static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
-       "?version=" CLIENT_VERSION
-       "&platform=" CLIENT_PLATFORM;
+       "?version=" APP_VERSION "&platform=" APP_PLATFORM;
 
 static char *
 get_md5_hash(const char *str)
@@ -131,7 +128,7 @@ lastfm_request_xsfp(lastfm_session *s, char **buffer, size_t *size)
 
         url = g_strconcat("http://", s->base_url, s->base_path,
                           "/xspf.php?sk=", s->id,
-                          "&discovery=0&desktop=" CLIENT_VERSION, NULL);
+                          "&discovery=0&desktop=" APP_VERSION, NULL);
         http_get_buffer(url, buffer, size);
         g_free(url);
 }

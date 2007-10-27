@@ -9,14 +9,14 @@
 #include "mainwin.h"
 #include "radio.h"
 #include "uimisc.h"
+#include "globaldefs.h"
 
 static const char *authors[] = {
-        "Alberto Garcia <agarcia@igalia.com>",
+        "Alberto Garcia\n<agarcia@igalia.com>",
         NULL
 };
 
-static const char *appname = "Last.fm player";
-static const char *appdescr = "A small (and still unnamed) Last.fm player";
+static const char *appdescr = "A Last.fm player\nfor GNOME and Maemo";
 static const char *copyright = "(c) 2007 Alberto Garcia Gonzalez";
 
 void
@@ -129,7 +129,7 @@ static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
-        gtk_show_about_dialog(win, "name", appname, "authors", authors,
+        gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", appdescr, "copyright", copyright,
                               NULL);
 }

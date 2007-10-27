@@ -3,6 +3,7 @@
 
 #include "controller.h"
 #include "mainwin.h"
+#include "globaldefs.h"
 
 int
 main (int argc, char **argv)
@@ -25,7 +26,7 @@ main (int argc, char **argv)
   gdk_threads_init ();
   gdk_threads_enter ();
   gtk_init (&argc, &argv);
-  g_set_application_name("Last.fm");
+  g_set_application_name(APP_NAME);
 
   mainwin = lastfm_mainwin_create();
   controller_run_app(mainwin, radio);
