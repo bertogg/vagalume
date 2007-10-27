@@ -16,5 +16,6 @@ void controller_play_radio_ask_url(void);
 void controller_open_usercfg(void);
 void controller_quit_app(void);
 void controller_run_app(lastfm_mainwin *win, const char *radio_url);
+void controller_show_warning(const char *text);
 
 #endif

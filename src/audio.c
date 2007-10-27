@@ -10,6 +10,8 @@ static GstElement *source = NULL;
 static GstElement *decoder = NULL;
 static GstElement *sink = NULL;
 
+static int failed_tracks = 0;
+
 static gboolean
 bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 {
@@ -19,6 +21,7 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
         case GST_MESSAGE_EOS:
                 g_main_loop_quit (loop);
                 gdk_threads_enter ();
+                failed_tracks = 0;
                 controller_skip_track();
                 gdk_threads_leave ();
                 break;
@@ -34,7 +37,13 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 
                 g_main_loop_quit (loop);
                 gdk_threads_enter ();
-                controller_skip_track();
+                if (++failed_tracks == 3) {
+                        failed_tracks = 0;
+                        controller_show_warning("Connection error");
+                        controller_stop_playing();
+                } else {
+                        controller_skip_track();
+                }
                 gdk_threads_leave ();
                 break;
         }

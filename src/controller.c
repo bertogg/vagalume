@@ -22,6 +22,11 @@ show_dialog(const char *text, GtkMessageType type)
         ui_info_dialog(GTK_WINDOW(mainwin->window), text, type);
 }
 
+void controller_show_warning(const char *text)
+{
+        show_dialog(text, GTK_MESSAGE_WARNING);
+}
+
 void
 controller_open_usercfg(void)
 {
