@@ -42,13 +42,17 @@ show_dialog(const char *text, GtkMessageType type)
 static gboolean
 controller_show_progress(gpointer data)
 {
-        g_return_val_if_fail(mainwin != NULL, FALSE);
-        if (nowplaying != NULL && session != NULL) {
+        lastfm_track *tr = (lastfm_track *) data;
+        g_return_val_if_fail(mainwin != NULL && tr != NULL, FALSE);
+        if (nowplaying && session && tr->id == nowplaying->id) {
                 guint played = time(NULL) - nowplaying_since;
                 guint length = nowplaying->duration/1000;
                 mainwin_show_progress(mainwin, length, played);
+                return TRUE;
+        } else {
+                lastfm_track_destroy(tr);
+                return FALSE;
         }
-        return TRUE;
 }
 
 static gpointer
@@ -255,6 +259,9 @@ controller_start_playing(void)
         lastfm_audio_play(track->stream_url);
         ui_update_track_info(track);
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING);
+        track = lastfm_track_copy(track);
+        controller_show_progress(track);
+        g_timeout_add(1000, controller_show_progress, track);
 }
 
 void
@@ -349,7 +356,6 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         } else if (radio_url) {
                 controller_play_radio_by_url(radio_url);
         }
-        g_timeout_add(1000, controller_show_progress, NULL);
 
         gtk_main();
 }

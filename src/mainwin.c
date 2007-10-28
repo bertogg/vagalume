@@ -53,9 +53,8 @@ mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
         char *count;
         gdouble fraction = 0;
         if (length != 0) {
+                if (played > length) played = length;
                 fraction = (gdouble)played / length;
-                if (fraction < 0) fraction = 0;
-                else if (fraction > 1) fraction = 1;
                 count = g_strdup_printf("%u:%02u / %u:%02u", played/60,
                                         played%60, length/60, length%60);
         } else {
