@@ -247,11 +247,15 @@ controller_start_playing(void)
         g_return_if_fail(mainwin != NULL);
         if (!check_session()) return;
         if (lastfm_pls_size(session->playlist) == 0) {
-                if (!lastfm_request_playlist(session)) {
+                lastfm_pls *pls = lastfm_request_playlist(session);
+                if (pls == NULL) {
                         controller_stop_playing();
                         show_dialog("No more content to play",
                                     GTK_MESSAGE_INFO);
                         return;
+                } else {
+                        lastfm_pls_merge(session->playlist, pls);
+                        lastfm_pls_destroy(pls);
                 }
         }
         track = lastfm_pls_get_track(session->playlist);

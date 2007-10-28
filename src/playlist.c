@@ -140,3 +140,22 @@ lastfm_pls_destroy(lastfm_pls *pls)
         g_free(pls->title);
         g_free(pls);
 }
+
+/**
+ * Merges two playlists, appending the contents of the second to the
+ * end of the first one. The second playlist is cleared (but not
+ * destroyed).
+ * It also copies the title from the second playlist to the first
+ * @param pls1 The first playlist
+ * @param pls2 The second playlist (empty after this operation)
+ */
+void
+lastfm_pls_merge(lastfm_pls *pls1, lastfm_pls *pls2)
+{
+        g_return_if_fail(pls1 != NULL && pls2 != NULL);
+        lastfm_track *track;
+        while ((track = lastfm_pls_get_track(pls2)) != NULL) {
+                lastfm_pls_add_track(pls1, track);
+        }
+        lastfm_pls_set_title(pls1, pls2->title);
+}

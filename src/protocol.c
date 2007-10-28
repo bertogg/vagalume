@@ -245,24 +245,29 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
         return (pls_size < lastfm_pls_size(pls));
 }
 
-gboolean
+lastfm_pls *
 lastfm_request_playlist(lastfm_session *s)
 {
         g_return_val_if_fail(s != NULL && s->playlist != NULL, FALSE);
         char *buffer = NULL;
         size_t bufsize = 0;
         xmlDoc *doc = NULL;
-        gboolean retval = FALSE;
+        lastfm_pls *pls = NULL;
 
         lastfm_request_xsfp(s, &buffer, &bufsize);
         if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
-                retval = lastfm_parse_playlist(doc, s->playlist);
+                pls = lastfm_pls_new(NULL);
+                lastfm_parse_playlist(doc, pls);
+                if (lastfm_pls_size(pls) == 0) {
+                        lastfm_pls_destroy(pls);
+                        pls = NULL;
+                }
                 xmlFreeDoc(doc);
         }
         xmlCleanupParser();
         g_free(buffer);
-        return retval;
+        return pls;
 }
 
 gboolean

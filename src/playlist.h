@@ -35,5 +35,6 @@ lastfm_pls *lastfm_pls_new(const char *title);
 void lastfm_pls_set_title(lastfm_pls *pls, const char *title);
 void lastfm_pls_clear(lastfm_pls *pls);
 void lastfm_pls_destroy(lastfm_pls *pls);
+void lastfm_pls_merge(lastfm_pls *pls1, lastfm_pls *pls2);
 
 #endif
