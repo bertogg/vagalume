@@ -74,8 +74,20 @@ lastfm_session_destroy(lastfm_session *session)
         g_free(session->stream_url);
         g_free(session->base_url);
         g_free(session->base_path);
-        lastfm_pls_destroy(session->playlist);
         g_free(session);
+}
+
+lastfm_session *
+lastfm_session_copy(const lastfm_session *session)
+{
+        if (session == NULL) return NULL;
+        lastfm_session *s = g_new0(lastfm_session, 1);
+        *s = *session;
+        s->id = g_strdup(session->id);
+        s->stream_url = g_strdup(session->stream_url);
+        s->base_url = g_strdup(session->base_url);
+        s->base_path = g_strdup(session->base_path);
+        return s;
 }
 
 lastfm_session *
@@ -102,7 +114,6 @@ lastfm_session_new(const char *username, const char *password,
         g_free(buffer);
 
         lastfm_session *s = g_new0(lastfm_session, 1);
-        s->playlist = lastfm_pls_new(NULL);
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
         s->stream_url = g_strdup(g_hash_table_lookup(response, "stream_url"));
         s->base_url = g_strdup(g_hash_table_lookup(response, "base_url"));
@@ -248,7 +259,7 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
 lastfm_pls *
 lastfm_request_playlist(lastfm_session *s)
 {
-        g_return_val_if_fail(s != NULL && s->playlist != NULL, FALSE);
+        g_return_val_if_fail(s != NULL, FALSE);
         char *buffer = NULL;
         size_t bufsize = 0;
         xmlDoc *doc = NULL;
@@ -273,8 +284,8 @@ lastfm_request_playlist(lastfm_session *s)
 gboolean
 lastfm_set_radio(lastfm_session *s, const char *radio_url)
 {
-        g_return_val_if_fail(s != NULL && s->playlist != NULL &&
-                             s->id != NULL && s->base_url != NULL &&
+        g_return_val_if_fail(s != NULL && s->id != NULL &&
+                             s->base_url != NULL &&
                              s->base_path && radio_url != NULL, FALSE);
         char *buffer = NULL;
         gboolean retval = FALSE;
@@ -290,7 +301,6 @@ lastfm_set_radio(lastfm_session *s, const char *radio_url)
 
         if (buffer != NULL) {
                 if (g_strrstr(buffer, "OK")) {
-                        lastfm_pls_clear(s->playlist);
                         retval = TRUE;
                 }
         }

@@ -21,6 +21,7 @@
 #include "globaldefs.h"
 
 static lastfm_session *session = NULL;
+static lastfm_pls *playlist = NULL;
 static rsp_session *rsp_sess = NULL;
 static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
@@ -220,12 +221,12 @@ check_session(void)
 static void
 ui_update_track_info(lastfm_track *track)
 {
-        g_return_if_fail(session != NULL && track != NULL && mainwin != NULL);
-        const char *playlist = session->playlist->title;
+        g_return_if_fail(playlist != NULL && track != NULL && mainwin != NULL);
+        const char *pls = playlist->title;
         const char *artist = track->artist;
         const char *title = track->title;
         const char *album = track->album;
-        mainwin_update_track_info(mainwin, playlist, artist, title, album);
+        mainwin_update_track_info(mainwin, pls, artist, title, album);
 }
 
 void
@@ -244,9 +245,9 @@ void
 controller_start_playing(void)
 {
         lastfm_track *track = NULL;
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(mainwin != NULL && playlist != NULL);
         if (!check_session()) return;
-        if (lastfm_pls_size(session->playlist) == 0) {
+        if (lastfm_pls_size(playlist) == 0) {
                 lastfm_pls *pls = lastfm_request_playlist(session);
                 if (pls == NULL) {
                         controller_stop_playing();
@@ -254,11 +255,11 @@ controller_start_playing(void)
                                     GTK_MESSAGE_INFO);
                         return;
                 } else {
-                        lastfm_pls_merge(session->playlist, pls);
+                        lastfm_pls_merge(playlist, pls);
                         lastfm_pls_destroy(pls);
                 }
         }
-        track = lastfm_pls_get_track(session->playlist);
+        track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
         lastfm_audio_play(track->stream_url);
         ui_update_track_info(track);
@@ -286,6 +287,7 @@ controller_play_radio_by_url(const char *url)
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
         } else if (lastfm_set_radio(session, url)) {
+                lastfm_pls_clear(playlist);
                 controller_skip_track();
         } else {
                 controller_stop_playing();
@@ -345,6 +347,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 
         http_init();
         usercfg = read_usercfg();
+        playlist = lastfm_pls_new(NULL);
 
 #ifdef MAEMO
         if (!osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL)) {

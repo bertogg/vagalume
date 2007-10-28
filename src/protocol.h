@@ -24,7 +24,6 @@ typedef struct {
         gboolean subscriber;
         char *base_url;
         char *base_path;
-        lastfm_pls *playlist;
 } lastfm_session;
 
 lastfm_session *lastfm_session_new(const char *username,
