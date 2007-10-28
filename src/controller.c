@@ -188,7 +188,7 @@ check_session(void)
         check_usercfg();
         if (usercfg != NULL) {
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
-                while (gtk_events_pending()) gtk_main_iteration();
+                flush_ui_events();
                 session = lastfm_session_new(usercfg->username,
                                              usercfg->password,
                                              &err);
@@ -241,23 +241,38 @@ controller_stop_playing(void)
         }
 }
 
+static gpointer
+start_playing_get_pls_thread(gpointer data)
+{
+        lastfm_session *s = (lastfm_session *) data;
+        g_return_val_if_fail(s != NULL, NULL);
+        lastfm_pls *pls = lastfm_request_playlist(s);
+        gdk_threads_enter();
+        if (pls == NULL) {
+                controller_stop_playing();
+                show_dialog("No more content to play", GTK_MESSAGE_INFO);
+        } else {
+                lastfm_pls_merge(playlist, pls);
+                lastfm_pls_destroy(pls);
+                controller_start_playing();
+        }
+        gdk_threads_leave();
+        lastfm_session_destroy(s);
+        return NULL;
+}
+
 void
 controller_start_playing(void)
 {
         lastfm_track *track = NULL;
         g_return_if_fail(mainwin != NULL && playlist != NULL);
         if (!check_session()) return;
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
+        flush_ui_events();
         if (lastfm_pls_size(playlist) == 0) {
-                lastfm_pls *pls = lastfm_request_playlist(session);
-                if (pls == NULL) {
-                        controller_stop_playing();
-                        show_dialog("No more content to play",
-                                    GTK_MESSAGE_INFO);
-                        return;
-                } else {
-                        lastfm_pls_merge(playlist, pls);
-                        lastfm_pls_destroy(pls);
-                }
+                lastfm_session *s = lastfm_session_copy(session);
+                g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
+                return;
         }
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
@@ -274,8 +289,6 @@ controller_skip_track(void)
 {
         g_return_if_fail(mainwin != NULL);
         controller_stop_playing();
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
-        while (gtk_events_pending()) gtk_main_iteration();
         controller_start_playing();
 }
 

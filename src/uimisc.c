@@ -12,6 +12,12 @@
 #include "userconfig.h"
 
 void
+flush_ui_events(void)
+{
+        while (gtk_events_pending()) gtk_main_iteration();
+}
+
+void
 ui_info_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
 {
         g_return_if_fail(text != NULL);
