@@ -15,7 +15,7 @@ endif
 default: main
 
 main: main.o protocol.o playlist.o userconfig.o radio.o md5.o http.o \
-	audio.o mainwin.o controller.o uimisc.o
+	audio.o mainwin.o controller.o uimisc.o scrobbler.o
 
 clean:
 	rm -f main *.o

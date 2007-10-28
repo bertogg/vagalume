@@ -14,7 +14,7 @@ static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
        "?version=" APP_VERSION "&platform=" APP_PLATFORM;
 
-static char *
+char *
 get_md5_hash(const char *str)
 {
         g_return_val_if_fail(str != NULL, NULL);
@@ -163,6 +163,8 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
                         track->duration = strtoll(val, NULL, 10);
                 } else if (!xmlStrcmp(name, (xmlChar *) "image")) {
                         track->image_url = g_strdup(val);
+                } else if (!xmlStrcmp(name, (xmlChar *) "trackauth")) {
+                        track->trackauth = g_strdup(val);
                 }
                 xmlFree((xmlChar *)val);
                 node = node->next;

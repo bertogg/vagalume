@@ -1,9 +1,11 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
+#include <time.h>
 
 #include "controller.h"
 #include "protocol.h"
+#include "scrobbler.h"
 #include "playlist.h"
 #include "mainwin.h"
 #include "audio.h"
@@ -12,14 +14,116 @@
 #include "http.h"
 
 static lastfm_session *session = NULL;
+static rsp_session *rsp_sess = NULL;
 static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
+static lastfm_track *nowplaying = NULL;
+static time_t nowplaying_since = 0;
+
+typedef struct {
+        lastfm_track *track;
+        time_t start;
+} rsp_data;
 
 static void
 show_dialog(const char *text, GtkMessageType type)
 {
         g_return_if_fail(mainwin != NULL);
         ui_info_dialog(GTK_WINDOW(mainwin->window), text, type);
+}
+
+static gpointer
+scrobble_track_thread(gpointer data)
+{
+        rsp_data *d = (rsp_data *) data;
+        rsp_session *s = NULL;
+        g_return_val_if_fail(d != NULL && d->track != NULL && d->start > 0,
+                             FALSE);
+        gdk_threads_enter();
+        s = rsp_session_copy(rsp_sess);
+        gdk_threads_leave();
+        if (s != NULL) {
+                rsp_scrobble(s, d->track, d->start);
+                rsp_session_destroy(s);
+        }
+        lastfm_track_destroy(d->track);
+        g_free(d);
+        return NULL;
+}
+
+static void
+controller_scrobble_track(void)
+{
+        g_return_if_fail(nowplaying != NULL && nowplaying_since > 0);
+        if (rsp_sess == NULL) return;
+        if (nowplaying->duration > 30000) {
+                time_t played = time(NULL) - nowplaying_since;
+                if (played > 240 || played > (nowplaying->duration/2000)) {
+                        rsp_data *d = g_new0(rsp_data, 1);
+                        d->track = lastfm_track_copy(nowplaying);
+                        d->start = nowplaying_since;
+                        g_thread_create(scrobble_track_thread,d,FALSE,NULL);
+                }
+        }
+}
+
+static gpointer
+set_nowplaying_thread(gpointer data)
+{
+        rsp_data *d = (rsp_data *) data;
+        g_return_val_if_fail(d != NULL && d->track != NULL, FALSE);
+        rsp_session *s = NULL;
+        gboolean set_np = FALSE;
+        g_usleep(10 * G_USEC_PER_SEC);
+        gdk_threads_enter();
+        if (nowplaying && nowplaying->id == d->track->id && rsp_sess) {
+                s = rsp_session_copy(rsp_sess);
+                set_np = TRUE;
+        }
+        gdk_threads_leave();
+        if (set_np) {
+                rsp_set_nowplaying(s, d->track);
+                rsp_session_destroy(s);
+        }
+        lastfm_track_destroy(d->track);
+        g_free(d);
+        return NULL;
+}
+
+static void
+controller_set_nowplaying(lastfm_track *track)
+{
+        if (nowplaying != NULL) {
+                lastfm_track_destroy(nowplaying);
+        }
+        nowplaying = track;
+        nowplaying_since = time(NULL);
+        if (track != NULL) {
+                rsp_data *d = g_new0(rsp_data, 1);
+                d->track = lastfm_track_copy(track);
+                d->start = 0;
+                g_thread_create(set_nowplaying_thread,d,FALSE,NULL);
+        }
+}
+
+static gpointer
+rsp_session_init_thread(gpointer data)
+{
+        g_return_val_if_fail(usercfg != NULL && rsp_sess == NULL, NULL);
+        gdk_threads_enter();
+        char *username = g_strdup(usercfg->username);
+        char *password = g_strdup(usercfg->password);
+        gdk_threads_leave();
+        if (username && password) {
+                rsp_session *s = rsp_session_new(username, password, NULL);
+                gdk_threads_enter();
+                rsp_session_destroy(rsp_sess);
+                rsp_sess = s;
+                gdk_threads_leave();
+        }
+        g_free(username);
+        g_free(password);
+        return NULL;
 }
 
 void controller_show_warning(const char *text)
@@ -83,6 +187,10 @@ check_session(void)
                 }
         } else {
                 retvalue = TRUE;
+                if (rsp_sess == NULL) {
+                        g_thread_create(rsp_session_init_thread, NULL,
+                                        FALSE, NULL);
+                }
         }
         return retvalue;
 }
@@ -104,11 +212,16 @@ controller_stop_playing(void)
         g_return_if_fail(mainwin != NULL);
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
         lastfm_audio_stop();
+        if (nowplaying != NULL) {
+                controller_scrobble_track();
+                controller_set_nowplaying(NULL);
+        }
 }
 
 void
 controller_start_playing(void)
 {
+        lastfm_track *track = NULL;
         g_return_if_fail(mainwin != NULL);
         if (!check_session()) return;
         if (lastfm_pls_size(session->playlist) == 0) {
@@ -119,10 +232,10 @@ controller_start_playing(void)
                         return;
                 }
         }
-        lastfm_track *track = lastfm_pls_get_track(session->playlist);
+        track = lastfm_pls_get_track(session->playlist);
+        controller_set_nowplaying(track);
         lastfm_audio_play(track->stream_url);
         ui_update_track_info(track);
-        lastfm_track_destroy(track);
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING);
 }
 
@@ -130,8 +243,8 @@ void
 controller_skip_track(void)
 {
         g_return_if_fail(mainwin != NULL);
+        controller_stop_playing();
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
-        lastfm_audio_stop();
         while (gtk_events_pending()) gtk_main_iteration();
         controller_start_playing();
 }

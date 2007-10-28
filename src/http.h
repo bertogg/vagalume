@@ -6,6 +6,7 @@
 
 char *escape_url(const char *url, gboolean escape);
 void http_get_buffer(const char *url, char **buffer, size_t *bufsize);
+void http_post_buffer(const char *url, const char *postdata, char **retdata);
 void http_init(void);
 
 #endif

@@ -26,5 +26,6 @@ lastfm_session *lastfm_session_new(const char *username,
 gboolean lastfm_request_playlist(lastfm_session *s);
 void lastfm_session_destroy(lastfm_session *session);
 gboolean lastfm_set_radio(lastfm_session *s, const char *radio_url);
+char *get_md5_hash(const char *str);
 
 #endif

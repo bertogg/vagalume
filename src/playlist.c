@@ -14,7 +14,29 @@ lastfm_track_destroy(lastfm_track *track)
         g_free(track->artist);
         g_free(track->album);
         g_free(track->image_url);
+        g_free(track->trackauth);
         g_free(track);
+}
+
+/**
+ * Copy a lastfm_track object
+ * @param track The object to copy, or NULL
+ * @return A newly created lastfm_track object, or NULL
+ */
+lastfm_track *
+lastfm_track_copy(const lastfm_track *track)
+{
+        if (track == NULL) return NULL;
+        lastfm_track *ret;
+        ret = g_new0(lastfm_track, 1);
+        *ret = *track;
+        ret->stream_url = g_strdup(track->stream_url);
+        ret->title = g_strdup(track->title);
+        ret->artist = g_strdup(track->artist);
+        ret->album = g_strdup(track->album);
+        ret->image_url = g_strdup(track->image_url);
+        ret->trackauth = g_strdup(track->trackauth);
+        return ret;
 }
 
 /**
