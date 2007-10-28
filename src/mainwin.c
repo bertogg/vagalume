@@ -281,6 +281,8 @@ lastfm_mainwin_create(void)
         menu = create_main_menu(w);
         /* Progress bar */
         w->progressbar = gtk_progress_bar_new();
+        gtk_progress_set_text_alignment(GTK_PROGRESS(w->progressbar),
+                                        0.5, 0.5);
         /* Layout */
         gtk_misc_set_alignment(GTK_MISC(w->playlist), 0, 0.5);
         gtk_misc_set_alignment(GTK_MISC(w->artist), 0, 0.5);
