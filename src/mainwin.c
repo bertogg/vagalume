@@ -22,7 +22,7 @@ static const char *authors[] = {
         NULL
 };
 
-static const char *appdescr = "A Last.fm player\nfor GNOME and Maemo";
+static const char *appdescr = "A Last.fm player for Gnome and Maemo";
 static const char *copyright = "(c) 2007 Alberto Garcia Gonzalez";
 
 void
@@ -172,7 +172,7 @@ show_about_dialog(GtkWidget *widget, gpointer data)
         GtkWindow *win = GTK_WINDOW(data);
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", appdescr, "copyright", copyright,
-                              NULL);
+                              "version", APP_VERSION, NULL);
 }
 
 static void
