@@ -1,0 +1,13 @@
+This package was debianized by Alberto Garcia <agarcia@igalia.com> on
+Sun, 28 Oct 2007 19:35:19 +0100.
+
+Upstream Author: Alberto Garcia Gonzalez <agarcia@igalia.com>
+
+Copyright: (c) 2007 Alberto Garcia Gonzalez
+
+License:
+
+GNU GPLv3
+
+The Debian packaging is (C) 2007, Alberto Garcia <agarcia@igalia.com> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

@@ -1,0 +1,12 @@
+Source: lastfm
+Section: user/multimedia
+Priority: extra
+Maintainer: Alberto Garcia <agarcia@igalia.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: lastfm
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: A small Last.fm player for Gnome and Maemo
+ A small Last.fm player for Gnome and Maemo

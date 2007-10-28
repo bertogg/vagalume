@@ -17,5 +17,9 @@ default: main
 main: main.o protocol.o playlist.o userconfig.o radio.o md5.o http.o \
 	audio.o mainwin.o controller.o uimisc.o scrobbler.o
 
+install: main
+	mkdir -p $(DESTDIR)/usr/bin
+	cp main $(DESTDIR)/usr/bin/lastfm
+
 clean:
 	rm -f main *.o

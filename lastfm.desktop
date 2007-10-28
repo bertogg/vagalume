@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Last.fm Player
+Exec=/usr/bin/lastfm
+X-Osso-Service=org.maemo.lastfm
+Icon=qgn_list_gene_default_app
