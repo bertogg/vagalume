@@ -9,6 +9,10 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef MAEMO
+#include <libosso.h>
+#endif
+
 #include "controller.h"
 #include "protocol.h"
 #include "scrobbler.h"

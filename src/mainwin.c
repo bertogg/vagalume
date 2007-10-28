@@ -203,7 +203,9 @@ create_main_menu(lastfm_mainwin *w)
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);
+#ifndef MAEMO
         gtk_menu_shell_append(lastfmsub, quit);
+#endif
         g_signal_connect(G_OBJECT(settings), "activate",
                          G_CALLBACK(open_user_settings), NULL);
         g_signal_connect(G_OBJECT(quit), "activate",
@@ -253,6 +255,9 @@ create_main_menu(lastfm_mainwin *w)
         gtk_menu_shell_append(helpsub, about);
         g_signal_connect(G_OBJECT(about), "activate",
                          G_CALLBACK(show_about_dialog), w->window);
+#ifdef MAEMO
+        gtk_menu_shell_append(bar, quit);
+#endif
 
         w->radiomenu = GTK_WIDGET(radio);
         w->settings = GTK_WIDGET(settings);
