@@ -32,6 +32,18 @@ show_dialog(const char *text, GtkMessageType type)
         ui_info_dialog(GTK_WINDOW(mainwin->window), text, type);
 }
 
+static gboolean
+controller_show_progress(gpointer data)
+{
+        g_return_val_if_fail(mainwin != NULL, FALSE);
+        if (nowplaying != NULL && session != NULL) {
+                guint played = time(NULL) - nowplaying_since;
+                guint length = nowplaying->duration/1000;
+                mainwin_show_progress(mainwin, length, played);
+        }
+        return TRUE;
+}
+
 static gpointer
 scrobble_track_thread(gpointer data)
 {
@@ -55,8 +67,7 @@ static void
 controller_scrobble_track(void)
 {
         g_return_if_fail(nowplaying != NULL && nowplaying_since > 0);
-        if (rsp_sess == NULL) return;
-        if (nowplaying->duration > 30000) {
+        if (rsp_sess != NULL && nowplaying->duration > 30000) {
                 time_t played = time(NULL) - nowplaying_since;
                 if (played > 240 || played > (nowplaying->duration/2000)) {
                         rsp_data *d = g_new0(rsp_data, 1);
@@ -323,6 +334,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         } else if (radio_url) {
                 controller_play_radio_by_url(radio_url);
         }
+        g_timeout_add(1000, controller_show_progress, NULL);
 
         gtk_main();
 }

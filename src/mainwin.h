@@ -7,6 +7,7 @@ typedef struct {
         GtkWidget *play, *stop, *next;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *settings;
+        GtkWidget *progressbar;
 } lastfm_mainwin;
 
 typedef enum {
@@ -21,5 +22,6 @@ void mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
                                const char *artist, const char *track,
                                const char *album);
 void mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state s);
+void mainwin_show_progress(lastfm_mainwin *w, guint length, guint played);
 
 #endif
