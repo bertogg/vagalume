@@ -52,7 +52,9 @@ rsp_session_new(const char *username, const char *password,
                 if (err != NULL) *err = LASTFM_ERR_CONN;
         } else {
                 if (!strncmp(buffer, "OK\n", 3)) {
-                        char **r = g_strsplit(buffer, "\n", 4);
+                        /* Split in 5 parts and not 4 to prevent
+                           trailing garbage from going to r[3] */
+                        char **r = g_strsplit(buffer, "\n", 5);
                         s = g_new0(rsp_session, 1);
                         if (r[0] && r[1] && r[2] && r[3]) {
                                 s->id = g_strdup(r[1]);
@@ -85,10 +87,9 @@ rsp_set_nowplaying(const rsp_session *rsp, const lastfm_track *t)
         char *buffer;
         char *retbuf = NULL;
         char *duration = NULL;
-        char *artist, *title, *album;
-        artist = t->artist ? escape_url(t->artist, TRUE) : g_strdup("");
-        title = t->title ? escape_url(t->title, TRUE) : g_strdup("");
-        album = t->album ? escape_url(t->album, TRUE) : g_strdup("");
+        char *artist = escape_url(t->artist, TRUE);
+        char *title = escape_url(t->title, TRUE);
+        char *album = escape_url(t->album, TRUE);
         if (t->duration != 0) {
                 duration = g_strdup_printf("&l=%u", t->duration / 1000);
         }
@@ -119,10 +120,9 @@ rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start)
         char *retbuf = NULL;
         char *duration = NULL;
         char *timestamp = g_strdup_printf("%lu", start);
-        char *artist, *title, *album;
-        artist = t->artist ? escape_url(t->artist, TRUE) : g_strdup("");
-        title = t->title ? escape_url(t->title, TRUE) : g_strdup("");
-        album = t->album ? escape_url(t->album, TRUE) : g_strdup("");
+        char *artist = escape_url(t->artist, TRUE);
+        char *title = escape_url(t->title, TRUE);
+        char *album = escape_url(t->album, TRUE);
         if (t->duration != 0) {
                 duration = g_strdup_printf("&l[0]=%u", t->duration/1000);
         }

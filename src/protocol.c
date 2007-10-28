@@ -138,6 +138,7 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
 {
         g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
 
+        gboolean retval = FALSE;
         const xmlChar *name;
         char *val;
         lastfm_track *track = g_new0(lastfm_track, 1);
@@ -150,33 +151,40 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
                 if (val == NULL) {
                         /* Ignore empty nodes */;
                 } else if (!xmlStrcmp(name, (xmlChar *) "location")) {
-                        track->stream_url = g_strdup(val);
+                        track->stream_url = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "title")) {
-                        track->title = g_strdup(val);
+                        track->title = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "id")) {
                         track->id = strtoll(val, NULL, 10);
                 } else if (!xmlStrcmp(name, (xmlChar *) "creator")) {
-                        track->artist = g_strdup(val);
+                        track->artist = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "album")) {
-                        track->album = g_strdup(val);
+                        track->album = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "duration")) {
                         track->duration = strtoll(val, NULL, 10);
                 } else if (!xmlStrcmp(name, (xmlChar *) "image")) {
-                        track->image_url = g_strdup(val);
+                        track->image_url = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "trackauth")) {
-                        track->trackauth = g_strdup(val);
+                        track->trackauth = g_strstrip(g_strdup(val));
                 }
                 xmlFree((xmlChar *)val);
                 node = node->next;
         }
-        if (track->stream_url == NULL || strlen(track->stream_url) == 0) {
+        if (track->stream_url == NULL || track->stream_url[0] == '\0') {
                 g_debug("Found track with no stream URL, discarding it");
-                lastfm_track_destroy(track);
-                return FALSE;
+        } else if (track->title == NULL || track->title[0] == '\0') {
+                g_debug("Found track with no title, discarding it");
+        } else if (track->artist == NULL || track->artist[0] == '\0') {
+                g_debug("Found track with no artist, discarding it");
         } else {
+                if (track->album == NULL) track->album = g_strdup("");
+                if (track->trackauth == NULL) track->trackauth = g_strdup("");
+                if (track->image_url == NULL) track->image_url = g_strdup("");
                 lastfm_pls_add_track(pls, track);
-                return TRUE;
+                retval = TRUE;
         }
+        if (!retval) lastfm_track_destroy(track);
+        return retval;
 }
 
 static gboolean
