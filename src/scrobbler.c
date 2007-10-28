@@ -131,7 +131,7 @@ rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start)
                              "&i[0]=", timestamp,
                              "&o[0]=L", t->trackauth,
                              "&n[0]=&m[0]=&r[0]=", duration, NULL);
-        http_post_buffer(rsp->np_url, buffer, &retbuf);
+        http_post_buffer(rsp->post_url, buffer, &retbuf);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Track scrobbled");
         } else if (retbuf != NULL) {
