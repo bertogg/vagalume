@@ -7,7 +7,7 @@
 
 #include "userconfig.h"
 
-#define CONFIG_FILE ".lastfmrc"
+#define CONFIG_FILE ".vagalumerc"
 
 static char *
 cfg_get_val(const char *line, const char *key)

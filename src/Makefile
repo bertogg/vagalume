@@ -8,8 +8,8 @@ LDFLAGS=$(shell pkg-config --libs gtk+-2.0 gstreamer-0.10 \
 	libcurl libxml-2.0)
 
 ifeq ($(MAEMO),yes)
-	CFLAGS+=$(shell pkg-config --cflags hildon-libs) -DMAEMO
-	LDFLAGS+=$(shell pkg-config --libs hildon-libs)
+	CFLAGS+=$(shell pkg-config --cflags hildon-libs libosso) -DMAEMO
+	LDFLAGS+=$(shell pkg-config --libs hildon-libs libosso)
 endif
 
 default: main
@@ -19,7 +19,7 @@ main: main.o protocol.o playlist.o userconfig.o radio.o md5.o http.o \
 
 install: main
 	mkdir -p $(DESTDIR)/usr/bin
-	cp main $(DESTDIR)/usr/bin/lastfm
+	cp main $(DESTDIR)/usr/bin/vagalume
 
 clean:
 	rm -f main *.o

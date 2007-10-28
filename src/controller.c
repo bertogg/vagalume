@@ -12,6 +12,7 @@
 #include "userconfig.h"
 #include "uimisc.h"
 #include "http.h"
+#include "globaldefs.h"
 
 static lastfm_session *session = NULL;
 static rsp_session *rsp_sess = NULL;
@@ -327,6 +328,14 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 
         http_init();
         usercfg = read_usercfg();
+
+#ifdef MAEMO
+        if (!osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL)) {
+                show_dialog("Unable to initialize OSSO context",
+                            GTK_MESSAGE_ERROR);
+                return;
+        }
+#endif
         if (!lastfm_audio_init()) {
                 show_dialog("Error initializing audio system",
                             GTK_MESSAGE_ERROR);

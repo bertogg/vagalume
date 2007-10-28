@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Vagalume Last.fm Player
+Exec=/usr/bin/vagalume
+Icon=qgn_list_gene_default_app
+X-Osso-Service=com.nokia.vagalume
+X-Osso-Type=application/x-executable
