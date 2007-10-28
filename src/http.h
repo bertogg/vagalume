@@ -1,3 +1,9 @@
+/*
+ * http.h -- All the HTTP-specific functions
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3
+ */
 
 #ifndef HTTP_H
 #define HTTP_H

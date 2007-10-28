@@ -1,3 +1,10 @@
+/*
+ * userconfig.c -- Read and write the user configuration file
+ *
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,9 @@
+/*
+ * mainwin.h -- Functions to control the main program window
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #ifndef MAINWIN_H
 #define MAINWIN_H

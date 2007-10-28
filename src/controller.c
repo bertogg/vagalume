@@ -1,3 +1,9 @@
+/*
+ * controller.c -- Where the control of the program is
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3
+ */
 
 #include <gtk/gtk.h>
 #include <string.h>

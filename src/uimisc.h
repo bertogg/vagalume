@@ -1,3 +1,10 @@
+/*
+ * uimisc.h -- Misc UI-related functions
+ *
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #ifndef UIMISC_H
 #define UIMISC_H

@@ -1,3 +1,9 @@
+/*
+ * radio.h -- Functions to build radio URLs
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #ifndef RADIO_H
 #define RADIO_H

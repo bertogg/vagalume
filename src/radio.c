@@ -1,3 +1,9 @@
+/*
+ * radio.c -- Functions to build radio URLs
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #include <glib.h>
 

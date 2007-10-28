@@ -1,3 +1,10 @@
+/*
+ * scrobbler.h -- Audioscrobbler Realtime Submission Protocol
+ *
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #ifndef SCROBBLER_H
 #define SCROBBLER_H

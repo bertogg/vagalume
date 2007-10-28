@@ -1,3 +1,22 @@
+/*
+ * main.c -- Main file, basic initialization
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is part of Vagalume.
+ *
+ * Vagalume is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * Vagalume is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Vagalume. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <gtk/gtk.h>
 #include <string.h>
 

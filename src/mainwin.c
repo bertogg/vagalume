@@ -1,3 +1,9 @@
+/*
+ * mainwin.c -- Functions to control the main program window
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #include <gtk/gtk.h>
 
@@ -48,6 +54,8 @@ mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
         gdouble fraction = 0;
         if (length != 0) {
                 fraction = (gdouble)played / length;
+                if (fraction < 0) fraction = 0;
+                else if (fraction > 1) fraction = 1;
                 count = g_strdup_printf("%u:%02u / %u:%02u", played/60,
                                         played%60, length/60, length%60);
         } else {

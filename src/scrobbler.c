@@ -1,3 +1,13 @@
+/*
+ * scrobbler.c -- Audioscrobbler Realtime Submission Protocol
+ *
+ * Version 1.2 implemented, see here:
+ * http://www.audioscrobbler.net/development/protocol/
+ *
+ * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ *
+ * This file is published under the GNU GPLv3.
+ */
 
 #include <glib.h>
 #include <string.h>
