@@ -318,7 +318,7 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(vbox, w->artist, TRUE, TRUE, 5);
         gtk_box_pack_start(vbox, w->track, TRUE, TRUE, 5);
         gtk_box_pack_start(vbox, w->album, TRUE, TRUE, 5);
-        gtk_box_pack_start(vbox, w->progressbar, TRUE, TRUE, 0);
+        gtk_box_pack_start(vbox, w->progressbar, FALSE, FALSE, 0);
         /* Signals */
         g_signal_connect(G_OBJECT(w->play), "clicked",
                          G_CALLBACK(play_clicked), NULL);
