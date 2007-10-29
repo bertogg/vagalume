@@ -18,12 +18,27 @@
 #include "globaldefs.h"
 
 static const char *authors[] = {
-        "Alberto Garcia\n<agarcia@igalia.com>",
+        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>",
         NULL
 };
 
 static const char *appdescr = "A Last.fm player for Gnome and Maemo";
 static const char *copyright = "(c) 2007 Alberto Garcia Gonzalez";
+static const char *license =
+"Vagalume is free software: you can redistribute\n"
+"it and/or modify it under the terms of the GNU\n"
+"General Public License version 3 as published by\n"
+"the Free Software Foundation.\n"
+"\n"
+"Vagalume is distributed in the hope that it will\n"
+"be useful, but WITHOUT ANY WARRANTY; without even\n"
+"the implied warranty of MERCHANTABILITY or FITNESS\n"
+"FOR A PARTICULAR PURPOSE. See the GNU General\n"
+"Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General\n"
+"Public License along with Vagalume. If not, see\n"
+"http://www.gnu.org/licenses/.\n";
 
 void
 mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
@@ -187,7 +202,8 @@ show_about_dialog(GtkWidget *widget, gpointer data)
         GtkWindow *win = GTK_WINDOW(data);
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", appdescr, "copyright", copyright,
-                              "version", APP_VERSION, NULL);
+                              "license", license, "version", APP_VERSION,
+                              NULL);
 }
 
 static void
