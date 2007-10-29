@@ -24,6 +24,7 @@ static const char *authors[] = {
 
 static const char *appdescr = "A Last.fm player for Gnome and Maemo";
 static const char *copyright = "(c) 2007 Alberto Garcia Gonzalez";
+static const char *website = "http://people.igalia.com/berto/";
 static const char *license =
 "Vagalume is free software: you can redistribute\n"
 "it and/or modify it under the terms of the GNU\n"
@@ -203,7 +204,7 @@ show_about_dialog(GtkWidget *widget, gpointer data)
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", appdescr, "copyright", copyright,
                               "license", license, "version", APP_VERSION,
-                              NULL);
+                              "website", website, NULL);
 }
 
 static void
