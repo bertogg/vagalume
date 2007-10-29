@@ -70,6 +70,8 @@ lastfm_usercfg_new(void)
         lastfm_usercfg *cfg = g_new0(lastfm_usercfg, 1);
         cfg->username = g_strdup("");
         cfg->password = g_strdup("");
+        cfg->enable_scrobbling = TRUE;
+        cfg->discovery_mode = FALSE;
         return cfg;
 }
 
@@ -116,11 +118,9 @@ read_usercfg(void)
                         g_free(pw);
 #endif
                 } else if ((val = cfg_get_val(buf, "discovery")) != NULL) {
-                        if (!strcmp(val, "1")) {
-                                cfg->discovery_mode = TRUE;
-                        } else {
-                                cfg->discovery_mode = FALSE;
-                        }
+                        cfg->discovery_mode = !strcmp(val, "1");
+                } else if ((val = cfg_get_val(buf, "scrobble")) != NULL) {
+                        cfg->enable_scrobbling = !strcmp(val, "1");
                 }
                 g_free(val);
         }
@@ -148,8 +148,10 @@ write_usercfg(lastfm_usercfg *cfg)
         base64pw = g_base64_encode((guchar *)cfg->password,
                                    strlen(cfg->password));
 #endif
-        if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n",
-                    cfg->username, base64pw) <= 0) {
+        if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n"
+                    "scrobble=\"%d\"\ndiscovery=\"%d\"\n",
+                    cfg->username, base64pw, !!cfg->enable_scrobbling,
+                    !!cfg->discovery_mode) <= 0) {
                 g_warning("Error writing to config file");
                 retval = FALSE;
         }

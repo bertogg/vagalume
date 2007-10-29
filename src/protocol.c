@@ -136,16 +136,19 @@ lastfm_session_new(const char *username, const char *password,
 }
 
 static void
-lastfm_request_xsfp(lastfm_session *s, char **buffer, size_t *size)
+lastfm_request_xsfp(lastfm_session *s, gboolean discovery, char **buffer,
+                    size_t *size)
 {
         char *url;
+        const char *disc_mode = discovery ? "1" : "0";
         g_return_if_fail(s != NULL);
         g_return_if_fail(s->id != NULL && s->base_url != NULL &&
                          s->base_path != NULL);
 
         url = g_strconcat("http://", s->base_url, s->base_path,
                           "/xspf.php?sk=", s->id,
-                          "&discovery=0&desktop=" APP_VERSION, NULL);
+                          "&discovery=", disc_mode, "&desktop="
+                          APP_VERSION, NULL);
         http_get_buffer(url, buffer, size);
         g_free(url);
 }
@@ -257,7 +260,7 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
 }
 
 lastfm_pls *
-lastfm_request_playlist(lastfm_session *s)
+lastfm_request_playlist(lastfm_session *s, gboolean discovery)
 {
         g_return_val_if_fail(s != NULL, FALSE);
         char *buffer = NULL;
@@ -265,7 +268,7 @@ lastfm_request_playlist(lastfm_session *s)
         xmlDoc *doc = NULL;
         lastfm_pls *pls = NULL;
 
-        lastfm_request_xsfp(s, &buffer, &bufsize);
+        lastfm_request_xsfp(s, discovery, &buffer, &bufsize);
         if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
                 pls = lastfm_pls_new(NULL);

@@ -96,8 +96,10 @@ scrobble_track_thread(gpointer data)
 static void
 controller_scrobble_track(void)
 {
-        g_return_if_fail(nowplaying != NULL && nowplaying_since > 0);
-        if (rsp_sess != NULL && nowplaying->duration > 30000) {
+        g_return_if_fail(nowplaying != NULL && usercfg != NULL &&
+                         nowplaying_since > 0);
+        if (usercfg->enable_scrobbling &&
+            rsp_sess != NULL && nowplaying->duration > 30000) {
                 time_t played = time(NULL) - nowplaying_since;
                 gboolean scrobble = FALSE;
                 if (nowplaying_rating == RSP_RATING_BAN ||
@@ -147,13 +149,14 @@ set_nowplaying_thread(gpointer data)
 static void
 controller_set_nowplaying(lastfm_track *track)
 {
+        g_return_if_fail(usercfg != NULL);
         if (nowplaying != NULL) {
                 lastfm_track_destroy(nowplaying);
         }
         nowplaying = track;
         nowplaying_since = time(NULL);
         nowplaying_rating = RSP_RATING_NONE;
-        if (track != NULL) {
+        if (track != NULL && usercfg->enable_scrobbling) {
                 rsp_data *d = g_new0(rsp_data, 1);
                 d->track = lastfm_track_copy(track);
                 d->start = 0;
@@ -185,17 +188,25 @@ void
 controller_open_usercfg(void)
 {
         g_return_if_fail(mainwin != NULL);
-        gboolean changed;
-        changed = ui_usercfg_dialog(GTK_WINDOW(mainwin->window), &usercfg);
+        gboolean userpwchanged = FALSE;
+        char *olduser = usercfg != NULL ? g_strdup(usercfg->username) : "";
+        char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) : "";
+        ui_usercfg_dialog(GTK_WINDOW(mainwin->window), &usercfg);
         if (usercfg != NULL) {
                 write_usercfg(usercfg);
         }
-        if (changed && session != NULL) {
+        if (strcmp(olduser, usercfg->username) ||
+            strcmp(oldpw, usercfg->password)) {
+                userpwchanged = TRUE;
+        }
+        if (session != NULL && userpwchanged) {
                 lastfm_session_destroy(session);
                 session = NULL;
                 controller_stop_playing();
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED);
         }
+        g_free(olduser);
+        g_free(oldpw);
 }
 
 static gboolean
@@ -260,8 +271,8 @@ static gpointer
 start_playing_get_pls_thread(gpointer data)
 {
         lastfm_session *s = (lastfm_session *) data;
-        g_return_val_if_fail(s != NULL, NULL);
-        lastfm_pls *pls = lastfm_request_playlist(s);
+        g_return_val_if_fail(s != NULL && usercfg != NULL, NULL);
+        lastfm_pls *pls = lastfm_request_playlist(s, usercfg->discovery_mode);
         gdk_threads_enter();
         if (pls == NULL) {
                 controller_stop_playing();

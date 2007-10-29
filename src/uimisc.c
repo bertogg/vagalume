@@ -73,26 +73,39 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
 {
         g_return_val_if_fail(cfg != NULL, FALSE);
         GtkDialog *dialog;
-        GtkWidget *label1, *label2;
+        GtkWidget *label1, *label2, *label3, *label4;
         GtkEntry *user, *pw;
+        GtkWidget *scrobble, *discovery;
         GtkTable *table;
         gboolean changed = FALSE;
 
         dialog = ui_base_dialog(parent, "User settings");
         label1 = gtk_label_new("Username:");
         label2 = gtk_label_new("Password:");
+        label3 = gtk_label_new("Enable scrobbling:");
+        label4 = gtk_label_new("Discovery mode:");
         user = GTK_ENTRY(gtk_entry_new());
         pw = GTK_ENTRY(gtk_entry_new());
+        scrobble = gtk_check_button_new();
+        discovery = gtk_check_button_new();
         gtk_entry_set_visibility(pw, FALSE);
         if (*cfg != NULL) {
                 gtk_entry_set_text(user, (*cfg)->username);
                 gtk_entry_set_text(pw, (*cfg)->password);
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
+                                             (*cfg)->enable_scrobbling);
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
+                                             (*cfg)->discovery_mode);
         }
-        table = GTK_TABLE(gtk_table_new(2, 2, FALSE));
+        table = GTK_TABLE(gtk_table_new(4, 2, FALSE));
         gtk_table_attach(table, label1, 0, 1, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, label2, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, label3, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, label4, 0, 1, 3, 4, 0, 0, 5, 5);
         gtk_table_attach(table, GTK_WIDGET(user), 1, 2, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, GTK_WIDGET(pw), 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, scrobble, 1, 2, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, discovery, 1, 2, 3, 4, 0, 0, 5, 5);
         gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(table),
                            FALSE, FALSE, 10);
         gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -100,6 +113,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 if (*cfg == NULL) *cfg = lastfm_usercfg_new();
                 lastfm_usercfg_set_username(*cfg, gtk_entry_get_text(user));
                 lastfm_usercfg_set_password(*cfg, gtk_entry_get_text(pw));
+                (*cfg)->enable_scrobbling = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(scrobble));
+                (*cfg)->discovery_mode = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(discovery));
                 changed = TRUE;
         }
         gtk_widget_destroy(GTK_WIDGET(dialog));
