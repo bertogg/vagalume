@@ -101,25 +101,17 @@ controller_scrobble_track(void)
         if (usercfg->enable_scrobbling &&
             rsp_sess != NULL && nowplaying->duration > 30000) {
                 time_t played = time(NULL) - nowplaying_since;
-                gboolean scrobble = FALSE;
-                if (nowplaying_rating == RSP_RATING_BAN ||
-                    nowplaying_rating == RSP_RATING_SKIP) {
-                        /* If we banned or manually skipped a track */
-                        scrobble = TRUE;
-                } else if (played > nowplaying->duration/2000) {
-                        /* If we played more than half the track */
-                        scrobble = TRUE;
-                } else if (played > 240) {
-                        /* If we played more than 4 minutes */
-                        scrobble = TRUE;
+                /* If a track is unrated and hasn't been played for
+                   enough time, scrobble it as skipped */
+                if (nowplaying_rating == RSP_RATING_NONE &&
+                    played < nowplaying->duration/2000 && played < 240) {
+                        nowplaying_rating = RSP_RATING_SKIP;
                 }
-                if (scrobble) {
-                        rsp_data *d = g_new0(rsp_data, 1);
-                        d->track = lastfm_track_copy(nowplaying);
-                        d->start = nowplaying_since;
-                        d->rating = nowplaying_rating;
-                        g_thread_create(scrobble_track_thread,d,FALSE,NULL);
-                }
+                rsp_data *d = g_new0(rsp_data, 1);
+                d->track = lastfm_track_copy(nowplaying);
+                d->start = nowplaying_since;
+                d->rating = nowplaying_rating;
+                g_thread_create(scrobble_track_thread,d,FALSE,NULL);
         }
 }
 
@@ -340,17 +332,6 @@ controller_skip_track(void)
 }
 
 void
-controller_manually_skip_track(void)
-{
-        g_return_if_fail(nowplaying != NULL);
-        /* Don't override a "love" rating */
-        if (nowplaying_rating == RSP_RATING_NONE) {
-                nowplaying_rating = RSP_RATING_SKIP;
-        }
-        controller_skip_track();
-}
-
-void
 controller_love_track(void)
 {
         g_return_if_fail(nowplaying != NULL);
@@ -375,7 +356,6 @@ controller_play_radio_by_url(const char *url)
                 controller_stop_playing();
         } else if (lastfm_set_radio(session, url)) {
                 lastfm_pls_clear(playlist);
-                /* Should we mark the track as manually skipped? */
                 controller_skip_track();
         } else {
                 controller_stop_playing();

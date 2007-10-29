@@ -155,7 +155,7 @@ stop_clicked(GtkWidget *widget, gpointer data)
 static void
 next_clicked(GtkWidget *widget, gpointer data)
 {
-        controller_manually_skip_track();
+        controller_skip_track();
 }
 
 static void

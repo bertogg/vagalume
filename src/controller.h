@@ -16,7 +16,6 @@
 void controller_stop_playing(void);
 void controller_start_playing(void);
 void controller_skip_track(void);
-void controller_manually_skip_track(void);
 void controller_love_track(void);
 void controller_ban_track(void);
 void controller_play_radio_by_url(const char *url);
