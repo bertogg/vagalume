@@ -123,7 +123,8 @@ rsp_set_nowplaying(const rsp_session *rsp, const lastfm_track *t)
 }
 
 void
-rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start)
+rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start,
+             rsp_rating rating)
 {
         g_return_if_fail(rsp != NULL && t != NULL);
         char *buffer;
@@ -133,6 +134,17 @@ rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start)
         char *artist = escape_url(t->artist, TRUE);
         char *title = escape_url(t->title, TRUE);
         char *album = escape_url(t->album, TRUE);
+        char *ratingstr;
+        switch (rating) {
+        case RSP_RATING_LOVE:
+                ratingstr = "L"; break;
+        case RSP_RATING_BAN:
+                ratingstr = "B"; break;
+        case RSP_RATING_SKIP:
+                ratingstr = "S"; break;
+        default:
+                ratingstr = ""; break;
+        }
         if (t->duration != 0) {
                 duration = g_strdup_printf("&l[0]=%u", t->duration/1000);
         }
@@ -140,7 +152,8 @@ rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start)
                              "&t[0]=", title, "&b[0]=", album,
                              "&i[0]=", timestamp,
                              "&o[0]=L", t->trackauth,
-                             "&n[0]=&m[0]=&r[0]=", duration, NULL);
+                             "&n[0]=&m[0]=&r[0]=", ratingstr,
+                             duration, NULL);
         http_post_buffer(rsp->post_url, buffer, &retbuf);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Track scrobbled");

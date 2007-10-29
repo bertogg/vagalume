@@ -31,9 +31,11 @@ static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
 static lastfm_track *nowplaying = NULL;
 static time_t nowplaying_since = 0;
+static rsp_rating nowplaying_rating = RSP_RATING_NONE;
 
 typedef struct {
         lastfm_track *track;
+        rsp_rating rating;
         time_t start;
 } rsp_data;
 
@@ -42,6 +44,18 @@ show_dialog(const char *text, GtkMessageType type)
 {
         g_return_if_fail(mainwin != NULL);
         ui_info_dialog(GTK_WINDOW(mainwin->window), text, type);
+}
+
+void
+controller_show_warning(const char *text)
+{
+        show_dialog(text, GTK_MESSAGE_WARNING);
+}
+
+void
+controller_show_info(const char *text)
+{
+        show_dialog(text, GTK_MESSAGE_INFO);
 }
 
 static gboolean
@@ -71,7 +85,7 @@ scrobble_track_thread(gpointer data)
         s = rsp_session_copy(rsp_sess);
         gdk_threads_leave();
         if (s != NULL) {
-                rsp_scrobble(s, d->track, d->start);
+                rsp_scrobble(s, d->track, d->start, d->rating);
                 rsp_session_destroy(s);
         }
         lastfm_track_destroy(d->track);
@@ -85,10 +99,23 @@ controller_scrobble_track(void)
         g_return_if_fail(nowplaying != NULL && nowplaying_since > 0);
         if (rsp_sess != NULL && nowplaying->duration > 30000) {
                 time_t played = time(NULL) - nowplaying_since;
-                if (played > 240 || played > (nowplaying->duration/2000)) {
+                gboolean scrobble = FALSE;
+                if (nowplaying_rating == RSP_RATING_BAN ||
+                    nowplaying_rating == RSP_RATING_SKIP) {
+                        /* If we banned or manually skipped a track */
+                        scrobble = TRUE;
+                } else if (played > nowplaying->duration/2000) {
+                        /* If we played more than half the track */
+                        scrobble = TRUE;
+                } else if (played > 240) {
+                        /* If we played more than 4 minutes */
+                        scrobble = TRUE;
+                }
+                if (scrobble) {
                         rsp_data *d = g_new0(rsp_data, 1);
                         d->track = lastfm_track_copy(nowplaying);
                         d->start = nowplaying_since;
+                        d->rating = nowplaying_rating;
                         g_thread_create(scrobble_track_thread,d,FALSE,NULL);
                 }
         }
@@ -125,6 +152,7 @@ controller_set_nowplaying(lastfm_track *track)
         }
         nowplaying = track;
         nowplaying_since = time(NULL);
+        nowplaying_rating = RSP_RATING_NONE;
         if (track != NULL) {
                 rsp_data *d = g_new0(rsp_data, 1);
                 d->track = lastfm_track_copy(track);
@@ -151,11 +179,6 @@ rsp_session_init_thread(gpointer data)
         g_free(username);
         g_free(password);
         return NULL;
-}
-
-void controller_show_warning(const char *text)
-{
-        show_dialog(text, GTK_MESSAGE_WARNING);
 }
 
 void
@@ -233,18 +256,6 @@ ui_update_track_info(lastfm_track *track)
         mainwin_update_track_info(mainwin, pls, artist, title, album);
 }
 
-void
-controller_stop_playing(void)
-{
-        g_return_if_fail(mainwin != NULL);
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
-        lastfm_audio_stop();
-        if (nowplaying != NULL) {
-                controller_scrobble_track();
-                controller_set_nowplaying(NULL);
-        }
-}
-
 static gpointer
 start_playing_get_pls_thread(gpointer data)
 {
@@ -288,17 +299,60 @@ controller_start_playing(void)
         g_timeout_add(1000, controller_show_progress, track);
 }
 
-void
-controller_skip_track(void)
+/* To be called only from controller_stop_playing()
+   and controller_skip_track() */
+static void
+finish_playing_track(void)
 {
         g_return_if_fail(mainwin != NULL);
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
         lastfm_audio_stop();
         if (nowplaying != NULL) {
                 controller_scrobble_track();
                 controller_set_nowplaying(NULL);
         }
+}
+
+void
+controller_stop_playing(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
+        finish_playing_track();
+}
+
+void
+controller_skip_track(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        finish_playing_track();
         controller_start_playing();
+}
+
+void
+controller_manually_skip_track(void)
+{
+        g_return_if_fail(nowplaying != NULL);
+        /* Don't override a "love" rating */
+        if (nowplaying_rating == RSP_RATING_NONE) {
+                nowplaying_rating = RSP_RATING_SKIP;
+        }
+        controller_skip_track();
+}
+
+void
+controller_love_track(void)
+{
+        g_return_if_fail(nowplaying != NULL);
+        nowplaying_rating = RSP_RATING_LOVE;
+        controller_show_info("Marking track as loved");
+}
+
+void
+controller_ban_track(void)
+{
+        g_return_if_fail(nowplaying != NULL);
+        nowplaying_rating = RSP_RATING_BAN;
+        controller_skip_track();
 }
 
 void
@@ -310,6 +364,7 @@ controller_play_radio_by_url(const char *url)
                 controller_stop_playing();
         } else if (lastfm_set_radio(session, url)) {
                 lastfm_pls_clear(playlist);
+                /* Should we mark the track as manually skipped? */
                 controller_skip_track();
         } else {
                 controller_stop_playing();

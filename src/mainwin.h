@@ -12,7 +12,7 @@ typedef struct {
         GtkWidget *window;
         GtkWidget *play, *stop, *next;
         GtkWidget *playlist, *artist, *track, *album;
-        GtkWidget *radiomenu, *settings;
+        GtkWidget *radiomenu, *ratemenu, *settings;
         GtkWidget *progressbar;
 } lastfm_mainwin;
 

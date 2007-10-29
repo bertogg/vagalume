@@ -86,6 +86,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
+                gtk_widget_set_sensitive (w->ratemenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 break;
         case LASTFM_UI_STATE_PLAYING:
@@ -96,6 +97,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, TRUE);
                 gtk_widget_set_sensitive (w->next, TRUE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
+                gtk_widget_set_sensitive (w->ratemenu, TRUE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 break;
         case LASTFM_UI_STATE_CONNECTING:
@@ -107,6 +109,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, FALSE);
+                gtk_widget_set_sensitive (w->ratemenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, FALSE);
                 break;
         default:
@@ -137,7 +140,7 @@ stop_clicked(GtkWidget *widget, gpointer data)
 static void
 next_clicked(GtkWidget *widget, gpointer data)
 {
-        controller_skip_track();
+        controller_manually_skip_track();
 }
 
 static void
@@ -167,6 +170,18 @@ url_radio_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+love_track_selected(GtkWidget *widget, gpointer data)
+{
+        controller_love_track();
+}
+
+static void
+ban_track_selected(GtkWidget *widget, gpointer data)
+{
+        controller_ban_track();
+}
+
+static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
@@ -184,9 +199,10 @@ open_user_settings(GtkWidget *widget, gpointer data)
 static GtkWidget *
 create_main_menu(lastfm_mainwin *w)
 {
-        GtkMenuItem *lastfm, *radio, *help;
-        GtkMenuShell *lastfmsub, *radiosub, *helpsub;
+        GtkMenuItem *lastfm, *radio, *rate, *help;
+        GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
         GtkWidget *settings, *quit;
+        GtkWidget *love, *ban;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *urlradio;
         GtkWidget *about;
 #ifdef MAEMO
@@ -246,6 +262,20 @@ create_main_menu(lastfm_mainwin *w)
         g_signal_connect(G_OBJECT(urlradio), "activate",
                          G_CALLBACK(url_radio_selected), NULL);
 
+        /* Rate */
+        rate = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Rate"));
+        ratesub = GTK_MENU_SHELL(gtk_menu_new());
+        love = gtk_menu_item_new_with_mnemonic("_Love this track");
+        ban = gtk_menu_item_new_with_mnemonic("_Ban this track");
+        gtk_menu_shell_append(bar, GTK_WIDGET(rate));
+        gtk_menu_item_set_submenu(rate, GTK_WIDGET(ratesub));
+        gtk_menu_shell_append(ratesub, love);
+        gtk_menu_shell_append(ratesub, ban);
+        g_signal_connect(G_OBJECT(love), "activate",
+                         G_CALLBACK(love_track_selected), NULL);
+        g_signal_connect(G_OBJECT(ban), "activate",
+                         G_CALLBACK(ban_track_selected), NULL);
+
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));
         helpsub = GTK_MENU_SHELL(gtk_menu_new());
@@ -260,6 +290,7 @@ create_main_menu(lastfm_mainwin *w)
 #endif
 
         w->radiomenu = GTK_WIDGET(radio);
+        w->ratemenu = GTK_WIDGET(rate);
         w->settings = GTK_WIDGET(settings);
         return GTK_WIDGET(bar);
 }
