@@ -292,7 +292,12 @@ void
 controller_skip_track(void)
 {
         g_return_if_fail(mainwin != NULL);
-        controller_stop_playing();
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
+        lastfm_audio_stop();
+        if (nowplaying != NULL) {
+                controller_scrobble_track();
+                controller_set_nowplaying(NULL);
+        }
         controller_start_playing();
 }
 
