@@ -58,12 +58,20 @@ controller_show_info(const char *text)
         show_dialog(text, GTK_MESSAGE_INFO);
 }
 
+/**
+ * Calculate the amount of time that a track has been playing and
+ * updates the UI (progressbars, etc). to reflect that. To be called
+ * using g_timeout_add()
+ *
+ * @param data A pointer to the lastfm_track being played
+ * @return TRUE if the track hasn't fininished yet, FALSE otherwise
+ */
 static gboolean
 controller_show_progress(gpointer data)
 {
         lastfm_track *tr = (lastfm_track *) data;
         g_return_val_if_fail(mainwin != NULL && tr != NULL, FALSE);
-        if (nowplaying && session && tr->id == nowplaying->id) {
+        if (nowplaying != NULL && tr->id == nowplaying->id) {
                 guint played = time(NULL) - nowplaying_since;
                 guint length = nowplaying->duration/1000;
                 mainwin_show_progress(mainwin, length, played);
@@ -74,13 +82,22 @@ controller_show_progress(gpointer data)
         }
 }
 
+/**
+ * Scrobble a track using the Audioscrobbler Realtime Submission
+ * Protocol. This can take some seconds, so it must be called using
+ * g_thread_create() to avoid freezing the UI.
+ *
+ * @param data Pointer to rsp_data, with info about the track to be
+ *             scrobbled. This data must be freed here
+ * @return NULL (this value is not used)
+ */
 static gpointer
 scrobble_track_thread(gpointer data)
 {
         rsp_data *d = (rsp_data *) data;
         rsp_session *s = NULL;
         g_return_val_if_fail(d != NULL && d->track != NULL && d->start > 0,
-                             FALSE);
+                             NULL);
         gdk_threads_enter();
         s = rsp_session_copy(rsp_sess);
         gdk_threads_leave();
@@ -93,6 +110,14 @@ scrobble_track_thread(gpointer data)
         return NULL;
 }
 
+/**
+ * Scrobble the track that is currently playing. Only tracks that have
+ * been playing for more than half its time (or 240 seconds) can be
+ * scrobbled, see http://www.audioscrobbler.net/development/protocol/
+ *
+ * This function only does checks and prepares the data, the process
+ * itself is done in another thread, see scrobble_track_thread()
+ */
 static void
 controller_scrobble_track(void)
 {
@@ -115,6 +140,15 @@ controller_scrobble_track(void)
         }
 }
 
+/**
+ * Set the "Now Playing" information using the Audioscrobbler Realtime
+ * Submission Protocol. This can take some seconds, so it must be
+ * called using g_thread_create() to avoid freezing the UI.
+ *
+ * @param data Pointer to rsp_data, with info about the track to be
+ *             processed. This data must be freed here
+ * @return NULL (this value is not used)
+ */
 static gpointer
 set_nowplaying_thread(gpointer data)
 {
@@ -138,6 +172,15 @@ set_nowplaying_thread(gpointer data)
         return NULL;
 }
 
+/**
+ * Set a track as "Now Playing", eventually setting it in the Last.fm
+ * server using the Audioscrobbler RSP (Realtime Submission Protocol).
+ *
+ * The actual RSP code is run in another thread to avoid freezing the
+ * UI, see set_nowplaying_thread()
+ *
+ * @param track The track to be set as Now Playing
+ */
 static void
 controller_set_nowplaying(lastfm_track *track)
 {
@@ -156,6 +199,13 @@ controller_set_nowplaying(lastfm_track *track)
         }
 }
 
+/**
+ * Initializes an RSP session. This is done in a thread to avoid
+ * freezing the UI.
+ *
+ * @param data Not used
+ * @return NULL (not used)
+ */
 static gpointer
 rsp_session_init_thread(gpointer data)
 {
@@ -176,15 +226,21 @@ rsp_session_init_thread(gpointer data)
         return NULL;
 }
 
+/**
+ * Open the user settings dialog and save the new settings to the
+ * configuration file. If the username or password have been modified,
+ * close the current session.
+ */
 void
 controller_open_usercfg(void)
 {
         g_return_if_fail(mainwin != NULL);
         gboolean userpwchanged = FALSE;
+        gboolean changed;
         char *olduser = usercfg != NULL ? g_strdup(usercfg->username) : "";
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) : "";
-        ui_usercfg_dialog(GTK_WINDOW(mainwin->window), &usercfg);
-        if (usercfg != NULL) {
+        changed = ui_usercfg_dialog(GTK_WINDOW(mainwin->window), &usercfg);
+        if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
         }
         if (strcmp(olduser, usercfg->username) ||
@@ -201,6 +257,14 @@ controller_open_usercfg(void)
         g_free(oldpw);
 }
 
+/**
+ * Check if the user settings exist (whether they are valid or
+ * not). If they don't exist, read the config file or open the
+ * settings dialog. This should only return FALSE the first time the
+ * user runs the program.
+ *
+ * @return TRUE if the settings exist, FALSE otherwise
+ */
 static gboolean
 check_usercfg(void)
 {
@@ -209,6 +273,16 @@ check_usercfg(void)
         return (usercfg != NULL);
 }
 
+/**
+ * Check if there's a Last.fm session opened. If not, try to create
+ * one (and an RSP session as well).
+ *
+ * FIXME: This is done synchronously so it will freeze the UI during
+ * its processing. However this will only happen once each time the
+ * program is run, so fortunately it's not that critical.
+ *
+ * @return TRUE if a session exists, false otherwise
+ */
 static gboolean
 check_session(void)
 {
@@ -248,17 +322,30 @@ check_session(void)
         return retvalue;
 }
 
+/**
+ * Update the UI to show info from the track currenty playing
+ */
 static void
-ui_update_track_info(lastfm_track *track)
+ui_update_track_info(void)
 {
-        g_return_if_fail(playlist != NULL && track != NULL && mainwin != NULL);
+        g_return_if_fail(playlist && nowplaying && mainwin);
         const char *pls = playlist->title;
-        const char *artist = track->artist;
-        const char *title = track->title;
-        const char *album = track->album;
+        const char *artist = nowplaying->artist;
+        const char *title = nowplaying->title;
+        const char *album = nowplaying->album;
         mainwin_update_track_info(mainwin, pls, artist, title, album);
 }
 
+/**
+ * Get a new playlist and append it to the end of the current
+ * one. Show an error if no playlist is found, start playing
+ * otherwise. This can take a bit, so it is done in a separate thread
+ * to avoid freezing the UI.
+ *
+ * @param data A copy of the lastfm_session used to get the new
+ *             playlist.
+ * @return NULL (not used)
+ */
 static gpointer
 start_playing_get_pls_thread(gpointer data)
 {
@@ -279,6 +366,10 @@ start_playing_get_pls_thread(gpointer data)
         return NULL;
 }
 
+/**
+ * Play the next track from the playlist, getting a new playlist if
+ * necessary, see start_playing_get_pls_thread().
+ */
 void
 controller_start_playing(void)
 {
@@ -295,15 +386,17 @@ controller_start_playing(void)
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
         lastfm_audio_play(track->stream_url);
-        ui_update_track_info(track);
+        ui_update_track_info();
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING);
         track = lastfm_track_copy(track);
         controller_show_progress(track);
         g_timeout_add(1000, controller_show_progress, track);
 }
 
-/* To be called only from controller_stop_playing()
-   and controller_skip_track() */
+/**
+ * Stop the track being played (if any) and scrobbles it. To be called
+ * only from controller_stop_playing() and controller_skip_track()
+ */
 static void
 finish_playing_track(void)
 {
@@ -315,6 +408,9 @@ finish_playing_track(void)
         }
 }
 
+/**
+ * Stop the track being played, updating the UI as well
+ */
 void
 controller_stop_playing(void)
 {
@@ -323,6 +419,9 @@ controller_stop_playing(void)
         finish_playing_track();
 }
 
+/**
+ * Stop the track being played and immediately play the next one.
+ */
 void
 controller_skip_track(void)
 {
@@ -331,6 +430,10 @@ controller_skip_track(void)
         controller_start_playing();
 }
 
+/**
+ * Mark the current playing track as a loved track. This will be used
+ * when scrobbling it.
+ */
 void
 controller_love_track(void)
 {
@@ -339,6 +442,9 @@ controller_love_track(void)
         controller_show_info("Marking track as loved");
 }
 
+/**
+ * Ban this track, marking it as banned and skipping it
+ */
 void
 controller_ban_track(void)
 {
@@ -347,6 +453,12 @@ controller_ban_track(void)
         controller_skip_track();
 }
 
+/**
+ * Start playing a radio by its URL, stopping the current track if
+ * necessary
+ *
+ * @param url The URL of the radio to be played
+ */
 void
 controller_play_radio_by_url(const char *url)
 {
@@ -363,6 +475,10 @@ controller_play_radio_by_url(const char *url)
         }
 }
 
+/**
+ * Start playing a radio by its type. In all cases it will be the
+ * radio of the user running the application, not someone else's radio
+ */
 void
 controller_play_radio(lastfm_radio type)
 {
@@ -378,6 +494,9 @@ controller_play_radio(lastfm_radio type)
         g_free(url);
 }
 
+/**
+ * Open a dialog asking a radio URL and play it
+ */
 void
 controller_play_radio_ask_url(void)
 {
@@ -398,6 +517,9 @@ controller_play_radio_ask_url(void)
         g_free(url);
 }
 
+/**
+ * Close the application
+ */
 void
 controller_quit_app(void)
 {
@@ -406,6 +528,15 @@ controller_quit_app(void)
         gtk_main_quit();
 }
 
+/**
+ * Start running the application, initializing all of its
+ * subcomponents and finally letting the main window take control.
+ *
+ * @param win The program's main window.
+ * @param radio_url If not NULL, this radio will be played
+ *                  automatically from the start. Tipically set in the
+ *                  command line
+ */
 void
 controller_run_app(lastfm_mainwin *win, const char *radio_url)
 {
