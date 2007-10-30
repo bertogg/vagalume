@@ -1,0 +1,59 @@
+Vagalume - A Last.fm client for Gnome and Maemo
+-----------------------------------------------
+
+Vagalume is a Last.fm client based on Gnome, and specially designed to
+work in the Maemo platform.
+
+It has been tested on a desktop PC with a Debian GNU/Linux system and
+in a Nokia N800 running Internet Tablet OS 2007, but it should work in
+any other Unix-like system that meets the following requirements:
+
+   * GStreamer 0.10
+   * GTK+ 2
+   * Gnome libxml2
+   * libcurl
+
+This program is still in early development, but I consider it
+reasonably usable and stable.
+
+It currently has the following features:
+
+   * It plays Last.fm streams using the Last.fm protocol v1.2
+   * It can play any Last.fm radio (personal, neighbours, loved
+     tracks, or any other arbitrary URL.
+   * It implements the Audioscrobbler Realtime Submission Protocol
+     v1.2, specifically:
+      * Now Playing information
+      * Scrobbling of tracks that you listen
+      * Love/Ban ratings
+
+--------------------------------------------------------
+
+Vagalume is (c) 2007 Alberto Garcia Gonzalez
+
+Vagalume also contains a free MD5 implementation that is
+(c) 1999 Aladdin Enterprises.
+See the files src/md5.c and src/md5.h for details
+
+Vagalume is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 3 as
+published by the Free Software Foundation.
+
+Vagalume is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the COPYING file for more details.
+
+--------------------------------------------------------
+
+The following documens have been the main sources of documentation for
+the implementing the Last.fm protocols:
+
+* An unofficial documentation of the Last.fm protocol version 1.2
+  (c) 2007 Tobias Brennecke, Jonas F. Jensen and Matt Brown
+  http://code.google.com/p/thelastripper/wiki/LastFM12UnofficialDocumentation
+
+* The Audioscrobbler Realtime Submission Protocol v1.2
+  (c) 2002-2007 Audioscrobbler Ltd.
+  http://www.audioscrobbler.net/development/protocol/

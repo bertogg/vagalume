@@ -26,5 +26,6 @@ void controller_quit_app(void);
 void controller_run_app(lastfm_mainwin *win, const char *radio_url);
 void controller_show_warning(const char *text);
 void controller_show_info(const char *text);
+gboolean controller_confirm_dialog(const char *text);
 
 #endif

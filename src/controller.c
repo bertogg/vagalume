@@ -46,16 +46,39 @@ show_dialog(const char *text, GtkMessageType type)
         ui_info_dialog(GTK_WINDOW(mainwin->window), text, type);
 }
 
+/**
+ * Show a warning dialog with an OK button
+ *
+ * @param text The text to show
+ */
 void
 controller_show_warning(const char *text)
 {
         show_dialog(text, GTK_MESSAGE_WARNING);
 }
 
+/**
+ * Show an info dialog with an OK button
+ *
+ * @param text The text to show
+ */
 void
 controller_show_info(const char *text)
 {
         show_dialog(text, GTK_MESSAGE_INFO);
+}
+
+/**
+ * Show an OK/cancel dialog to request confirmation from the user
+ *
+ * @param text The text to show
+ * @return TRUE if the user selects OK, cancel otherwise
+ */
+gboolean
+controller_confirm_dialog(const char *text)
+{
+        g_return_val_if_fail(mainwin != NULL, FALSE);
+        return ui_confirm_dialog(GTK_WINDOW(mainwin->window), text);
 }
 
 /**
@@ -438,8 +461,10 @@ void
 controller_love_track(void)
 {
         g_return_if_fail(nowplaying != NULL);
-        nowplaying_rating = RSP_RATING_LOVE;
-        controller_show_info("Marking track as loved");
+        if (controller_confirm_dialog("Really mark track as loved?")) {
+                nowplaying_rating = RSP_RATING_LOVE;
+                controller_show_info("Marking track as loved");
+        }
 }
 
 /**
@@ -449,8 +474,10 @@ void
 controller_ban_track(void)
 {
         g_return_if_fail(nowplaying != NULL);
-        nowplaying_rating = RSP_RATING_BAN;
-        controller_skip_track();
+        if (controller_confirm_dialog("Really ban this track?")) {
+                nowplaying_rating = RSP_RATING_BAN;
+                controller_skip_track();
+        }
 }
 
 /**

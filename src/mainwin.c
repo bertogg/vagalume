@@ -22,7 +22,7 @@ static const char *authors[] = {
         NULL
 };
 
-static const char *appdescr = "A Last.fm player for Gnome and Maemo";
+static const char *appdescr = "A Last.fm client for Gnome and Maemo";
 static const char *copyright = "(c) 2007 Alberto Garcia Gonzalez";
 static const char *website = "http://people.igalia.com/berto/";
 static const char *license =

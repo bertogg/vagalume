@@ -45,6 +45,20 @@ ui_base_dialog(GtkWindow *parent, const char *title)
         return GTK_DIALOG(dialog);
 }
 
+gboolean
+ui_confirm_dialog(GtkWindow *parent, const char *text)
+{
+        g_return_val_if_fail(text != NULL, FALSE);
+        gint response;
+        GtkDialog *dialog = ui_base_dialog(parent, "Confirmation");
+        GtkWidget *label = gtk_label_new(text);
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
+        gtk_widget_show_all(GTK_WIDGET(dialog));
+        response = gtk_dialog_run(dialog);
+        gtk_widget_destroy(GTK_WIDGET(dialog));
+        return (response == GTK_RESPONSE_ACCEPT);
+}
+
 char *
 ui_input_dialog(GtkWindow *parent, const char *title,
                 const char *text, const char *value)
