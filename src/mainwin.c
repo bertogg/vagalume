@@ -182,6 +182,19 @@ radio_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+others_radio_selected(GtkWidget *widget, gpointer data)
+{
+        lastfm_radio type = GPOINTER_TO_INT(data);
+        controller_play_others_radio(type);
+}
+
+static void
+globaltag_radio_selected(GtkWidget *widget, gpointer data)
+{
+        controller_play_globaltag_radio();
+}
+
+static void
 url_radio_selected(GtkWidget *widget, gpointer data)
 {
         controller_play_radio_ask_url();
@@ -219,10 +232,14 @@ static GtkWidget *
 create_main_menu(lastfm_mainwin *w)
 {
         GtkMenuItem *lastfm, *radio, *rate, *help;
+        GtkMenuItem *user, *others;
+        GtkWidget *globaltag, *urlradio;
         GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
+        GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
         GtkWidget *love, *ban;
-        GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *urlradio;
+        GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
+        GtkWidget *personal2, *neigh2, *loved2, *playlist2;
         GtkWidget *about;
 #ifdef MAEMO
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_new());
@@ -249,20 +266,37 @@ create_main_menu(lastfm_mainwin *w)
         /* Radio */
         radio = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("Play _Radio"));
         radiosub = GTK_MENU_SHELL(gtk_menu_new());
+        user = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Your radios"));
+        others = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(
+                                      "_Others' radios"));
+        globaltag = gtk_menu_item_new_with_mnemonic("_Music tagged...");
+        urlradio = gtk_menu_item_new_with_mnemonic("_Enter URL...");
+        gtk_menu_shell_append(bar, GTK_WIDGET(radio));
+        gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
+        gtk_menu_shell_append(radiosub, GTK_WIDGET(user));
+        gtk_menu_shell_append(radiosub, GTK_WIDGET(others));
+        gtk_menu_shell_append(radiosub, globaltag);
+        gtk_menu_shell_append(radiosub, urlradio);
+        g_signal_connect(G_OBJECT(globaltag), "activate",
+                         G_CALLBACK(globaltag_radio_selected), NULL);
+        g_signal_connect(G_OBJECT(urlradio), "activate",
+                         G_CALLBACK(url_radio_selected), NULL);
+
+        /* Radio -> Your radios */
+        usersub = GTK_MENU_SHELL(gtk_menu_new());
+        gtk_menu_item_set_submenu(user, GTK_WIDGET(usersub));
         personal = gtk_menu_item_new_with_mnemonic("_Personal");
         neigh = gtk_menu_item_new_with_mnemonic("_Neighbours");
         loved = gtk_menu_item_new_with_mnemonic("_Loved tracks");
         playlist = gtk_menu_item_new_with_mnemonic("Pl_aylist");
         recomm = gtk_menu_item_new_with_mnemonic("R_ecommendations");
-        urlradio = gtk_menu_item_new_with_mnemonic("Enter _URL...");
-        gtk_menu_shell_append(bar, GTK_WIDGET(radio));
-        gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
-        gtk_menu_shell_append(radiosub, personal);
-        gtk_menu_shell_append(radiosub, neigh);
-        gtk_menu_shell_append(radiosub, loved);
-        gtk_menu_shell_append(radiosub, playlist);
-        gtk_menu_shell_append(radiosub, recomm);
-        gtk_menu_shell_append(radiosub, urlradio);
+        usertag = gtk_menu_item_new_with_mnemonic("_Music tagged...");
+        gtk_menu_shell_append(usersub, personal);
+        gtk_menu_shell_append(usersub, neigh);
+        gtk_menu_shell_append(usersub, loved);
+        gtk_menu_shell_append(usersub, playlist);
+        gtk_menu_shell_append(usersub, recomm);
+        gtk_menu_shell_append(usersub, usertag);
         g_signal_connect(G_OBJECT(personal), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_PERSONAL_RADIO));
@@ -278,8 +312,33 @@ create_main_menu(lastfm_mainwin *w)
         g_signal_connect(G_OBJECT(recomm), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_RECOMMENDED_RADIO));
-        g_signal_connect(G_OBJECT(urlradio), "activate",
-                         G_CALLBACK(url_radio_selected), NULL);
+        g_signal_connect(G_OBJECT(usertag), "activate",
+                         G_CALLBACK(radio_selected),
+                         GINT_TO_POINTER(LASTFM_USERTAG_RADIO));
+
+        /* Radio -> Others' radios */
+        othersub = GTK_MENU_SHELL(gtk_menu_new());
+        gtk_menu_item_set_submenu(others, GTK_WIDGET(othersub));
+        personal2 = gtk_menu_item_new_with_mnemonic("_Personal");
+        neigh2 = gtk_menu_item_new_with_mnemonic("_Neighbours");
+        loved2 = gtk_menu_item_new_with_mnemonic("_Loved tracks");
+        playlist2 = gtk_menu_item_new_with_mnemonic("Pl_aylist");
+        gtk_menu_shell_append(othersub, personal2);
+        gtk_menu_shell_append(othersub, neigh2);
+        gtk_menu_shell_append(othersub, loved2);
+        gtk_menu_shell_append(othersub, playlist2);
+        g_signal_connect(G_OBJECT(personal2), "activate",
+                         G_CALLBACK(others_radio_selected),
+                         GINT_TO_POINTER(LASTFM_PERSONAL_RADIO));
+        g_signal_connect(G_OBJECT(neigh2), "activate",
+                         G_CALLBACK(others_radio_selected),
+                         GINT_TO_POINTER(LASTFM_NEIGHBOURS_RADIO));
+        g_signal_connect(G_OBJECT(loved2), "activate",
+                         G_CALLBACK(others_radio_selected),
+                         GINT_TO_POINTER(LASTFM_LOVEDTRACKS_RADIO));
+        g_signal_connect(G_OBJECT(playlist2), "activate",
+                         G_CALLBACK(others_radio_selected),
+                         GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
 
         /* Rate */
         rate = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Rate"));

@@ -73,7 +73,7 @@ ui_input_dialog(GtkWindow *parent, const char *title,
         gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
         gtk_box_pack_start(GTK_BOX(dialog->vbox),
                            GTK_WIDGET(entry), FALSE, FALSE, 10);
-        gtk_entry_set_text(entry, value);
+        if (value != NULL) gtk_entry_set_text(entry, value);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
                 retvalue = g_strdup(gtk_entry_get_text(entry));

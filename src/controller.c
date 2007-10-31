@@ -509,6 +509,7 @@ controller_play_radio_by_url(const char *url)
 /**
  * Start playing a radio by its type. In all cases it will be the
  * radio of the user running the application, not someone else's radio
+ * @param type Radio type
  */
 void
 controller_play_radio(lastfm_radio type)
@@ -518,34 +519,98 @@ controller_play_radio(lastfm_radio type)
         if (type == LASTFM_RECOMMENDED_RADIO) {
                 url = lastfm_recommended_radio_url(
                         usercfg->username, 100);
+        } else if (type == LASTFM_USERTAG_RADIO) {
+                static char *previous = NULL;
+                char *tag = ui_input_dialog(GTK_WINDOW(mainwin->window),
+                                            "Enter tag",
+                                            "Enter one of your tags",
+                                            previous);
+                if (tag != NULL) {
+                        url = lastfm_usertag_radio_url(usercfg->username, tag);
+                        /* Store the new value for later use */
+                        g_free(previous);
+                        previous = tag;
+                }
         } else {
                 url = lastfm_radio_url(type, usercfg->username);
         }
-        controller_play_radio_by_url(url);
-        g_free(url);
+        if (url != NULL) {
+                controller_play_radio_by_url(url);
+                g_free(url);
+        }
 }
 
 /**
- * Open a dialog asking a radio URL and play it
+ * Start playing other user's radio by its type. It will pop up a
+ * dialog to ask the user whose radio is going to be played
+ * @param type Radio type
+ */
+void
+controller_play_others_radio(lastfm_radio type)
+{
+        if (!check_session()) return;
+        static char *previous = NULL;
+        char *url = NULL;
+        char *user = ui_input_dialog(GTK_WINDOW(mainwin->window),
+                                     "Enter user name",
+                                     "Play this user's radio", previous);
+        if (user != NULL) {
+                url = lastfm_radio_url(type, user);
+                controller_play_radio_by_url(url);
+                g_free(url);
+                /* Store the new value for later use */
+                g_free(previous);
+                previous = user;
+        }
+}
+
+/**
+ * Open a dialog asking for a global tag and play its radio
+ */
+void
+controller_play_globaltag_radio(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        static char *previous = NULL;
+        char *url = NULL;
+        char *tag = ui_input_dialog(GTK_WINDOW(mainwin->window),
+                                    "Enter tag", "Enter a global tag",
+                                    previous);
+        if (tag != NULL) {
+                url = lastfm_radio_url(LASTFM_GLOBALTAG_RADIO, tag);
+                controller_play_radio_by_url(url);
+                g_free(url);
+                /* Store the new value for later use */
+                g_free(previous);
+                previous = tag;
+        }
+}
+
+/**
+ * Open a dialog asking for a radio URL and play it
  */
 void
 controller_play_radio_ask_url(void)
 {
         g_return_if_fail(mainwin != NULL);
+        static char *previous = NULL;
         char *url = NULL;
         url = ui_input_dialog(GTK_WINDOW(mainwin->window),
                               "Enter radio URL",
                               "Enter the URL of the Last.fm radio",
-                              "lastfm://");
+                              previous ? previous : "lastfm://");
         if (url != NULL) {
                 if (!strncmp(url, "lastfm://", 9)) {
                         controller_play_radio_by_url(url);
+                        /* Store the new value for later use */
+                        g_free(previous);
+                        previous = url;
                 } else {
                         show_dialog("Last.fm radio URLs must start with "
                                     "lastfm://", GTK_MESSAGE_INFO);
+                        g_free(url);
                 }
         }
-        g_free(url);
 }
 
 /**
