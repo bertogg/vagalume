@@ -262,8 +262,10 @@ controller_open_usercfg(void)
         g_return_if_fail(mainwin != NULL);
         gboolean userpwchanged = FALSE;
         gboolean changed;
-        char *olduser = usercfg != NULL ? g_strdup(usercfg->username) : "";
-        char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) : "";
+        char *olduser = usercfg != NULL ? g_strdup(usercfg->username) :
+                                          g_strdup("");
+        char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
+                                        g_strdup("");
         changed = ui_usercfg_dialog(GTK_WINDOW(mainwin->window), &usercfg);
         if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
