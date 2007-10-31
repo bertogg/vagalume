@@ -5,6 +5,8 @@
  * This file is published under the GNU GPLv3
  */
 
+#include "config.h"
+
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 

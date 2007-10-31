@@ -3,11 +3,18 @@ Sun, 28 Oct 2007 19:35:19 +0100.
 
 Upstream Author: Alberto Garcia Gonzalez <agarcia@igalia.com>
 
-Copyright: (c) 2007 Alberto Garcia Gonzalez
+Vagalume is (c) 2007 Alberto Garcia Gonzalez
 
-License:
+Vagalume also contains a free MD5 implementation that is
+(c) 1999 Aladdin Enterprises.
+See the files src/md5.c and src/md5.h for details
 
-GNU GPLv3
+Vagalume is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 3 as
+published by the Free Software Foundation.
 
-The Debian packaging is (C) 2007, Alberto Garcia <agarcia@igalia.com> and
-is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+Vagalume is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the COPYING file for more details.
