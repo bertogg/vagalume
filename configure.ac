@@ -1,5 +1,5 @@
 AC_INIT(Makefile.am)
-AM_INIT_AUTOMAKE(vagalume, 0.0.20071030)
+AM_INIT_AUTOMAKE(vagalume, 0.0.20071031)
 AM_CONFIG_HEADER(config.h)
 
 AC_CANONICAL_HOST
@@ -30,8 +30,8 @@ AC_SUBST(LIBCURL_LIBS)
 
 # Platform support
 AC_ARG_WITH(platform, [
-  --with-platform=maemo3  compile for Maemo 3
-  --with-platform=gnome   compile for Gnome],
+  --with-platform=gnome   compile for Gnome (default)
+  --with-platform=maemo3  compile for Maemo 3],
   PLATFORM=$withval, PLATFORM=gnome)
 
 if test "$PLATFORM" = "maemo3"; then
@@ -42,14 +42,19 @@ if test "$PLATFORM" = "maemo3"; then
    AC_SUBST(HILDON_LIBS)
    AC_SUBST(HILDON_CFLAGS)
 
-   PKG_CHECK_MODULES(OSSO, libosso)
+   PKG_CHECK_MODULES(OSSO, libosso osso-af-settings)
    AC_SUBST(OSSO_LIBS)
    AC_SUBST(OSSO_CFLAGS)
 
-   PKG_CHECK_MODULES(DBUS, dbus-glib-1 >= 0.60)
-
    desktopentrydir=`$PKG_CONFIG osso-af-settings --variable=desktopentrydir`
    serviceentrydir=`$PKG_CONFIG osso-af-settings --variable=dbusservicedir`
+
+   if test "x$desktopentrydir" = "x"; then
+      AC_MSG_ERROR([Unable to find .desktop directory])
+   elif test "x$serviceentrydir" = "x"; then
+      AC_MSG_ERROR([Unable to find dbus service directory])
+   fi
+
    AC_SUBST(desktopentrydir)
    AC_SUBST(serviceentrydir)
 

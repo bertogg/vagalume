@@ -1,3 +1,9 @@
+vagalume (0.0.20071031-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alberto Garcia <agarcia@igalia.com>  Wed, 31 Oct 2007 02:20:32 +0100
+
 vagalume (0.0.20071028-1) unstable; urgency=low
 
   * Initial release

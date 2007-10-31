@@ -1,5 +1,5 @@
 
-0.0.20071030 (30 Oct 2007)
+0.0.20071031 (31 Oct 2007)
   * Support for marking tracks as Loved / Banned
   * Not it sends Skip information according to the RSP v1.2
   * New "Enable scrobbling" setting

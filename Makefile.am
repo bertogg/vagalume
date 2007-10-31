@@ -14,4 +14,27 @@ EXTRA_DIST = \
 	debian/rules \
 	debian/compat
 
+MAINTAINERCLEANFILES = \
+	Makefile.in \
+	aclocal.m4 \
+	compile \
+	config.guess \
+	config.h.in \
+	config.sub \
+	configure \
+	depcomp \
+	install-sh \
+	ltmain.sh \
+	missing
+
 SUBDIRS = src
+
+install-data-local:
+	if test -n "$(desktopentrydir)"; then \
+	   $(mkinstalldirs) $(DESTDIR)/$(desktopentrydir) ; \
+	   $(INSTALL) maemo/vagalume.desktop $(DESTDIR)/$(desktopentrydir) ; \
+	fi
+	if test -n "$(serviceentrydir)"; then \
+	   $(mkinstalldirs) $(DESTDIR)/$(serviceentrydir) ; \
+	   $(INSTALL) maemo/vagalume.service $(DESTDIR)/$(serviceentrydir) ; \
+	fi

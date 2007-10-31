@@ -6,13 +6,16 @@
 # This file is published under the GNU GPLv3.
 #
 
+MAINTAINERCLEANFILES = \
+	Makefile.in
+
 bin_PROGRAMS = vagalume
 
 vagalume_LDADD = $(GTK2_LIBS) $(GSTREAMER_LIBS) $(LIBXML2_LIBS) \
-	$(LIBCURL_LIBS)
+	$(LIBCURL_LIBS) $(HILDON_LIBS) $(OSSO_LIBS)
 
 vagalume_CFLAGS= $(GTK2_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBXML2_CFLAGS) \
-	$(LIBCURL_CFLAGS)
+	$(LIBCURL_CFLAGS) $(HILDON_CFLAGS) $(OSSO_CFLAGS)
 
 vagalume_SOURCES = \
 	audio.c \

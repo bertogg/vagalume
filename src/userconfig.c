@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#include "config.h"
 #include "userconfig.h"
 
 #define CONFIG_FILE ".vagalumerc"
