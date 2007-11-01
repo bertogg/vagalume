@@ -15,4 +15,6 @@
 #define APP_VERSION VERSION
 #define APP_PLATFORM "linux"
 
+#define APP_FULLNAME APP_NAME " " APP_VERSION " (" APP_PLATFORM ")"
+
 #endif

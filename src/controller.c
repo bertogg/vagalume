@@ -24,6 +24,7 @@
 #include "userconfig.h"
 #include "uimisc.h"
 #include "http.h"
+#include "tags.h"
 #include "globaldefs.h"
 
 static lastfm_session *session = NULL;
@@ -482,6 +483,45 @@ controller_ban_track(void)
                 nowplaying_rating = RSP_RATING_BAN;
                 controller_skip_track();
         }
+}
+
+/**
+ * Ask the user a list of tags and tag the current artist, track or
+ * album (yes, the name of the function is misleading but I can't
+ * think of a better one)
+ * TODO: This should be asynchronous
+ * @param type The type of tag (artist, track, album)
+ */
+void
+controller_tag_track(tag_type type)
+{
+        g_return_if_fail(usercfg != NULL && nowplaying != NULL);
+        char *tag = NULL;
+        char *title = NULL;
+        const char *text;
+        const char *name;
+        if (type == TAG_ARTIST) {
+                text = "Enter a tag for this artist";
+                name = nowplaying->artist;
+        } else if (type == TAG_TRACK) {
+                text = "Enter a tag for this track";
+                name = nowplaying->title;
+        } else {
+                text = "Enter a tag for this album";
+                name = nowplaying->album;
+        }
+        title = g_strconcat("Tagging ", name, NULL);
+        tag = ui_input_dialog(GTK_WINDOW(mainwin->window),
+                              "Enter tag", text, NULL);
+        if (tag != NULL) {
+                GSList *list = NULL;
+                list = g_slist_append(list, tag);
+                tag_track(usercfg->username, usercfg->password,
+                          nowplaying, type, list);
+                g_slist_free(list);
+                g_free(tag);
+        }
+        g_free(title);
 }
 
 /**

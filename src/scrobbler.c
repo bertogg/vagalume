@@ -45,16 +45,15 @@ rsp_session_new(const char *username, const char *password,
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
         rsp_session *s = NULL;
-        char *md5password, *strtimestamp, *auth1, *auth2, *url;
+        char *md5password, *timestamp, *auth1, *auth2, *url;
         char *buffer = NULL;
-        time_t timestamp = time(NULL);
         md5password = get_md5_hash(password);
-        strtimestamp = g_strdup_printf("%lu", timestamp);
-        auth1 = g_strdup_printf("%s%s", md5password, strtimestamp);
+        timestamp = g_strdup_printf("%lu", time(NULL));
+        auth1 = g_strconcat(md5password, timestamp, NULL);
         auth2 = get_md5_hash(auth1);
         url = g_strconcat("http://post.audioscrobbler.com/?hs=true"
                           "&p=1.2&c=tst&v=" APP_VERSION,
-                          "&u=", username, "&t=", strtimestamp,
+                          "&u=", username, "&t=", timestamp,
                           "&a=", auth2, NULL);
         http_get_buffer(url, &buffer, NULL);
         if (buffer == NULL) {
@@ -83,7 +82,7 @@ rsp_session_new(const char *username, const char *password,
         }
         g_free(auth1);
         g_free(auth2);
-        g_free(strtimestamp);
+        g_free(timestamp);
         g_free(md5password);
         g_free(url);
         g_free(buffer);
@@ -106,7 +105,7 @@ rsp_set_nowplaying(const rsp_session *rsp, const lastfm_track *t)
         buffer = g_strconcat("s=", rsp->id, "&a=", artist,
                              "&t=", title, "&b=", album,
                              "&m=&n=", duration, NULL);
-        http_post_buffer(rsp->np_url, buffer, &retbuf);
+        http_post_buffer(rsp->np_url, buffer, &retbuf, NULL);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Correctly set Now Playing");
         } else if (retbuf != NULL) {
@@ -154,7 +153,7 @@ rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start,
                              "&o[0]=L", t->trackauth,
                              "&n[0]=&m[0]=&r[0]=", ratingstr,
                              duration, NULL);
-        http_post_buffer(rsp->post_url, buffer, &retbuf);
+        http_post_buffer(rsp->post_url, buffer, &retbuf, NULL);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Track scrobbled");
         } else if (retbuf != NULL) {

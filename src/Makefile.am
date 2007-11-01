@@ -39,6 +39,8 @@ vagalume_SOURCES = \
 	radio.h \
 	scrobbler.c \
 	scrobbler.h \
+	tags.c \
+	tags.h \
 	uimisc.c \
 	uimisc.h \
 	userconfig.c \

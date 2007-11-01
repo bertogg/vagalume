@@ -18,6 +18,7 @@
 #include "radio.h"
 #include "uimisc.h"
 #include "globaldefs.h"
+#include "tags.h"
 
 static const char *authors[] = {
         "Alberto Garcia Gonzalez\n<agarcia@igalia.com>",
@@ -213,6 +214,13 @@ ban_track_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+tag_track_selected(GtkWidget *widget, gpointer data)
+{
+        tag_type type = GPOINTER_TO_INT(data);
+        controller_tag_track(type);
+}
+
+static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
@@ -237,7 +245,9 @@ create_main_menu(lastfm_mainwin *w)
         GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
-        GtkWidget *love, *ban;
+        GtkWidget *love, *ban, *tag;
+        GtkMenuShell *tagsub;
+        GtkWidget *tagartist, *tagtrack, *tagalbum;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
         GtkWidget *about;
@@ -340,19 +350,38 @@ create_main_menu(lastfm_mainwin *w)
                          G_CALLBACK(others_radio_selected),
                          GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
 
-        /* Rate */
-        rate = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Rate"));
+        /* Actions */
+        rate = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Actions"));
         ratesub = GTK_MENU_SHELL(gtk_menu_new());
-        love = gtk_menu_item_new_with_mnemonic("_Love this track");
+        tagsub = GTK_MENU_SHELL(gtk_menu_new());
+        love = gtk_menu_item_new_with_mnemonic("L_ove this track");
         ban = gtk_menu_item_new_with_mnemonic("_Ban this track");
+        tag = gtk_menu_item_new_with_mnemonic("_Tag");
+        tagartist = gtk_menu_item_new_with_mnemonic("This a_rtist...");
+        tagtrack = gtk_menu_item_new_with_mnemonic("This _track...");
+        tagalbum = gtk_menu_item_new_with_mnemonic("This a_lbum...");
         gtk_menu_shell_append(bar, GTK_WIDGET(rate));
         gtk_menu_item_set_submenu(rate, GTK_WIDGET(ratesub));
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(tag), GTK_WIDGET(tagsub));
         gtk_menu_shell_append(ratesub, love);
         gtk_menu_shell_append(ratesub, ban);
+        gtk_menu_shell_append(ratesub, tag);
+        gtk_menu_shell_append(tagsub, tagartist);
+        gtk_menu_shell_append(tagsub, tagtrack);
+        gtk_menu_shell_append(tagsub, tagalbum);
         g_signal_connect(G_OBJECT(love), "activate",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(ban), "activate",
                          G_CALLBACK(ban_track_selected), NULL);
+        g_signal_connect(G_OBJECT(tagartist), "activate",
+                         G_CALLBACK(tag_track_selected),
+                         GINT_TO_POINTER(TAG_ARTIST));
+        g_signal_connect(G_OBJECT(tagtrack), "activate",
+                         G_CALLBACK(tag_track_selected),
+                         GINT_TO_POINTER(TAG_TRACK));
+        g_signal_connect(G_OBJECT(tagalbum), "activate",
+                         G_CALLBACK(tag_track_selected),
+                         GINT_TO_POINTER(TAG_ALBUM));
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));
