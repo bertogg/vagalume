@@ -516,13 +516,13 @@ controller_tag_track(tag_type type)
         const char *text;
         const char *name;
         if (type == TAG_ARTIST) {
-                text = "Enter a tag for this artist";
+                text = "Enter a comma-separated list\nof tags for this artist";
                 name = nowplaying->artist;
         } else if (type == TAG_TRACK) {
-                text = "Enter a tag for this track";
+                text = "Enter a comma-separated list\nof tags for this track";
                 name = nowplaying->title;
         } else {
-                text = "Enter a tag for this album";
+                text = "Enter a comma-separated list\nof tags for this album";
                 name = nowplaying->album;
         }
         title = g_strconcat("Tagging ", name, NULL);
@@ -530,9 +530,14 @@ controller_tag_track(tag_type type)
                               "Enter tag", text, NULL);
         if (tag != NULL) {
                 GSList *list = NULL;
-                list = g_slist_append(list, tag);
+                char **tags = g_strsplit(tag, ",", 0);
+                int i;
+                for (i = 0; tags[i] != NULL; i++) {
+                        list = g_slist_append(list, g_strstrip(tags[i]));
+                }
                 tag_track(usercfg->username, usercfg->password,
                           nowplaying, type, list);
+                g_strfreev(tags);
                 g_slist_free(list);
                 g_free(tag);
         }

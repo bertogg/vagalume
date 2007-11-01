@@ -45,7 +45,7 @@ lastfm_parse_handshake(const char *buffer)
 {
         GHashTable *hash;
         int i;
-        char **lines = g_strsplit(buffer, "\n", 50);
+        char **lines = g_strsplit(buffer, "\n", 0);
         hash = g_hash_table_new_full(g_str_hash, g_str_equal,
                                      g_free, g_free);
         for (i = 0; lines[i] != NULL; i++) {
