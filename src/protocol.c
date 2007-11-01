@@ -6,6 +6,7 @@
  */
 
 #include <libxml/parser.h>
+#include <string.h>
 
 #include "http.h"
 #include "util.h"
@@ -15,6 +16,8 @@
 static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
        "?version=" APP_VERSION "&platform=" APP_PLATFORM;
+static const char *friends_url =
+       "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
 
 static GHashTable *
 lastfm_parse_handshake(const char *buffer)
@@ -286,4 +289,31 @@ lastfm_set_radio(lastfm_session *s, const char *radio_url)
         g_free(buffer);
 
         return retval;
+}
+
+GList *
+lastfm_get_friends(const char *username)
+{
+        g_return_val_if_fail(username != NULL, NULL);
+        GList *list = NULL;
+        char *url = g_strdup_printf(friends_url, username);
+        char *buffer = NULL;
+        http_get_buffer(url, &buffer, NULL);
+        if (buffer != NULL) {
+                char **friends = g_strsplit(buffer, "\n", 0);
+                int i;
+                for (i = 0; friends[i] != NULL; i++) {
+                        char *elem = g_strstrip(friends[i]);
+                        if (*elem != '\0') {
+                                list = g_list_append(list, g_strdup(elem));
+                        }
+                }
+                g_strfreev(friends);
+                if (list != NULL) {
+                        list = g_list_sort(list, (GCompareFunc) strcmp);
+                }
+        }
+        g_free(url);
+        g_free(buffer);
+        return list;
 }

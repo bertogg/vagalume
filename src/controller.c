@@ -29,6 +29,7 @@ static lastfm_pls *playlist = NULL;
 static rsp_session *rsp_sess = NULL;
 static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
+static GList *friends = NULL;
 static lastfm_track *nowplaying = NULL;
 static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
@@ -250,8 +251,8 @@ controller_set_nowplaying(lastfm_track *track)
 }
 
 /**
- * Initializes an RSP session. This is done in a thread to avoid
- * freezing the UI.
+ * Initializes an RSP session and get list of friends. This is done in
+ * a thread to avoid freezing the UI.
  *
  * @param data Not used
  * @return NULL (not used)
@@ -266,9 +267,13 @@ rsp_session_init_thread(gpointer data)
         gdk_threads_leave();
         if (username && password) {
                 rsp_session *s = rsp_session_new(username, password, NULL);
+                GList *list = lastfm_get_friends(username);
                 gdk_threads_enter();
                 rsp_session_destroy(rsp_sess);
                 rsp_sess = s;
+                g_list_foreach(friends, g_free, NULL);
+                g_list_free(friends);
+                friends = list;
                 gdk_threads_leave();
         }
         g_free(username);
