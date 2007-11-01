@@ -16,9 +16,13 @@ DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
 ifeq ($(ENABLE_MAEMO),yes)
-	PLATFORM=maemo3
+	PLATFORM=maemo
 else
+    ifeq ($(ENABLE_GNOME),yes)
 	PLATFORM=gnome
+    else
+	PLATFORM=detect
+    endif
 endif
 
 CFLAGS = -Wall -g

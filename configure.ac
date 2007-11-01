@@ -28,19 +28,48 @@ PKG_CHECK_MODULES(LIBCURL, libcurl)
 AC_SUBST(LIBCURL_CFLAGS)
 AC_SUBST(LIBCURL_LIBS)
 
+# Autodetect platform
+if pkg-config --exists libosso; then
+   DETECTED_PLATFORM=maemo
+else
+   DETECTED_PLATFORM=gnome
+fi
+
 # Platform support
 AC_ARG_WITH(platform, [
-  --with-platform=gnome   compile for Gnome (default)
-  --with-platform=maemo3  compile for Maemo 3],
-  PLATFORM=$withval, PLATFORM=gnome)
+Target platform:
+  --with-platform=detect  detect target platform (default)
+  --with-platform=gnome   compile for Gnome
+  --with-platform=maemo   compile for Maemo],
+  PLATFORM=$withval, PLATFORM=detect)
 
-if test "$PLATFORM" = "maemo3"; then
+if test "$PLATFORM" = "detect"; then
+   PLATFORM=$DETECTED_PLATFORM
+fi
 
-   echo "Compiling for Maemo 3"
+if test "$PLATFORM" = "maemo"; then
 
-   PKG_CHECK_MODULES(HILDON, hildon-libs)
-   AC_SUBST(HILDON_LIBS)
-   AC_SUBST(HILDON_CFLAGS)
+   libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
+
+   if test "$libossovers" = "1"; then
+      MAEMOVERS=3
+      echo "Compiling for Maemo 3"
+   elif test "$libossovers" = "2"; then
+      MAEMOVERS=4
+      echo "Compiling for Maemo 4"
+   else
+      AC_MSG_ERROR([Unknown Maemo version])
+   fi
+
+   if test "$MAEMOVERS" = "3"; then
+      PKG_CHECK_MODULES(HILDON, hildon-libs)
+      AC_SUBST(HILDON_LIBS)
+      AC_SUBST(HILDON_CFLAGS)
+   else
+      PKG_CHECK_MODULES(HILDON, hildon-1)
+      AC_SUBST(HILDON_LIBS)
+      AC_SUBST(HILDON_CFLAGS)
+   fi
 
    PKG_CHECK_MODULES(OSSO, libosso osso-af-settings)
    AC_SUBST(OSSO_LIBS)
@@ -59,7 +88,11 @@ if test "$PLATFORM" = "maemo3"; then
    AC_SUBST(serviceentrydir)
 
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])
-   AC_DEFINE([MAEMO3], [], [Defined if building for Maemo 3 (bora)])
+   if test "$MAEMOVERS" = "3"; then
+      AC_DEFINE([MAEMO3], [], [Defined if building for Maemo 3 (bora)])
+   else
+      AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
+   fi
 
 elif test "$PLATFORM" = "gnome"; then
 

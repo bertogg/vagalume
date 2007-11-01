@@ -1,9 +1,10 @@
-To compile and install this program simply run:
-
-./configure --with-platform=gnome && make       for a Gnome desktop, or
-./configure --with-platform=maemo3 && make      for the Maemo 3 platform.
-
 Scripts to generate Debian packages are provided as well, run
 
-./build-gnome-package.sh         for a Debian GNU/Linux system, or
-./build-maemo-package.sh         for Maemo 3
+./build-package.sh
+
+Or you can compile this program by hand if you want to:
+
+./configure && make
+
+In both cases the system should detect automatically if running in
+Maemo 3, Maemo 4 or a standard desktop system.

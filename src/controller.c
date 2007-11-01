@@ -14,7 +14,6 @@
 
 #ifdef MAEMO
 #include <libosso.h>
-#include <hildon-widgets/hildon-app.h>
 #endif
 
 #include "controller.h"
@@ -754,7 +753,7 @@ static gboolean
 key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
 {
         switch (event->keyval) {
-        case HILDON_FULLSCREEN_KEY:
+        case GDK_F6:
                 if (win->is_fullscreen) {
                         gtk_window_unfullscreen(win->window);
                 } else {
