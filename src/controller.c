@@ -39,12 +39,16 @@ static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
 
 typedef struct {
-        char *user;    /* Needed for the old love/ban protocol,    */
-        char *pass;    /* this is going to disappear in the future */
         lastfm_track *track;
         rsp_rating rating;
         time_t start;
 } rsp_data;
+
+typedef struct {
+        lastfm_track *track;
+        char *taglist;                /* comma-separated list of tags */
+        tag_type type;
+} tag_data;
 
 static void
 show_dialog(const char *text, GtkMessageType type)
@@ -128,8 +132,13 @@ scrobble_track_thread(gpointer data)
         rsp_session *s = NULL;
         g_return_val_if_fail(d != NULL && d->track != NULL && d->start > 0,
                              NULL);
+        char *user = NULL, *pass = NULL;
         gdk_threads_enter();
         s = rsp_session_copy(rsp_sess);
+        if (usercfg != NULL) {
+                user = g_strdup(usercfg->username);
+                pass = g_strdup(usercfg->password);
+        }
         gdk_threads_leave();
         if (s != NULL) {
                 rsp_scrobble(s, d->track, d->start, d->rating);
@@ -137,13 +146,13 @@ scrobble_track_thread(gpointer data)
         }
         /* This love_ban_track() call won't be needed anymore with
          * Lastfm's new protocol v1.2 */
-        if (d->rating == RSP_RATING_LOVE) {
-                love_ban_track(d->user, d->pass, d->track, TRUE);
-        } else if (d->rating == RSP_RATING_BAN) {
-                love_ban_track(d->user, d->pass, d->track, FALSE);
+        if (user && pass && d->rating == RSP_RATING_LOVE) {
+                love_ban_track(user, pass, d->track, TRUE);
+        } else if (user && pass && d->rating == RSP_RATING_BAN) {
+                love_ban_track(user, pass, d->track, FALSE);
         }
-        g_free(d->user);
-        g_free(d->pass);
+        g_free(user);
+        g_free(pass);
         lastfm_track_destroy(d->track);
         g_free(d);
         return NULL;
@@ -172,8 +181,6 @@ controller_scrobble_track(void)
                         nowplaying_rating = RSP_RATING_SKIP;
                 }
                 rsp_data *d = g_new0(rsp_data, 1);
-                d->user = g_strdup(usercfg->username);
-                d->pass = g_strdup(usercfg->password);
                 d->track = lastfm_track_copy(nowplaying);
                 d->start = nowplaying_since;
                 d->rating = nowplaying_rating;
@@ -501,17 +508,53 @@ controller_ban_track(void)
 }
 
 /**
+ * Tag a track using This can take some seconds, so it must be called
+ * using g_thread_create() to avoid freezing the UI.
+ *
+ * @param data Pointer to tag_data, with info about the track to be
+ *             tagged. This data must be freed here
+ * @return NULL (this value is not used)
+ */
+static gpointer
+tag_track_thread(gpointer data)
+{
+        tag_data *d = (tag_data *) data;
+        g_return_val_if_fail(d && d->track && d->taglist, NULL);
+        char *user = NULL, *pass = NULL;
+        gdk_threads_enter();
+        if (usercfg != NULL) {
+                user = g_strdup(usercfg->username);
+                pass = g_strdup(usercfg->password);
+        }
+        gdk_threads_leave();
+        if (user != NULL && pass != NULL) {
+                GSList *list = NULL;
+                char **tags = g_strsplit(d->taglist, ",", 0);
+                int i;
+                for (i = 0; tags[i] != NULL; i++) {
+                        list = g_slist_append(list, g_strstrip(tags[i]));
+                }
+                tag_track(user, pass, d->track, d->type, list);
+                g_strfreev(tags);
+                g_slist_free(list);
+        }
+        lastfm_track_destroy(d->track);
+        g_free(d->taglist);
+        g_free(d);
+        return NULL;
+}
+
+/**
  * Ask the user a list of tags and tag the current artist, track or
  * album (yes, the name of the function is misleading but I can't
  * think of a better one)
- * TODO: This should be asynchronous
  * @param type The type of tag (artist, track, album)
  */
 void
 controller_tag_track(tag_type type)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
-        char *tag = NULL;
+        char *tags = NULL;
         char *title = NULL;
         const char *text;
         const char *name;
@@ -526,20 +569,15 @@ controller_tag_track(tag_type type)
                 name = nowplaying->album;
         }
         title = g_strconcat("Tagging ", name, NULL);
-        tag = ui_input_dialog(GTK_WINDOW(mainwin->window),
-                              "Enter tag", text, NULL);
-        if (tag != NULL) {
-                GSList *list = NULL;
-                char **tags = g_strsplit(tag, ",", 0);
-                int i;
-                for (i = 0; tags[i] != NULL; i++) {
-                        list = g_slist_append(list, g_strstrip(tags[i]));
-                }
-                tag_track(usercfg->username, usercfg->password,
-                          nowplaying, type, list);
-                g_strfreev(tags);
-                g_slist_free(list);
-                g_free(tag);
+        tags = ui_input_dialog(GTK_WINDOW(mainwin->window),
+                               "Enter tag", text, NULL);
+        if (tags != NULL) {
+                tag_data *d = g_new0(tag_data, 1);
+                d->track = lastfm_track_copy(nowplaying);
+                d->taglist = g_strdup(tags);
+                d->type = type;
+                g_thread_create(tag_track_thread,d,FALSE,NULL);
+                g_free(tags);
         }
         g_free(title);
 }
