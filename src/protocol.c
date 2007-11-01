@@ -310,7 +310,7 @@ lastfm_get_friends(const char *username)
                 }
                 g_strfreev(friends);
                 if (list != NULL) {
-                        list = g_list_sort(list, (GCompareFunc) strcmp);
+                        list = g_list_sort(list, (GCompareFunc) strcasecmp);
                 }
         }
         g_free(url);

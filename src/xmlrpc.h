@@ -25,5 +25,7 @@ void love_ban_track(const char *user, const char *password,
 void recommend_track(const char *user, const char *password,
                      const lastfm_track *track, const char *text,
                      request_type type, const char *rcpt);
+void add_to_playlist(const char *user, const char *password,
+                     const lastfm_track *track);
 
 #endif

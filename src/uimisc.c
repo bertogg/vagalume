@@ -139,3 +139,44 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_widget_destroy(GTK_WIDGET(dialog));
         return changed;
 }
+
+static GtkTreeModel *
+ui_create_options_list(GList *elems)
+{
+        GtkTreeIter iter;
+        GList *current = elems;
+        GtkListStore *store = gtk_list_store_new (1, G_TYPE_STRING);;
+
+        for (; current != NULL; current = g_list_next(current)) {
+                gtk_list_store_append(store, &iter);
+                gtk_list_store_set(store, &iter, 0, current->data, -1);
+        }
+        return GTK_TREE_MODEL(store);
+}
+
+char *
+ui_input_dialog_with_list(GtkWindow *parent, const char *title,
+                          const char *text, GList *elems, const char *value)
+{
+        GtkDialog *dialog;
+        GtkWidget *label;
+        GtkWidget *combo;
+        GtkTreeModel *model;
+        char *retvalue = NULL;
+        model = ui_create_options_list(elems);
+        dialog = ui_base_dialog(parent, title);
+        label = gtk_label_new(text);
+        combo = gtk_combo_box_entry_new_with_model(model, 0);
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), combo, FALSE, FALSE, 10);
+        gtk_widget_show_all(GTK_WIDGET(dialog));
+        if (value != NULL) {
+                gtk_entry_set_text(GTK_ENTRY(GTK_BIN(combo)->child), value);
+        }
+        if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
+                GtkEntry *entry = GTK_ENTRY(GTK_BIN(combo)->child);
+                retvalue = g_strstrip(g_strdup(gtk_entry_get_text(entry)));
+        }
+        gtk_widget_destroy(GTK_WIDGET(dialog));
+        return retvalue;
+}

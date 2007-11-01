@@ -271,7 +271,7 @@ rsp_session_init_thread(gpointer data)
                 gdk_threads_enter();
                 rsp_session_destroy(rsp_sess);
                 rsp_sess = s;
-                g_list_foreach(friends, g_free, NULL);
+                g_list_foreach(friends, (GFunc) g_free, NULL);
                 g_list_free(friends);
                 friends = list;
                 gdk_threads_leave();
@@ -628,7 +628,8 @@ controller_recomm_track(request_type type)
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         char *rcpt = NULL;
         const char *text = "Recommend to this user...";
-        rcpt = ui_input_dialog(mainwin->window, "Recommendation", text, NULL);
+        rcpt = ui_input_dialog_with_list(mainwin->window, "Recommendation",
+                                         text, friends, NULL);
         if (rcpt != NULL) {
                 g_strstrip(rcpt);
                 recomm_data *d = g_new0(recomm_data, 1);
@@ -751,8 +752,11 @@ controller_play_others_radio(lastfm_radio type)
         if (!check_session()) return;
         static char *previous = NULL;
         char *url = NULL;
-        char *user = ui_input_dialog(mainwin->window, "Enter user name",
-                                     "Play this user's radio", previous);
+        char *user = ui_input_dialog_with_list(mainwin->window,
+                                               "Enter user name",
+                                               "Play this user's radio",
+                                               friends,
+                                               previous);
         if (user != NULL) {
                 url = lastfm_radio_url(type, user);
                 controller_play_radio_by_url(url);
