@@ -18,7 +18,7 @@
 #include "radio.h"
 #include "uimisc.h"
 #include "globaldefs.h"
-#include "tags.h"
+#include "xmlrpc.h"
 
 static const char *authors[] = {
         "Alberto Garcia Gonzalez\n<agarcia@igalia.com>",

@@ -18,15 +18,11 @@
 #endif
 
 #include "controller.h"
-#include "protocol.h"
 #include "scrobbler.h"
 #include "playlist.h"
-#include "mainwin.h"
 #include "audio.h"
-#include "userconfig.h"
 #include "uimisc.h"
 #include "http.h"
-#include "tags.h"
 #include "globaldefs.h"
 
 static lastfm_session *session = NULL;

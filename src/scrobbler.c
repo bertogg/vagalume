@@ -15,6 +15,7 @@
 #include "scrobbler.h"
 #include "http.h"
 #include "globaldefs.h"
+#include "util.h"
 
 void
 rsp_session_destroy(rsp_session *s)
@@ -45,16 +46,14 @@ rsp_session_new(const char *username, const char *password,
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
         rsp_session *s = NULL;
-        char *md5password, *timestamp, *auth1, *auth2, *url;
+        char *timestamp, *auth, *url;
         char *buffer = NULL;
-        md5password = get_md5_hash(password);
         timestamp = g_strdup_printf("%lu", time(NULL));
-        auth1 = g_strconcat(md5password, timestamp, NULL);
-        auth2 = get_md5_hash(auth1);
+        auth = compute_auth_token(password, timestamp);
         url = g_strconcat("http://post.audioscrobbler.com/?hs=true"
                           "&p=1.2&c=tst&v=" APP_VERSION,
                           "&u=", username, "&t=", timestamp,
-                          "&a=", auth2, NULL);
+                          "&a=", auth, NULL);
         http_get_buffer(url, &buffer, NULL);
         if (buffer == NULL) {
                 g_warning("Unable to initiate rsp session");
@@ -80,10 +79,8 @@ rsp_session_new(const char *username, const char *password,
                         *err = LASTFM_ERR_NONE;
                 }
         }
-        g_free(auth1);
-        g_free(auth2);
+        g_free(auth);
         g_free(timestamp);
-        g_free(md5password);
         g_free(url);
         g_free(buffer);
         return s;

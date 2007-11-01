@@ -1,14 +1,14 @@
 /*
- * tags.c -- XMLRPC-based functions to tag artists, tracks, albums,
- *           loves and hates
+ * xmlrpc.c -- XMLRPC-based functions to tag artists, tracks, albums,
+ *             loves and hates
  * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
  *
  * This file is published under the GNU GPLv3
  */
 
-#include "tags.h"
+#include "xmlrpc.h"
 #include "http.h"
-#include "protocol.h"
+#include "util.h"
 
 static const char *xmlrpc_url =
 "http://ws.audioscrobbler.com:80/1.0/rw/xmlrpc.php";
@@ -74,19 +74,15 @@ static char *
 auth_header(const char *user, const char *password, const char *method)
 {
         g_return_val_if_fail(user && password && method, NULL);
-        char *md5password = get_md5_hash(password);
         char *timestamp = g_strdup_printf("%lu", time(NULL));
-        char *auth1 = g_strconcat(md5password, timestamp, NULL);
-        char *auth2 = get_md5_hash(auth1);
+        char *auth = compute_auth_token(password, timestamp);
         char *hdr = method_header(method);
         char *param1 = string_param(user);
         char *param2 = string_param(timestamp);
-        char *param3 = string_param(auth2);
+        char *param3 = string_param(auth);
         char *auth_hdr = g_strconcat(hdr, param1, param2, param3, NULL);
-        g_free(md5password);
         g_free(timestamp);
-        g_free(auth1);
-        g_free(auth2);
+        g_free(auth);
         g_free(hdr);
         g_free(param1);
         g_free(param2);

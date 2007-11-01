@@ -11,7 +11,7 @@
 #include "protocol.h"
 #include "mainwin.h"
 #include "radio.h"
-#include "tags.h"
+#include "xmlrpc.h"
 #include "userconfig.h"
 
 void controller_stop_playing(void);

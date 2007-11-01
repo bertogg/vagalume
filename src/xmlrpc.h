@@ -1,13 +1,13 @@
 /*
- * tags.h -- XMLRPC-based functions to tag artists, tracks, albums,
- *           loves and hates
+ * xmlrpc.h -- XMLRPC-based functions to tag artists, tracks, albums,
+ *             loves and hates
  * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
  *
  * This file is published under the GNU GPLv3
  */
 
-#ifndef TAGS_H
-#define TAGS_H
+#ifndef XMLRPC_H
+#define XMLRPC_H
 
 #include <glib.h>
 #include "playlist.h"

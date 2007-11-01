@@ -5,40 +5,16 @@
  * This file is published under the GNU GPLv3.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <libxml/parser.h>
 
 #include "http.h"
-#include "md5.h"
+#include "util.h"
 #include "protocol.h"
 #include "globaldefs.h"
 
 static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
        "?version=" APP_VERSION "&platform=" APP_PLATFORM;
-
-char *
-get_md5_hash(const char *str)
-{
-        g_return_val_if_fail(str != NULL, NULL);
-        const int digestlen = 16;
-        md5_state_t state;
-        md5_byte_t digest[digestlen];
-        int i;
-
-        md5_init(&state);
-        md5_append(&state, (const md5_byte_t *)str, strlen(str));
-        md5_finish(&state, digest);
-
-        char *hexdigest = g_malloc(digestlen*2 + 1);
-        for (i = 0; i < digestlen; i++) {
-                sprintf(hexdigest + 2*i, "%02x", digest[i]);
-        }
-        return hexdigest;
-}
 
 static GHashTable *
 lastfm_parse_handshake(const char *buffer)
