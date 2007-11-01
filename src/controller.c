@@ -37,6 +37,8 @@ static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
 
 typedef struct {
+        char *user;    /* Needed for the old love/ban protocol,    */
+        char *pass;    /* this is going to disappear in the future */
         lastfm_track *track;
         rsp_rating rating;
         time_t start;
@@ -131,6 +133,15 @@ scrobble_track_thread(gpointer data)
                 rsp_scrobble(s, d->track, d->start, d->rating);
                 rsp_session_destroy(s);
         }
+        /* This love_ban_track() call won't be needed anymore with
+         * Lastfm's new protocol v1.2 */
+        if (d->rating == RSP_RATING_LOVE) {
+                love_ban_track(d->user, d->pass, d->track, TRUE);
+        } else if (d->rating == RSP_RATING_BAN) {
+                love_ban_track(d->user, d->pass, d->track, FALSE);
+        }
+        g_free(d->user);
+        g_free(d->pass);
         lastfm_track_destroy(d->track);
         g_free(d);
         return NULL;
@@ -159,6 +170,8 @@ controller_scrobble_track(void)
                         nowplaying_rating = RSP_RATING_SKIP;
                 }
                 rsp_data *d = g_new0(rsp_data, 1);
+                d->user = g_strdup(usercfg->username);
+                d->pass = g_strdup(usercfg->password);
                 d->track = lastfm_track_copy(nowplaying);
                 d->start = nowplaying_since;
                 d->rating = nowplaying_rating;
