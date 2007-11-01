@@ -110,6 +110,9 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                                              (*cfg)->enable_scrobbling);
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
                                              (*cfg)->discovery_mode);
+        } else {
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
+                                             TRUE);
         }
         table = GTK_TABLE(gtk_table_new(4, 2, FALSE));
         gtk_table_attach(table, label1, 0, 1, 0, 1, 0, 0, 5, 5);
