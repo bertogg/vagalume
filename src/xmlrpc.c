@@ -101,7 +101,7 @@ auth_header(const char *user, const char *password, const char *method)
  */
 void
 tag_track(const char *user, const char *password, const lastfm_track *track,
-          tag_type type, GSList *tags)
+          request_type type, GSList *tags)
 {
         g_return_if_fail(user && password && track && tags);
         GSList *headers = NULL;
@@ -110,10 +110,10 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
         char *hdr;
         char *param1, *param2, *param3, *param4;
         const char *method;
-        if (type == TAG_ARTIST) {
+        if (type == REQUEST_ARTIST) {
                 method = "tagArtist";
                 param2 = g_strdup("");
-        } else if (type == TAG_TRACK) {
+        } else if (type == REQUEST_TRACK) {
                 method = "tagTrack";
                 param2 = string_param(track->title);
         } else {
@@ -193,4 +193,67 @@ love_ban_track(const char *user, const char *password,
         g_free(hdr);
         g_free(artist);
         g_free(title);
+}
+
+/**
+ * Recommend a track to a user
+ *
+ * @param user The user's Last.fm ID
+ * @param password The user's password
+ * @param track The track to recommend
+ * @param text The text of the recommendation
+ * @param type Whether to recommend an artist, track or album
+ * @param rcpt The user who will receive the recommendation
+ */
+void
+recommend_track(const char *user, const char *password,
+                const lastfm_track *track, const char *text,
+                request_type type, const char *rcpt)
+{
+        g_return_if_fail(user && password && track && text && rcpt);
+        GSList *headers = NULL;
+        char *retbuf = NULL;
+        char *request, *hdr, *artist, *title;
+        char *recomm_type, *recomm_to, *recomm_body, *language;
+        hdr = auth_header(user, password, "recommendItem");
+        artist = string_param(track->artist);
+        if (type == REQUEST_ARTIST) {
+                title = string_param("");
+                recomm_type = string_param("artist");
+        } else if (type == REQUEST_TRACK) {
+                title = string_param(track->title);
+                recomm_type = string_param("track");
+        } else {
+                title = string_param(track->album);
+                recomm_type = string_param("album");
+        }
+        recomm_to = string_param(rcpt);
+        recomm_body = string_param(text);
+        language = string_param("en");
+        request = g_strconcat(hdr, artist, title, recomm_type, recomm_to,
+                              recomm_body, language, request_ftr, NULL);
+        /* Send request */
+        headers = g_slist_append(headers, "Content-Type: text/xml");
+        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
+
+        /* Check its return value */
+        if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
+                g_debug("Recommendation sent correctly");
+        } else if (retbuf != NULL) {
+                g_debug("Error sending recommendation, response: %s", retbuf);
+        } else {
+                g_debug("Problem sending recommendation, connection error?");
+        }
+
+        /* Cleanup */
+        g_slist_free(headers);
+        g_free(retbuf);
+        g_free(request);
+        g_free(hdr);
+        g_free(artist);
+        g_free(title);
+        g_free(recomm_type);
+        g_free(recomm_to);
+        g_free(recomm_body);
+        g_free(language);
 }

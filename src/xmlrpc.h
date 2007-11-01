@@ -13,14 +13,17 @@
 #include "playlist.h"
 
 typedef enum {
-        TAG_ARTIST,
-        TAG_TRACK,
-        TAG_ALBUM
-} tag_type;
+        REQUEST_ARTIST,
+        REQUEST_TRACK,
+        REQUEST_ALBUM
+} request_type;
 
 void tag_track(const char *user, const char *password,
-               const lastfm_track *track, tag_type type, GSList *tags);
+               const lastfm_track *track, request_type type, GSList *tags);
 void love_ban_track(const char *user, const char *password,
                     const lastfm_track *track, gboolean love);
+void recommend_track(const char *user, const char *password,
+                     const lastfm_track *track, const char *text,
+                     request_type type, const char *rcpt);
 
 #endif

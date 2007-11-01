@@ -42,8 +42,15 @@ typedef struct {
 typedef struct {
         lastfm_track *track;
         char *taglist;                /* comma-separated list of tags */
-        tag_type type;
+        request_type type;
 } tag_data;
+
+typedef struct {
+        lastfm_track *track;
+        char *rcpt;                  /* Recipient of the recommendation */
+        char *text;                  /* text of the recommendation */
+        request_type type;
+} recomm_data;
 
 static void
 show_dialog(const char *text, GtkMessageType type)
@@ -503,8 +510,8 @@ controller_ban_track(void)
 }
 
 /**
- * Tag a track using This can take some seconds, so it must be called
- * using g_thread_create() to avoid freezing the UI.
+ * Tag a track. This can take some seconds, so it must be called using
+ * g_thread_create() to avoid freezing the UI.
  *
  * @param data Pointer to tag_data, with info about the track to be
  *             tagged. This data must be freed here
@@ -546,34 +553,83 @@ tag_track_thread(gpointer data)
  * @param type The type of tag (artist, track, album)
  */
 void
-controller_tag_track(tag_type type)
+controller_tag_track(request_type type)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         char *tags = NULL;
-        char *title = NULL;
         const char *text;
-        const char *name;
-        if (type == TAG_ARTIST) {
+        if (type == REQUEST_ARTIST) {
                 text = "Enter a comma-separated list\nof tags for this artist";
-                name = nowplaying->artist;
-        } else if (type == TAG_TRACK) {
+        } else if (type == REQUEST_TRACK) {
                 text = "Enter a comma-separated list\nof tags for this track";
-                name = nowplaying->title;
         } else {
                 text = "Enter a comma-separated list\nof tags for this album";
-                name = nowplaying->album;
         }
-        title = g_strconcat("Tagging ", name, NULL);
-        tags = ui_input_dialog(mainwin->window, "Enter tag", text, NULL);
+        tags = ui_input_dialog(mainwin->window, "Enter tags", text, NULL);
         if (tags != NULL) {
                 tag_data *d = g_new0(tag_data, 1);
                 d->track = lastfm_track_copy(nowplaying);
-                d->taglist = g_strdup(tags);
+                d->taglist = tags;
                 d->type = type;
                 g_thread_create(tag_track_thread,d,FALSE,NULL);
-                g_free(tags);
         }
-        g_free(title);
+}
+
+/**
+ * Recommend a track. This can take some seconds, so it must be called
+ * using g_thread_create() to avoid freezing the UI.
+ *
+ * @param data Pointer to recomm_data, with info about the track to be
+ *             recommended. This data must be freed here
+ * @return NULL (this value is not used)
+ */
+static gpointer
+recomm_track_thread(gpointer data)
+{
+        recomm_data *d = (recomm_data *) data;
+        g_return_val_if_fail(d && d->track && d->rcpt && d->text, NULL);
+        char *user = NULL, *pass = NULL;
+        gdk_threads_enter();
+        if (usercfg != NULL) {
+                user = g_strdup(usercfg->username);
+                pass = g_strdup(usercfg->password);
+        }
+        gdk_threads_leave();
+        if (user != NULL && pass != NULL) {
+                recommend_track(user, pass, d->track, d->text,
+                                d->type, d->rcpt);
+        }
+        lastfm_track_destroy(d->track);
+        g_free(d->rcpt);
+        g_free(d->text);
+        g_free(d);
+        return NULL;
+}
+
+/**
+ * Ask the user a recipient and recommend the current artist, track or
+ * album album (yes, the name of the function is misleading but I
+ * can't think of a better one)
+ *
+ * @param type The type of recommendation (artist, track, album)
+ */
+void
+controller_recomm_track(request_type type)
+{
+        g_return_if_fail(usercfg != NULL && nowplaying != NULL);
+        char *rcpt = NULL;
+        const char *text = "Recommend to this user...";
+        rcpt = ui_input_dialog(mainwin->window, "Recommendation", text, NULL);
+        if (rcpt != NULL) {
+                g_strstrip(rcpt);
+                recomm_data *d = g_new0(recomm_data, 1);
+                d->track = lastfm_track_copy(nowplaying);
+                d->rcpt = rcpt;
+                d->text = g_strconcat("Recommended by ",
+                                      usercfg->username, NULL);
+                d->type = type;
+                g_thread_create(recomm_track_thread,d,FALSE,NULL);
+        }
 }
 
 /**

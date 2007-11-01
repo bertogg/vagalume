@@ -224,8 +224,15 @@ ban_track_selected(GtkWidget *widget, gpointer data)
 static void
 tag_track_selected(GtkWidget *widget, gpointer data)
 {
-        tag_type type = GPOINTER_TO_INT(data);
+        request_type type = GPOINTER_TO_INT(data);
         controller_tag_track(type);
+}
+
+static void
+recomm_track_selected(GtkWidget *widget, gpointer data)
+{
+        request_type type = GPOINTER_TO_INT(data);
+        controller_recomm_track(type);
 }
 
 static void
@@ -253,9 +260,10 @@ create_main_menu(lastfm_mainwin *w)
         GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
-        GtkWidget *love, *ban, *tag;
-        GtkMenuShell *tagsub;
+        GtkWidget *love, *ban, *tag, *dorecomm;
+        GtkMenuShell *tagsub, *dorecommsub;
         GtkWidget *tagartist, *tagtrack, *tagalbum;
+        GtkWidget *recommartist, *recommtrack, *recommalbum;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
         GtkWidget *about;
@@ -366,34 +374,54 @@ create_main_menu(lastfm_mainwin *w)
         rate = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Actions"));
         ratesub = GTK_MENU_SHELL(gtk_menu_new());
         tagsub = GTK_MENU_SHELL(gtk_menu_new());
+        dorecommsub = GTK_MENU_SHELL(gtk_menu_new());
         love = gtk_menu_item_new_with_mnemonic("L_ove this track");
         ban = gtk_menu_item_new_with_mnemonic("_Ban this track");
         tag = gtk_menu_item_new_with_mnemonic("_Tag");
+        dorecomm = gtk_menu_item_new_with_mnemonic("Recommend");
         tagartist = gtk_menu_item_new_with_mnemonic("This a_rtist...");
         tagtrack = gtk_menu_item_new_with_mnemonic("This _track...");
         tagalbum = gtk_menu_item_new_with_mnemonic("This a_lbum...");
+        recommartist = gtk_menu_item_new_with_mnemonic("This artist...");
+        recommtrack = gtk_menu_item_new_with_mnemonic("This track...");
+        recommalbum = gtk_menu_item_new_with_mnemonic("This album...");
         gtk_menu_shell_append(bar, GTK_WIDGET(rate));
         gtk_menu_item_set_submenu(rate, GTK_WIDGET(ratesub));
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(tag), GTK_WIDGET(tagsub));
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(dorecomm),
+                                  GTK_WIDGET(dorecommsub));
         gtk_menu_shell_append(ratesub, love);
         gtk_menu_shell_append(ratesub, ban);
         gtk_menu_shell_append(ratesub, tag);
+        gtk_menu_shell_append(ratesub, dorecomm);
         gtk_menu_shell_append(tagsub, tagartist);
         gtk_menu_shell_append(tagsub, tagtrack);
         gtk_menu_shell_append(tagsub, tagalbum);
+        gtk_menu_shell_append(dorecommsub, recommartist);
+        gtk_menu_shell_append(dorecommsub, recommtrack);
+        gtk_menu_shell_append(dorecommsub, recommalbum);
         g_signal_connect(G_OBJECT(love), "activate",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(ban), "activate",
                          G_CALLBACK(ban_track_selected), NULL);
         g_signal_connect(G_OBJECT(tagartist), "activate",
                          G_CALLBACK(tag_track_selected),
-                         GINT_TO_POINTER(TAG_ARTIST));
+                         GINT_TO_POINTER(REQUEST_ARTIST));
         g_signal_connect(G_OBJECT(tagtrack), "activate",
                          G_CALLBACK(tag_track_selected),
-                         GINT_TO_POINTER(TAG_TRACK));
+                         GINT_TO_POINTER(REQUEST_TRACK));
         g_signal_connect(G_OBJECT(tagalbum), "activate",
                          G_CALLBACK(tag_track_selected),
-                         GINT_TO_POINTER(TAG_ALBUM));
+                         GINT_TO_POINTER(REQUEST_ALBUM));
+        g_signal_connect(G_OBJECT(recommartist), "activate",
+                         G_CALLBACK(recomm_track_selected),
+                         GINT_TO_POINTER(REQUEST_ARTIST));
+        g_signal_connect(G_OBJECT(recommtrack), "activate",
+                         G_CALLBACK(recomm_track_selected),
+                         GINT_TO_POINTER(REQUEST_TRACK));
+        g_signal_connect(G_OBJECT(recommalbum), "activate",
+                         G_CALLBACK(recomm_track_selected),
+                         GINT_TO_POINTER(REQUEST_ALBUM));
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));
