@@ -236,6 +236,12 @@ recomm_track_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+add_to_playlist_selected(GtkWidget *widget, gpointer data)
+{
+        controller_add_to_playlist();
+}
+
+static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
@@ -260,7 +266,7 @@ create_main_menu(lastfm_mainwin *w)
         GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
-        GtkWidget *love, *ban, *tag, *dorecomm;
+        GtkWidget *love, *ban, *tag, *dorecomm, *addtopls;
         GtkMenuShell *tagsub, *dorecommsub;
         GtkWidget *tagartist, *tagtrack, *tagalbum;
         GtkWidget *recommartist, *recommtrack, *recommalbum;
@@ -379,6 +385,7 @@ create_main_menu(lastfm_mainwin *w)
         ban = gtk_menu_item_new_with_mnemonic("_Ban this track");
         tag = gtk_menu_item_new_with_mnemonic("_Tag");
         dorecomm = gtk_menu_item_new_with_mnemonic("Recommend");
+        addtopls = gtk_menu_item_new_with_mnemonic("Add to playlist");
         tagartist = gtk_menu_item_new_with_mnemonic("This a_rtist...");
         tagtrack = gtk_menu_item_new_with_mnemonic("This _track...");
         tagalbum = gtk_menu_item_new_with_mnemonic("This a_lbum...");
@@ -394,6 +401,7 @@ create_main_menu(lastfm_mainwin *w)
         gtk_menu_shell_append(ratesub, ban);
         gtk_menu_shell_append(ratesub, tag);
         gtk_menu_shell_append(ratesub, dorecomm);
+        gtk_menu_shell_append(ratesub, addtopls);
         gtk_menu_shell_append(tagsub, tagartist);
         gtk_menu_shell_append(tagsub, tagtrack);
         gtk_menu_shell_append(tagsub, tagalbum);
@@ -422,6 +430,8 @@ create_main_menu(lastfm_mainwin *w)
         g_signal_connect(G_OBJECT(recommalbum), "activate",
                          G_CALLBACK(recomm_track_selected),
                          GINT_TO_POINTER(REQUEST_ALBUM));
+        g_signal_connect(G_OBJECT(addtopls), "activate",
+                         G_CALLBACK(add_to_playlist_selected), NULL);
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));

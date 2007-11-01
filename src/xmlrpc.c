@@ -257,3 +257,44 @@ recommend_track(const char *user, const char *password,
         g_free(recomm_body);
         g_free(language);
 }
+
+/**
+ * Add a track to the user's playlist
+ *
+ * @param user The user's Last.fm ID
+ * @param password The user's password
+ * @param track The track to add to the playlist
+ */
+void
+add_to_playlist(const char *user, const char *password,
+                const lastfm_track *track)
+{
+        g_return_if_fail(user && password && track);
+        GSList *headers = NULL;
+        char *retbuf = NULL;
+        char *request, *hdr, *artist, *title;
+        hdr = auth_header(user, password, "addTrackToUserPlaylist");
+        artist = string_param(track->artist);
+        title = string_param(track->title);
+        request = g_strconcat(hdr, artist, title, request_ftr, NULL);
+        /* Send request */
+        headers = g_slist_append(headers, "Content-Type: text/xml");
+        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
+
+        /* Check its return value */
+        if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
+                g_debug("Correctly added to playlist");
+        } else if (retbuf != NULL) {
+                g_debug("Error adding to playlist, response: %s", retbuf);
+        } else {
+                g_debug("Problem adding to playlist, connection error?");
+        }
+
+        /* Cleanup */
+        g_slist_free(headers);
+        g_free(retbuf);
+        g_free(request);
+        g_free(hdr);
+        g_free(artist);
+        g_free(title);
+}

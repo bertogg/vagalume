@@ -27,6 +27,7 @@ void controller_play_globaltag_radio(void);
 void controller_play_similarartist_radio(void);
 void controller_tag_track(request_type type);
 void controller_recomm_track(request_type type);
+void controller_add_to_playlist(void);
 void controller_open_usercfg(void);
 void controller_quit_app(void);
 void controller_run_app(lastfm_mainwin *win, const char *radio_url);

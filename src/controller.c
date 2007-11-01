@@ -539,6 +539,8 @@ tag_track_thread(gpointer data)
                 tag_track(user, pass, d->track, d->type, list);
                 g_strfreev(tags);
                 g_slist_free(list);
+                g_free(user);
+                g_free(pass);
         }
         lastfm_track_destroy(d->track);
         g_free(d->taglist);
@@ -598,6 +600,8 @@ recomm_track_thread(gpointer data)
         if (user != NULL && pass != NULL) {
                 recommend_track(user, pass, d->track, d->text,
                                 d->type, d->rcpt);
+                g_free(user);
+                g_free(pass);
         }
         lastfm_track_destroy(d->track);
         g_free(d->rcpt);
@@ -629,6 +633,50 @@ controller_recomm_track(request_type type)
                                       usercfg->username, NULL);
                 d->type = type;
                 g_thread_create(recomm_track_thread,d,FALSE,NULL);
+        }
+}
+
+/**
+ * Add a track to the user's playlist. This can take some seconds, so
+ * it must be called using g_thread_create() to avoid freezing the UI.
+ *
+ * @param data Pointer to the lastfm_track to add. This data must be
+ *             freed here
+ * @return NULL (this value is not used)
+ */
+gpointer
+add_to_playlist_thread(gpointer data)
+{
+        lastfm_track *t = (lastfm_track *) data;
+        g_return_val_if_fail(t != NULL, NULL);
+        char *user = NULL, *pass = NULL;
+        gdk_threads_enter();
+        if (usercfg != NULL) {
+                user = g_strdup(usercfg->username);
+                pass = g_strdup(usercfg->password);
+        }
+        gdk_threads_leave();
+        if (user != NULL && pass != NULL) {
+                add_to_playlist(user, pass, t);
+                g_free(user);
+                g_free(pass);
+        }
+        lastfm_track_destroy(t);
+        return NULL;
+}
+
+/**
+ * Add the now-playing track to the user's playlist, the one in the
+ * Last.fm website: http://www.last.fm/user/USERNAME/playlist/
+ */
+void
+controller_add_to_playlist(void)
+{
+        g_return_if_fail(usercfg != NULL && nowplaying != NULL);
+        if (ui_confirm_dialog(mainwin->window,
+                              "Really add this track to your playlist?")) {
+                lastfm_track *track = lastfm_track_copy(nowplaying);
+                g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
         }
 }
 
