@@ -14,6 +14,7 @@ typedef struct {
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *ratemenu, *settings;
         GtkWidget *progressbar;
+        gboolean is_fullscreen;
 } lastfm_mainwin;
 
 typedef enum {

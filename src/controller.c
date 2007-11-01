@@ -8,11 +8,13 @@
 #include "config.h"
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include <time.h>
 
 #ifdef MAEMO
 #include <libosso.h>
+#include <hildon-widgets/hildon-app.h>
 #endif
 
 #include "controller.h"
@@ -677,6 +679,36 @@ controller_quit_app(void)
         gtk_main_quit();
 }
 
+/*
+ * This enables the hardware fullscreen key. Only makes sense for
+ * Maemo really
+ */
+#ifdef MAEMO
+static gboolean
+window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
+                lastfm_mainwin *win)
+{
+        win->is_fullscreen = (event->new_window_state &
+                              GDK_WINDOW_STATE_FULLSCREEN);
+        return FALSE;
+}
+
+static gboolean
+key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
+{
+        switch (event->keyval) {
+        case HILDON_FULLSCREEN_KEY:
+                if (win->is_fullscreen) {
+                        gtk_window_unfullscreen(win->window);
+                } else {
+                        gtk_window_fullscreen(win->window);
+                }
+                break;
+        }
+        return FALSE;
+}
+#endif /* MAEMO */
+
 /**
  * Start running the application, initializing all of its
  * subcomponents and finally letting the main window take control.
@@ -703,6 +735,10 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
                             GTK_MESSAGE_ERROR);
                 return;
         }
+        g_signal_connect(G_OBJECT(mainwin->window), "key_press_event",
+                         G_CALLBACK(key_press_cb), mainwin);
+        g_signal_connect(G_OBJECT(mainwin->window), "window_state_event",
+                         G_CALLBACK(window_state_cb), mainwin);
 #endif
         if (!lastfm_audio_init()) {
                 show_dialog("Error initializing audio system",
