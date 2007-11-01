@@ -196,6 +196,12 @@ globaltag_radio_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+similarartist_radio_selected(GtkWidget *widget, gpointer data)
+{
+        controller_play_similarartist_radio();
+}
+
+static void
 url_radio_selected(GtkWidget *widget, gpointer data)
 {
         controller_play_radio_ask_url();
@@ -241,7 +247,7 @@ create_main_menu(lastfm_mainwin *w)
 {
         GtkMenuItem *lastfm, *radio, *rate, *help;
         GtkMenuItem *user, *others;
-        GtkWidget *globaltag, *urlradio;
+        GtkWidget *globaltag, *similarartist, *urlradio;
         GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
@@ -280,15 +286,19 @@ create_main_menu(lastfm_mainwin *w)
         others = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(
                                       "_Others' radios"));
         globaltag = gtk_menu_item_new_with_mnemonic("_Music tagged...");
+        similarartist = gtk_menu_item_new_with_mnemonic("Artists similar to...");
         urlradio = gtk_menu_item_new_with_mnemonic("_Enter URL...");
         gtk_menu_shell_append(bar, GTK_WIDGET(radio));
         gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
         gtk_menu_shell_append(radiosub, GTK_WIDGET(user));
         gtk_menu_shell_append(radiosub, GTK_WIDGET(others));
         gtk_menu_shell_append(radiosub, globaltag);
+        gtk_menu_shell_append(radiosub, similarartist);
         gtk_menu_shell_append(radiosub, urlradio);
         g_signal_connect(G_OBJECT(globaltag), "activate",
                          G_CALLBACK(globaltag_radio_selected), NULL);
+        g_signal_connect(G_OBJECT(similarartist), "activate",
+                         G_CALLBACK(similarartist_radio_selected), NULL);
         g_signal_connect(G_OBJECT(urlradio), "activate",
                          G_CALLBACK(url_radio_selected), NULL);
 
@@ -410,9 +420,9 @@ lastfm_mainwin_create(void)
         GtkWidget *menu;
         /* Window */
 #ifdef MAEMO
-        w->window = hildon_window_new();
+        w->window = GTK_WINDOW(hildon_window_new());
 #else
-        w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        w->window = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
 #endif
         gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
         /* Boxes */

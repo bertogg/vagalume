@@ -9,7 +9,7 @@
 #define MAINWIN_H
 
 typedef struct {
-        GtkWidget *window;
+        GtkWindow *window;
         GtkWidget *play, *stop, *next;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *ratemenu, *settings;

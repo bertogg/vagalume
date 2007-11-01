@@ -54,7 +54,7 @@ static void
 show_dialog(const char *text, GtkMessageType type)
 {
         g_return_if_fail(mainwin != NULL);
-        ui_info_dialog(GTK_WINDOW(mainwin->window), text, type);
+        ui_info_dialog(mainwin->window, text, type);
 }
 
 /**
@@ -89,7 +89,7 @@ gboolean
 controller_confirm_dialog(const char *text)
 {
         g_return_val_if_fail(mainwin != NULL, FALSE);
-        return ui_confirm_dialog(GTK_WINDOW(mainwin->window), text);
+        return ui_confirm_dialog(mainwin->window, text);
 }
 
 /**
@@ -289,7 +289,7 @@ controller_open_usercfg(void)
                                           g_strdup("");
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
-        changed = ui_usercfg_dialog(GTK_WINDOW(mainwin->window), &usercfg);
+        changed = ui_usercfg_dialog(mainwin->window, &usercfg);
         if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
         }
@@ -569,8 +569,7 @@ controller_tag_track(tag_type type)
                 name = nowplaying->album;
         }
         title = g_strconcat("Tagging ", name, NULL);
-        tags = ui_input_dialog(GTK_WINDOW(mainwin->window),
-                               "Enter tag", text, NULL);
+        tags = ui_input_dialog(mainwin->window, "Enter tag", text, NULL);
         if (tags != NULL) {
                 tag_data *d = g_new0(tag_data, 1);
                 d->track = lastfm_track_copy(nowplaying);
@@ -613,14 +612,13 @@ void
 controller_play_radio(lastfm_radio type)
 {
         if (!check_session()) return;
-        char *url;
+        char *url = NULL;
         if (type == LASTFM_RECOMMENDED_RADIO) {
                 url = lastfm_recommended_radio_url(
                         usercfg->username, 100);
         } else if (type == LASTFM_USERTAG_RADIO) {
                 static char *previous = NULL;
-                char *tag = ui_input_dialog(GTK_WINDOW(mainwin->window),
-                                            "Enter tag",
+                char *tag = ui_input_dialog(mainwin->window, "Enter tag",
                                             "Enter one of your tags",
                                             previous);
                 if (tag != NULL) {
@@ -649,8 +647,7 @@ controller_play_others_radio(lastfm_radio type)
         if (!check_session()) return;
         static char *previous = NULL;
         char *url = NULL;
-        char *user = ui_input_dialog(GTK_WINDOW(mainwin->window),
-                                     "Enter user name",
+        char *user = ui_input_dialog(mainwin->window, "Enter user name",
                                      "Play this user's radio", previous);
         if (user != NULL) {
                 url = lastfm_radio_url(type, user);
@@ -671,9 +668,8 @@ controller_play_globaltag_radio(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        char *tag = ui_input_dialog(GTK_WINDOW(mainwin->window),
-                                    "Enter tag", "Enter a global tag",
-                                    previous);
+        char *tag = ui_input_dialog(mainwin->window, "Enter tag",
+                                    "Enter a global tag", previous);
         if (tag != NULL) {
                 url = lastfm_radio_url(LASTFM_GLOBALTAG_RADIO, tag);
                 controller_play_radio_by_url(url);
@@ -681,6 +677,29 @@ controller_play_globaltag_radio(void)
                 /* Store the new value for later use */
                 g_free(previous);
                 previous = tag;
+        }
+}
+
+
+/**
+ * Open a dialog asking for an artist and play its similar artists'
+ * radio
+ */
+void
+controller_play_similarartist_radio(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        static char *previous = NULL;
+        char *url = NULL;
+        char *artist = ui_input_dialog(mainwin->window, "Enter artist",
+                                       "Enter an artist's name", previous);
+        if (artist != NULL) {
+                url = lastfm_radio_url(LASTFM_SIMILAR_ARTIST_RADIO, artist);
+                controller_play_radio_by_url(url);
+                g_free(url);
+                /* Store the new value for later use */
+                g_free(previous);
+                previous = artist;
         }
 }
 
@@ -693,8 +712,7 @@ controller_play_radio_ask_url(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        url = ui_input_dialog(GTK_WINDOW(mainwin->window),
-                              "Enter radio URL",
+        url = ui_input_dialog(mainwin->window, "Enter radio URL",
                               "Enter the URL of the Last.fm radio",
                               previous ? previous : "lastfm://");
         if (url != NULL) {
@@ -766,7 +784,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 {
         g_return_if_fail(win != NULL && mainwin == NULL);
         mainwin = win;
-        gtk_widget_show_all(mainwin->window);
+        gtk_widget_show_all(GTK_WIDGET(mainwin->window));
 
         http_init();
         usercfg = read_usercfg();

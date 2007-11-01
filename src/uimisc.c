@@ -76,7 +76,7 @@ ui_input_dialog(GtkWindow *parent, const char *title,
         if (value != NULL) gtk_entry_set_text(entry, value);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
-                retvalue = g_strdup(gtk_entry_get_text(entry));
+                retvalue = g_strstrip(g_strdup(gtk_entry_get_text(entry)));
         }
         gtk_widget_destroy(GTK_WIDGET(dialog));
         return retvalue;

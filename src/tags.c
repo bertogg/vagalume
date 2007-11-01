@@ -73,7 +73,7 @@ array_param(const GSList *params)
 static char *
 auth_header(const char *user, const char *password, const char *method)
 {
-        g_return_if_fail(user && password && method);
+        g_return_val_if_fail(user && password && method, NULL);
         char *md5password = get_md5_hash(password);
         char *timestamp = g_strdup_printf("%lu", time(NULL));
         char *auth1 = g_strconcat(md5password, timestamp, NULL);

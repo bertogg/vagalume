@@ -24,6 +24,7 @@ void controller_play_radio(lastfm_radio type);
 void controller_play_others_radio(lastfm_radio type);
 void controller_play_radio_ask_url(void);
 void controller_play_globaltag_radio(void);
+void controller_play_similarartist_radio(void);
 void controller_tag_track(tag_type type);
 void controller_open_usercfg(void);
 void controller_quit_app(void);
