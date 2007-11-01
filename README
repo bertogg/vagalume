@@ -19,13 +19,14 @@ reasonably usable and stable.
 It currently has the following features:
 
    * It plays Last.fm streams using the Last.fm protocol v1.2
-   * It can play any Last.fm radio (personal, neighbours, loved
+   * It can play any Last.fm radio: personal, neighbours, loved
      tracks, or any other arbitrary URL.
    * It implements the Audioscrobbler Realtime Submission Protocol
      v1.2, specifically:
       * Now Playing information
       * Scrobbling of tracks that you listen
       * Love/Ban ratings
+   * Ability to tag artists, tracks and albums
 
 --------------------------------------------------------
 

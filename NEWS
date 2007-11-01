@@ -1,3 +1,14 @@
+0.1 (01 Nov 2007)
+  * First proper release, with source code
+  * Implemented Love/Ban using the old protocol too (the new one is
+    not working yet) so now everything works as expected
+  * Support for tagging artists, tracks and albums
+  * Support for the fullscreen hardware key in Nokia N800
+  * More menu options to select radio stations, including other
+    users' radios, tag radios and similar artists radios
+  * Fixed bug in 0.0.20071031 that made the program crash the first
+    time the user saved their settings
+  * Now Vagalume sends a proper User-Agent header in HTTP requests ;-)
 
 0.0.20071031 (31 Oct 2007)
   * Support for marking tracks as Loved / Banned
