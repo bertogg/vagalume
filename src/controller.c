@@ -627,18 +627,25 @@ controller_recomm_track(request_type type)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         char *rcpt = NULL;
+        char *body = NULL;;
         const char *text = "Recommend to this user...";
         rcpt = ui_input_dialog_with_list(mainwin->window, "Recommendation",
                                          text, friends, NULL);
         if (rcpt != NULL) {
+                body = ui_input_dialog(mainwin->window, "Recommendation",
+                                       "Recommendation message", NULL);
+        }
+        if (body != NULL) {
                 g_strstrip(rcpt);
                 recomm_data *d = g_new0(recomm_data, 1);
                 d->track = lastfm_track_copy(nowplaying);
                 d->rcpt = rcpt;
-                d->text = g_strconcat("Recommended by ",
-                                      usercfg->username, NULL);
+                d->text = body;
                 d->type = type;
                 g_thread_create(recomm_track_thread,d,FALSE,NULL);
+        } else {
+                controller_show_info("Recommendation cancelled");
+                g_free(rcpt);
         }
 }
 
