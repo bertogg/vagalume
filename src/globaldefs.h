@@ -13,7 +13,7 @@
 #define APP_NAME "Vagalume"
 #define APP_NAME_LC "vagalume"
 #define APP_VERSION VERSION
-#define APP_PLATFORM "linux"
+#define APP_PLATFORM KERNEL_NAME "/" ARCH
 
 #define APP_FULLNAME APP_NAME " " APP_VERSION " (" APP_PLATFORM ")"
 

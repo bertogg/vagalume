@@ -11,6 +11,9 @@ AC_PROG_RANLIB
 AC_PROG_LIBTOOL
 AC_HEADER_STDC
 
+AC_DEFINE_UNQUOTED([KERNEL_NAME],"`uname -s`",[Name of the kernel])
+AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
+
 # Basic dependencies
 PKG_CHECK_MODULES(GTK2, gtk+-2.0)
 AC_SUBST(GTK2_CFLAGS)
