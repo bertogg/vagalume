@@ -370,6 +370,7 @@ check_session(void)
                                     GTK_MESSAGE_WARNING);
                 }
         } else {
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
                 retvalue = TRUE;
                 if (rsp_sess == NULL) {
                         g_thread_create(rsp_session_init_thread, NULL,
