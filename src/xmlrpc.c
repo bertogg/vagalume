@@ -113,6 +113,33 @@ new_request(const char *user, const char *password, const char *method, ...)
         return retval;
 }
 
+/**
+ * Send the actual request
+ * @param request String containing the request in XML
+ * @param name Name of the method (for debugging purposes only)
+ */
+static void
+xmlrpc_send_request(const char *request, const char *name)
+{
+        g_return_if_fail(request != NULL);
+        GSList *headers = NULL;
+        char *retbuf = NULL;
+        headers = g_slist_append(headers, "Content-Type: text/xml");
+        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
+
+        /* Check its return value */
+        if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
+                g_debug("XMLRPC call (%s) OK", name);
+        } else if (retbuf != NULL) {
+                g_debug("Error in XMLRPC call (%s): %s", name, retbuf);
+        } else {
+                g_debug("Error in XMLRPC call (%s), connection error?", name);
+        }
+
+        /* Cleanup */
+        g_slist_free(headers);
+        g_free(retbuf);
+}
 
 /**
  * Tags an artist, track or album, Previous tags won't be overwritten.
@@ -128,9 +155,7 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
           request_type type, GSList *tags)
 {
         g_return_if_fail(user && password && track && tags);
-        GSList *headers = NULL;
         char *request;
-        char *retbuf = NULL;
         xmlNode *param1, *param2, *param3, *param4;
         const char *method;
         param1 = string_param(track->artist);
@@ -154,23 +179,8 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
                                       param3, param4, NULL);
         }
 
-        /* Send request */
-        headers = g_slist_append(headers, "Content-Type: text/xml");
-        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
-
-        /* Check its return value */
-        if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
-                g_debug("Correctly tagged");
-        } else if (retbuf != NULL) {
-                g_debug("Error tagging, response: %s", retbuf);
-        } else {
-                g_debug("Problem tagging, connection error?");
-        }
-
-        /* Cleanup */
-        g_slist_free(headers);
+        xmlrpc_send_request(request, method);
         g_free(request);
-        g_free(retbuf);
 }
 
 /**
@@ -188,30 +198,13 @@ love_ban_track(const char *user, const char *password,
                const lastfm_track *track, gboolean love)
 {
         g_return_if_fail(user && password && track);
-        GSList *headers = NULL;
-        char *retbuf = NULL;
         char *request;
         xmlNode *artist, *title;
         const char *method = love ? "loveTrack" : "banTrack";
         artist = string_param(track->artist);
         title = string_param(track->title);
         request = new_request(user, password, method, artist, title, NULL);
-        /* Send request */
-        headers = g_slist_append(headers, "Content-Type: text/xml");
-        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
-
-        /* Check its return value */
-        if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
-                g_debug("Correctly marked with %s", method);
-        } else if (retbuf != NULL) {
-                g_debug("Error marking with %s, response: %s", method, retbuf);
-        } else {
-                g_debug("Problem marking with %s, connection error?", method);
-        }
-
-        /* Cleanup */
-        g_slist_free(headers);
-        g_free(retbuf);
+        xmlrpc_send_request(request, method);
         g_free(request);
 }
 
@@ -231,9 +224,8 @@ recommend_track(const char *user, const char *password,
                 request_type type, const char *rcpt)
 {
         g_return_if_fail(user && password && track && text && rcpt);
-        GSList *headers = NULL;
-        char *retbuf = NULL;
         char *request;
+        const char *method = "recommendItem";
         xmlNode *artist, *title, *recomm_type, *recomm_to;
         xmlNode *recomm_body, *language;
         artist = string_param(track->artist);
@@ -250,25 +242,10 @@ recommend_track(const char *user, const char *password,
         recomm_to = string_param(rcpt);
         recomm_body = string_param(text);
         language = string_param("en");
-        request = new_request(user, password, "recommendItem", artist,
+        request = new_request(user, password, method, artist,
                               title, recomm_type, recomm_to,
                               recomm_body, language, NULL);
-        /* Send request */
-        headers = g_slist_append(headers, "Content-Type: text/xml");
-        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
-
-        /* Check its return value */
-        if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
-                g_debug("Recommendation sent correctly");
-        } else if (retbuf != NULL) {
-                g_debug("Error sending recommendation, response: %s", retbuf);
-        } else {
-                g_debug("Problem sending recommendation, connection error?");
-        }
-
-        /* Cleanup */
-        g_slist_free(headers);
-        g_free(retbuf);
+        xmlrpc_send_request(request, method);
         g_free(request);
 }
 
@@ -284,29 +261,12 @@ add_to_playlist(const char *user, const char *password,
                 const lastfm_track *track)
 {
         g_return_if_fail(user && password && track);
-        GSList *headers = NULL;
-        char *retbuf = NULL;
         char *request;
+        const char *method = "addTrackToUserPlaylist";
         xmlNode *artist, *title;
         artist = string_param(track->artist);
         title = string_param(track->title);
-        request = new_request(user, password, "addTrackToUserPlaylist",
-                              artist, title, NULL);
-        /* Send request */
-        headers = g_slist_append(headers, "Content-Type: text/xml");
-        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
-
-        /* Check its return value */
-        if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
-                g_debug("Correctly added to playlist");
-        } else if (retbuf != NULL) {
-                g_debug("Error adding to playlist, response: %s", retbuf);
-        } else {
-                g_debug("Problem adding to playlist, connection error?");
-        }
-
-        /* Cleanup */
-        g_slist_free(headers);
-        g_free(retbuf);
+        request = new_request(user, password, method, artist, title, NULL);
+        xmlrpc_send_request(request, method);
         g_free(request);
 }
