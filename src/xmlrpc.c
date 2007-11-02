@@ -6,6 +6,9 @@
  * This file is published under the GNU GPLv3
  */
 
+#include <libxml/parser.h>
+#include <stdarg.h>
+
 #include "xmlrpc.h"
 #include "http.h"
 #include "util.h"
@@ -13,82 +16,103 @@
 static const char *xmlrpc_url =
 "http://ws.audioscrobbler.com:80/1.0/rw/xmlrpc.php";
 
-/*
- * Yes yes this is ugly but it's the easiest way to do it.
- * TODO: Allow action 'set' besides 'append'
+/**
+ * Create a new xmlNode * with a string parameter to be added to the
+ * request
+ * @param str The value of the string
+ * @return A new xmlNode *
  */
-static const char *request_hdr =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-  "<methodCall>"
-  "<methodName>%s</methodName>" /* Method */
-  "<params>";
-static const char *request_strparam =
-    "<param><value><string>%s</string></value></param>";
-static const char *request_ftr =
-  "</params>"
-"</methodCall>";
-
-static const char *array_param_hdr = "<param><value><array><data>";
-static const char *array_param_body = "<value><string>%s</string></value>";
-static const char *array_param_ftr = "</data></array></value></param>";
-
-static char *
-method_header(const char *value)
+static xmlNode *
+string_param(const char *str)
 {
-        g_return_val_if_fail(value != NULL, NULL);
-        return g_strdup_printf(request_hdr, value);
-}
-
-static char *
-string_param(const char *value)
-{
-        g_return_val_if_fail(value != NULL, NULL);
-        return g_strdup_printf(request_strparam, value);
-}
-
-static char *
-array_param(const GSList *params)
-{
-        char *tmp = NULL;
-        char *ret = g_strdup(array_param_hdr);
-        const GSList *iter;
-        for (iter = params; iter != NULL; iter = g_slist_next(iter)) {
-                tmp = ret;
-                char *val = g_strdup_printf(array_param_body, iter->data);
-                ret = g_strconcat(ret, val, NULL);
-                g_free(tmp);
-                g_free(val);
-        }
-        tmp = ret;
-        ret = g_strconcat(ret, array_param_ftr, NULL);
-        g_free(tmp);
-        return ret;
+        g_return_val_if_fail(str != NULL, NULL);
+        xmlNode *param = xmlNewNode(NULL, (xmlChar *) "param");
+        xmlNode *value = xmlNewNode(NULL, (xmlChar *) "value");
+        xmlNode *string = xmlNewNode(NULL, (xmlChar *) "string");
+        xmlAddChild(param, value);
+        xmlAddChild(value, string);
+        xmlNodeSetContent(string, (xmlChar *) str);
+        return param;
 }
 
 /**
- * The first part of the xmlrpc request is always the same: method
- * name, user, timestamp, and cryptographic authentication. This
- * function computes all this.
+ * Create a new xmlNode * with an array parameter to be added to the
+ * request
+ * @param params A lists of strings
+ * @return A new xmlNode *
+ */
+static xmlNode *
+array_param(const GSList *params)
+{
+        const GSList *iter;
+        xmlNode *param = xmlNewNode(NULL, (xmlChar *) "param");
+        xmlNode *value = xmlNewNode(NULL, (xmlChar *) "value");
+        xmlNode *array = xmlNewNode(NULL, (xmlChar *) "array");
+        xmlNode *data = xmlNewNode(NULL, (xmlChar *) "data");
+        xmlAddChild(param, value);
+        xmlAddChild(value, array);
+        xmlAddChild(array, data);
+        for (iter = params; iter != NULL; iter = g_slist_next(iter)) {
+                xmlNode *val = xmlNewNode(NULL, (xmlChar *) "value");
+                xmlNode *string = xmlNewNode(NULL, (xmlChar *) "string");
+                xmlAddChild(data, val);
+                xmlAddChild(val, string);
+                xmlNodeSetContent(string, iter->data);
+        }
+        return param;
+}
+
+/**
+ * Create a full XML document with the xmlrpc request. It receives a
+ * variable, NULL-terminated list of nodes (xmlNode *) to be added as
+ * parameters of the XMLRPC request
+ * @param user User's Last.fm ID
+ * @param password User's password
+ * @param method The method
+ * @return A new string containing the full XML request. Must be freed
+ *         by the caller
  */
 static char *
-auth_header(const char *user, const char *password, const char *method)
+new_request(const char *user, const char *password, const char *method, ...)
 {
         g_return_val_if_fail(user && password && method, NULL);
+        va_list ap;
+        char *retval;
+        xmlChar *xmlbuff;
+        int buffersize;
+        xmlDocPtr doc = xmlNewDoc((xmlChar *) "1.0");;
+        xmlNode *root = xmlNewNode(NULL, (xmlChar *) "methodCall");
+        xmlNode *name = xmlNewNode(NULL, (xmlChar *) "methodName");
+        xmlNode *params = xmlNewNode(NULL, (xmlChar *) "params");
+        xmlNode *elem;
         char *timestamp = g_strdup_printf("%lu", time(NULL));
         char *auth = compute_auth_token(password, timestamp);
-        char *hdr = method_header(method);
-        char *param1 = string_param(user);
-        char *param2 = string_param(timestamp);
-        char *param3 = string_param(auth);
-        char *auth_hdr = g_strconcat(hdr, param1, param2, param3, NULL);
+        xmlDocSetRootElement(doc, root);
+        xmlNodeSetContent(name, (xmlChar *) method);
+        xmlAddChild(root, name);
+        xmlAddChild(root, params);
+        xmlAddChild(params, string_param(user));
+        xmlAddChild(params, string_param(timestamp));
+        xmlAddChild(params, string_param(auth));
+
+        va_start(ap, method);
+        elem = va_arg(ap, xmlNode *);
+        while (elem != NULL) {
+                xmlAddChild(params, elem);
+                elem = va_arg(ap, xmlNode *);
+        }
+        va_end(ap);
+
+        xmlDocDumpMemoryEnc(doc, &xmlbuff, &buffersize, "UTF-8");
+        retval = g_strdup((char *) xmlbuff);
+
+        xmlFree(xmlbuff);
+        xmlFreeDoc(doc);
         g_free(timestamp);
         g_free(auth);
-        g_free(hdr);
-        g_free(param1);
-        g_free(param2);
-        g_free(param3);
-        return auth_hdr;
+        return retval;
 }
+
 
 /**
  * Tags an artist, track or album, Previous tags won't be overwritten.
@@ -107,12 +131,14 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
         GSList *headers = NULL;
         char *request;
         char *retbuf = NULL;
-        char *hdr;
-        char *param1, *param2, *param3, *param4;
+        xmlNode *param1, *param2, *param3, *param4;
         const char *method;
+        param1 = string_param(track->artist);
+        param3 = array_param(tags);
+        param4 = string_param("append");
         if (type == REQUEST_ARTIST) {
                 method = "tagArtist";
-                param2 = g_strdup("");
+                param2 = NULL;
         } else if (type == REQUEST_TRACK) {
                 method = "tagTrack";
                 param2 = string_param(track->title);
@@ -120,12 +146,14 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
                 method = "tagAlbum";
                 param2 = string_param(track->album);
         }
-        hdr = auth_header(user, password, method);
-        param1 = string_param(track->artist);
-        param3 = array_param(tags);
-        param4 = string_param("append");
-        request = g_strconcat(hdr, param1, param2, param3, param4,
-                              request_ftr, NULL);
+        if (param2 != NULL) {
+                request = new_request(user, password, method, param1, param2,
+                                      param3, param4, NULL);
+        } else {
+                request = new_request(user, password, method, param1,
+                                      param3, param4, NULL);
+        }
+
         /* Send request */
         headers = g_slist_append(headers, "Content-Type: text/xml");
         http_post_buffer(xmlrpc_url, request, &retbuf, headers);
@@ -143,11 +171,6 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
         g_slist_free(headers);
         g_free(request);
         g_free(retbuf);
-        g_free(hdr);
-        g_free(param1);
-        g_free(param2);
-        g_free(param3);
-        g_free(param4);
 }
 
 /**
@@ -167,12 +190,12 @@ love_ban_track(const char *user, const char *password,
         g_return_if_fail(user && password && track);
         GSList *headers = NULL;
         char *retbuf = NULL;
-        char *request, *hdr, *artist, *title;
+        char *request;
+        xmlNode *artist, *title;
         const char *method = love ? "loveTrack" : "banTrack";
-        hdr = auth_header(user, password, method);
         artist = string_param(track->artist);
         title = string_param(track->title);
-        request = g_strconcat(hdr, artist, title, request_ftr, NULL);
+        request = new_request(user, password, method, artist, title, NULL);
         /* Send request */
         headers = g_slist_append(headers, "Content-Type: text/xml");
         http_post_buffer(xmlrpc_url, request, &retbuf, headers);
@@ -190,9 +213,6 @@ love_ban_track(const char *user, const char *password,
         g_slist_free(headers);
         g_free(retbuf);
         g_free(request);
-        g_free(hdr);
-        g_free(artist);
-        g_free(title);
 }
 
 /**
@@ -213,9 +233,9 @@ recommend_track(const char *user, const char *password,
         g_return_if_fail(user && password && track && text && rcpt);
         GSList *headers = NULL;
         char *retbuf = NULL;
-        char *request, *hdr, *artist, *title;
-        char *recomm_type, *recomm_to, *recomm_body, *language;
-        hdr = auth_header(user, password, "recommendItem");
+        char *request;
+        xmlNode *artist, *title, *recomm_type, *recomm_to;
+        xmlNode *recomm_body, *language;
         artist = string_param(track->artist);
         if (type == REQUEST_ARTIST) {
                 title = string_param("");
@@ -230,8 +250,9 @@ recommend_track(const char *user, const char *password,
         recomm_to = string_param(rcpt);
         recomm_body = string_param(text);
         language = string_param("en");
-        request = g_strconcat(hdr, artist, title, recomm_type, recomm_to,
-                              recomm_body, language, request_ftr, NULL);
+        request = new_request(user, password, "recommendItem", artist,
+                              title, recomm_type, recomm_to,
+                              recomm_body, language, NULL);
         /* Send request */
         headers = g_slist_append(headers, "Content-Type: text/xml");
         http_post_buffer(xmlrpc_url, request, &retbuf, headers);
@@ -249,13 +270,6 @@ recommend_track(const char *user, const char *password,
         g_slist_free(headers);
         g_free(retbuf);
         g_free(request);
-        g_free(hdr);
-        g_free(artist);
-        g_free(title);
-        g_free(recomm_type);
-        g_free(recomm_to);
-        g_free(recomm_body);
-        g_free(language);
 }
 
 /**
@@ -272,11 +286,12 @@ add_to_playlist(const char *user, const char *password,
         g_return_if_fail(user && password && track);
         GSList *headers = NULL;
         char *retbuf = NULL;
-        char *request, *hdr, *artist, *title;
-        hdr = auth_header(user, password, "addTrackToUserPlaylist");
+        char *request;
+        xmlNode *artist, *title;
         artist = string_param(track->artist);
         title = string_param(track->title);
-        request = g_strconcat(hdr, artist, title, request_ftr, NULL);
+        request = new_request(user, password, "addTrackToUserPlaylist",
+                              artist, title, NULL);
         /* Send request */
         headers = g_slist_append(headers, "Content-Type: text/xml");
         http_post_buffer(xmlrpc_url, request, &retbuf, headers);
@@ -294,7 +309,4 @@ add_to_playlist(const char *user, const char *password,
         g_slist_free(headers);
         g_free(retbuf);
         g_free(request);
-        g_free(hdr);
-        g_free(artist);
-        g_free(title);
 }
