@@ -1,10 +1,13 @@
-Scripts to generate Debian packages are provided as well, run
+
+The easiest way to install Vagalume is to create a Debian package. A
+script to generate one is provided, just run
 
 ./build-package.sh
 
-Or you can compile this program by hand if you want to:
+If you prefer to compile it by hand or if you're trying to compile it
+in other non-Debian system then run:
 
 ./configure && make
 
-In both cases the system should detect automatically if running in
-Maemo 3, Maemo 4 or a standard desktop system.
+In both cases the system should detect automatically if it's compiling
+for Maemo or for a standard computer.

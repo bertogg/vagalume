@@ -2,11 +2,17 @@ Vagalume - A Last.fm client for Gnome and Maemo
 -----------------------------------------------
 
 Vagalume is a Last.fm client based on Gnome, and specially designed to
-work in the Maemo platform.
+work in the Maemo platform. It is known to work in Nokia devices with
+the following operating systems:
 
-It has been tested on a desktop PC with a Debian GNU/Linux system and
-in a Nokia N800 running Internet Tablet OS 2007, but it should work in
-any other Unix-like system that meets the following requirements:
+   * Internet Tablet OS 2006 (Nokia 770)
+   * Internet Tablet OS 2007 (Nokia N800)
+   * Internet Tablet OS 2008 (Nokia N810 and updated N800)
+
+Besides that, it should work in a standard PCs as well. Vagalume has
+been tested and developed in a desktop PC with a Debian GNU/Linux
+system, but it should work in any other Unix-like system that meets
+the following requirements:
 
    * GStreamer 0.10
    * GTK+ 2
