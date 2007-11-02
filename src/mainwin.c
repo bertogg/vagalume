@@ -9,7 +9,7 @@
 
 #include <gtk/gtk.h>
 
-#if defined(MAEMO3)
+#if defined(MAEMO2) || defined(MAEMO3)
 #include <hildon-widgets/hildon-program.h>
 #elif defined(MAEMO4)
 #include <hildon/hildon-program.h>

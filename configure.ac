@@ -28,6 +28,12 @@ PKG_CHECK_MODULES(LIBCURL, libcurl)
 AC_SUBST(LIBCURL_CFLAGS)
 AC_SUBST(LIBCURL_LIBS)
 
+# Check if libcurl has curl_easy_escape()
+AC_CHECK_LIB(curl, curl_easy_escape,
+   AC_DEFINE([HAS_CURL_EASY_ESCAPE],[],[If curl_easy_escape() exists]),
+   has_curl_easy_escape=0
+)
+
 # Autodetect platform
 if pkg-config --exists libosso; then
    DETECTED_PLATFORM=maemo
@@ -51,7 +57,10 @@ if test "$PLATFORM" = "maemo"; then
 
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
 
-   if test "$libossovers" = "1"; then
+   if test "$has_curl_easy_escape" = "0"; then
+      MAEMOVERS=2
+      echo "Compiling for Maemo 2"
+   elif test "$libossovers" = "1"; then
       MAEMOVERS=3
       echo "Compiling for Maemo 3"
    elif test "$libossovers" = "2"; then
@@ -61,7 +70,7 @@ if test "$PLATFORM" = "maemo"; then
       AC_MSG_ERROR([Unknown Maemo version])
    fi
 
-   if test "$MAEMOVERS" = "3"; then
+   if test "$MAEMOVERS" = "2" -o "$MAEMOVERS" = "3"; then
       PKG_CHECK_MODULES(HILDON, hildon-libs)
       AC_SUBST(HILDON_LIBS)
       AC_SUBST(HILDON_CFLAGS)
@@ -88,7 +97,9 @@ if test "$PLATFORM" = "maemo"; then
    AC_SUBST(serviceentrydir)
 
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])
-   if test "$MAEMOVERS" = "3"; then
+   if test "$MAEMOVERS" = "2"; then
+      AC_DEFINE([MAEMO2], [], [Defined if building for Maemo 2 (gregale)])
+   elif test "$MAEMOVERS" = "3"; then
       AC_DEFINE([MAEMO3], [], [Defined if building for Maemo 3 (bora)])
    else
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])

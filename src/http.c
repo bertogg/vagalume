@@ -29,9 +29,15 @@ escape_url(const char *url, gboolean escape)
         char *str, *curl_str;
         handle = curl_easy_init();
         if (escape) {
+#ifdef HAS_CURL_EASY_ESCAPE
                 curl_str = curl_easy_escape(handle, url, 0);
         } else {
                 curl_str = curl_easy_unescape(handle, url, 0, NULL);
+#else
+                curl_str = curl_escape(url, 0);
+        } else {
+                curl_str = curl_unescape(url, 0);
+#endif
         }
         str = g_strdup(curl_str);
         curl_free(curl_str);
