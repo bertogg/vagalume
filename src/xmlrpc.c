@@ -8,6 +8,7 @@
 
 #include <libxml/parser.h>
 #include <stdarg.h>
+#include <time.h>
 
 #include "xmlrpc.h"
 #include "http.h"
