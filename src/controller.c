@@ -299,10 +299,10 @@ controller_open_usercfg(void)
         changed = ui_usercfg_dialog(mainwin->window, &usercfg);
         if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
-        }
-        if (strcmp(olduser, usercfg->username) ||
-            strcmp(oldpw, usercfg->password)) {
-                userpwchanged = TRUE;
+                if (strcmp(olduser, usercfg->username) ||
+                    strcmp(oldpw, usercfg->password)) {
+                        userpwchanged = TRUE;
+                }
         }
         if (session != NULL && userpwchanged) {
                 lastfm_session_destroy(session);
