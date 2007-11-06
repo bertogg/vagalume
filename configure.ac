@@ -12,6 +12,8 @@ AC_PROG_LIBTOOL
 AC_HEADER_STDC
 
 AC_DEFINE_UNQUOTED([KERNEL_NAME],"`uname -s`",[Name of the kernel])
+AC_DEFINE_UNQUOTED([KERNEL_NAME_LC],"`uname -s|tr A-Z a-z`",
+                   [Name of the kernel (lowercase)])
 AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
 
 # Basic dependencies

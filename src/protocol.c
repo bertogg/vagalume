@@ -15,7 +15,7 @@
 
 static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
-       "?version=" APP_VERSION "&platform=" APP_PLATFORM;
+       "?version=" APP_VERSION "&platform=" APP_OS_LC;
 static const char *friends_url =
        "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
 
