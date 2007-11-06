@@ -12,6 +12,7 @@
 #include <gtk/gtk.h>
 #include "userconfig.h"
 
+void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text, GtkMessageType type);
 char *ui_input_dialog(GtkWindow *parent, const char *title,
                       const char *text, const char *value);

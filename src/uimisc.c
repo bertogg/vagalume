@@ -7,6 +7,10 @@
  */
 
 #include <gtk/gtk.h>
+#ifdef MAEMO
+#include <hildon-widgets/hildon-program.h>
+#include <hildon-widgets/hildon-banner.h>
+#endif
 
 #include "uimisc.h"
 #include "userconfig.h"
@@ -28,6 +32,17 @@ ui_info_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
                                                    "%s", text);
         gtk_dialog_run (GTK_DIALOG (dialog));
         gtk_widget_destroy (dialog);
+}
+
+void
+ui_info_banner(GtkWindow *parent, const char *text)
+{
+        g_return_if_fail(parent != NULL && text != NULL);
+#ifdef MAEMO
+        hildon_banner_show_information(GTK_WIDGET(parent), NULL, text);
+#else
+        ui_info_dialog(parent, text, GTK_MESSAGE_INFO);
+#endif
 }
 
 static GtkDialog *

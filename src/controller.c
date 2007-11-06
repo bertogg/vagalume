@@ -133,6 +133,8 @@ scrobble_track_thread(gpointer data)
 {
         rsp_data *d = (rsp_data *) data;
         rsp_session *s = NULL;
+        gboolean retval = FALSE;
+        gboolean loved = FALSE;
         g_return_val_if_fail(d != NULL && d->track != NULL && d->start > 0,
                              NULL);
         char *user = NULL, *pass = NULL;
@@ -150,10 +152,24 @@ scrobble_track_thread(gpointer data)
         /* This love_ban_track() call won't be needed anymore with
          * Lastfm's new protocol v1.2 */
         if (user && pass && d->rating == RSP_RATING_LOVE) {
-                love_ban_track(user, pass, d->track, TRUE);
+                loved = TRUE;
+                retval = love_ban_track(user, pass, d->track, TRUE);
         } else if (user && pass && d->rating == RSP_RATING_BAN) {
-                love_ban_track(user, pass, d->track, FALSE);
+                retval = love_ban_track(user, pass, d->track, FALSE);
         }
+        gdk_threads_enter();
+        if (mainwin && mainwin->window) {
+                if (loved) {
+                        ui_info_banner(mainwin->window, retval ?
+                                       "Track marked as loved" :
+                                       "Error marking track as loved");
+                } else {
+                        ui_info_banner(mainwin->window, retval ?
+                                       "Track banned" :
+                                       "Error banning track");
+                }
+        }
+        gdk_threads_leave();
         g_free(user);
         g_free(pass);
         lastfm_track_destroy(d->track);
@@ -528,6 +544,7 @@ tag_track_thread(gpointer data)
 {
         tag_data *d = (tag_data *) data;
         g_return_val_if_fail(d && d->track && d->taglist, NULL);
+        gboolean tagged = FALSE;
         char *user = NULL, *pass = NULL;
         gdk_threads_enter();
         if (usercfg != NULL) {
@@ -542,7 +559,7 @@ tag_track_thread(gpointer data)
                 for (i = 0; tags[i] != NULL; i++) {
                         list = g_slist_append(list, g_strstrip(tags[i]));
                 }
-                tag_track(user, pass, d->track, d->type, list);
+                tagged = tag_track(user, pass, d->track, d->type, list);
                 g_strfreev(tags);
                 g_slist_free(list);
                 g_free(user);
@@ -551,6 +568,12 @@ tag_track_thread(gpointer data)
         lastfm_track_destroy(d->track);
         g_free(d->taglist);
         g_free(d);
+        gdk_threads_enter();
+        if (mainwin && mainwin->window) {
+                ui_info_banner(mainwin->window, tagged ?
+                               "Tag set correctly" : "Error tagging");
+        }
+        gdk_threads_leave();
         return NULL;
 }
 
@@ -596,6 +619,7 @@ recomm_track_thread(gpointer data)
 {
         recomm_data *d = (recomm_data *) data;
         g_return_val_if_fail(d && d->track && d->rcpt && d->text, NULL);
+        gboolean retval = FALSE;
         char *user = NULL, *pass = NULL;
         gdk_threads_enter();
         if (usercfg != NULL) {
@@ -604,11 +628,18 @@ recomm_track_thread(gpointer data)
         }
         gdk_threads_leave();
         if (user != NULL && pass != NULL) {
-                recommend_track(user, pass, d->track, d->text,
-                                d->type, d->rcpt);
+                retval = recommend_track(user, pass, d->track, d->text,
+                                         d->type, d->rcpt);
                 g_free(user);
                 g_free(pass);
         }
+        gdk_threads_enter();
+        if (mainwin && mainwin->window) {
+                ui_info_banner(mainwin->window, retval ?
+                               "Recommendation sent" :
+                               "Error sending recommendation");
+        }
+        gdk_threads_leave();
         lastfm_track_destroy(d->track);
         g_free(d->rcpt);
         g_free(d->text);
@@ -663,6 +694,7 @@ add_to_playlist_thread(gpointer data)
 {
         lastfm_track *t = (lastfm_track *) data;
         g_return_val_if_fail(t != NULL, NULL);
+        gboolean retval = FALSE;
         char *user = NULL, *pass = NULL;
         gdk_threads_enter();
         if (usercfg != NULL) {
@@ -671,10 +703,17 @@ add_to_playlist_thread(gpointer data)
         }
         gdk_threads_leave();
         if (user != NULL && pass != NULL) {
-                add_to_playlist(user, pass, t);
+                retval = add_to_playlist(user, pass, t);
                 g_free(user);
                 g_free(pass);
         }
+        gdk_threads_enter();
+        if (mainwin && mainwin->window) {
+                ui_info_banner(mainwin->window, retval ?
+                               "Track added to your playlist" :
+                               "Error adding track to your playlist");
+        }
+        gdk_threads_leave();
         lastfm_track_destroy(t);
         return NULL;
 }

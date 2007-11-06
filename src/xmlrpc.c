@@ -118,11 +118,13 @@ new_request(const char *user, const char *password, const char *method, ...)
  * Send the actual request
  * @param request String containing the request in XML
  * @param name Name of the method (for debugging purposes only)
+ * @return Whether the operation was successful or not
  */
-static void
+static gboolean
 xmlrpc_send_request(const char *request, const char *name)
 {
-        g_return_if_fail(request != NULL);
+        g_return_val_if_fail(request != NULL, FALSE);
+        gboolean retval = FALSE;
         GSList *headers = NULL;
         char *retbuf = NULL;
         headers = g_slist_append(headers, "Content-Type: text/xml");
@@ -131,6 +133,7 @@ xmlrpc_send_request(const char *request, const char *name)
         /* Check its return value */
         if (retbuf != NULL && g_strrstr(retbuf, "OK")) {
                 g_debug("XMLRPC call (%s) OK", name);
+                retval = TRUE;
         } else if (retbuf != NULL) {
                 g_debug("Error in XMLRPC call (%s): %s", name, retbuf);
         } else {
@@ -140,6 +143,7 @@ xmlrpc_send_request(const char *request, const char *name)
         /* Cleanup */
         g_slist_free(headers);
         g_free(retbuf);
+        return retval;
 }
 
 /**
@@ -150,12 +154,14 @@ xmlrpc_send_request(const char *request, const char *name)
  * @param track The track to tag
  * @param type The type of the tag (artist/track/album)
  * @param tags A list of tags to set
+ * @return Whether the operation was successful or not
  */
-void
+gboolean
 tag_track(const char *user, const char *password, const lastfm_track *track,
           request_type type, GSList *tags)
 {
-        g_return_if_fail(user && password && track && tags);
+        g_return_val_if_fail(user && password && track && tags, FALSE);
+        gboolean retval;
         char *request;
         xmlNode *param1, *param2, *param3, *param4;
         const char *method;
@@ -180,8 +186,9 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
                                       param3, param4, NULL);
         }
 
-        xmlrpc_send_request(request, method);
+        retval = xmlrpc_send_request(request, method);
         g_free(request);
+        return retval;
 }
 
 /**
@@ -193,20 +200,23 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
  * @param password The user's password
  * @param track The track to mark as loved or banned
  * @param love TRUE to love, FALSE to ban
+ * @return Whether the operation was successful or not
  */
-void
+gboolean
 love_ban_track(const char *user, const char *password,
                const lastfm_track *track, gboolean love)
 {
-        g_return_if_fail(user && password && track);
+        g_return_val_if_fail(user && password && track, FALSE);
+        gboolean retval;
         char *request;
         xmlNode *artist, *title;
         const char *method = love ? "loveTrack" : "banTrack";
         artist = string_param(track->artist);
         title = string_param(track->title);
         request = new_request(user, password, method, artist, title, NULL);
-        xmlrpc_send_request(request, method);
+        retval = xmlrpc_send_request(request, method);
         g_free(request);
+        return retval;
 }
 
 /**
@@ -218,13 +228,15 @@ love_ban_track(const char *user, const char *password,
  * @param text The text of the recommendation
  * @param type Whether to recommend an artist, track or album
  * @param rcpt The user who will receive the recommendation
+ * @return Whether the operation was successful or not
  */
-void
+gboolean
 recommend_track(const char *user, const char *password,
                 const lastfm_track *track, const char *text,
                 request_type type, const char *rcpt)
 {
-        g_return_if_fail(user && password && track && text && rcpt);
+        g_return_val_if_fail(user && password && track && text && rcpt, FALSE);
+        gboolean retval;
         char *request;
         const char *method = "recommendItem";
         xmlNode *artist, *title, *recomm_type, *recomm_to;
@@ -246,8 +258,9 @@ recommend_track(const char *user, const char *password,
         request = new_request(user, password, method, artist,
                               title, recomm_type, recomm_to,
                               recomm_body, language, NULL);
-        xmlrpc_send_request(request, method);
+        retval = xmlrpc_send_request(request, method);
         g_free(request);
+        return retval;
 }
 
 /**
@@ -256,18 +269,21 @@ recommend_track(const char *user, const char *password,
  * @param user The user's Last.fm ID
  * @param password The user's password
  * @param track The track to add to the playlist
+ * @return Whether the operation was successful or not
  */
-void
+gboolean
 add_to_playlist(const char *user, const char *password,
                 const lastfm_track *track)
 {
-        g_return_if_fail(user && password && track);
+        g_return_val_if_fail(user && password && track, FALSE);
+        gboolean retval;
         char *request;
         const char *method = "addTrackToUserPlaylist";
         xmlNode *artist, *title;
         artist = string_param(track->artist);
         title = string_param(track->title);
         request = new_request(user, password, method, artist, title, NULL);
-        xmlrpc_send_request(request, method);
+        retval = xmlrpc_send_request(request, method);
         g_free(request);
+        return retval;
 }
