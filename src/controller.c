@@ -133,8 +133,6 @@ scrobble_track_thread(gpointer data)
 {
         rsp_data *d = (rsp_data *) data;
         rsp_session *s = NULL;
-        gboolean retval = FALSE;
-        gboolean loved = FALSE;
         g_return_val_if_fail(d != NULL && d->track != NULL && d->start > 0,
                              NULL);
         char *user = NULL, *pass = NULL;
@@ -152,24 +150,10 @@ scrobble_track_thread(gpointer data)
         /* This love_ban_track() call won't be needed anymore with
          * Lastfm's new protocol v1.2 */
         if (user && pass && d->rating == RSP_RATING_LOVE) {
-                loved = TRUE;
-                retval = love_ban_track(user, pass, d->track, TRUE);
+                love_ban_track(user, pass, d->track, TRUE);
         } else if (user && pass && d->rating == RSP_RATING_BAN) {
-                retval = love_ban_track(user, pass, d->track, FALSE);
+                love_ban_track(user, pass, d->track, FALSE);
         }
-        gdk_threads_enter();
-        if (mainwin && mainwin->window) {
-                if (loved) {
-                        ui_info_banner(mainwin->window, retval ?
-                                       "Track marked as loved" :
-                                       "Error marking track as loved");
-                } else {
-                        ui_info_banner(mainwin->window, retval ?
-                                       "Track banned" :
-                                       "Error banning track");
-                }
-        }
-        gdk_threads_leave();
         g_free(user);
         g_free(pass);
         lastfm_track_destroy(d->track);

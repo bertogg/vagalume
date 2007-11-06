@@ -12,6 +12,7 @@
 #include <hildon-widgets/hildon-banner.h>
 #endif
 
+#include "config.h"
 #include "uimisc.h"
 #include "userconfig.h"
 
