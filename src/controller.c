@@ -83,6 +83,17 @@ controller_show_info(const char *text)
 }
 
 /**
+ * Show an info banner (with no buttons if possible)
+ *
+ * @param text The text to show
+ */
+void
+controller_show_banner(const char *text)
+{
+        ui_info_banner(mainwin->window, text);
+}
+
+/**
  * Show an OK/cancel dialog to request confirmation from the user
  *
  * @param text The text to show
@@ -498,7 +509,7 @@ controller_love_track(void)
         g_return_if_fail(nowplaying != NULL);
         if (controller_confirm_dialog("Really mark track as loved?")) {
                 nowplaying_rating = RSP_RATING_LOVE;
-                controller_show_info("Marking track as loved");
+                controller_show_banner("Marking track as loved");
         }
 }
 
@@ -511,6 +522,7 @@ controller_ban_track(void)
         g_return_if_fail(nowplaying != NULL);
         if (controller_confirm_dialog("Really ban this track?")) {
                 nowplaying_rating = RSP_RATING_BAN;
+                controller_show_banner("Banning track");
                 controller_skip_track();
         }
 }
@@ -554,8 +566,8 @@ tag_track_thread(gpointer data)
         g_free(d);
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
-                ui_info_banner(mainwin->window, tagged ?
-                               "Tag set correctly" : "Error tagging");
+                controller_show_banner(tagged ? "Tag set correctly" :
+                                       "Error tagging");
         }
         gdk_threads_leave();
         return NULL;
@@ -619,9 +631,9 @@ recomm_track_thread(gpointer data)
         }
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
-                ui_info_banner(mainwin->window, retval ?
-                               "Recommendation sent" :
-                               "Error sending recommendation");
+                controller_show_banner(retval ?
+                                       "Recommendation sent" :
+                                       "Error sending recommendation");
         }
         gdk_threads_leave();
         lastfm_track_destroy(d->track);
@@ -693,9 +705,9 @@ add_to_playlist_thread(gpointer data)
         }
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
-                ui_info_banner(mainwin->window, retval ?
-                               "Track added to your playlist" :
-                               "Error adding track to your playlist");
+                controller_show_banner(retval ?
+                                       "Track added to your playlist" :
+                                       "Error adding track to your playlist");
         }
         gdk_threads_leave();
         lastfm_track_destroy(t);

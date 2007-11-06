@@ -42,7 +42,7 @@ ui_info_banner(GtkWindow *parent, const char *text)
 #ifdef MAEMO
         hildon_banner_show_information(GTK_WIDGET(parent), NULL, text);
 #else
-        ui_info_dialog(parent, text, GTK_MESSAGE_INFO);
+        /* TODO: Implement a notification banner for Gnome */
 #endif
 }
 
