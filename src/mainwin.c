@@ -282,8 +282,8 @@ create_main_menu(lastfm_mainwin *w)
         /* Last.fm */
         lastfm = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Last.fm"));
         lastfmsub = GTK_MENU_SHELL(gtk_menu_new());
-        settings = gtk_menu_item_new_with_mnemonic("_Settings...");
-        quit = gtk_menu_item_new_with_mnemonic("_Quit");
+        settings = gtk_menu_item_new_with_label("Settings...");
+        quit = gtk_menu_item_new_with_label("Quit");
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);
@@ -298,12 +298,12 @@ create_main_menu(lastfm_mainwin *w)
         /* Radio */
         radio = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("Play _Radio"));
         radiosub = GTK_MENU_SHELL(gtk_menu_new());
-        user = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Your radios"));
-        others = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(
-                                      "_Others' radios"));
-        globaltag = gtk_menu_item_new_with_mnemonic("_Music tagged...");
-        similarartist = gtk_menu_item_new_with_mnemonic("Artists similar to...");
-        urlradio = gtk_menu_item_new_with_mnemonic("_Enter URL...");
+        user = GTK_MENU_ITEM(gtk_menu_item_new_with_label("My radios"));
+        others = GTK_MENU_ITEM(gtk_menu_item_new_with_label(
+                                      "Others' radios"));
+        globaltag = gtk_menu_item_new_with_label("Music tagged...");
+        similarartist = gtk_menu_item_new_with_label("Artists similar to...");
+        urlradio = gtk_menu_item_new_with_label("Enter URL...");
         gtk_menu_shell_append(bar, GTK_WIDGET(radio));
         gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
         gtk_menu_shell_append(radiosub, GTK_WIDGET(user));
@@ -321,12 +321,12 @@ create_main_menu(lastfm_mainwin *w)
         /* Radio -> Your radios */
         usersub = GTK_MENU_SHELL(gtk_menu_new());
         gtk_menu_item_set_submenu(user, GTK_WIDGET(usersub));
-        personal = gtk_menu_item_new_with_mnemonic("_Personal");
-        neigh = gtk_menu_item_new_with_mnemonic("_Neighbours");
-        loved = gtk_menu_item_new_with_mnemonic("_Loved tracks");
-        playlist = gtk_menu_item_new_with_mnemonic("Pl_aylist");
-        recomm = gtk_menu_item_new_with_mnemonic("R_ecommendations");
-        usertag = gtk_menu_item_new_with_mnemonic("_Music tagged...");
+        personal = gtk_menu_item_new_with_label("My personal radio");
+        neigh = gtk_menu_item_new_with_label("My neighbours");
+        loved = gtk_menu_item_new_with_label("My loved tracks");
+        playlist = gtk_menu_item_new_with_label("My playlist");
+        recomm = gtk_menu_item_new_with_label("My recommendations");
+        usertag = gtk_menu_item_new_with_label("My music tagged...");
         gtk_menu_shell_append(usersub, personal);
         gtk_menu_shell_append(usersub, neigh);
         gtk_menu_shell_append(usersub, loved);
@@ -355,10 +355,10 @@ create_main_menu(lastfm_mainwin *w)
         /* Radio -> Others' radios */
         othersub = GTK_MENU_SHELL(gtk_menu_new());
         gtk_menu_item_set_submenu(others, GTK_WIDGET(othersub));
-        personal2 = gtk_menu_item_new_with_mnemonic("_Personal");
-        neigh2 = gtk_menu_item_new_with_mnemonic("_Neighbours");
-        loved2 = gtk_menu_item_new_with_mnemonic("_Loved tracks");
-        playlist2 = gtk_menu_item_new_with_mnemonic("Pl_aylist");
+        personal2 = gtk_menu_item_new_with_label("Personal");
+        neigh2 = gtk_menu_item_new_with_label("Neighbours");
+        loved2 = gtk_menu_item_new_with_label("Loved tracks");
+        playlist2 = gtk_menu_item_new_with_label("Playlist");
         gtk_menu_shell_append(othersub, personal2);
         gtk_menu_shell_append(othersub, neigh2);
         gtk_menu_shell_append(othersub, loved2);
@@ -381,17 +381,17 @@ create_main_menu(lastfm_mainwin *w)
         ratesub = GTK_MENU_SHELL(gtk_menu_new());
         tagsub = GTK_MENU_SHELL(gtk_menu_new());
         dorecommsub = GTK_MENU_SHELL(gtk_menu_new());
-        love = gtk_menu_item_new_with_mnemonic("L_ove this track");
-        ban = gtk_menu_item_new_with_mnemonic("_Ban this track");
-        tag = gtk_menu_item_new_with_mnemonic("_Tag");
-        dorecomm = gtk_menu_item_new_with_mnemonic("Recommend");
-        addtopls = gtk_menu_item_new_with_mnemonic("Add to playlist");
-        tagartist = gtk_menu_item_new_with_mnemonic("This a_rtist...");
-        tagtrack = gtk_menu_item_new_with_mnemonic("This _track...");
-        tagalbum = gtk_menu_item_new_with_mnemonic("This a_lbum...");
-        recommartist = gtk_menu_item_new_with_mnemonic("This artist...");
-        recommtrack = gtk_menu_item_new_with_mnemonic("This track...");
-        recommalbum = gtk_menu_item_new_with_mnemonic("This album...");
+        love = gtk_menu_item_new_with_label("Love this track");
+        ban = gtk_menu_item_new_with_label("Ban this track");
+        addtopls = gtk_menu_item_new_with_label("Add to playlist");
+        tag = gtk_menu_item_new_with_label("Tag");
+        dorecomm = gtk_menu_item_new_with_label("Recommend");
+        tagartist = gtk_menu_item_new_with_label("This artist...");
+        tagtrack = gtk_menu_item_new_with_label("This track...");
+        tagalbum = gtk_menu_item_new_with_label("This album...");
+        recommartist = gtk_menu_item_new_with_label("This artist...");
+        recommtrack = gtk_menu_item_new_with_label("This track...");
+        recommalbum = gtk_menu_item_new_with_label("This album...");
         gtk_menu_shell_append(bar, GTK_WIDGET(rate));
         gtk_menu_item_set_submenu(rate, GTK_WIDGET(ratesub));
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(tag), GTK_WIDGET(tagsub));
@@ -399,9 +399,9 @@ create_main_menu(lastfm_mainwin *w)
                                   GTK_WIDGET(dorecommsub));
         gtk_menu_shell_append(ratesub, love);
         gtk_menu_shell_append(ratesub, ban);
+        gtk_menu_shell_append(ratesub, addtopls);
         gtk_menu_shell_append(ratesub, tag);
         gtk_menu_shell_append(ratesub, dorecomm);
-        gtk_menu_shell_append(ratesub, addtopls);
         gtk_menu_shell_append(tagsub, tagartist);
         gtk_menu_shell_append(tagsub, tagtrack);
         gtk_menu_shell_append(tagsub, tagalbum);
@@ -436,7 +436,7 @@ create_main_menu(lastfm_mainwin *w)
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));
         helpsub = GTK_MENU_SHELL(gtk_menu_new());
-        about = gtk_menu_item_new_with_mnemonic("_About...");
+        about = gtk_menu_item_new_with_label("About...");
         gtk_menu_shell_append(bar, GTK_WIDGET(help));
         gtk_menu_item_set_submenu(help, GTK_WIDGET(helpsub));
         gtk_menu_shell_append(helpsub, about);
