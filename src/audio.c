@@ -144,7 +144,7 @@ lastfm_audio_get_volume(void)
         g_return_val_if_fail(g_object_class_find_property(
                                      G_OBJECT_GET_CLASS(sink), "volume"), 0);
         g_object_get(G_OBJECT(sink), "volume", &vol, NULL);
-        vol /= 655.35;
+        vol = ((double)vol) / 655.35 + 0.5; /* Round the number */
         if (vol > 100) vol = 100;
         if (vol < 0) vol = 0;
 #endif
@@ -165,9 +165,9 @@ lastfm_audio_set_volume(int vol)
 #endif
 }
 
-gboolean
+int
 lastfm_audio_increase_volume(int inc)
 {
         lastfm_audio_set_volume(lastfm_audio_get_volume() + inc);
-        return TRUE;
+        return lastfm_audio_get_volume();
 }
