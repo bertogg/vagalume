@@ -916,6 +916,12 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
                         gtk_window_fullscreen(win->window);
                 }
                 break;
+        case GDK_F7:
+                lastfm_audio_increase_volume(5);
+                break;
+        case GDK_F8:
+                lastfm_audio_increase_volume(-5);
+                break;
         }
         return FALSE;
 }

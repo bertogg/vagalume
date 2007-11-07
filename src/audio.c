@@ -104,6 +104,8 @@ lastfm_audio_init(void)
         gst_bin_add_many (GST_BIN (pipeline), source, decoder, sink, NULL);
         gst_element_link_many (source, decoder, sink, NULL);
 #endif
+
+        lastfm_audio_set_volume(50);
         return TRUE;
 }
 
@@ -131,4 +133,41 @@ lastfm_audio_clear(void)
         gst_element_set_state (pipeline, GST_STATE_NULL);
         gst_object_unref (GST_OBJECT (pipeline));
         pipeline = NULL;
+}
+
+int
+lastfm_audio_get_volume(void)
+{
+        int vol = 0;
+#ifdef MAEMO
+        g_return_val_if_fail(sink != NULL, 0);
+        g_return_val_if_fail(g_object_class_find_property(
+                                     G_OBJECT_GET_CLASS(sink), "volume"), 0);
+        g_object_get(G_OBJECT(sink), "volume", &vol, NULL);
+        vol /= 655.35;
+        if (vol > 100) vol = 100;
+        if (vol < 0) vol = 0;
+#endif
+        return vol;
+}
+
+void
+lastfm_audio_set_volume(int vol)
+{
+#ifdef MAEMO
+        g_return_if_fail(sink != NULL);
+        g_return_if_fail(g_object_class_find_property(
+                                 G_OBJECT_GET_CLASS(sink),"volume"));
+        vol *= 655.35;
+        if (vol > 65535) vol = 65535;
+        if (vol < 0) vol = 0;
+        g_object_set(G_OBJECT(sink), "volume", vol, NULL);
+#endif
+}
+
+gboolean
+lastfm_audio_increase_volume(int inc)
+{
+        lastfm_audio_set_volume(lastfm_audio_get_volume() + inc);
+        return TRUE;
 }

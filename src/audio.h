@@ -13,6 +13,9 @@
 gboolean lastfm_audio_init(void);
 gboolean lastfm_audio_play(const char *url);
 gboolean lastfm_audio_stop(void);
+int lastfm_audio_get_volume(void);
+void lastfm_audio_set_volume(int vol);
+gboolean lastfm_audio_increase_volume(int inc);
 void lastfm_audio_clear(void);
 
 #endif
