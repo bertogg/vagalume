@@ -1,3 +1,16 @@
+0.2 (09 Nov 2007)
+  * Added support for recommending tracks to other users
+  * Added support for adding tracks to the user's playlist
+  * Added volume control for Nokia devices using the +/- hardware keys
+  * Show a combo box with the list of friends in all dialogs that
+    require a user name
+  * Show hildon banners after setting tags, recommendations, etc.
+  * Some menus have been reorganized
+  * The released source code now compiles in Maemo 2 (Nokia 770)
+    without modifications
+  * Rewrote all the XMLRPC functions using libxml2
+  * Fixed a couple of memory leaks and other minor bugs
+
 0.1 (01 Nov 2007)
   * First proper release, with source code
   * Implemented Love/Ban using the old protocol too (the new one is
