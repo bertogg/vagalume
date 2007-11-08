@@ -318,7 +318,7 @@ create_main_menu(lastfm_mainwin *w)
         g_signal_connect(G_OBJECT(urlradio), "activate",
                          G_CALLBACK(url_radio_selected), NULL);
 
-        /* Radio -> Your radios */
+        /* Radio -> My radios */
         usersub = GTK_MENU_SHELL(gtk_menu_new());
         gtk_menu_item_set_submenu(user, GTK_WIDGET(usersub));
         personal = gtk_menu_item_new_with_label("My personal radio");
