@@ -355,10 +355,10 @@ create_main_menu(lastfm_mainwin *w)
         /* Radio -> Others' radios */
         othersub = GTK_MENU_SHELL(gtk_menu_new());
         gtk_menu_item_set_submenu(others, GTK_WIDGET(othersub));
-        personal2 = gtk_menu_item_new_with_label("Personal");
-        neigh2 = gtk_menu_item_new_with_label("Neighbours");
-        loved2 = gtk_menu_item_new_with_label("Loved tracks");
-        playlist2 = gtk_menu_item_new_with_label("Playlist");
+        personal2 = gtk_menu_item_new_with_label("Personal...");
+        neigh2 = gtk_menu_item_new_with_label("Neighbours...");
+        loved2 = gtk_menu_item_new_with_label("Loved tracks...");
+        playlist2 = gtk_menu_item_new_with_label("Playlist...");
         gtk_menu_shell_append(othersub, personal2);
         gtk_menu_shell_append(othersub, neigh2);
         gtk_menu_shell_append(othersub, loved2);
