@@ -115,6 +115,14 @@ lastfm_audio_play(const char *url)
         g_return_val_if_fail(pipeline && source && url, FALSE);
         g_object_set(G_OBJECT(source), "location", url, NULL);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
+#ifdef MAEMO
+        /* It seems that dspmp3sink ignores the previous volume level
+         * when playing a new song. Workaround: change it and then
+         * restore the original value */
+        int volume = lastfm_audio_get_volume();
+        lastfm_audio_set_volume(volume == 0 ? 1 : 0);
+        lastfm_audio_set_volume(volume);
+#endif
         return TRUE;
 }
 
