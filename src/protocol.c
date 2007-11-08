@@ -7,6 +7,8 @@
 
 #include <libxml/parser.h>
 #include <string.h>
+#include <strings.h>
+#include <stdlib.h>
 
 #include "http.h"
 #include "util.h"
