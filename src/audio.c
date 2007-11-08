@@ -105,7 +105,7 @@ lastfm_audio_init(void)
         gst_element_link_many (source, decoder, sink, NULL);
 #endif
 
-        lastfm_audio_set_volume(50);
+        lastfm_audio_set_volume(80);
         return TRUE;
 }
 
