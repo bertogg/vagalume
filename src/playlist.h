@@ -24,7 +24,7 @@ typedef struct {
 
 typedef struct {
         char *title;
-        GSList *tracks;
+        GQueue *tracks;
 } lastfm_pls;
 
 void lastfm_track_destroy(lastfm_track *track);

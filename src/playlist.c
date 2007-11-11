@@ -56,7 +56,7 @@ guint
 lastfm_pls_size(lastfm_pls *pls)
 {
         g_return_val_if_fail(pls != NULL, 0);
-        return g_slist_length(pls->tracks);
+        return g_queue_get_length(pls->tracks);
 }
 
 /**
@@ -70,10 +70,10 @@ lastfm_track *
 lastfm_pls_get_track(lastfm_pls *pls)
 {
         g_return_val_if_fail(pls != NULL, NULL);
-        GSList *list = pls->tracks;
-        if (list == NULL) return NULL;
-        lastfm_track *track = (lastfm_track *) list->data;
-        pls->tracks = g_slist_delete_link(list, list);
+        lastfm_track *track = NULL;
+        if (!g_queue_is_empty(pls->tracks)) {
+                track = (lastfm_track *) g_queue_pop_head(pls->tracks);
+        }
         return track;
 }
 
@@ -86,7 +86,7 @@ void
 lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track)
 {
         g_return_if_fail(pls != NULL && track != NULL);
-        pls->tracks = g_slist_append(pls->tracks, track);
+        g_queue_push_tail(pls->tracks, track);
 }
 
 /**
@@ -113,6 +113,7 @@ lastfm_pls_new(const char *title)
 {
         lastfm_pls *pls = g_new0(lastfm_pls, 1);
         pls->title = g_strdup(title);
+        pls->tracks = g_queue_new();
         return pls;
 }
 
@@ -139,6 +140,7 @@ lastfm_pls_destroy(lastfm_pls *pls)
 {
         if (pls == NULL) return;
         lastfm_pls_clear(pls);
+        g_queue_free(pls->tracks);
         g_free(pls->title);
         g_free(pls);
 }
