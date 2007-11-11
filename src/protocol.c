@@ -143,32 +143,6 @@ lastfm_session_new(const char *username, const char *password,
 }
 
 /**
- * Request a playlist in XSPF format
- * @param s The session
- * @param discovery Whether to use discovery mode or not
- * @param buffer A NULL-terminated string where the playlist will be stored
- * @param size If non-NULL, the size of the buffer (including the
- *             string terminator) will be written here
- */
-static void
-lastfm_request_xsfp(lastfm_session *s, gboolean discovery, char **buffer,
-                    size_t *size)
-{
-        char *url;
-        const char *disc_mode = discovery ? "1" : "0";
-        g_return_if_fail(s != NULL);
-        g_return_if_fail(s->id != NULL && s->base_url != NULL &&
-                         s->base_path != NULL);
-
-        url = g_strconcat("http://", s->base_url, s->base_path,
-                          "/xspf.php?sk=", s->id,
-                          "&discovery=", disc_mode, "&desktop="
-                          APP_VERSION, NULL);
-        http_get_buffer(url, buffer, size);
-        g_free(url);
-}
-
-/**
  * Parse a <track> element from an XSPF and add it to a playlist
  * @param doc The XML document that is being parsed
  * @param node The node poiting to the track to parse
@@ -241,26 +215,33 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
 
 /**
  * Parse a playlist in XSPF form and add its tracks to a lastfm_pls
- * @param doc An xmlDoc containing the playlist to parse
- * @param pls The lastfm_pls where tracks will be added
- * @return Whether the XSPF contains tracks or not
+ * @param buffer A buffer containing the playlist in XSPF format
+ * @param bufsize Size of the buffer
+ * @return A new playlist, or NULL if none was found
  */
-static gboolean
-lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
+static lastfm_pls *
+lastfm_parse_playlist(const char *buffer, size_t bufsize)
 {
-        xmlNode *node, *tracklist;
+        xmlDoc *doc = NULL;
+        xmlNode *node = NULL;
+        xmlNode *tracklist = NULL;
+        lastfm_pls *pls = NULL;
         const xmlChar *name;
-        gint pls_size;
         char *pls_title = NULL;
-        g_return_val_if_fail(doc != NULL && pls != NULL, FALSE);
+        g_return_val_if_fail(buffer != NULL && bufsize > 0, NULL);
 
-        node = xmlDocGetRootElement(doc);
-        if (xmlStrcmp(node->name, (const xmlChar *) "playlist")) {
-                g_warning("Playlist file not in the expected format");
-                return FALSE;
+        doc = xmlParseMemory(buffer, bufsize);
+        if (doc != NULL) {
+                node = xmlDocGetRootElement(doc);
+                if (!xmlStrcmp(node->name, (const xmlChar *) "playlist")) {
+                        node = node->xmlChildrenNode;
+                } else {
+                        g_warning("Playlist file not in the expected format");
+                        node = NULL;
+                }
+        } else {
+                g_warning("Playlist is not an XML document");
         }
-        tracklist = NULL;
-        node = node->xmlChildrenNode;
         while (node != NULL) {
                 name = node->name;
                 if (!xmlStrcmp(name, (const xmlChar *) "title")) {
@@ -282,11 +263,11 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
         }
         if (tracklist != NULL) {
                 node = tracklist->xmlChildrenNode;
+                pls = lastfm_pls_new();
         } else {
                 g_warning("No tracks found in playlist");
                 node = NULL;
         }
-        pls_size = lastfm_pls_size(pls);
         while (node != NULL) {
                 if (!xmlStrcmp(node->name, (const xmlChar *) "track")) {
                         lastfm_parse_track(doc, node->xmlChildrenNode, pls,
@@ -294,9 +275,14 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
                 }
                 node = node->next;
         }
-        /* Return TRUE if the playlist has grown */
         g_free(pls_title);
-        return (pls_size < lastfm_pls_size(pls));
+        if (doc != NULL) xmlFreeDoc(doc);
+        if (pls != NULL && lastfm_pls_size(pls) == 0) {
+                lastfm_pls_destroy(pls);
+                pls = NULL;
+        }
+        xmlCleanupParser();
+        return pls;
 }
 
 /**
@@ -308,32 +294,28 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
 lastfm_pls *
 lastfm_request_playlist(lastfm_session *s, gboolean discovery)
 {
-        g_return_val_if_fail(s != NULL, FALSE);
+        g_return_val_if_fail(s && s->id && s->base_url && s->base_path, NULL);
+        const char *disc_mode = discovery ? "1" : "0";
+        char *url;
         char *buffer = NULL;
         size_t bufsize = 0;
-        xmlDoc *doc = NULL;
         lastfm_pls *pls = NULL;
 
-        lastfm_request_xsfp(s, discovery, &buffer, &bufsize);
-        if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
-        if (doc != NULL) {
-                pls = lastfm_pls_new();
-                lastfm_parse_playlist(doc, pls);
-                if (lastfm_pls_size(pls) == 0) {
-                        lastfm_pls_destroy(pls);
-                        pls = NULL;
-                }
-                xmlFreeDoc(doc);
+        url = g_strconcat("http://", s->base_url, s->base_path,
+                          "/xspf.php?sk=", s->id, "&discovery=", disc_mode,
+                          "&desktop=" APP_VERSION, NULL);
+        http_get_buffer(url, &buffer, &bufsize);
+        if (buffer != NULL) {
+                pls = lastfm_parse_playlist(buffer, bufsize);
+                g_free(buffer);
         }
-        xmlCleanupParser();
-        g_free(buffer);
+        g_free(url);
         return pls;
 }
 
 /**
- * Request a custom playlist (those starting with
- * lastfm://play/). These are handled different from the usual
- * playlists
+ * Request a custom playlist (those starting with lastfm://play/).
+ * These are handled different from the usual playlists
  * @param s The session
  * @param radio_url URL of the playlist
  * @return A new playlist, or NULL if none has been obtained
@@ -344,26 +326,17 @@ lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
         g_return_val_if_fail(s != NULL && radio_url != NULL, NULL);
         char *buffer = NULL;
         size_t bufsize = 0;
-        xmlDoc *doc = NULL;
         lastfm_pls *pls = NULL;
         char *url = NULL;
         char *radio_url_escaped = escape_url(radio_url, TRUE);
         url = g_strconcat("http://", s->base_url, custom_pls_path,
                           "?sk=", s->id, "&url=", radio_url_escaped,
-                          "&desktop=1", NULL);
+                          "&desktop=", APP_VERSION, NULL);
         http_get_buffer(url, &buffer, &bufsize);
-        if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
-        if (doc != NULL) {
-                pls = lastfm_pls_new();
-                lastfm_parse_playlist(doc, pls);
-                if (lastfm_pls_size(pls) == 0) {
-                        lastfm_pls_destroy(pls);
-                        pls = NULL;
-                }
-                xmlFreeDoc(doc);
+        if (buffer != NULL) {
+                pls = lastfm_parse_playlist(buffer, bufsize);
+                g_free(buffer);
         }
-        xmlCleanupParser();
-        g_free(buffer);
         g_free(url);
         g_free(radio_url_escaped);
         return pls;
