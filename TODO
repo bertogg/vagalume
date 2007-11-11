@@ -12,3 +12,5 @@ List of features that need to be implemented (in no particular order):
 * A decent UI
 * History
 * Support for different languages
+* Add a volume bar to control the volume graphically
+* Support changing the popularity of recommendations

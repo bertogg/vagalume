@@ -34,7 +34,7 @@ AC_SUBST(LIBCURL_LIBS)
 
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
-   AC_DEFINE([HAS_CURL_EASY_ESCAPE],[],[If curl_easy_escape() exists]),
+   AC_DEFINE([HAVE_CURL_EASY_ESCAPE],[1],[If curl_easy_escape() exists]),
    has_curl_easy_escape=0
 )
 
