@@ -21,6 +21,7 @@ lastfm_track_destroy(lastfm_track *track)
         g_free(track->album);
         g_free(track->image_url);
         g_free(track->trackauth);
+        g_free(track->free_track_url);
         g_free(track);
 }
 
@@ -42,6 +43,7 @@ lastfm_track_copy(const lastfm_track *track)
         ret->album = g_strdup(track->album);
         ret->image_url = g_strdup(track->image_url);
         ret->trackauth = g_strdup(track->trackauth);
+        ret->free_track_url = g_strdup(track->free_track_url);
         return ret;
 }
 

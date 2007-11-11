@@ -19,6 +19,7 @@ typedef struct {
         guint duration;
         char *image_url;
         char *trackauth;
+        char *free_track_url;
 } lastfm_track;
 
 typedef struct {

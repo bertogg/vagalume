@@ -22,7 +22,8 @@ static const char *friends_url =
        "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
 static const char *custom_pls_path =
        "/1.0/webclient/getresourceplaylist.php";
-
+static const xmlChar *free_track_rel = (xmlChar *)
+       "http://www.last.fm/freeTrackURL";
 
 /**
  * Parse the output of a lastfm handshake and return a hashtable
@@ -207,6 +208,15 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
                         track->image_url = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "trackauth")) {
                         track->trackauth = g_strstrip(g_strdup(val));
+                } else if (!xmlStrcmp(name, (xmlChar *) "link")) {
+                        xmlChar *rel = xmlGetProp(node, (xmlChar *) "rel");
+                        if (rel != NULL) {
+                                if (!xmlStrcmp(rel, free_track_rel)) {
+                                        track->free_track_url =
+                                                g_strstrip(g_strdup(val));
+                                }
+                                xmlFree(rel);
+                        }
                 }
                 xmlFree((xmlChar *)val);
                 node = node->next;
@@ -220,7 +230,6 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
         } else {
                 if (track->album == NULL) track->album = g_strdup("");
                 if (track->trackauth == NULL) track->trackauth = g_strdup("");
-                if (track->image_url == NULL) track->image_url = g_strdup("");
                 lastfm_pls_add_track(pls, track);
                 retval = TRUE;
         }
