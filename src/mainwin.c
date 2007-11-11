@@ -65,6 +65,9 @@ mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
         text = g_strconcat("Listening to ", playlist, NULL);
         gtk_label_set_text(GTK_LABEL(w->playlist), text);
         g_free(text);
+        text = g_strconcat(artist, " - ", track, NULL);
+        gtk_window_set_title(w->window, text);
+        g_free(text);
 }
 
 void
@@ -109,6 +112,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
                 gtk_widget_set_sensitive (w->ratemenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
+                gtk_window_set_title(w->window, APP_NAME);
                 break;
         case LASTFM_UI_STATE_PLAYING:
                 dim_labels = FALSE;
@@ -132,6 +136,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->radiomenu, FALSE);
                 gtk_widget_set_sensitive (w->ratemenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, FALSE);
+                gtk_window_set_title(w->window, APP_NAME);
                 break;
         default:
                 g_critical("Unknown ui state received: %d", state);
