@@ -53,11 +53,16 @@ typedef struct {
         request_type type;
 } recomm_data;
 
-static void
-show_dialog(const char *text, GtkMessageType type)
+/**
+ * Show an error dialog with an OK button
+ *
+ * @param text The text to show
+ */
+void
+controller_show_error(const char *text)
 {
         g_return_if_fail(mainwin != NULL);
-        ui_info_dialog(mainwin->window, text, type);
+        ui_error_dialog(mainwin->window, text);
 }
 
 /**
@@ -68,7 +73,8 @@ show_dialog(const char *text, GtkMessageType type)
 void
 controller_show_warning(const char *text)
 {
-        show_dialog(text, GTK_MESSAGE_WARNING);
+        g_return_if_fail(mainwin != NULL);
+        ui_warning_dialog(mainwin->window, text);
 }
 
 /**
@@ -79,7 +85,8 @@ controller_show_warning(const char *text)
 void
 controller_show_info(const char *text)
 {
-        show_dialog(text, GTK_MESSAGE_INFO);
+        g_return_if_fail(mainwin != NULL);
+        ui_info_dialog(mainwin->window, text);
 }
 
 /**
@@ -368,17 +375,15 @@ check_session(void)
         if (session == NULL || session->id == NULL) {
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED);
                 if (usercfg == NULL) {
-                        show_dialog("You need to enter your Last.fm\n"
-                                    "username and password to be able\n"
-                                    "to use this program.",
-                                    GTK_MESSAGE_WARNING);
+                        controller_show_warning("You need to enter your "
+                                                "Last.fm\nusername and "
+                                                "password to be able\n"
+                                                "to use this program.");
                 } else if (err == LASTFM_ERR_LOGIN) {
-                        show_dialog("Unable to login to Last.fm\n"
-                                    "Check username and password",
-                                    GTK_MESSAGE_WARNING);
+                        controller_show_warning("Unable to login to Last.fm\n"
+                                                "Check username and password");
                 } else {
-                        show_dialog("Network connection error",
-                                    GTK_MESSAGE_WARNING);
+                        controller_show_warning("Network connection error");
                 }
         } else {
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
@@ -424,7 +429,7 @@ start_playing_get_pls_thread(gpointer data)
         gdk_threads_enter();
         if (pls == NULL) {
                 controller_stop_playing();
-                show_dialog("No more content to play", GTK_MESSAGE_INFO);
+                controller_show_info("No more content to play");
         } else {
                 lastfm_pls_merge(playlist, pls);
                 lastfm_pls_destroy(pls);
@@ -747,7 +752,7 @@ controller_play_radio_by_url(const char *url)
                 controller_skip_track();
         } else {
                 controller_stop_playing();
-                show_dialog("Invalid radio URL", GTK_MESSAGE_INFO);
+                controller_show_info("Invalid radio URL");
         }
 }
 
@@ -873,8 +878,8 @@ controller_play_radio_ask_url(void)
                         g_free(previous);
                         previous = url;
                 } else {
-                        show_dialog("Last.fm radio URLs must start with "
-                                    "lastfm://", GTK_MESSAGE_INFO);
+                        controller_show_info("Last.fm radio URLs must start "
+                                             "with lastfm://");
                         g_free(url);
                 }
         }
@@ -959,8 +964,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 
 #ifdef MAEMO
         if (!osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL)) {
-                show_dialog("Unable to initialize OSSO context",
-                            GTK_MESSAGE_ERROR);
+                controller_show_error("Unable to initialize OSSO context");
                 return;
         }
         g_signal_connect(G_OBJECT(mainwin->window), "key_press_event",
@@ -969,8 +973,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
                          G_CALLBACK(window_state_cb), mainwin);
 #endif
         if (!lastfm_audio_init()) {
-                show_dialog("Error initializing audio system",
-                            GTK_MESSAGE_ERROR);
+                controller_show_error("Error initializing audio system");
                 return;
         } else if (radio_url) {
                 controller_play_radio_by_url(radio_url);

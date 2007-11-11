@@ -22,8 +22,8 @@ flush_ui_events(void)
         while (gtk_events_pending()) gtk_main_iteration();
 }
 
-void
-ui_info_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
+static void
+ui_show_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
 {
         g_return_if_fail(text != NULL);
         GtkDialogFlags flags = GTK_DIALOG_MODAL |
@@ -33,6 +33,24 @@ ui_info_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
                                                    "%s", text);
         gtk_dialog_run (GTK_DIALOG (dialog));
         gtk_widget_destroy (dialog);
+}
+
+void
+ui_info_dialog(GtkWindow *parent, const char *text)
+{
+        ui_show_dialog(parent, text, GTK_MESSAGE_INFO);
+}
+
+void
+ui_warning_dialog(GtkWindow *parent, const char *text)
+{
+        ui_show_dialog(parent, text, GTK_MESSAGE_WARNING);
+}
+
+void
+ui_error_dialog(GtkWindow *parent, const char *text)
+{
+        ui_show_dialog(parent, text, GTK_MESSAGE_ERROR);
 }
 
 void
