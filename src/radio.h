@@ -23,5 +23,6 @@ typedef enum {
 char *lastfm_radio_url(lastfm_radio type, const char *data);
 char *lastfm_recommended_radio_url(const char *user, int value);
 char *lastfm_usertag_radio_url(const char *user, const char *tag);
+gboolean lastfm_radio_url_is_custom(const char *url);
 
 #endif

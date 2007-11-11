@@ -6,6 +6,7 @@
  */
 
 #include <glib.h>
+#include <string.h>
 
 #include "radio.h"
 
@@ -55,4 +56,11 @@ lastfm_usertag_radio_url(const char *user, const char *tag)
 {
         g_return_val_if_fail(user != NULL && tag != NULL, NULL);
         return g_strconcat("lastfm://usertags/", user, "/", tag, NULL);
+}
+
+gboolean
+lastfm_radio_url_is_custom(const char *url)
+{
+        g_return_val_if_fail(url != NULL, FALSE);
+        return !strncmp(url, "lastfm://play/", 14);
 }

@@ -265,6 +265,38 @@ lastfm_request_playlist(lastfm_session *s, gboolean discovery)
         return pls;
 }
 
+lastfm_pls *
+lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
+{
+        g_return_val_if_fail(s != NULL && radio_url != NULL, NULL);
+        char *buffer = NULL;
+        size_t bufsize = 0;
+        xmlDoc *doc = NULL;
+        lastfm_pls *pls = NULL;
+        char *url = NULL;
+        char *radio_url_escaped = escape_url(radio_url, TRUE);
+        url = g_strconcat("http://", s->base_url,
+                          "/1.0/webclient/getresourceplaylist.php?sk=",
+                          s->id, "&url=", radio_url_escaped,
+                          "&desktop=1", NULL);
+        http_get_buffer(url, &buffer, &bufsize);
+        if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
+        if (doc != NULL) {
+                pls = lastfm_pls_new(NULL);
+                lastfm_parse_playlist(doc, pls);
+                if (lastfm_pls_size(pls) == 0) {
+                        lastfm_pls_destroy(pls);
+                        pls = NULL;
+                }
+                xmlFreeDoc(doc);
+        }
+        xmlCleanupParser();
+        g_free(buffer);
+        g_free(url);
+        g_free(radio_url_escaped);
+        return pls;
+}
+
 gboolean
 lastfm_set_radio(lastfm_session *s, const char *radio_url)
 {
