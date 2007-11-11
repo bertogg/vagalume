@@ -816,6 +816,27 @@ controller_play_others_radio(lastfm_radio type)
 }
 
 /**
+ * Open a dialog asking for a group and play its radio
+ */
+void
+controller_play_group_radio(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        static char *previous = NULL;
+        char *url = NULL;
+        char *group = ui_input_dialog(mainwin->window, "Enter group",
+                                      "Enter group name", previous);
+        if (group != NULL) {
+                url = lastfm_radio_url(LASTFM_GROUP_RADIO, group);
+                controller_play_radio_by_url(url);
+                g_free(url);
+                /* Store the new value for later use */
+                g_free(previous);
+                previous = group;
+        }
+}
+
+/**
  * Open a dialog asking for a global tag and play its radio
  */
 void

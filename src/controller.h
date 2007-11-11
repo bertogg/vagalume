@@ -23,6 +23,7 @@ void controller_play_radio_by_url(const char *url);
 void controller_play_radio(lastfm_radio type);
 void controller_play_others_radio(lastfm_radio type);
 void controller_play_radio_ask_url(void);
+void controller_play_group_radio(void);
 void controller_play_globaltag_radio(void);
 void controller_play_similarartist_radio(void);
 void controller_tag_track(request_type type);

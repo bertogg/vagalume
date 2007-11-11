@@ -192,6 +192,12 @@ others_radio_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+group_radio_selected(GtkWidget *widget, gpointer data)
+{
+        controller_play_group_radio();
+}
+
+static void
 globaltag_radio_selected(GtkWidget *widget, gpointer data)
 {
         controller_play_globaltag_radio();
@@ -262,7 +268,7 @@ create_main_menu(lastfm_mainwin *w)
 {
         GtkMenuItem *lastfm, *radio, *rate, *help;
         GtkMenuItem *user, *others;
-        GtkWidget *globaltag, *similarartist, *urlradio;
+        GtkWidget *group, *globaltag, *similarartist, *urlradio;
         GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
@@ -301,6 +307,7 @@ create_main_menu(lastfm_mainwin *w)
         user = GTK_MENU_ITEM(gtk_menu_item_new_with_label("My radios"));
         others = GTK_MENU_ITEM(gtk_menu_item_new_with_label(
                                       "Others' radios"));
+        group = gtk_menu_item_new_with_label("Group radio...");
         globaltag = gtk_menu_item_new_with_label("Music tagged...");
         similarartist = gtk_menu_item_new_with_label("Artists similar to...");
         urlradio = gtk_menu_item_new_with_label("Enter URL...");
@@ -308,9 +315,12 @@ create_main_menu(lastfm_mainwin *w)
         gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
         gtk_menu_shell_append(radiosub, GTK_WIDGET(user));
         gtk_menu_shell_append(radiosub, GTK_WIDGET(others));
+        gtk_menu_shell_append(radiosub, group);
         gtk_menu_shell_append(radiosub, globaltag);
         gtk_menu_shell_append(radiosub, similarartist);
         gtk_menu_shell_append(radiosub, urlradio);
+        g_signal_connect(G_OBJECT(group), "activate",
+                         G_CALLBACK(group_radio_selected), NULL);
         g_signal_connect(G_OBJECT(globaltag), "activate",
                          G_CALLBACK(globaltag_radio_selected), NULL);
         g_signal_connect(G_OBJECT(similarartist), "activate",
