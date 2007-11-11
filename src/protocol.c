@@ -20,7 +20,16 @@ static const char *handshake_url =
        "?version=" APP_VERSION "&platform=" APP_OS_LC;
 static const char *friends_url =
        "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
+static const char *custom_pls_path =
+       "/1.0/webclient/getresourceplaylist.php";
 
+
+/**
+ * Parse the output of a lastfm handshake and return a hashtable
+ * containing keys and values
+ * @param buffer A NULL string containing the handshake output
+ * @return A new GHashTable containing the keys and values
+ */
 static GHashTable *
 lastfm_parse_handshake(const char *buffer)
 {
@@ -47,6 +56,10 @@ lastfm_parse_handshake(const char *buffer)
         return hash;
 }
 
+/**
+ * Destroy a lastfm_session object, freeing all of its memory
+ * @param session The session
+ */
 void
 lastfm_session_destroy(lastfm_session *session)
 {
@@ -58,6 +71,11 @@ lastfm_session_destroy(lastfm_session *session)
         g_free(session);
 }
 
+/**
+ * Copy a lastfm_session object
+ * @param session The original object
+ * @return A new object
+ */
 lastfm_session *
 lastfm_session_copy(const lastfm_session *session)
 {
@@ -71,6 +89,13 @@ lastfm_session_copy(const lastfm_session *session)
         return s;
 }
 
+/**
+ * Create a new Last.fm session to play radios
+ * @param username User's ID
+ * @param password User's passwords
+ * @param err If non-NULL, an error code will be written here
+ * @return A new lastfm_session or NULL if it couldn't be created
+ */
 lastfm_session *
 lastfm_session_new(const char *username, const char *password,
                    lastfm_err *err)
@@ -116,6 +141,14 @@ lastfm_session_new(const char *username, const char *password,
         return s;
 }
 
+/**
+ * Request a playlist in XSPF format
+ * @param s The session
+ * @param discovery Whether to use discovery mode or not
+ * @param buffer A NULL-terminated string where the playlist will be stored
+ * @param size If non-NULL, the size of the buffer (including the
+ *             string terminator) will be written here
+ */
 static void
 lastfm_request_xsfp(lastfm_session *s, gboolean discovery, char **buffer,
                     size_t *size)
@@ -134,6 +167,13 @@ lastfm_request_xsfp(lastfm_session *s, gboolean discovery, char **buffer,
         g_free(url);
 }
 
+/**
+ * Parse a <track> element from an XSPF and add it to a playlist
+ * @param doc The XML document that is being parsed
+ * @param node The node poiting to the track to parse
+ * @param pls The playlist where the track will be added
+ * @return Whether a track has been found and added to the playlist
+ */
 static gboolean
 lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
 {
@@ -188,6 +228,12 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
         return retval;
 }
 
+/**
+ * Parse a playlist in XSPF form and add its tracks to a lastfm_pls
+ * @param doc An xmlDoc containing the playlist to parse
+ * @param pls The lastfm_pls where tracks will be added
+ * @return Whether the XSPF contains tracks or not
+ */
 static gboolean
 lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
 {
@@ -240,6 +286,12 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
         return (pls_size < lastfm_pls_size(pls));
 }
 
+/**
+ * Request a new playlist from the currently active radio.
+ * @param s The session
+ * @param discovery Whether to use discovery mode or not
+ * @return A new playlist or NULL if none has been obtained
+ */
 lastfm_pls *
 lastfm_request_playlist(lastfm_session *s, gboolean discovery)
 {
@@ -265,6 +317,14 @@ lastfm_request_playlist(lastfm_session *s, gboolean discovery)
         return pls;
 }
 
+/**
+ * Request a custom playlist (those starting with
+ * lastfm://play/). These are handled different from the usual
+ * playlists
+ * @param s The session
+ * @param radio_url URL of the playlist
+ * @return A new playlist, or NULL if none has been obtained
+ */
 lastfm_pls *
 lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
 {
@@ -275,9 +335,8 @@ lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
         lastfm_pls *pls = NULL;
         char *url = NULL;
         char *radio_url_escaped = escape_url(radio_url, TRUE);
-        url = g_strconcat("http://", s->base_url,
-                          "/1.0/webclient/getresourceplaylist.php?sk=",
-                          s->id, "&url=", radio_url_escaped,
+        url = g_strconcat("http://", s->base_url, custom_pls_path,
+                          "?sk=", s->id, "&url=", radio_url_escaped,
                           "&desktop=1", NULL);
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
@@ -297,6 +356,13 @@ lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
         return pls;
 }
 
+/**
+ * Set a radio URL. All the following playlist requests will return
+ * tracks from this radio.
+ * @param s The session
+ * @param radio_url URL of the radio to set
+ * @return Whether the radio has been set correctly
+ */
 gboolean
 lastfm_set_radio(lastfm_session *s, const char *radio_url)
 {
@@ -325,6 +391,11 @@ lastfm_set_radio(lastfm_session *s, const char *radio_url)
         return retval;
 }
 
+/**
+ * Obtain the list of friends from a user
+ * @param username The user name
+ * @return a list of friends (char *)
+ */
 GList *
 lastfm_get_friends(const char *username)
 {
