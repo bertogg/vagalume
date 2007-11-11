@@ -176,7 +176,8 @@ lastfm_request_xsfp(lastfm_session *s, gboolean discovery, char **buffer,
  * @return Whether a track has been found and added to the playlist
  */
 static gboolean
-lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
+lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
+                   const char *pls_title)
 {
         g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
 
@@ -184,6 +185,7 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls)
         const xmlChar *name;
         char *val;
         lastfm_track *track = g_new0(lastfm_track, 1);
+        track->pls_title = g_strdup(pls_title);
 
         while (node != NULL) {
                 name = node->name;
@@ -249,6 +251,7 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
         xmlNode *node, *tracklist;
         const xmlChar *name;
         gint pls_size;
+        char *pls_title = NULL;
         g_return_val_if_fail(doc != NULL && pls != NULL, FALSE);
 
         node = xmlDocGetRootElement(doc);
@@ -263,15 +266,13 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
                 if (!xmlStrcmp(name, (const xmlChar *) "title")) {
                         char *title = (char *) xmlNodeListGetString(doc,
                                                node->xmlChildrenNode, 1);
-                        if (title != NULL) {
-                                char *unescaped = escape_url(title, FALSE);
+                        if (title != NULL && pls_title == NULL) {
+                                pls_title = escape_url(title, FALSE);
                                 int i;
-                                for (i = 0; unescaped[i] != 0; i++) {
-                                        if (unescaped[i] == '+')
-                                                unescaped[i] = ' ';
+                                for (i = 0; pls_title[i] != 0; i++) {
+                                        if (pls_title[i] == '+')
+                                                pls_title[i] = ' ';
                                 }
-                                lastfm_pls_set_title(pls, unescaped);
-                                g_free(unescaped);
                         }
                         xmlFree((xmlChar *)title);
                 } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {
@@ -279,19 +280,22 @@ lastfm_parse_playlist(xmlDoc *doc, lastfm_pls *pls)
                 }
                 node = node->next;
         }
-        if (tracklist == NULL) {
+        if (tracklist != NULL) {
+                node = tracklist->xmlChildrenNode;
+        } else {
                 g_warning("No tracks found in playlist");
-                return FALSE;
+                node = NULL;
         }
-        node = tracklist->xmlChildrenNode;
         pls_size = lastfm_pls_size(pls);
         while (node != NULL) {
                 if (!xmlStrcmp(node->name, (const xmlChar *) "track")) {
-                        lastfm_parse_track(doc, node->xmlChildrenNode, pls);
+                        lastfm_parse_track(doc, node->xmlChildrenNode, pls,
+                                           pls_title);
                 }
                 node = node->next;
         }
         /* Return TRUE if the playlist has grown */
+        g_free(pls_title);
         return (pls_size < lastfm_pls_size(pls));
 }
 
@@ -313,7 +317,7 @@ lastfm_request_playlist(lastfm_session *s, gboolean discovery)
         lastfm_request_xsfp(s, discovery, &buffer, &bufsize);
         if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
-                pls = lastfm_pls_new(NULL);
+                pls = lastfm_pls_new();
                 lastfm_parse_playlist(doc, pls);
                 if (lastfm_pls_size(pls) == 0) {
                         lastfm_pls_destroy(pls);
@@ -350,7 +354,7 @@ lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
-                pls = lastfm_pls_new(NULL);
+                pls = lastfm_pls_new();
                 lastfm_parse_playlist(doc, pls);
                 if (lastfm_pls_size(pls) == 0) {
                         lastfm_pls_destroy(pls);

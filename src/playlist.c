@@ -19,6 +19,7 @@ lastfm_track_destroy(lastfm_track *track)
         g_free(track->title);
         g_free(track->artist);
         g_free(track->album);
+        g_free(track->pls_title);
         g_free(track->image_url);
         g_free(track->trackauth);
         g_free(track->free_track_url);
@@ -41,6 +42,7 @@ lastfm_track_copy(const lastfm_track *track)
         ret->title = g_strdup(track->title);
         ret->artist = g_strdup(track->artist);
         ret->album = g_strdup(track->album);
+        ret->pls_title = g_strdup(track->pls_title);
         ret->image_url = g_strdup(track->image_url);
         ret->trackauth = g_strdup(track->trackauth);
         ret->free_track_url = g_strdup(track->free_track_url);
@@ -90,29 +92,14 @@ lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track)
 }
 
 /**
- * Set the title of a playlist
- * @param pls The playlist
- * @param title Title to set (the playlist will store a copy)
- */
-void
-lastfm_pls_set_title(lastfm_pls *pls, const char *title)
-{
-        g_return_if_fail(pls != NULL);
-        g_free(pls->title);
-        pls->title = g_strdup(title);
-}
-
-/**
  * Create a new, empty playlist
- * @param title The title of this playlist, or NULL
  * @return A new playlist. It should be destroyed with
  * lastfm_pls_destroy() when no longer used
  */
 lastfm_pls *
-lastfm_pls_new(const char *title)
+lastfm_pls_new(void)
 {
         lastfm_pls *pls = g_new0(lastfm_pls, 1);
-        pls->title = g_strdup(title);
         pls->tracks = g_queue_new();
         return pls;
 }
@@ -141,7 +128,6 @@ lastfm_pls_destroy(lastfm_pls *pls)
         if (pls == NULL) return;
         lastfm_pls_clear(pls);
         g_queue_free(pls->tracks);
-        g_free(pls->title);
         g_free(pls);
 }
 
@@ -149,7 +135,6 @@ lastfm_pls_destroy(lastfm_pls *pls)
  * Merges two playlists, appending the contents of the second to the
  * end of the first one. The second playlist is cleared (but not
  * destroyed).
- * It also copies the title from the second playlist to the first
  * @param pls1 The first playlist
  * @param pls2 The second playlist (empty after this operation)
  */
@@ -161,5 +146,4 @@ lastfm_pls_merge(lastfm_pls *pls1, lastfm_pls *pls2)
         while ((track = lastfm_pls_get_track(pls2)) != NULL) {
                 lastfm_pls_add_track(pls1, track);
         }
-        lastfm_pls_set_title(pls1, pls2->title);
 }

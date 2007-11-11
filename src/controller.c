@@ -402,8 +402,8 @@ check_session(void)
 static void
 ui_update_track_info(void)
 {
-        g_return_if_fail(playlist && nowplaying && mainwin);
-        const char *pls = playlist->title;
+        g_return_if_fail(nowplaying && mainwin);
+        const char *pls = nowplaying->pls_title;
         const char *artist = nowplaying->artist;
         const char *title = nowplaying->title;
         const char *album = nowplaying->album;
@@ -960,7 +960,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 
         http_init();
         usercfg = read_usercfg();
-        playlist = lastfm_pls_new(NULL);
+        playlist = lastfm_pls_new();
 
 #ifdef MAEMO
         if (!osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL)) {

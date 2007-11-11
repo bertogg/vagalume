@@ -16,6 +16,7 @@ typedef struct {
         guint id;
         char *artist;
         char *album;
+        char *pls_title;
         guint duration;
         char *image_url;
         char *trackauth;
@@ -23,7 +24,6 @@ typedef struct {
 } lastfm_track;
 
 typedef struct {
-        char *title;
         GQueue *tracks;
 } lastfm_pls;
 
@@ -32,8 +32,7 @@ lastfm_track *lastfm_track_copy(const lastfm_track *track);
 lastfm_track *lastfm_pls_get_track(lastfm_pls *pls);
 void lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track);
 guint lastfm_pls_size(lastfm_pls *pls);
-lastfm_pls *lastfm_pls_new(const char *title);
-void lastfm_pls_set_title(lastfm_pls *pls, const char *title);
+lastfm_pls *lastfm_pls_new(void);
 void lastfm_pls_clear(lastfm_pls *pls);
 void lastfm_pls_destroy(lastfm_pls *pls);
 void lastfm_pls_merge(lastfm_pls *pls1, lastfm_pls *pls2);
