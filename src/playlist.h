@@ -21,6 +21,7 @@ typedef struct {
         char *image_url;
         char *trackauth;
         char *free_track_url;
+        gboolean custom_pls;
 } lastfm_track;
 
 typedef struct {

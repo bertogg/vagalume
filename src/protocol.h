@@ -20,7 +20,6 @@ typedef enum {
 
 typedef struct {
         char *id;
-        char *stream_url;
         gboolean subscriber;
         char *base_url;
         char *base_path;
