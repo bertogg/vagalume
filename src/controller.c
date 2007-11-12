@@ -258,7 +258,7 @@ controller_set_nowplaying(lastfm_track *track)
                 lastfm_track_destroy(nowplaying);
         }
         nowplaying = track;
-        nowplaying_since = time(NULL);
+        nowplaying_since = 0;
         nowplaying_rating = RSP_RATING_NONE;
         if (track != NULL && usercfg->enable_scrobbling) {
                 rsp_data *d = g_new0(rsp_data, 1);
@@ -441,6 +441,23 @@ start_playing_get_pls_thread(gpointer data)
 }
 
 /**
+ * Callback to be called by the audio component when it actually
+ * starts playing
+ */
+static void
+controller_audio_started_cb(void)
+{
+        g_return_if_fail(nowplaying != NULL);
+        lastfm_track *track;
+        nowplaying_since = time(NULL);
+        ui_update_track_info();
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING);
+        track = lastfm_track_copy(nowplaying);
+        controller_show_progress(track);
+        g_timeout_add(1000, controller_show_progress, track);
+}
+
+/**
  * Play the next track from the playlist, getting a new playlist if
  * necessary, see start_playing_get_pls_thread().
  */
@@ -459,12 +476,8 @@ controller_start_playing(void)
         }
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
-        lastfm_audio_play(track->stream_url);
-        ui_update_track_info();
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING);
-        track = lastfm_track_copy(track);
-        controller_show_progress(track);
-        g_timeout_add(1000, controller_show_progress, track);
+        lastfm_audio_play(track->stream_url,
+                          (GCallback) controller_audio_started_cb);
 }
 
 /**

@@ -9,9 +9,11 @@
 
 #include <gst/gst.h>
 #include <gtk/gtk.h>
+#include <unistd.h>
 
 #include "audio.h"
 #include "controller.h"
+#include "http.h"
 
 static GstElement *pipeline = NULL;
 static GstElement *source = NULL;
@@ -19,6 +21,30 @@ static GstElement *decoder = NULL;
 static GstElement *sink = NULL;
 
 static int failed_tracks = 0;
+
+static int http_pipe[2] = { -1, -1 };
+static GThread *http_thread = NULL;
+static GCallback audio_started_callback = NULL;
+
+static void
+close_previous_playback(void)
+{
+        if (http_pipe[0] != -1) close(http_pipe[0]);
+        if (http_pipe[1] != -1) close(http_pipe[1]);
+        if (http_thread != NULL) g_thread_join(http_thread);
+        http_pipe[0] = http_pipe[1] = -1;
+        http_thread = NULL;
+}
+
+static gpointer
+get_audio_thread(gpointer data)
+{
+        g_return_val_if_fail(data != NULL && http_pipe[1] > 0, NULL);
+        char *url = (char *) data;
+        http_get_to_fd(url, http_pipe[1]);
+        g_free(url);
+        return NULL;
+}
 
 static gboolean
 bus_call (GstBus *bus, GstMessage *msg, gpointer data)
@@ -56,6 +82,17 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
                 break;
         }
         case GST_MESSAGE_STATE_CHANGED:
+                if (audio_started_callback != NULL) {
+                        GstState st;
+                        gst_message_parse_state_changed(msg, NULL, &st, NULL);
+                        if (st == GST_STATE_PLAYING) {
+                                gdk_threads_enter();
+                                (*audio_started_callback)();
+                                audio_started_callback = NULL;
+                                gdk_threads_leave();
+                        }
+                }
+                break;
         case GST_MESSAGE_TAG:
         case GST_MESSAGE_CLOCK_PROVIDE:
         case GST_MESSAGE_NEW_CLOCK:
@@ -81,7 +118,7 @@ lastfm_audio_init(void)
 
         /* set up */
         pipeline = gst_pipeline_new (NULL);
-        source = gst_element_factory_make ("gnomevfssrc", NULL);
+        source = gst_element_factory_make ("fdsrc", NULL);
 #ifdef MAEMO
         sink = gst_element_factory_make ("dspmp3sink", NULL);
         decoder = sink; /* Unused, this is only for the assertions */
@@ -110,10 +147,15 @@ lastfm_audio_init(void)
 }
 
 gboolean
-lastfm_audio_play(const char *url)
+lastfm_audio_play(const char *url, GCallback audio_started_cb)
 {
         g_return_val_if_fail(pipeline && source && url, FALSE);
-        g_object_set(G_OBJECT(source), "location", url, NULL);
+        close_previous_playback();
+        audio_started_callback = audio_started_cb;
+        pipe(http_pipe);
+        http_thread = g_thread_create(get_audio_thread, g_strdup(url),
+                                      TRUE, NULL);
+        g_object_set(G_OBJECT(source), "fd", http_pipe[0], NULL);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
 #ifdef MAEMO
         /* It seems that dspmp3sink ignores the previous volume level
@@ -138,6 +180,7 @@ void
 lastfm_audio_clear(void)
 {
         g_return_if_fail(pipeline != NULL);
+        close_previous_playback();
         gst_element_set_state (pipeline, GST_STATE_NULL);
         gst_object_unref (GST_OBJECT (pipeline));
         pipeline = NULL;

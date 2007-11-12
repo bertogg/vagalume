@@ -60,6 +60,22 @@ http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
 }
 
 void
+http_get_to_fd(const char *url, int fd)
+{
+        g_return_if_fail(url != NULL && fd > 0);
+        CURL *handle = curl_easy_init();
+        FILE *f = fdopen(fd, "w");
+
+        g_debug("Requesting URL %s", url);
+        curl_easy_setopt(handle, CURLOPT_URL, url);
+        curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
+        curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
+        curl_easy_perform(handle);
+        curl_easy_cleanup(handle);
+        fclose(f);
+}
+
+void
 http_get_buffer(const char *url, char **buffer, size_t *bufsize)
 {
         g_return_if_fail(url != NULL && buffer != NULL);

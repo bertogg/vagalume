@@ -11,7 +11,7 @@
 #include <glib.h>
 
 gboolean lastfm_audio_init(void);
-gboolean lastfm_audio_play(const char *url);
+gboolean lastfm_audio_play(const char *url, GCallback audio_started_cb);
 gboolean lastfm_audio_stop(void);
 int lastfm_audio_get_volume(void);
 void lastfm_audio_set_volume(int vol);

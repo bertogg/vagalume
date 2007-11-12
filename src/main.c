@@ -19,6 +19,7 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
+#include <signal.h>
 
 #include "controller.h"
 #include "mainwin.h"
@@ -41,6 +42,7 @@ main (int argc, char **argv)
                 radio = g_strdup(argv[1]);
         }
 
+        signal(SIGPIPE, SIG_IGN);
         g_thread_init (NULL);
         gdk_threads_init ();
         gdk_threads_enter ();

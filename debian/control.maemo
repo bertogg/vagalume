@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: vagalume
 Architecture: any
-Depends: ${shlibs:Depends}, libgst0.10-dsp, gstreamer0.10-gnomevfs
+Depends: ${shlibs:Depends}, libgst0.10-dsp
 Description: A small Last.fm client for Gnome and Maemo
  Vagalume is a Last.fm client designed for the Gnome desktop
  environment. It's small and doesn't have much features yet but it has
