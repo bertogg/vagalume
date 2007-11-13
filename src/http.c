@@ -59,10 +59,11 @@ http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
         return datasize;
 }
 
-void
-http_get_to_fd(const char *url, int fd, GSList *headers)
+gboolean
+http_get_to_fd(const char *url, int fd, const GSList *headers)
 {
         g_return_if_fail(url != NULL && fd > 0);
+        CURLcode retcode;
         CURL *handle = curl_easy_init();
         FILE *f = fdopen(fd, "w");
         struct curl_slist *hdrs = NULL;
@@ -70,7 +71,7 @@ http_get_to_fd(const char *url, int fd, GSList *headers)
         g_debug("Requesting URL %s", url);
         hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
         if (headers != NULL) {
-                GSList *iter = headers;
+                const GSList *iter = headers;
                 for (; iter != NULL; iter = g_slist_next(iter)) {
                         hdrs = curl_slist_append(hdrs, iter->data);
                 }
@@ -80,10 +81,12 @@ http_get_to_fd(const char *url, int fd, GSList *headers)
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
         curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
-        curl_easy_perform(handle);
+        retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
         fclose(f);
+        /* We only return false for _read_ errors */
+        return (retcode == CURLE_OK || retcode == CURLE_WRITE_ERROR);
 }
 
 void
@@ -119,7 +122,7 @@ http_get_buffer(const char *url, char **buffer, size_t *bufsize)
 
 void
 http_post_buffer(const char *url, const char *postdata, char **retdata,
-                 GSList *headers)
+                 const GSList *headers)
 {
         g_return_if_fail(url != NULL && postdata != NULL);
         curl_buffer dstbuf = { NULL, 0 };
@@ -135,7 +138,7 @@ http_post_buffer(const char *url, const char *postdata, char **retdata,
 
         hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
         if (headers != NULL) {
-                GSList *iter = headers;
+                const GSList *iter = headers;
                 for (; iter != NULL; iter = g_slist_next(iter)) {
                         hdrs = curl_slist_append(hdrs, iter->data);
                 }

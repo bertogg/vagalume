@@ -941,6 +941,7 @@ controller_play_radio_ask_url(void)
 void
 controller_quit_app(void)
 {
+        controller_stop_playing();
         lastfm_audio_clear();
         lastfm_session_destroy(session);
         gtk_main_quit();

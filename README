@@ -36,7 +36,9 @@ It currently has the following features:
 
 --------------------------------------------------------
 
-Vagalume is (c) 2007 Alberto Garcia Gonzalez
+Vagalume is (c) 2007 Alberto Garcia Gonzalez <agarcia@igalia.com>
+http://people.igalia.com/berto/
+https://garage.maemo.org/projects/vagalume/
 
 Vagalume also contains a free MD5 implementation that is
 (c) 1999 Aladdin Enterprises.

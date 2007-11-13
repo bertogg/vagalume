@@ -21,6 +21,7 @@ static GstElement *decoder = NULL;
 static GstElement *sink = NULL;
 
 static int failed_tracks = 0;
+static GMutex *failed_tracks_mutex = NULL;
 
 static int http_pipe[2] = { -1, -1 };
 static GThread *http_thread = NULL;
@@ -48,17 +49,21 @@ get_audio_thread(gpointer userdata)
         get_audio_thread_data *data = (get_audio_thread_data *) userdata;
         GSList *headers = NULL;
         char *cookie = NULL;
+        gboolean transfer_ok;
         if (data->session_id != NULL) {
                 cookie = g_strconcat("Cookie: Session=", data->session_id,
                                      NULL);
                 headers = g_slist_append(headers, cookie);
         }
-        http_get_to_fd(data->url, http_pipe[1], headers);
+        transfer_ok = http_get_to_fd(data->url, http_pipe[1], headers);
         g_free(data->url);
         g_free(data->session_id);
         g_free(data);
         g_free(cookie);
         g_slist_free(headers);
+        g_mutex_lock(failed_tracks_mutex);
+        failed_tracks = transfer_ok ? 0 : (failed_tracks + 1);
+        g_mutex_unlock(failed_tracks_mutex);
         return NULL;
 }
 
@@ -68,13 +73,6 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
         GMainLoop *loop = (GMainLoop *) data;
 
         switch (GST_MESSAGE_TYPE (msg)) {
-        case GST_MESSAGE_EOS:
-                g_main_loop_quit (loop);
-                gdk_threads_enter ();
-                failed_tracks = 0;
-                controller_skip_track();
-                gdk_threads_leave ();
-                break;
         case GST_MESSAGE_ERROR: {
                 gchar *debug;
                 GError *err;
@@ -84,19 +82,24 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 
                 g_warning ("Error: %s", err->message);
                 g_error_free (err);
-
+                g_mutex_lock(failed_tracks_mutex);
+                failed_tracks++;
+                g_mutex_unlock(failed_tracks_mutex);
+        } /* No, I haven't forgotten the break here */
+        case GST_MESSAGE_EOS:
                 g_main_loop_quit (loop);
                 gdk_threads_enter ();
-                if (++failed_tracks == 3) {
+                if (failed_tracks == 3) {
+                        g_mutex_lock(failed_tracks_mutex);
                         failed_tracks = 0;
-                        controller_show_warning("Connection error");
+                        g_mutex_unlock(failed_tracks_mutex);
                         controller_stop_playing();
+                        controller_show_warning("Connection error");
                 } else {
                         controller_skip_track();
                 }
                 gdk_threads_leave ();
                 break;
-        }
         case GST_MESSAGE_STATE_CHANGED:
                 if (audio_started_callback != NULL) {
                         GstState st;
@@ -128,6 +131,7 @@ lastfm_audio_init(void)
 {
         GMainLoop *loop;
         GstBus *bus;
+        failed_tracks_mutex = g_mutex_new();
         /* initialize GStreamer */
         gst_init (NULL, NULL);
         loop = g_main_loop_new (NULL, FALSE);
@@ -192,6 +196,7 @@ gboolean
 lastfm_audio_stop(void)
 {
         g_return_val_if_fail(pipeline != NULL, FALSE);
+        close_previous_playback();
         gst_element_set_state(pipeline, GST_STATE_NULL);
         return TRUE;
 }
