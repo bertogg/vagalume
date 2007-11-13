@@ -12,7 +12,7 @@
 
 char *escape_url(const char *url, gboolean escape);
 void http_get_buffer(const char *url, char **buffer, size_t *bufsize);
-void http_get_to_fd(const char *url, int fd);
+void http_get_to_fd(const char *url, int fd, GSList *headers);
 void http_post_buffer(const char *url, const char *postdata, char **retdata,
                       GSList *headers);
 void http_init(void);

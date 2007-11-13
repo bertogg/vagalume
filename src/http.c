@@ -60,18 +60,29 @@ http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
 }
 
 void
-http_get_to_fd(const char *url, int fd)
+http_get_to_fd(const char *url, int fd, GSList *headers)
 {
         g_return_if_fail(url != NULL && fd > 0);
         CURL *handle = curl_easy_init();
         FILE *f = fdopen(fd, "w");
+        struct curl_slist *hdrs = NULL;
 
         g_debug("Requesting URL %s", url);
+        hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
+        if (headers != NULL) {
+                GSList *iter = headers;
+                for (; iter != NULL; iter = g_slist_next(iter)) {
+                        hdrs = curl_slist_append(hdrs, iter->data);
+                }
+        }
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
+        curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
+        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
         curl_easy_perform(handle);
         curl_easy_cleanup(handle);
+        if (hdrs != NULL) curl_slist_free_all(hdrs);
         fclose(f);
 }
 

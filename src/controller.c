@@ -190,9 +190,8 @@ scrobble_track_thread(gpointer data)
 static void
 controller_scrobble_track(void)
 {
-        g_return_if_fail(nowplaying != NULL && usercfg != NULL &&
-                         nowplaying_since > 0);
-        if (usercfg->enable_scrobbling &&
+        g_return_if_fail(nowplaying != NULL && usercfg != NULL);
+        if (usercfg->enable_scrobbling && nowplaying_since > 0 &&
             rsp_sess != NULL && nowplaying->duration > 30000) {
                 time_t played = time(NULL) - nowplaying_since;
                 /* If a track is unrated and hasn't been played for
@@ -476,8 +475,15 @@ controller_start_playing(void)
         }
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
-        lastfm_audio_play(track->stream_url,
-                          (GCallback) controller_audio_started_cb);
+        if (track->custom_pls) {
+                lastfm_audio_play(track->stream_url,
+                                  (GCallback) controller_audio_started_cb,
+                                  session->id);
+        } else {
+                lastfm_audio_play(track->stream_url,
+                                  (GCallback) controller_audio_started_cb,
+                                  NULL);
+        }
 }
 
 /**
@@ -760,6 +766,16 @@ controller_play_radio_by_url(const char *url)
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
+        } else if (lastfm_radio_url_is_custom(url)) {
+                lastfm_pls *pls = lastfm_request_custom_playlist(session, url);
+                if (pls != NULL) {
+                        lastfm_pls_destroy(playlist);
+                        playlist = pls;
+                        controller_skip_track();
+                } else {
+                        controller_stop_playing();
+                        controller_show_info("Invalid radio URL");
+                }
         } else if (lastfm_set_radio(session, url)) {
                 lastfm_pls_clear(playlist);
                 controller_skip_track();

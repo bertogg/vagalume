@@ -36,13 +36,29 @@ close_previous_playback(void)
         http_thread = NULL;
 }
 
+typedef struct {
+        char *url;
+        char *session_id;
+} get_audio_thread_data;
+
 static gpointer
-get_audio_thread(gpointer data)
+get_audio_thread(gpointer userdata)
 {
-        g_return_val_if_fail(data != NULL && http_pipe[1] > 0, NULL);
-        char *url = (char *) data;
-        http_get_to_fd(url, http_pipe[1]);
-        g_free(url);
+        g_return_val_if_fail(userdata != NULL && http_pipe[1] > 0, NULL);
+        get_audio_thread_data *data = (get_audio_thread_data *) userdata;
+        GSList *headers = NULL;
+        char *cookie = NULL;
+        if (data->session_id != NULL) {
+                cookie = g_strconcat("Cookie: Session=", data->session_id,
+                                     NULL);
+                headers = g_slist_append(headers, cookie);
+        }
+        http_get_to_fd(data->url, http_pipe[1], headers);
+        g_free(data->url);
+        g_free(data->session_id);
+        g_free(data);
+        g_free(cookie);
+        g_slist_free(headers);
         return NULL;
 }
 
@@ -147,14 +163,18 @@ lastfm_audio_init(void)
 }
 
 gboolean
-lastfm_audio_play(const char *url, GCallback audio_started_cb)
+lastfm_audio_play(const char *url, GCallback audio_started_cb,
+                  const char *session_id)
 {
         g_return_val_if_fail(pipeline && source && url, FALSE);
+        get_audio_thread_data *data = NULL;
         close_previous_playback();
         audio_started_callback = audio_started_cb;
         pipe(http_pipe);
-        http_thread = g_thread_create(get_audio_thread, g_strdup(url),
-                                      TRUE, NULL);
+        data = g_new(get_audio_thread_data, 1);
+        data->session_id = g_strdup(session_id);
+        data->url = g_strdup(url);
+        http_thread = g_thread_create(get_audio_thread, data, TRUE, NULL);
         g_object_set(G_OBJECT(source), "fd", http_pipe[0], NULL);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
 #ifdef MAEMO
