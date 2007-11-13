@@ -8,6 +8,7 @@
 #include "config.h"
 
 #include <gtk/gtk.h>
+#include <stdio.h>
 
 #if defined(MAEMO2) || defined(MAEMO3)
 #include <hildon-widgets/hildon-program.h>
@@ -74,21 +75,21 @@ void
 mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
 {
         g_return_if_fail(w != NULL && w->progressbar != NULL);
-        char *count;
+        const int bufsize = 16;
+        char count[bufsize];
         gdouble fraction = 0;
         if (length != 0) {
                 if (played > length) played = length;
                 fraction = (gdouble)played / length;
-                count = g_strdup_printf("%u:%02u / %u:%02u", played/60,
-                                        played%60, length/60, length%60);
+                snprintf(count, bufsize, "%u:%02u / %u:%02u", played/60,
+                         played%60, length/60, length%60);
         } else {
-                count = g_strdup_printf("%u:%02u / ??:??",
-                                        played/60, played%60);
+                snprintf(count, bufsize, "%u:%02u / ??:??",
+                         played/60, played%60);
         }
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(w->progressbar),
                                       fraction);
         gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar), count);
-        g_free(count);
 }
 
 void
