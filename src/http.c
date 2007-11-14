@@ -81,6 +81,8 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
         curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, 5);
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
