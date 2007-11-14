@@ -25,6 +25,7 @@ static GMutex *failed_tracks_mutex = NULL;
 
 static int http_pipe[2] = { -1, -1 };
 static GThread *http_thread = NULL;
+static gboolean audio_started = FALSE;
 static GCallback audio_started_callback = NULL;
 
 static void
@@ -56,6 +57,7 @@ get_audio_thread(gpointer userdata)
                 headers = g_slist_append(headers, cookie);
         }
         transfer_ok = http_get_to_fd(data->url, http_pipe[1], headers);
+        if (!audio_started) transfer_ok = FALSE;
         g_free(data->url);
         g_free(data->session_id);
         g_free(data);
@@ -108,6 +110,7 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
                                 gdk_threads_enter();
                                 (*audio_started_callback)();
                                 audio_started_callback = NULL;
+                                audio_started = TRUE;
                                 gdk_threads_leave();
                         }
                 }
@@ -173,6 +176,7 @@ lastfm_audio_play(const char *url, GCallback audio_started_cb,
         g_return_val_if_fail(pipeline && source && url, FALSE);
         get_audio_thread_data *data = NULL;
         close_previous_playback();
+        audio_started = FALSE;
         audio_started_callback = audio_started_cb;
         pipe(http_pipe);
         data = g_new(get_audio_thread_data, 1);
