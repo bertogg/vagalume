@@ -62,7 +62,7 @@ http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
 gboolean
 http_get_to_fd(const char *url, int fd, const GSList *headers)
 {
-        g_return_if_fail(url != NULL && fd > 0);
+        g_return_val_if_fail(url != NULL && fd > 0, FALSE);
         CURLcode retcode;
         CURL *handle = curl_easy_init();
         FILE *f = fdopen(fd, "w");
