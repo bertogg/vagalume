@@ -33,9 +33,7 @@ close_previous_playback(void)
 {
         if (http_pipe[0] != -1) close(http_pipe[0]);
         if (http_pipe[1] != -1) close(http_pipe[1]);
-        if (http_thread != NULL) g_thread_join(http_thread);
         http_pipe[0] = http_pipe[1] = -1;
-        http_thread = NULL;
 }
 
 typedef struct {
@@ -182,6 +180,7 @@ lastfm_audio_play(const char *url, GCallback audio_started_cb,
         data = g_new(get_audio_thread_data, 1);
         data->session_id = g_strdup(session_id);
         data->url = g_strdup(url);
+        if (http_thread != NULL) g_thread_join(http_thread);
         http_thread = g_thread_create(get_audio_thread, data, TRUE, NULL);
         g_object_set(G_OBJECT(source), "fd", http_pipe[0], NULL);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
