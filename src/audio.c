@@ -174,13 +174,14 @@ lastfm_audio_play(const char *url, GCallback audio_started_cb,
         g_return_val_if_fail(pipeline && source && url, FALSE);
         get_audio_thread_data *data = NULL;
         close_previous_playback();
+        if (http_thread != NULL) g_thread_join(http_thread);
+        http_thread = NULL;
         audio_started = FALSE;
         audio_started_callback = audio_started_cb;
         pipe(http_pipe);
         data = g_new(get_audio_thread_data, 1);
         data->session_id = g_strdup(session_id);
         data->url = g_strdup(url);
-        if (http_thread != NULL) g_thread_join(http_thread);
         http_thread = g_thread_create(get_audio_thread, data, TRUE, NULL);
         g_object_set(G_OBJECT(source), "fd", http_pipe[0], NULL);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
