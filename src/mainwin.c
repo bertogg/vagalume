@@ -8,6 +8,7 @@
 #include "config.h"
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 
 #if defined(MAEMO2) || defined(MAEMO3)
@@ -285,6 +286,8 @@ create_main_menu(lastfm_mainwin *w)
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
         GtkWidget *about;
+        GtkAccelGroup *accel = gtk_accel_group_new();
+        gtk_window_add_accel_group(w->window, accel);
 #ifdef MAEMO
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_new());
 #else
@@ -296,6 +299,8 @@ create_main_menu(lastfm_mainwin *w)
         lastfmsub = GTK_MENU_SHELL(gtk_menu_new());
         settings = gtk_menu_item_new_with_label("Settings...");
         quit = gtk_menu_item_new_with_label("Quit");
+        gtk_widget_add_accelerator(quit, "activate", accel, GDK_q,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);

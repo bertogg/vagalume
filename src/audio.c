@@ -200,8 +200,8 @@ gboolean
 lastfm_audio_stop(void)
 {
         g_return_val_if_fail(pipeline != NULL, FALSE);
-        close_previous_playback();
         gst_element_set_state(pipeline, GST_STATE_NULL);
+        close_previous_playback();
         return TRUE;
 }
 
@@ -209,10 +209,10 @@ void
 lastfm_audio_clear(void)
 {
         g_return_if_fail(pipeline != NULL);
-        close_previous_playback();
         gst_element_set_state (pipeline, GST_STATE_NULL);
         gst_object_unref (GST_OBJECT (pipeline));
         pipeline = NULL;
+        close_previous_playback();
 }
 
 int
