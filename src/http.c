@@ -88,7 +88,12 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
         if (hdrs != NULL) curl_slist_free_all(hdrs);
         fclose(f);
         /* We only return false for _read_ errors */
-        return (retcode == CURLE_OK || retcode == CURLE_WRITE_ERROR);
+        if (retcode == CURLE_OK || retcode == CURLE_WRITE_ERROR) {
+                return TRUE;
+        } else {
+                g_warning("Error getting URL %s", url);
+                return FALSE;
+        }
 }
 
 void
