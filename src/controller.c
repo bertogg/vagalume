@@ -532,13 +532,19 @@ download_track_thread(gpointer data)
         gdk_threads_leave();
         if (filename != NULL) {
                 g_debug("Downloading track to %s", filename);
+                gdk_threads_enter();
                 controller_show_banner("Downloading track");
+                gdk_threads_leave();
                 if (http_download_file(t->free_track_url, filename)) {
                         g_debug("Downloaded track %s", filename);
+                        gdk_threads_enter();
                         controller_show_banner("Track downloaded");
+                        gdk_threads_leave();
                 } else {
                         g_warning("Error downloading track %s", filename);
+                        gdk_threads_enter();
                         controller_show_banner("Error downloading track");
+                        gdk_threads_leave();
                 }
                 g_free(filename);
         } else {
