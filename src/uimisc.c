@@ -6,15 +6,18 @@
  * This file is published under the GNU GPLv3.
  */
 
-#include <gtk/gtk.h>
-#ifdef MAEMO
-#include <hildon-widgets/hildon-program.h>
-#include <hildon-widgets/hildon-banner.h>
-#endif
-
 #include "config.h"
 #include "uimisc.h"
 #include "userconfig.h"
+
+#include <gtk/gtk.h>
+#if defined(MAEMO2) || defined(MAEMO3)
+#include <hildon-widgets/hildon-program.h>
+#include <hildon-widgets/hildon-banner.h>
+#elif defined(MAEMO4)
+#include <hildon/hildon-program.h>
+#include <hildon/hildon-banner.h>
+#endif
 
 void
 flush_ui_events(void)

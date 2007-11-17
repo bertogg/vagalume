@@ -1033,6 +1033,30 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
         }
         return FALSE;
 }
+
+static gpointer
+playurl_handler_thread(gpointer data)
+{
+        g_return_val_if_fail(data != NULL, NULL);
+        char *url = (char *) data;
+        gdk_threads_enter();
+        controller_play_radio_by_url(url);
+        gdk_threads_leave();
+        g_free(url);
+        return NULL;
+}
+
+static gint
+dbus_req_handler(const gchar* interface, const gchar* method,
+                 GArray* arguments, gpointer data, osso_rpc_t* retval)
+{
+        if (!strcasecmp(method, APP_DBUS_METHOD_PLAYURL)) {
+                osso_rpc_t val = g_array_index(arguments, osso_rpc_t, 0);
+                gchar *url = g_strdup(val.value.s);
+                g_thread_create(playurl_handler_thread, url, FALSE, NULL);
+        }
+        return OSSO_OK;
+}
 #endif /* MAEMO */
 
 /**
@@ -1055,9 +1079,22 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         usercfg = read_usercfg();
         playlist = lastfm_pls_new();
 
+        if (!lastfm_audio_init()) {
+                controller_show_error("Error initializing audio system");
+                return;
+        }
 #ifdef MAEMO
-        if (!osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL)) {
+        osso_context_t *context;
+        osso_return_t result;
+        context = osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL);
+        if (!context) {
                 controller_show_error("Unable to initialize OSSO context");
+                return;
+        }
+        result = osso_rpc_set_cb_f(context, APP_DBUS_SERVICE, APP_DBUS_OBJECT,
+                                   APP_DBUS_IFACE, dbus_req_handler, NULL);
+        if (result != OSSO_OK) {
+                controller_show_error("Unable to set D-BUS callback");
                 return;
         }
         g_signal_connect(G_OBJECT(mainwin->window), "key_press_event",
@@ -1065,12 +1102,12 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         g_signal_connect(G_OBJECT(mainwin->window), "window_state_event",
                          G_CALLBACK(window_state_cb), mainwin);
 #endif
-        if (!lastfm_audio_init()) {
-                controller_show_error("Error initializing audio system");
-                return;
-        } else if (radio_url) {
+        if (radio_url) {
                 controller_play_radio_by_url(radio_url);
         }
 
         gtk_main();
+#ifdef MAEMO
+        osso_deinitialize(context);
+#endif
 }

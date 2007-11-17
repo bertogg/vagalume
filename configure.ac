@@ -20,25 +20,25 @@ EXTRA_LIBS=""
 
 # Basic dependencies
 PKG_CHECK_MODULES(GTK2, gtk+-2.0)
-EXTRA_CFLAGS+=$GTK2_CFLAGS
-EXTRA_LIBS+=$GTK2_LIBS
+EXTRA_CFLAGS="$EXTRA_CFLAGS $GTK2_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $GTK2_LIBS"
 
 PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10)
-EXTRA_CFLAGS+=$GSTREAMER_CFLAGS
-EXTRA_LIBS+=$GSTREAMER_LIBS
+EXTRA_CFLAGS="$EXTRA_CFLAGS $GSTREAMER_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $GSTREAMER_LIBS"
 
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
-EXTRA_CFLAGS+=$LIBXML2_CFLAGS
-EXTRA_LIBS+=$LIBXML2_LIBS
+EXTRA_CFLAGS="$EXTRA_CFLAGS $LIBXML2_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $LIBXML2_LIBS"
 
 PKG_CHECK_MODULES(LIBCURL, libcurl)
-EXTRA_CFLAGS+=$LIBCURL_CFLAGS
-EXTRA_LIBS+=$LIBCURL_LIBS
+EXTRA_CFLAGS="$EXTRA_CFLAGS $LIBCURL_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $LIBCURL_LIBS"
 
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
    AC_DEFINE([HAVE_CURL_EASY_ESCAPE],[1],[If curl_easy_escape() exists]),
-   has_curl_easy_escape=0
+   have_curl_easy_escape=0
 )
 
 # Autodetect platform
@@ -64,7 +64,7 @@ if test "$PLATFORM" = "maemo"; then
 
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
 
-   if test "$has_curl_easy_escape" = "0"; then
+   if test "$have_curl_easy_escape" = "0"; then
       MAEMOVERS=2
       echo "Compiling for Maemo 2"
    elif test "$libossovers" = "1"; then
@@ -82,13 +82,13 @@ if test "$PLATFORM" = "maemo"; then
    else
       PKG_CHECK_MODULES(HILDON, hildon-1)
    fi
-   EXTRA_CFLAGS+=$HILDON_CFLAGS
-   EXTRA_LIBS+=$HILDON_LIBS
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $HILDON_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $HILDON_LIBS"
 
 
    PKG_CHECK_MODULES(OSSO, libosso osso-af-settings)
-   EXTRA_CFLAGS+=$OSSO_CFLAGS
-   EXTRA_LIBS+=$OSSO_LIBS
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $OSSO_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $OSSO_LIBS"
 
    desktopentrydir=`$PKG_CONFIG osso-af-settings --variable=desktopentrydir`
    serviceentrydir=`$PKG_CONFIG osso-af-settings --variable=dbusservicedir`
