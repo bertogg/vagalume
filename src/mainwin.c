@@ -48,26 +48,24 @@ static const char *license =
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/.\n";
 
-void
-mainwin_update_track_info(lastfm_mainwin *w, const char *playlist,
-                          const char *artist, const char *track,
-                          const char *album)
+static void
+mainwin_update_track_info(lastfm_mainwin *w, const lastfm_track *t)
 {
-        g_return_if_fail(w != NULL && playlist != NULL);
+        g_return_if_fail(w != NULL && t != NULL);
         char *text;
-        text = g_strconcat("Artist: ", artist, NULL);
+        text = g_strconcat("Artist: ", t->artist, NULL);
         gtk_label_set_text(GTK_LABEL(w->artist), text);
         g_free(text);
-        text = g_strconcat("Track: ", track, NULL);
+        text = g_strconcat("Track: ", t->title, NULL);
         gtk_label_set_text(GTK_LABEL(w->track), text);
         g_free(text);
-        text = g_strconcat("Album: ", album, NULL);
+        text = g_strconcat("Album: ", t->album, NULL);
         gtk_label_set_text(GTK_LABEL(w->album), text);
         g_free(text);
-        text = g_strconcat("Listening to ", playlist, NULL);
+        text = g_strconcat("Listening to ", t->pls_title, NULL);
         gtk_label_set_text(GTK_LABEL(w->playlist), text);
         g_free(text);
-        text = g_strconcat(artist, " - ", track, NULL);
+        text = g_strconcat(t->artist, " - ", t->title, NULL);
         gtk_window_set_title(w->window, text);
         g_free(text);
 }
@@ -94,7 +92,8 @@ mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
 }
 
 void
-mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
+mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
+                     const lastfm_track *t)
 {
         g_return_if_fail(w != NULL);
         gboolean dim_labels = FALSE;
@@ -112,11 +111,16 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
-                gtk_widget_set_sensitive (w->ratemenu, FALSE);
+                gtk_widget_set_sensitive (w->actionsmenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 gtk_window_set_title(w->window, APP_NAME);
                 break;
         case LASTFM_UI_STATE_PLAYING:
+                if (t == NULL) {
+                        g_warning("Set playing state with t == NULL");
+                        break;
+                }
+                mainwin_update_track_info(w, t);
                 dim_labels = FALSE;
                 gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar),
                                           "Playing...");
@@ -124,8 +128,9 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, TRUE);
                 gtk_widget_set_sensitive (w->next, TRUE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
-                gtk_widget_set_sensitive (w->ratemenu, TRUE);
+                gtk_widget_set_sensitive (w->actionsmenu, TRUE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
+                gtk_widget_set_sensitive (w->dload, t->free_track_url != NULL);
                 break;
         case LASTFM_UI_STATE_CONNECTING:
                 dim_labels = TRUE;
@@ -136,7 +141,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state)
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, FALSE);
-                gtk_widget_set_sensitive (w->ratemenu, FALSE);
+                gtk_widget_set_sensitive (w->actionsmenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, FALSE);
                 gtk_window_set_title(w->window, APP_NAME);
                 break;
@@ -255,6 +260,12 @@ add_to_playlist_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+download_track_selected(GtkWidget *widget, gpointer data)
+{
+        controller_download_track();
+}
+
+static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
@@ -273,13 +284,13 @@ open_user_settings(GtkWidget *widget, gpointer data)
 static GtkWidget *
 create_main_menu(lastfm_mainwin *w)
 {
-        GtkMenuItem *lastfm, *radio, *rate, *help;
+        GtkMenuItem *lastfm, *radio, *actions, *help;
         GtkMenuItem *user, *others;
         GtkWidget *group, *globaltag, *similarartist, *urlradio;
-        GtkMenuShell *lastfmsub, *radiosub, *ratesub, *helpsub;
+        GtkMenuShell *lastfmsub, *radiosub, *actionssub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
-        GtkWidget *love, *ban, *tag, *dorecomm, *addtopls;
+        GtkWidget *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkMenuShell *tagsub, *dorecommsub;
         GtkWidget *tagartist, *tagtrack, *tagalbum;
         GtkWidget *recommartist, *recommtrack, *recommalbum;
@@ -398,13 +409,14 @@ create_main_menu(lastfm_mainwin *w)
                          GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
 
         /* Actions */
-        rate = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Actions"));
-        ratesub = GTK_MENU_SHELL(gtk_menu_new());
+        actions = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Actions"));
+        actionssub = GTK_MENU_SHELL(gtk_menu_new());
         tagsub = GTK_MENU_SHELL(gtk_menu_new());
         dorecommsub = GTK_MENU_SHELL(gtk_menu_new());
         love = gtk_menu_item_new_with_label("Love this track");
         ban = gtk_menu_item_new_with_label("Ban this track");
         addtopls = gtk_menu_item_new_with_label("Add to playlist");
+        dload = gtk_menu_item_new_with_label("Download this track");
         tag = gtk_menu_item_new_with_label("Tag");
         dorecomm = gtk_menu_item_new_with_label("Recommend");
         tagartist = gtk_menu_item_new_with_label("This artist...");
@@ -413,16 +425,17 @@ create_main_menu(lastfm_mainwin *w)
         recommartist = gtk_menu_item_new_with_label("This artist...");
         recommtrack = gtk_menu_item_new_with_label("This track...");
         recommalbum = gtk_menu_item_new_with_label("This album...");
-        gtk_menu_shell_append(bar, GTK_WIDGET(rate));
-        gtk_menu_item_set_submenu(rate, GTK_WIDGET(ratesub));
+        gtk_menu_shell_append(bar, GTK_WIDGET(actions));
+        gtk_menu_item_set_submenu(actions, GTK_WIDGET(actionssub));
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(tag), GTK_WIDGET(tagsub));
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(dorecomm),
                                   GTK_WIDGET(dorecommsub));
-        gtk_menu_shell_append(ratesub, love);
-        gtk_menu_shell_append(ratesub, ban);
-        gtk_menu_shell_append(ratesub, addtopls);
-        gtk_menu_shell_append(ratesub, tag);
-        gtk_menu_shell_append(ratesub, dorecomm);
+        gtk_menu_shell_append(actionssub, love);
+        gtk_menu_shell_append(actionssub, ban);
+        gtk_menu_shell_append(actionssub, addtopls);
+        gtk_menu_shell_append(actionssub, dload);
+        gtk_menu_shell_append(actionssub, tag);
+        gtk_menu_shell_append(actionssub, dorecomm);
         gtk_menu_shell_append(tagsub, tagartist);
         gtk_menu_shell_append(tagsub, tagtrack);
         gtk_menu_shell_append(tagsub, tagalbum);
@@ -453,6 +466,8 @@ create_main_menu(lastfm_mainwin *w)
                          GINT_TO_POINTER(REQUEST_ALBUM));
         g_signal_connect(G_OBJECT(addtopls), "activate",
                          G_CALLBACK(add_to_playlist_selected), NULL);
+        g_signal_connect(G_OBJECT(dload), "activate",
+                         G_CALLBACK(download_track_selected), NULL);
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Help"));
@@ -468,8 +483,9 @@ create_main_menu(lastfm_mainwin *w)
 #endif
 
         w->radiomenu = GTK_WIDGET(radio);
-        w->ratemenu = GTK_WIDGET(rate);
+        w->actionsmenu = GTK_WIDGET(actions);
         w->settings = GTK_WIDGET(settings);
+        w->dload = GTK_WIDGET(dload);
         return GTK_WIDGET(bar);
 }
 
@@ -540,6 +556,6 @@ lastfm_mainwin_create(void)
         g_signal_connect(G_OBJECT(w->window), "delete-event",
                          G_CALLBACK(delete_event), NULL);
         /* Initial state */
-        mainwin_set_ui_state(w, LASTFM_UI_STATE_DISCONNECTED);
+        mainwin_set_ui_state(w, LASTFM_UI_STATE_DISCONNECTED, NULL);
         return w;
 }

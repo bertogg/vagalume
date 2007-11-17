@@ -49,6 +49,22 @@ get_cfg_filename(void)
         return g_strconcat(homedir, "/" CONFIG_FILE, NULL);
 }
 
+static char *
+default_download_dir(void)
+{
+        const char *homedir = getenv("HOME");
+        char *dldir = NULL;
+        if (homedir == NULL) {
+                return g_strdup("/tmp");
+        }
+#ifdef MAEMO
+        dldir = g_strconcat(homedir, "/MyDocs/.sounds");
+#else
+        dldir = g_strdup(homedir);
+#endif
+        return dldir;
+}
+
 void
 lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username)
 {
@@ -71,6 +87,7 @@ lastfm_usercfg_new(void)
         lastfm_usercfg *cfg = g_new0(lastfm_usercfg, 1);
         cfg->username = g_strdup("");
         cfg->password = g_strdup("");
+        cfg->download_dir = default_download_dir();
         cfg->enable_scrobbling = TRUE;
         cfg->discovery_mode = FALSE;
         return cfg;
@@ -81,6 +98,7 @@ lastfm_usercfg_destroy(lastfm_usercfg *cfg)
 {
         g_free(cfg->username);
         g_free(cfg->password);
+        g_free(cfg->download_dir);
         g_free(cfg);
 }
 

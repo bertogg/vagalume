@@ -14,6 +14,7 @@
 typedef struct {
         char *username; /* Never NULL, even if not defined */
         char *password; /* Never NULL, even if not defined */
+        char *download_dir;
         gboolean discovery_mode;
         gboolean enable_scrobbling;
 } lastfm_usercfg;

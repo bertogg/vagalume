@@ -9,6 +9,9 @@
 #include "globaldefs.h"
 #include <curl/curl.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 typedef struct {
         char *buffer;
@@ -92,6 +95,39 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
                 return TRUE;
         } else {
                 g_warning("Error getting URL %s", url);
+                return FALSE;
+        }
+}
+
+gboolean
+http_download_file(const char *url, const char *filename)
+{
+        g_return_val_if_fail(url != NULL && filename != NULL, FALSE);
+        struct stat statdata;
+        CURLcode retcode;
+        CURL *handle = NULL;
+        FILE *f = NULL;
+        if (stat(filename, &statdata)) {
+                f = fopen(filename, "w");
+        } else {
+                g_warning("File %s already exists", filename);
+        }
+        if (f == NULL) {
+                g_warning("Unable to open %s for writing", filename);
+                return FALSE;
+        }
+
+        handle = curl_easy_init();
+        curl_easy_setopt(handle, CURLOPT_URL, url);
+        curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
+        curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
+        retcode = curl_easy_perform(handle);
+        curl_easy_cleanup(handle);
+        fclose(f);
+        if (retcode == CURLE_OK) {
+                return TRUE;
+        } else {
+                g_warning("Error downloading URL %s", url);
                 return FALSE;
         }
 }

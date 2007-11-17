@@ -325,7 +325,8 @@ controller_open_usercfg(void)
                 lastfm_session_destroy(session);
                 session = NULL;
                 controller_stop_playing();
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED);
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED,
+                                     NULL);
         }
         g_free(olduser);
         g_free(oldpw);
@@ -365,14 +366,16 @@ check_session(void)
         gboolean retvalue = FALSE;
         check_usercfg();
         if (usercfg != NULL) {
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING,
+                                     NULL);
                 flush_ui_events();
                 session = lastfm_session_new(usercfg->username,
                                              usercfg->password,
                                              &err);
         }
         if (session == NULL || session->id == NULL) {
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED);
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED,
+                                     NULL);
                 if (usercfg == NULL) {
                         controller_show_warning("You need to enter your "
                                                 "Last.fm\nusername and "
@@ -385,7 +388,7 @@ check_session(void)
                         controller_show_warning("Network connection error");
                 }
         } else {
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
+                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED, NULL);
                 retvalue = TRUE;
                 if (rsp_sess == NULL) {
                         g_thread_create(rsp_session_init_thread, NULL,
@@ -393,20 +396,6 @@ check_session(void)
                 }
         }
         return retvalue;
-}
-
-/**
- * Update the UI to show info from the track currenty playing
- */
-static void
-ui_update_track_info(void)
-{
-        g_return_if_fail(nowplaying && mainwin);
-        const char *pls = nowplaying->pls_title;
-        const char *artist = nowplaying->artist;
-        const char *title = nowplaying->title;
-        const char *album = nowplaying->album;
-        mainwin_update_track_info(mainwin, pls, artist, title, album);
 }
 
 /**
@@ -446,11 +435,10 @@ start_playing_get_pls_thread(gpointer data)
 static void
 controller_audio_started_cb(void)
 {
-        g_return_if_fail(nowplaying != NULL);
+        g_return_if_fail(mainwin != NULL && nowplaying != NULL);
         lastfm_track *track;
         nowplaying_since = time(NULL);
-        ui_update_track_info();
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING);
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING, nowplaying);
         track = lastfm_track_copy(nowplaying);
         controller_show_progress(track);
         g_timeout_add(1000, controller_show_progress, track);
@@ -466,7 +454,7 @@ controller_start_playing(void)
         lastfm_track *track = NULL;
         g_return_if_fail(mainwin != NULL && playlist != NULL);
         if (!check_session()) return;
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING);
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING, NULL);
         flush_ui_events();
         if (lastfm_pls_size(playlist) == 0) {
                 lastfm_session *s = lastfm_session_copy(session);
@@ -508,7 +496,7 @@ void
 controller_stop_playing(void)
 {
         g_return_if_fail(mainwin != NULL);
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED);
+        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED, NULL);
         finish_playing_track();
 }
 
@@ -524,8 +512,56 @@ controller_skip_track(void)
 }
 
 /**
- * Mark the current playing track as a loved track. This will be used
- * when scrobbling it.
+ * Download a track. This will take some time, so it must be called
+ * using g_thread_create() to avoid freezing the UI.
+ * @param data Pointer to the lastfm_track to be downloaded
+ * @return NULL (this value is not used)
+ */
+static gpointer
+download_track_thread(gpointer data)
+{
+        lastfm_track *t = (lastfm_track *) data;
+        g_return_val_if_fail(t != NULL && t->free_track_url != NULL, NULL);
+        char *filename = NULL;
+        gdk_threads_enter();
+        if (usercfg != NULL) {
+                filename = g_strconcat(usercfg->download_dir, "/",
+                                       t->artist, " - ", t->title, ".mp3",
+                                       NULL);
+        }
+        gdk_threads_leave();
+        if (filename != NULL) {
+                g_debug("Downloading track to %s", filename);
+                controller_show_banner("Downloading track");
+                if (http_download_file(t->free_track_url, filename)) {
+                        g_debug("Downloaded track %s", filename);
+                        controller_show_banner("Track downloaded");
+                } else {
+                        g_warning("Error downloading track %s", filename);
+                        controller_show_banner("Error downloading track");
+                }
+                g_free(filename);
+        } else {
+                g_warning("Could not find user cfg!!!");
+        }
+        lastfm_track_destroy(t);
+        return NULL;
+}
+
+/**
+ * Download the currently play track (if it's free)
+ */
+void
+controller_download_track(void)
+{
+        g_return_if_fail(nowplaying && nowplaying->free_track_url);
+        lastfm_track *t = lastfm_track_copy(nowplaying);
+        g_thread_create(download_track_thread, t, FALSE, NULL);
+}
+
+/**
+ * Mark the currently playing track as a loved track. This will be
+ * used when scrobbling it.
  */
 void
 controller_love_track(void)
