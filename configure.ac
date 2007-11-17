@@ -15,22 +15,25 @@ AC_DEFINE_UNQUOTED([KERNEL_NAME_LC],"`uname -s|tr A-Z a-z`",
                    [Name of the kernel (lowercase)])
 AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
 
+EXTRA_CFLAGS=""
+EXTRA_LIBS=""
+
 # Basic dependencies
 PKG_CHECK_MODULES(GTK2, gtk+-2.0)
-AC_SUBST(GTK2_CFLAGS)
-AC_SUBST(GTK2_LIBS)
+EXTRA_CFLAGS+=$GTK2_CFLAGS
+EXTRA_LIBS+=$GTK2_LIBS
 
 PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10)
-AC_SUBST(GSTREAMER_CFLAGS)
-AC_SUBST(GSTREAMER_LIBS)
+EXTRA_CFLAGS+=$GSTREAMER_CFLAGS
+EXTRA_LIBS+=$GSTREAMER_LIBS
 
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
-AC_SUBST(LIBXML2_CFLAGS)
-AC_SUBST(LIBXML2_LIBS)
+EXTRA_CFLAGS+=$LIBXML2_CFLAGS
+EXTRA_LIBS+=$LIBXML2_LIBS
 
 PKG_CHECK_MODULES(LIBCURL, libcurl)
-AC_SUBST(LIBCURL_CFLAGS)
-AC_SUBST(LIBCURL_LIBS)
+EXTRA_CFLAGS+=$LIBCURL_CFLAGS
+EXTRA_LIBS+=$LIBCURL_LIBS
 
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
@@ -39,7 +42,7 @@ AC_CHECK_LIB(curl, curl_easy_escape,
 )
 
 # Autodetect platform
-if pkg-config --exists libosso; then
+if $PKG_CONFIG --exists libosso; then
    DETECTED_PLATFORM=maemo
 else
    DETECTED_PLATFORM=gnome
@@ -76,17 +79,16 @@ if test "$PLATFORM" = "maemo"; then
 
    if test "$MAEMOVERS" = "2" -o "$MAEMOVERS" = "3"; then
       PKG_CHECK_MODULES(HILDON, hildon-libs)
-      AC_SUBST(HILDON_LIBS)
-      AC_SUBST(HILDON_CFLAGS)
    else
       PKG_CHECK_MODULES(HILDON, hildon-1)
-      AC_SUBST(HILDON_LIBS)
-      AC_SUBST(HILDON_CFLAGS)
    fi
+   EXTRA_CFLAGS+=$HILDON_CFLAGS
+   EXTRA_LIBS+=$HILDON_LIBS
+
 
    PKG_CHECK_MODULES(OSSO, libosso osso-af-settings)
-   AC_SUBST(OSSO_LIBS)
-   AC_SUBST(OSSO_CFLAGS)
+   EXTRA_CFLAGS+=$OSSO_CFLAGS
+   EXTRA_LIBS+=$OSSO_LIBS
 
    desktopentrydir=`$PKG_CONFIG osso-af-settings --variable=desktopentrydir`
    serviceentrydir=`$PKG_CONFIG osso-af-settings --variable=dbusservicedir`
@@ -118,6 +120,9 @@ else
    AC_MSG_ERROR([Unknown platform $PLATFORM selected])
 
 fi
+
+AC_SUBST(EXTRA_CFLAGS)
+AC_SUBST(EXTRA_LIBS)
 
 # Produce output files
 AC_OUTPUT(
