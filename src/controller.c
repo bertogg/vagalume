@@ -284,7 +284,8 @@ rsp_session_init_thread(gpointer data)
         gdk_threads_leave();
         if (username && password) {
                 rsp_session *s = rsp_session_new(username, password, NULL);
-                GList *list = lastfm_get_friends(username);
+                GList *list;
+                lastfm_get_friends(username, &list);
                 gdk_threads_enter();
                 rsp_session_destroy(rsp_sess);
                 rsp_sess = s;

@@ -381,16 +381,17 @@ lastfm_set_radio(lastfm_session *s, const char *radio_url)
 /**
  * Obtain the list of friends from a user
  * @param username The user name
- * @return a list of friends (char *)
+ * @param friendlist Where the list of friends (char *) will be written
+ * @return Whether the operation has been successful or not
  */
-GList *
-lastfm_get_friends(const char *username)
+gboolean
+lastfm_get_friends(const char *username, GList **friendlist)
 {
-        g_return_val_if_fail(username != NULL, NULL);
+        g_return_val_if_fail(username != NULL && friendlist != NULL, FALSE);
         GList *list = NULL;
         char *url = g_strdup_printf(friends_url, username);
         char *buffer = NULL;
-        http_get_buffer(url, &buffer, NULL);
+        gboolean found = http_get_buffer(url, &buffer, NULL);
         if (buffer != NULL) {
                 char **friends = g_strsplit(buffer, "\n", 0);
                 int i;
@@ -407,5 +408,6 @@ lastfm_get_friends(const char *username)
         }
         g_free(url);
         g_free(buffer);
-        return list;
+        *friendlist = list;
+        return found;
 }
