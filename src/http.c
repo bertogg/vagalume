@@ -132,11 +132,12 @@ http_download_file(const char *url, const char *filename)
         }
 }
 
-void
+gboolean
 http_get_buffer(const char *url, char **buffer, size_t *bufsize)
 {
-        g_return_if_fail(url != NULL && buffer != NULL);
+        g_return_val_if_fail(url != NULL && buffer != NULL, FALSE);
         curl_buffer dstbuf = { NULL, 0 };
+        CURLcode retcode;
         CURL *handle;
         struct curl_slist *hdrs = NULL;
 
@@ -147,28 +148,33 @@ http_get_buffer(const char *url, char **buffer, size_t *bufsize)
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, &dstbuf);
         hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
-        curl_easy_perform(handle);
+        retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
 
-        if (dstbuf.buffer == NULL) {
+        if (retcode != CURLE_OK) {
                 g_warning("Error getting URL %s", url);
-                return;
+                g_free(dstbuf.buffer);
+                dstbuf.buffer = NULL;
         }
 
-        dstbuf.buffer[dstbuf.size] = '\0';
+        if (dstbuf.buffer != NULL) {
+                dstbuf.buffer[dstbuf.size] = '\0';
+        }
         *buffer = dstbuf.buffer;
         if (bufsize != NULL) {
                 *bufsize = dstbuf.size;
         }
+        return (retcode == CURLE_OK);
 }
 
-void
+gboolean
 http_post_buffer(const char *url, const char *postdata, char **retdata,
                  const GSList *headers)
 {
-        g_return_if_fail(url != NULL && postdata != NULL);
+        g_return_val_if_fail(url != NULL && postdata != NULL, FALSE);
         curl_buffer dstbuf = { NULL, 0 };
+        CURLcode retcode;
         CURL *handle;
         struct curl_slist *hdrs = NULL;
         handle = curl_easy_init();
@@ -191,13 +197,21 @@ http_post_buffer(const char *url, const char *postdata, char **retdata,
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_POSTFIELDS, postdata);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
-        curl_easy_perform(handle);
+        retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
+
+        if (retcode != CURLE_OK) {
+                g_warning("Error posting to URL %s", url);
+                g_free(dstbuf.buffer);
+                dstbuf.buffer = NULL;
+        }
+
         if (retdata != NULL) {
                 if (dstbuf.buffer != NULL) {
                         dstbuf.buffer[dstbuf.size] = '\0';
                 }
                 *retdata = dstbuf.buffer;
         }
+        return (retcode == CURLE_OK);
 }

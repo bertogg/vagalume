@@ -11,11 +11,11 @@
 #include <glib.h>
 
 char *escape_url(const char *url, gboolean escape);
-void http_get_buffer(const char *url, char **buffer, size_t *bufsize);
+gboolean http_get_buffer(const char *url, char **buffer, size_t *bufsize);
 gboolean http_get_to_fd(const char *url, int fd, const GSList *headers);
 gboolean http_download_file(const char *url, const char *filename);
-void http_post_buffer(const char *url, const char *postdata, char **retdata,
-                      const GSList *headers);
+gboolean http_post_buffer(const char *url, const char *postdata,
+                          char **retdata, const GSList *headers);
 void http_init(void);
 
 #endif
