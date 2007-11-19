@@ -58,7 +58,7 @@ default_download_dir(void)
                 return g_strdup("/tmp");
         }
 #ifdef MAEMO
-        dldir = g_strconcat(homedir, "/MyDocs/.sounds");
+        dldir = g_strconcat(homedir, "/MyDocs/.sounds", NULL);
 #else
         dldir = g_strdup(homedir);
 #endif
