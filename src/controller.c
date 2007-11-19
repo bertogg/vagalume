@@ -54,6 +54,11 @@ typedef struct {
         request_type type;
 } recomm_data;
 
+typedef struct {
+        guint track_id;              /* Id of the track */
+        char *image_url;             /* URL of the album cover */
+} getcover_data;
+
 /**
  * Show an error dialog with an OK button
  *
@@ -401,6 +406,32 @@ check_session(void)
 }
 
 /**
+ * Set the album cover image. This must be done in a thread to avoid
+ * freezing the UI.
+ * @param data A pointer to getcover_data
+ * @return NULL (not used)
+ */
+static gpointer
+set_album_cover_thread(gpointer data)
+{
+        getcover_data *d = (getcover_data *) data;
+        g_return_val_if_fail(d != NULL && d->image_url != NULL, NULL);
+        char *buffer = NULL;
+        size_t bufsize = 0;
+        http_get_buffer(d->image_url, &buffer, &bufsize);
+        if (buffer == NULL) g_warning("Error getting cover image");
+        gdk_threads_enter();
+        if (nowplaying != NULL && nowplaying->id == d->track_id) {
+                mainwin_set_album_cover(mainwin, (guchar *) buffer, bufsize);
+        }
+        gdk_threads_leave();
+        g_free(buffer);
+        g_free(d->image_url);
+        g_free(d);
+        return NULL;
+}
+
+/**
  * Get a new playlist and append it to the end of the current
  * one. Show an error if no playlist is found, start playing
  * otherwise. This can take a bit, so it is done in a separate thread
@@ -465,6 +496,14 @@ controller_start_playing(void)
         }
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
+        if (track->image_url != NULL) {
+                getcover_data *d = g_new(getcover_data, 1);
+                d->track_id = track->id;
+                d->image_url = g_strdup(track->image_url);
+                g_thread_create(set_album_cover_thread, d, FALSE, NULL);
+        } else {
+                mainwin_set_album_cover(mainwin, NULL, 0);
+        }
         if (track->custom_pls) {
                 lastfm_audio_play(track->stream_url,
                                   (GCallback) controller_audio_started_cb,

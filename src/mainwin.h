@@ -15,6 +15,7 @@ typedef struct {
         GtkWidget *play, *stop, *next;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *dload;
+        GtkWidget *album_cover;
         GtkWidget *progressbar;
         gboolean is_fullscreen;
 } lastfm_mainwin;
@@ -30,5 +31,6 @@ lastfm_mainwin *lastfm_mainwin_create(void);
 void mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state s,
                           const lastfm_track *t);
 void mainwin_show_progress(lastfm_mainwin *w, guint length, guint played);
+void mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size);
 
 #endif

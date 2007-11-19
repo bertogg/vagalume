@@ -24,6 +24,8 @@
 #include "globaldefs.h"
 #include "xmlrpc.h"
 
+static const int album_cover_size = 100;
+
 static const char *authors[] = {
         "Alberto Garcia Gonzalez\n<agarcia@igalia.com>",
         NULL
@@ -47,6 +49,39 @@ static const char *license =
 "You should have received a copy of the GNU General\n"
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/.\n";
+
+void
+mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
+{
+        g_return_if_fail(w != NULL);
+        GdkPixbufLoader *ldr = NULL;
+        if (data != NULL) {
+                g_return_if_fail(size > 0);
+                GError *err = NULL;
+                ldr = gdk_pixbuf_loader_new();
+                gdk_pixbuf_loader_set_size(ldr, album_cover_size,
+                                           album_cover_size);
+                gdk_pixbuf_loader_write(ldr, data, size, NULL);
+                gdk_pixbuf_loader_close(ldr, &err);
+                if (err != NULL) {
+                        g_warning("Error loading image: %s",
+                                  err->message ? err->message : "unknown");
+                        g_error_free(err);
+                        g_object_unref(G_OBJECT(ldr));
+                        ldr = NULL;
+                }
+        }
+        if (ldr != NULL) {
+                GdkPixbuf *pixbuf = gdk_pixbuf_loader_get_pixbuf(ldr);;
+                gtk_image_set_from_pixbuf(GTK_IMAGE(w->album_cover), pixbuf);
+                gtk_widget_set_sensitive(w->album_cover, TRUE);
+                g_object_unref(G_OBJECT(ldr));
+        } else {
+                gtk_image_set_from_stock(GTK_IMAGE(w->album_cover),
+                                         GTK_STOCK_MISSING_IMAGE,
+                                         GTK_ICON_SIZE_LARGE_TOOLBAR);
+        }
+}
 
 static void
 mainwin_update_track_info(lastfm_mainwin *w, const lastfm_track *t)
@@ -114,6 +149,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_widget_set_sensitive (w->actionsmenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 gtk_window_set_title(w->window, APP_NAME);
+                mainwin_set_album_cover(w, NULL, 0);
                 break;
         case LASTFM_UI_STATE_PLAYING:
                 if (t == NULL) {
@@ -144,6 +180,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_widget_set_sensitive (w->actionsmenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, FALSE);
                 gtk_window_set_title(w->window, APP_NAME);
+                gtk_widget_set_sensitive(w->album_cover, FALSE);
                 break;
         default:
                 g_critical("Unknown ui state received: %d", state);
@@ -514,6 +551,10 @@ lastfm_mainwin_create(void)
         w->artist = gtk_label_new(NULL);
         w->track = gtk_label_new(NULL);
         w->album = gtk_label_new(NULL);
+        /* Cover image */
+        w->album_cover = gtk_image_new();
+        g_object_set(w->album_cover, "width-request", album_cover_size,
+                     "height-request", album_cover_size, NULL);
         /* Menu */
         menu = create_main_menu(w);
         /* Progress bar */
@@ -530,6 +571,7 @@ lastfm_mainwin_create(void)
         gtk_misc_set_padding(GTK_MISC(w->track), 10, 0);
         gtk_misc_set_padding(GTK_MISC(w->album), 10, 0);
         gtk_container_add(GTK_CONTAINER(w->window), GTK_WIDGET(vbox));
+        gtk_box_pack_start(hbox, w->album_cover, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->play, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->stop, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->next, TRUE, TRUE, 5);
