@@ -18,8 +18,8 @@
 
 #define APP_FULLNAME APP_NAME " " APP_VERSION " (" APP_OS "/" ARCH ")"
 
-#define APP_DBUS_SERVICE "com.nokia." APP_NAME_LC
-#define APP_DBUS_OBJECT "/com/nokia/" APP_NAME_LC
+#define APP_DBUS_SERVICE "com.igalia." APP_NAME_LC
+#define APP_DBUS_OBJECT "/com/igalia/" APP_NAME_LC
 #define APP_DBUS_IFACE APP_DBUS_SERVICE
 #define APP_DBUS_METHOD_PLAYURL "PlayUrl"
 
