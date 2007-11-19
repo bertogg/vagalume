@@ -10,6 +10,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 
 #ifdef MAEMO
