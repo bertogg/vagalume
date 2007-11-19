@@ -88,18 +88,36 @@ mainwin_update_track_info(lastfm_mainwin *w, const lastfm_track *t)
 {
         g_return_if_fail(w != NULL && t != NULL);
         char *text;
-        text = g_strconcat("Artist: ", t->artist, NULL);
-        gtk_label_set_text(GTK_LABEL(w->artist), text);
+        char *markup;
+
+        markup = g_markup_escape_text(t->artist, -1);
+        text = g_strconcat("Artist: <b>", markup, "</b>", NULL);
+        gtk_label_set_markup(GTK_LABEL(w->artist), text);
         g_free(text);
-        text = g_strconcat("Track: ", t->title, NULL);
-        gtk_label_set_text(GTK_LABEL(w->track), text);
+        g_free(markup);
+
+        markup = g_markup_escape_text(t->title, -1);
+        text = g_strconcat("Track: <b><i>", markup, "</i></b>", NULL);
+        gtk_label_set_markup(GTK_LABEL(w->track), text);
         g_free(text);
-        text = g_strconcat("Album: ", t->album, NULL);
-        gtk_label_set_text(GTK_LABEL(w->album), text);
+        g_free(markup);
+
+        if (t->album[0] != '\0') {
+                markup = g_markup_escape_text(t->album, -1);
+                text = g_strconcat("Album: <i>", markup, "</i>", NULL);
+                gtk_label_set_markup(GTK_LABEL(w->album), text);
+                g_free(text);
+                g_free(markup);
+        } else {
+                gtk_label_set_text(GTK_LABEL(w->album), "");
+        }
+
+        markup = g_markup_escape_text(t->pls_title, -1);
+        text = g_strconcat("<b>Listening to: <i>", markup, "</i></b>", NULL);
+        gtk_label_set_markup(GTK_LABEL(w->playlist), text);
         g_free(text);
-        text = g_strconcat("Listening to ", t->pls_title, NULL);
-        gtk_label_set_text(GTK_LABEL(w->playlist), text);
-        g_free(text);
+        g_free(markup);
+
         text = g_strconcat(t->artist, " - ", t->title, NULL);
         gtk_window_set_title(w->window, text);
         g_free(text);
