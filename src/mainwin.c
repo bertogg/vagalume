@@ -77,9 +77,7 @@ mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
                 gtk_widget_set_sensitive(w->album_cover, TRUE);
                 g_object_unref(G_OBJECT(ldr));
         } else {
-                gtk_image_set_from_stock(GTK_IMAGE(w->album_cover),
-                                         GTK_STOCK_MISSING_IMAGE,
-                                         GTK_ICON_SIZE_LARGE_TOOLBAR);
+                gtk_image_clear(GTK_IMAGE (w->album_cover));
         }
 }
 
@@ -160,8 +158,9 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_label_set_text(GTK_LABEL(w->artist), NULL);
                 gtk_label_set_text(GTK_LABEL(w->track), NULL);
                 gtk_label_set_text(GTK_LABEL(w->album), NULL);
+                gtk_widget_show (w->play);
+                gtk_widget_hide (w->stop);
                 gtk_widget_set_sensitive (w->play, TRUE);
-                gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
                 gtk_widget_set_sensitive (w->actionsmenu, FALSE);
@@ -178,7 +177,8 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 dim_labels = FALSE;
                 gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar),
                                           "Playing...");
-                gtk_widget_set_sensitive (w->play, FALSE);
+                gtk_widget_hide (w->play);
+                gtk_widget_show (w->stop);
                 gtk_widget_set_sensitive (w->stop, TRUE);
                 gtk_widget_set_sensitive (w->next, TRUE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
@@ -191,7 +191,8 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar),
                                           "Connecting...");
                 gtk_label_set_text(GTK_LABEL(w->playlist), "Connecting...");
-                gtk_widget_set_sensitive (w->play, FALSE);
+                gtk_widget_hide (w->play);
+                gtk_widget_show (w->stop);
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, FALSE);
@@ -550,6 +551,7 @@ lastfm_mainwin_create(void)
         lastfm_mainwin *w = g_new0(lastfm_mainwin, 1);
         GtkBox *hbox, *vbox;
         GtkWidget *menu;
+        GtkWidget *cover_frame;
         /* Window */
 #ifdef MAEMO
         w->window = GTK_WINDOW(hildon_window_new());
@@ -570,9 +572,11 @@ lastfm_mainwin_create(void)
         w->track = gtk_label_new(NULL);
         w->album = gtk_label_new(NULL);
         /* Cover image */
+        cover_frame = gtk_aspect_frame_new(NULL, 0.5, 0.5, 1.0, FALSE);
         w->album_cover = gtk_image_new();
         g_object_set(w->album_cover, "width-request", album_cover_size,
                      "height-request", album_cover_size, NULL);
+        gtk_container_add(GTK_CONTAINER(cover_frame), w->album_cover);
         /* Menu */
         menu = create_main_menu(w);
         /* Progress bar */
@@ -589,7 +593,7 @@ lastfm_mainwin_create(void)
         gtk_misc_set_padding(GTK_MISC(w->track), 10, 0);
         gtk_misc_set_padding(GTK_MISC(w->album), 10, 0);
         gtk_container_add(GTK_CONTAINER(w->window), GTK_WIDGET(vbox));
-        gtk_box_pack_start(hbox, w->album_cover, TRUE, TRUE, 5);
+        gtk_box_pack_start(hbox, cover_frame, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->play, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->stop, TRUE, TRUE, 5);
         gtk_box_pack_start(hbox, w->next, TRUE, TRUE, 5);
