@@ -421,7 +421,7 @@ set_album_cover_thread(gpointer data)
         http_get_buffer(d->image_url, &buffer, &bufsize);
         if (buffer == NULL) g_warning("Error getting cover image");
         gdk_threads_enter();
-        if (nowplaying != NULL && nowplaying->id == d->track_id) {
+        if (mainwin && nowplaying && nowplaying->id == d->track_id) {
                 mainwin_set_album_cover(mainwin, (guchar *) buffer, bufsize);
         }
         gdk_threads_leave();
