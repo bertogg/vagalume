@@ -488,7 +488,6 @@ controller_start_playing(void)
         g_return_if_fail(mainwin != NULL && playlist != NULL);
         if (!check_session()) return;
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING, NULL);
-        flush_ui_events();
         if (lastfm_pls_size(playlist) == 0) {
                 lastfm_session *s = lastfm_session_copy(session);
                 g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
@@ -1027,6 +1026,7 @@ controller_quit_app(void)
         controller_stop_playing();
         lastfm_audio_clear();
         lastfm_session_destroy(session);
+        session = NULL;
         gtk_main_quit();
 }
 
@@ -1149,6 +1149,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         }
 
         gtk_main();
+        mainwin = NULL;
 #ifdef MAEMO
         osso_deinitialize(context);
 #endif
