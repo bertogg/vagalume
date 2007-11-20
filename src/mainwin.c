@@ -549,7 +549,7 @@ lastfm_mainwin *
 lastfm_mainwin_create(void)
 {
         lastfm_mainwin *w = g_new0(lastfm_mainwin, 1);
-        GtkBox *hbox, *vbox;
+        GtkBox *hbox, *vbox, *buthbox, *ctrlvbox;
         GtkWidget *menu;
         GtkWidget *cover_frame;
         /* Window */
@@ -560,8 +560,10 @@ lastfm_mainwin_create(void)
 #endif
         gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
         /* Boxes */
-        hbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
+        hbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         vbox = GTK_BOX(gtk_vbox_new(FALSE, 0));
+        buthbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
+        ctrlvbox = GTK_BOX(gtk_vbox_new(FALSE, 5));
         /* Buttons */
         w->play = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
         w->stop = gtk_button_new_from_stock(GTK_STOCK_MEDIA_STOP);
@@ -593,10 +595,13 @@ lastfm_mainwin_create(void)
         gtk_misc_set_padding(GTK_MISC(w->track), 10, 0);
         gtk_misc_set_padding(GTK_MISC(w->album), 10, 0);
         gtk_container_add(GTK_CONTAINER(w->window), GTK_WIDGET(vbox));
-        gtk_box_pack_start(hbox, cover_frame, TRUE, TRUE, 5);
-        gtk_box_pack_start(hbox, w->play, TRUE, TRUE, 5);
-        gtk_box_pack_start(hbox, w->stop, TRUE, TRUE, 5);
-        gtk_box_pack_start(hbox, w->next, TRUE, TRUE, 5);
+        gtk_box_pack_start(hbox, cover_frame, FALSE, FALSE, 5);
+        gtk_box_pack_start(hbox, GTK_WIDGET(ctrlvbox), TRUE, TRUE, 5);
+        gtk_box_pack_start(ctrlvbox, GTK_WIDGET(buthbox), TRUE, TRUE, 5);
+        gtk_box_pack_start(ctrlvbox, w->progressbar, FALSE, FALSE, 0);
+        gtk_box_pack_start(buthbox, w->play, TRUE, TRUE, 0);
+        gtk_box_pack_start(buthbox, w->stop, TRUE, TRUE, 0);
+        gtk_box_pack_start(buthbox, w->next, TRUE, TRUE, 0);
 #ifdef MAEMO
         hildon_window_set_menu(HILDON_WINDOW(w->window), GTK_MENU(menu));
 #else
@@ -607,7 +612,6 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(vbox, w->artist, TRUE, TRUE, 5);
         gtk_box_pack_start(vbox, w->track, TRUE, TRUE, 5);
         gtk_box_pack_start(vbox, w->album, TRUE, TRUE, 5);
-        gtk_box_pack_start(vbox, w->progressbar, FALSE, FALSE, 0);
         /* Signals */
         g_signal_connect(G_OBJECT(w->play), "clicked",
                          G_CALLBACK(play_clicked), NULL);
