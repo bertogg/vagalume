@@ -571,6 +571,10 @@ lastfm_mainwin_create(void)
         w->artist = gtk_label_new(NULL);
         w->track = gtk_label_new(NULL);
         w->album = gtk_label_new(NULL);
+        gtk_label_set_ellipsize(GTK_LABEL(w->playlist), PANGO_ELLIPSIZE_END);
+        gtk_label_set_ellipsize(GTK_LABEL(w->artist), PANGO_ELLIPSIZE_END);
+        gtk_label_set_ellipsize(GTK_LABEL(w->track), PANGO_ELLIPSIZE_END);
+        gtk_label_set_ellipsize(GTK_LABEL(w->album), PANGO_ELLIPSIZE_END);
         /* Cover image */
         cover_frame = gtk_aspect_frame_new(NULL, 0.5, 0.5, 1.0, FALSE);
         w->album_cover = gtk_image_new();
