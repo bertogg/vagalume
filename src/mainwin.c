@@ -55,6 +55,7 @@ mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
 {
         g_return_if_fail(w != NULL);
         GdkPixbufLoader *ldr = NULL;
+        GdkPixbuf *pixbuf = NULL;
         if (data != NULL) {
                 g_return_if_fail(size > 0);
                 GError *err = NULL;
@@ -69,16 +70,13 @@ mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
                         g_error_free(err);
                         g_object_unref(G_OBJECT(ldr));
                         ldr = NULL;
+                } else {
+                        pixbuf = gdk_pixbuf_loader_get_pixbuf(ldr);;
                 }
         }
-        if (ldr != NULL) {
-                GdkPixbuf *pixbuf = gdk_pixbuf_loader_get_pixbuf(ldr);;
-                gtk_image_set_from_pixbuf(GTK_IMAGE(w->album_cover), pixbuf);
-                gtk_widget_set_sensitive(w->album_cover, TRUE);
-                g_object_unref(G_OBJECT(ldr));
-        } else {
-                gtk_image_clear(GTK_IMAGE (w->album_cover));
-        }
+        gtk_image_set_from_pixbuf(GTK_IMAGE(w->album_cover), pixbuf);
+        gtk_widget_set_sensitive(w->album_cover, TRUE);
+        if (ldr != NULL) g_object_unref(G_OBJECT(ldr));
 }
 
 static void
