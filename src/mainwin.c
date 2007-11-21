@@ -39,9 +39,12 @@ static const char *dload_icon = VAGALUME_DATA_DIR "/dload.png";
 static const char *ban_icon = VAGALUME_DATA_DIR "/ban.png";
 
 static const char *authors[] = {
-        "Alberto Garcia Gonzalez <agarcia@igalia.com>\nCore development\n",
-        "Felipe Erias Morandeira <femorandeira@igalia.com>",
-        "Mario Sanchez Prada <msanchez@igalia.com>\nIcons, UI enhancements\n",
+        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>\n",
+        NULL
+};
+static const char *artists[] = {
+        "Felipe Erias Morandeira\n<femorandeira@igalia.com>\n",
+        "Mario Sanchez Prada\n<msanchez@igalia.com>\n",
         NULL
 };
 
@@ -347,10 +350,13 @@ static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
+        GdkPixbuf *logo = gdk_pixbuf_new_from_file(app_icon, NULL);
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", appdescr, "copyright", copyright,
                               "license", license, "version", APP_VERSION,
-                              "website", website, NULL);
+                              "website", website, "artists", artists,
+                              "logo", logo, NULL);
+        g_object_unref(G_OBJECT(logo));
 }
 
 static void
