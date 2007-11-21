@@ -1,3 +1,6 @@
+0.3a (21 Nov 2007)
+  * Fixed a bug that showed buttons with no icons in the Nokia 770
+
 0.3 (21 Nov 2007)
   * Support for lastfm://play/ URLs (previews and free tracks)
   * Support for downloading free tracks

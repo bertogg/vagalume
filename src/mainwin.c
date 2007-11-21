@@ -598,12 +598,13 @@ lastfm_mainwin_create(void)
         buthbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
         ctrlvbox = GTK_BOX(gtk_vbox_new(FALSE, 5));
         /* Buttons */
-        w->play = gtk_button_new();
-        w->stop = gtk_button_new();
-        w->next = gtk_button_new();
-        w->love = gtk_button_new();
-        w->ban = gtk_button_new();
-        w->dloadbutton = gtk_button_new();
+        /* Don't use gtk_button_new() or icons won't appear in Nokia 770 */
+        w->play = gtk_button_new_with_label("");
+        w->stop = gtk_button_new_with_label("");
+        w->next = gtk_button_new_with_label("");
+        w->love = gtk_button_new_with_label("");
+        w->ban = gtk_button_new_with_label("");
+        w->dloadbutton = gtk_button_new_with_label("");
         gtk_button_set_image(GTK_BUTTON(w->play),
                              gtk_image_new_from_file(play_icon));
         gtk_button_set_image(GTK_BUTTON(w->stop),

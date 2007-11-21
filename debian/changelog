@@ -1,3 +1,9 @@
+vagalume (0.3a-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alberto Garcia <agarcia@igalia.com>  Wed, 21 Nov 2007 23:08:13 +0100
+
 vagalume (0.3-1) unstable; urgency=low
 
   * New upstream release
