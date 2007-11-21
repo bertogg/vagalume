@@ -2,11 +2,8 @@ List of features that need to be implemented (in no particular order):
 
 * Ask the user if the connection is down
 * Alarm clock
-* Support for downloading free tracks
 * Send recommendations to many users at once
 * Tag dialog: view track's popular tags (from you and from others)
-* Application icon
-* Display album cover
 * A decent UI
 * History
 * Support for different languages

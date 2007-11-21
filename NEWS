@@ -1,3 +1,18 @@
+0.3 (21 Nov 2007)
+  * Support for lastfm://play/ URLs (previews and free tracks)
+  * Support for downloading free tracks
+  * D-BUS support (Maemo only)
+  * Handle lastfm:// URLs with Vagalume (Maemo only)
+  * Show album cover of the track being played
+  * New buttons to love, ban and download tracks
+  * No more Gtk+ stock icons: now we have new icons for all buttons
+    (thanks Felipe Erias and Mario Sanchez)
+  * New menu entry to play a group's radio
+  * Show the name of the track being played in the window title
+  * Other UI enhancements (thanks Felipe Erias and Mario Sanchez)
+  * Removed dependency on gnomevfs, using custom curl-based gstreamer
+    source element instead
+
 0.2 (09 Nov 2007)
   * Added support for recommending tracks to other users
   * Added support for adding tracks to the user's playlist
