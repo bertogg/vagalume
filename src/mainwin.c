@@ -351,7 +351,7 @@ static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
-        GdkPixbuf *logo = gdk_pixbuf_new_from_file(app_icon, NULL);
+        GdkPixbuf *logo = gdk_pixbuf_new_from_file(app_icon_big, NULL);
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", appdescr, "copyright", copyright,
                               "license", license, "version", APP_VERSION,
