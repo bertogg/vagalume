@@ -13,6 +13,7 @@
 typedef struct {
         GtkWindow *window;
         GtkWidget *play, *stop, *next;
+        GtkWidget *love, *ban, *dloadbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *dload;
         GtkWidget *album_cover;

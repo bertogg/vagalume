@@ -602,7 +602,12 @@ controller_download_track(void)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url);
         lastfm_track *t = lastfm_track_copy(nowplaying);
-        g_thread_create(download_track_thread, t, FALSE, NULL);
+        if (controller_confirm_dialog("Download this track to\n"
+                                      "your audio clips directory?")) {
+                g_thread_create(download_track_thread, t, FALSE, NULL);
+        } else {
+                lastfm_track_destroy(t);
+        }
 }
 
 /**
