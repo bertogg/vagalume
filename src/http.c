@@ -54,7 +54,7 @@ http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
         curl_buffer *dstbuf = (curl_buffer *) dest;
         size_t datasize = size*nmemb;
         size_t writefrom = dstbuf->size;
-        if (datasize == 0) return 0;
+        if (datasize == 0 || src == NULL) return 0;
         dstbuf->size += datasize;
         /* Allocate an extra byte to place the final \0 */
         dstbuf->buffer = g_realloc(dstbuf->buffer, dstbuf->size + 1);
