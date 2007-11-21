@@ -30,6 +30,7 @@ static const int album_cover_size = 200;
 static const int album_cover_size = 120;
 #endif
 
+static const char *app_icon_big = VAGALUME_DATA_DIR "/vagalume_48x48.png";
 static const char *app_icon = VAGALUME_DATA_DIR "/vagalume.png";
 static const char *play_icon = VAGALUME_DATA_DIR "/play.png";
 static const char *stop_icon = VAGALUME_DATA_DIR "/stop.png";
@@ -39,12 +40,12 @@ static const char *dload_icon = VAGALUME_DATA_DIR "/dload.png";
 static const char *ban_icon = VAGALUME_DATA_DIR "/ban.png";
 
 static const char *authors[] = {
-        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>\n",
+        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>",
         NULL
 };
 static const char *artists[] = {
         "Felipe Erias Morandeira\n<femorandeira@igalia.com>\n",
-        "Mario Sanchez Prada\n<msanchez@igalia.com>\n",
+        "Mario Sanchez Prada\n<msanchez@igalia.com>",
         NULL
 };
 
