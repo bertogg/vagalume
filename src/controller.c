@@ -474,6 +474,14 @@ controller_audio_started_cb(void)
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING, nowplaying);
         track = lastfm_track_copy(nowplaying);
         controller_show_progress(track);
+        if (track->image_url != NULL) {
+                getcover_data *d = g_new(getcover_data, 1);
+                d->track_id = track->id;
+                d->image_url = g_strdup(track->image_url);
+                g_thread_create(set_album_cover_thread, d, FALSE, NULL);
+        } else {
+                mainwin_set_album_cover(mainwin, NULL, 0);
+        }
         g_timeout_add(1000, controller_show_progress, track);
 }
 
@@ -495,14 +503,6 @@ controller_start_playing(void)
         }
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
-        if (track->image_url != NULL) {
-                getcover_data *d = g_new(getcover_data, 1);
-                d->track_id = track->id;
-                d->image_url = g_strdup(track->image_url);
-                g_thread_create(set_album_cover_thread, d, FALSE, NULL);
-        } else {
-                mainwin_set_album_cover(mainwin, NULL, 0);
-        }
         if (track->custom_pls) {
                 lastfm_audio_play(track->stream_url,
                                   (GCallback) controller_audio_started_cb,
