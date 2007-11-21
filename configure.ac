@@ -15,6 +15,9 @@ AC_DEFINE_UNQUOTED([KERNEL_NAME_LC],"`uname -s|tr A-Z a-z`",
                    [Name of the kernel (lowercase)])
 AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
 
+vagalumedatadir="\${datadir}/vagalume"
+AC_SUBST(vagalumedatadir)
+
 EXTRA_CFLAGS=""
 EXTRA_LIBS=""
 
@@ -120,6 +123,8 @@ else
    AC_MSG_ERROR([Unknown platform $PLATFORM selected])
 
 fi
+
+AM_CONDITIONAL(MAEMO, test "$PLATFORM" = "maemo")
 
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LIBS)

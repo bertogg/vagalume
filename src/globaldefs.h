@@ -23,4 +23,8 @@
 #define APP_DBUS_IFACE APP_DBUS_SERVICE
 #define APP_DBUS_METHOD_PLAYURL "PlayUrl"
 
+#ifndef VAGALUME_DATA_DIR
+#define VAGALUME_DATA_DIR "/usr/share/vagalume"
+#endif
+
 #endif

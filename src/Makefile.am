@@ -13,7 +13,7 @@ bin_PROGRAMS = vagalume
 
 vagalume_LDADD = $(EXTRA_LIBS)
 
-vagalume_CFLAGS= $(EXTRA_CFLAGS)
+vagalume_CFLAGS= $(EXTRA_CFLAGS) -DVAGALUME_DATA_DIR=\"$(vagalumedatadir)\"
 
 vagalume_SOURCES = \
 	audio.c audio.h \

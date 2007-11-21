@@ -30,12 +30,12 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src
 
-install-data-local:
-	if test -n "$(desktopentrydir)"; then \
-	   $(mkinstalldirs) $(DESTDIR)/$(desktopentrydir) ; \
-	   $(INSTALL) maemo/vagalume.desktop $(DESTDIR)/$(desktopentrydir) ; \
-	fi
-	if test -n "$(serviceentrydir)"; then \
-	   $(mkinstalldirs) $(DESTDIR)/$(serviceentrydir) ; \
-	   $(INSTALL) maemo/vagalume.service $(DESTDIR)/$(serviceentrydir) ; \
-	fi
+vagalumedata_DATA = data/pixmaps/*
+
+icondir = $(datadir)/pixmaps
+icon_DATA = data/pixmaps/vagalume.png
+
+if MAEMO
+desktopentry_DATA = maemo/vagalume.desktop
+serviceentry_DATA = maemo/vagalume.service
+endif
