@@ -133,7 +133,7 @@ controller_show_progress(gpointer data)
         lastfm_track *tr = (lastfm_track *) data;
         g_return_val_if_fail(mainwin != NULL && tr != NULL, FALSE);
         if (nowplaying != NULL && tr->id == nowplaying->id) {
-                guint played = time(NULL) - nowplaying_since;
+                guint played = lastfm_audio_get_running_time();
                 guint length = nowplaying->duration/1000;
                 mainwin_show_progress(mainwin, length, played);
                 return TRUE;
@@ -199,7 +199,7 @@ controller_scrobble_track(void)
         g_return_if_fail(nowplaying != NULL && usercfg != NULL);
         if (usercfg->enable_scrobbling && nowplaying_since > 0 &&
             rsp_sess != NULL && nowplaying->duration > 30000) {
-                time_t played = time(NULL) - nowplaying_since;
+                time_t played = lastfm_audio_get_running_time();
                 /* If a track is unrated and hasn't been played for
                    enough time, scrobble it as skipped */
                 if (nowplaying_rating == RSP_RATING_NONE &&

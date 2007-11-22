@@ -215,6 +215,16 @@ lastfm_audio_clear(void)
         close_previous_playback();
 }
 
+guint
+lastfm_audio_get_running_time(void)
+{
+        g_return_val_if_fail(pipeline != NULL, 0);
+        gint64 t;
+        GstFormat format = GST_FORMAT_TIME;
+        gst_element_query_position(pipeline, &format, &t);
+        return (t + 500000000) / 1000000000; /* Round to nearest integer */
+}
+
 int
 lastfm_audio_get_volume(void)
 {
