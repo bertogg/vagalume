@@ -522,11 +522,11 @@ static void
 finish_playing_track(void)
 {
         g_return_if_fail(mainwin != NULL);
-        lastfm_audio_stop();
         if (nowplaying != NULL) {
                 controller_scrobble_track();
                 controller_set_nowplaying(NULL);
         }
+        lastfm_audio_stop();
 }
 
 /**
