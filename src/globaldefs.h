@@ -23,6 +23,10 @@
 #define APP_DBUS_IFACE APP_DBUS_SERVICE
 #define APP_DBUS_METHOD_PLAYURL "PlayUrl"
 
+/* Client ID and version provided by Last.fm - don't change */
+#define LASTFM_APP_ID "vag"
+#define LASTFM_APP_VERSION "0.1"
+
 #ifndef VAGALUME_DATA_DIR
 #define VAGALUME_DATA_DIR "/usr/share/vagalume"
 #endif

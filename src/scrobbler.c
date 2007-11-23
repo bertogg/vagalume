@@ -17,6 +17,10 @@
 #include "globaldefs.h"
 #include "util.h"
 
+static const char *rsp_session_url =
+       "http://post.audioscrobbler.com/?hs=true&p=1.2"
+       "&c=" LASTFM_APP_ID "&v=" LASTFM_APP_VERSION;
+
 void
 rsp_session_destroy(rsp_session *s)
 {
@@ -50,9 +54,7 @@ rsp_session_new(const char *username, const char *password,
         char *buffer = NULL;
         timestamp = g_strdup_printf("%lu", time(NULL));
         auth = compute_auth_token(password, timestamp);
-        url = g_strconcat("http://post.audioscrobbler.com/?hs=true"
-                          "&p=1.2&c=tst&v=" APP_VERSION,
-                          "&u=", username, "&t=", timestamp,
+        url = g_strconcat(rsp_session_url, "&u=", username, "&t=", timestamp,
                           "&a=", auth, NULL);
         http_get_buffer(url, &buffer, NULL);
         if (buffer == NULL) {
