@@ -478,8 +478,8 @@ start_playing_get_pls_thread(gpointer data)
 void
 controller_show_cover(void)
 {
-        g_return_if_fail(mainwin != NULL && nowplaying != NULL);
-        if (showing_cover || mainwin->is_hidden) return;
+        g_return_if_fail(mainwin != NULL);
+        if (showing_cover || nowplaying == NULL || mainwin->is_hidden) return;
         showing_cover = TRUE;
         if (nowplaying->image_url != NULL) {
                 getcover_data *d = g_new(getcover_data, 1);
