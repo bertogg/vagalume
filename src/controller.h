@@ -37,5 +37,6 @@ void controller_show_info(const char *text);
 gboolean controller_confirm_dialog(const char *text);
 void controller_show_mainwin(gboolean show);
 void controller_increase_volume(int inc);
+void controller_show_cover(void);
 
 #endif

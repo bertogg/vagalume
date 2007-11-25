@@ -262,16 +262,21 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(w->progressbar), 0);
 }
 
-#ifdef MAEMO
 static gboolean
 window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
                 lastfm_mainwin *win)
 {
-        win->is_fullscreen = (event->new_window_state &
-                              GDK_WINDOW_STATE_FULLSCREEN);
+        GdkWindowState st = event->new_window_state;
+        win->is_fullscreen = (st & GDK_WINDOW_STATE_FULLSCREEN);
+        win->is_hidden =
+                st & (GDK_WINDOW_STATE_ICONIFIED|GDK_WINDOW_STATE_WITHDRAWN);
+        if (!win->is_hidden) {
+                controller_show_cover();
+        }
         return FALSE;
 }
 
+#ifdef MAEMO
 static gboolean
 key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
 {
@@ -743,9 +748,9 @@ lastfm_mainwin_create(void)
 #ifdef MAEMO
         g_signal_connect(G_OBJECT(w->window), "key_press_event",
                          G_CALLBACK(key_press_cb), w);
+#endif
         g_signal_connect(G_OBJECT(w->window), "window_state_event",
                          G_CALLBACK(window_state_cb), w);
-#endif
         /* Shortcuts */
 #ifndef MAEMO
         gtk_widget_add_accelerator(w->play, "clicked", accel, GDK_space,

@@ -29,6 +29,7 @@ static GList *friends = NULL;
 static lastfm_track *nowplaying = NULL;
 static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
+static gboolean showing_cover = FALSE;
 
 typedef struct {
         lastfm_track *track;
@@ -468,6 +469,29 @@ start_playing_get_pls_thread(gpointer data)
 }
 
 /**
+ * Download the cover of the track being played and show it in the
+ * main window. This will create a thread to avoid freezing the UI.
+ * If the window is not visible or if the cover is already displayed
+ * (or about to be displayed) this will do nothing so this function
+ * can be called several times.
+ */
+void
+controller_show_cover(void)
+{
+        g_return_if_fail(mainwin != NULL && nowplaying != NULL);
+        if (showing_cover || mainwin->is_hidden) return;
+        showing_cover = TRUE;
+        if (nowplaying->image_url != NULL) {
+                getcover_data *d = g_new(getcover_data, 1);
+                d->track_id = nowplaying->id;
+                d->image_url = g_strdup(nowplaying->image_url);
+                g_thread_create(set_album_cover_thread, d, FALSE, NULL);
+        } else {
+                mainwin_set_album_cover(mainwin, NULL, 0);
+        }
+}
+
+/**
  * Callback to be called by the audio component when it actually
  * starts playing
  */
@@ -480,14 +504,8 @@ controller_audio_started_cb(void)
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING, nowplaying);
         track = lastfm_track_copy(nowplaying);
         controller_show_progress(track);
-        if (track->image_url != NULL) {
-                getcover_data *d = g_new(getcover_data, 1);
-                d->track_id = track->id;
-                d->image_url = g_strdup(track->image_url);
-                g_thread_create(set_album_cover_thread, d, FALSE, NULL);
-        } else {
-                mainwin_set_album_cover(mainwin, NULL, 0);
-        }
+        showing_cover = FALSE;
+        controller_show_cover();
         g_timeout_add(1000, controller_show_progress, track);
 }
 

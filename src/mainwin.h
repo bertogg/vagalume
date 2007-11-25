@@ -20,6 +20,7 @@ typedef struct {
         GtkWidget *album_cover;
         GtkWidget *progressbar;
         gboolean is_fullscreen;
+        gboolean is_hidden;
 } lastfm_mainwin;
 
 typedef enum {
