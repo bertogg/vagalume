@@ -13,11 +13,12 @@ bin_PROGRAMS = vagalume
 
 vagalume_LDADD = $(EXTRA_LIBS)
 
-vagalume_CFLAGS= $(EXTRA_CFLAGS) -DVAGALUME_DATA_DIR=\"$(vagalumedatadir)\"
+vagalume_CFLAGS= $(EXTRA_CFLAGS) -DAPP_DATA_DIR=\"$(appdatadir)\"
 
 vagalume_SOURCES = \
 	audio.c audio.h \
 	controller.c controller.h \
+	dbus.h \
 	globaldefs.h \
 	http.c http.h \
 	main.c \
@@ -31,3 +32,7 @@ vagalume_SOURCES = \
 	userconfig.c userconfig.h \
 	util.c util.h \
 	xmlrpc.c xmlrpc.h
+
+if HAVE_DBUS_SUPPORT
+vagalume_SOURCES += dbus.c
+endif

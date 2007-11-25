@@ -30,12 +30,13 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src
 
-vagalumedata_DATA = data/pixmaps/*
 
 icondir = $(datadir)/pixmaps
 icon_DATA = data/pixmaps/vagalume.png
 
-if MAEMO
-desktopentry_DATA = maemo/vagalume.desktop
-serviceentry_DATA = maemo/vagalume.service
+appdata_DATA = data/pixmaps/*
+desktopentry_DATA = data/vagalume.desktop
+
+if HAVE_DBUS_SUPPORT
+serviceentry_DATA = data/vagalume.service
 endif

@@ -10,6 +10,7 @@
 
 #include <glib.h>
 
+void http_set_proxy(const char *proxy);
 char *escape_url(const char *url, gboolean escape);
 gboolean http_get_buffer(const char *url, char **buffer, size_t *bufsize);
 gboolean http_get_to_fd(const char *url, int fd, const GSList *headers);

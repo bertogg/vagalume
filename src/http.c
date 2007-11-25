@@ -9,6 +9,7 @@
 #include "globaldefs.h"
 #include <curl/curl.h>
 #include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -17,6 +18,16 @@ typedef struct {
         char *buffer;
         size_t size;
 } curl_buffer;
+
+void
+http_set_proxy(const char *proxy)
+{
+        if (proxy == NULL || *proxy == '\0') {
+                unsetenv("http_proxy");
+        } else {
+                setenv("http_proxy", proxy, 1);
+        }
+}
 
 void
 http_init(void)

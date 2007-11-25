@@ -71,6 +71,7 @@ lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username)
         g_return_if_fail(cfg != NULL);
         g_free(cfg->username);
         cfg->username = g_strdup(username);
+        if (cfg->username) g_strstrip(cfg->username);
 }
 
 void
@@ -79,6 +80,16 @@ lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password)
         g_return_if_fail(cfg != NULL);
         g_free(cfg->password);
         cfg->password = g_strdup(password);
+        if (cfg->password) g_strstrip(cfg->password);
+}
+
+void
+lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy)
+{
+        g_return_if_fail(cfg != NULL);
+        g_free(cfg->http_proxy);
+        cfg->http_proxy = g_strdup(proxy);
+        if (cfg->http_proxy) g_strstrip(cfg->http_proxy);
 }
 
 lastfm_usercfg *
@@ -87,6 +98,7 @@ lastfm_usercfg_new(void)
         lastfm_usercfg *cfg = g_new0(lastfm_usercfg, 1);
         cfg->username = g_strdup("");
         cfg->password = g_strdup("");
+        cfg->http_proxy = g_strdup("");
         cfg->download_dir = default_download_dir();
         cfg->enable_scrobbling = TRUE;
         cfg->discovery_mode = FALSE;
@@ -98,6 +110,7 @@ lastfm_usercfg_destroy(lastfm_usercfg *cfg)
 {
         g_free(cfg->username);
         g_free(cfg->password);
+        g_free(cfg->http_proxy);
         g_free(cfg->download_dir);
         g_free(cfg);
 }
@@ -140,6 +153,8 @@ read_usercfg(void)
                         cfg->discovery_mode = !strcmp(val, "1");
                 } else if ((val = cfg_get_val(buf, "scrobble")) != NULL) {
                         cfg->enable_scrobbling = !strcmp(val, "1");
+                } else if ((val = cfg_get_val(buf, "http_proxy")) != NULL) {
+                        lastfm_usercfg_set_http_proxy(cfg, val);
                 }
                 g_free(val);
         }
@@ -168,9 +183,9 @@ write_usercfg(lastfm_usercfg *cfg)
                                    strlen(cfg->password));
 #endif
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n"
-                    "scrobble=\"%d\"\ndiscovery=\"%d\"\n",
-                    cfg->username, base64pw, !!cfg->enable_scrobbling,
-                    !!cfg->discovery_mode) <= 0) {
+                    "http_proxy=\"%s\"\nscrobble=\"%d\"\ndiscovery=\"%d\"\n",
+                    cfg->username, base64pw, cfg->http_proxy,
+                    !!cfg->enable_scrobbling, !!cfg->discovery_mode) <= 0) {
                 g_warning("Error writing to config file");
                 retval = FALSE;
         }

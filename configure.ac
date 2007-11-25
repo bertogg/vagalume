@@ -1,3 +1,4 @@
+# Initialization and basic checks
 AC_INIT(Makefile.am)
 AM_INIT_AUTOMAKE(vagalume, 0.3a)
 AM_CONFIG_HEADER(config.h)
@@ -10,14 +11,13 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 AC_HEADER_STDC
 
+# Defines for config.h
 AC_DEFINE_UNQUOTED([KERNEL_NAME],"`uname -s`",[Name of the kernel])
 AC_DEFINE_UNQUOTED([KERNEL_NAME_LC],"`uname -s|tr A-Z a-z`",
                    [Name of the kernel (lowercase)])
 AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
 
-vagalumedatadir="\${datadir}/vagalume"
-AC_SUBST(vagalumedatadir)
-
+# Extra flags for compiler and linker
 EXTRA_CFLAGS=""
 EXTRA_LIBS=""
 
@@ -88,7 +88,6 @@ if test "$PLATFORM" = "maemo"; then
    EXTRA_CFLAGS="$EXTRA_CFLAGS $HILDON_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $HILDON_LIBS"
 
-
    PKG_CHECK_MODULES(OSSO, libosso osso-af-settings)
    EXTRA_CFLAGS="$EXTRA_CFLAGS $OSSO_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $OSSO_LIBS"
@@ -101,9 +100,6 @@ if test "$PLATFORM" = "maemo"; then
    elif test "x$serviceentrydir" = "x"; then
       AC_MSG_ERROR([Unable to find dbus service directory])
    fi
-
-   AC_SUBST(desktopentrydir)
-   AC_SUBST(serviceentrydir)
 
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])
    if test "$MAEMOVERS" = "2"; then
@@ -118,14 +114,24 @@ elif test "$PLATFORM" = "gnome"; then
 
    echo "Compiling for Gnome"
 
+   # serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
+   desktopentrydir="\${datadir}/applications"
+
 else
 
    AC_MSG_ERROR([Unknown platform $PLATFORM selected])
 
 fi
 
-AM_CONDITIONAL(MAEMO, test "$PLATFORM" = "maemo")
+AM_CONDITIONAL(HAVE_DBUS_SUPPORT, test -n "$serviceentrydir")
+if test -n "$serviceentrydir"; then
+   AC_DEFINE([HAVE_DBUS_SUPPORT], [], [Defined if compiling with D-BUS])
+fi
 
+appdatadir="\${datadir}/vagalume"
+AC_SUBST(appdatadir)
+AC_SUBST(serviceentrydir)
+AC_SUBST(desktopentrydir)
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LIBS)
 

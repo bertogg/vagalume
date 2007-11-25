@@ -37,5 +37,6 @@ void controller_show_error(const char *text);
 void controller_show_warning(const char *text);
 void controller_show_info(const char *text);
 gboolean controller_confirm_dialog(const char *text);
+void controller_show_mainwin(gboolean show);
 
 #endif

@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 
@@ -30,14 +29,14 @@ static const int album_cover_size = 200;
 static const int album_cover_size = 120;
 #endif
 
-static const char *app_icon_big = VAGALUME_DATA_DIR "/vagalume_48x48.png";
-static const char *app_icon = VAGALUME_DATA_DIR "/vagalume.png";
-static const char *play_icon = VAGALUME_DATA_DIR "/play.png";
-static const char *stop_icon = VAGALUME_DATA_DIR "/stop.png";
-static const char *next_icon = VAGALUME_DATA_DIR "/next.png";
-static const char *love_icon = VAGALUME_DATA_DIR "/love.png";
-static const char *dload_icon = VAGALUME_DATA_DIR "/dload.png";
-static const char *ban_icon = VAGALUME_DATA_DIR "/ban.png";
+static const char *app_icon_big = APP_DATA_DIR "/vagalume_48x48.png";
+static const char *app_icon = APP_DATA_DIR "/vagalume.png";
+static const char *play_icon = APP_DATA_DIR "/play.png";
+static const char *stop_icon = APP_DATA_DIR "/stop.png";
+static const char *next_icon = APP_DATA_DIR "/next.png";
+static const char *love_icon = APP_DATA_DIR "/love.png";
+static const char *dload_icon = APP_DATA_DIR "/dload.png";
+static const char *ban_icon = APP_DATA_DIR "/ban.png";
 
 static const char *authors[] = {
         "Alberto Garcia Gonzalez\n<agarcia@igalia.com>",
@@ -66,7 +65,18 @@ static const char *license =
 "\n"
 "You should have received a copy of the GNU General\n"
 "Public License along with Vagalume. If not, see\n"
-"http://www.gnu.org/licenses/.\n";
+"http://www.gnu.org/licenses/\n";
+
+void
+mainwin_show_window(lastfm_mainwin *w, gboolean show)
+{
+        g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
+        if (show) {
+                gtk_widget_show(GTK_WIDGET(w->window));
+        } else {
+                gtk_widget_hide(GTK_WIDGET(w->window));
+        }
+}
 
 void
 mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)

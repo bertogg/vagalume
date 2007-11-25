@@ -10,12 +10,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
-#include <strings.h>
 #include <time.h>
-
-#ifdef MAEMO
-#include <libosso.h>
-#endif
 
 #include "controller.h"
 #include "scrobbler.h"
@@ -24,6 +19,7 @@
 #include "uimisc.h"
 #include "http.h"
 #include "globaldefs.h"
+#include "dbus.h"
 
 static lastfm_session *session = NULL;
 static lastfm_pls *playlist = NULL;
@@ -117,6 +113,18 @@ controller_confirm_dialog(const char *text)
 {
         g_return_val_if_fail(mainwin != NULL, FALSE);
         return ui_confirm_dialog(mainwin->window, text);
+}
+
+/**
+ * Show/Hide the program main window
+ *
+ * @param show Whether to show or hide it
+ */
+void
+controller_show_mainwin(gboolean show)
+{
+        g_return_if_fail(mainwin != NULL);
+        mainwin_show_window(mainwin, show);
 }
 
 /**
@@ -327,13 +335,12 @@ controller_open_usercfg(void)
                     strcmp(oldpw, usercfg->password)) {
                         userpwchanged = TRUE;
                 }
+                http_set_proxy(usercfg->http_proxy);
         }
         if (session != NULL && userpwchanged) {
                 lastfm_session_destroy(session);
                 session = NULL;
                 controller_stop_playing();
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED,
-                                     NULL);
         }
         g_free(olduser);
         g_free(oldpw);
@@ -493,7 +500,7 @@ void
 controller_start_playing(void)
 {
         lastfm_track *track = NULL;
-        g_return_if_fail(mainwin != NULL && playlist != NULL);
+        g_return_if_fail(mainwin && playlist && nowplaying != NULL);
         if (!check_session()) return;
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING, NULL);
         if (lastfm_pls_size(playlist) == 0) {
@@ -536,7 +543,10 @@ void
 controller_stop_playing(void)
 {
         g_return_if_fail(mainwin != NULL);
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED, NULL);
+        lastfm_ui_state new_state = session != NULL ?
+                LASTFM_UI_STATE_STOPPED :
+                LASTFM_UI_STATE_DISCONNECTED;
+        mainwin_set_ui_state(mainwin, new_state, NULL);
         finish_playing_track();
 }
 
@@ -1080,29 +1090,6 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
         return FALSE;
 }
 
-static gpointer
-playurl_handler_thread(gpointer data)
-{
-        g_return_val_if_fail(data != NULL, NULL);
-        char *url = (char *) data;
-        gdk_threads_enter();
-        controller_play_radio_by_url(url);
-        gdk_threads_leave();
-        g_free(url);
-        return NULL;
-}
-
-static gint
-dbus_req_handler(const gchar* interface, const gchar* method,
-                 GArray* arguments, gpointer data, osso_rpc_t* retval)
-{
-        if (!strcasecmp(method, APP_DBUS_METHOD_PLAYURL)) {
-                osso_rpc_t val = g_array_index(arguments, osso_rpc_t, 0);
-                gchar *url = g_strdup(val.value.s);
-                g_thread_create(playurl_handler_thread, url, FALSE, NULL);
-        }
-        return OSSO_OK;
-}
 #endif /* MAEMO */
 
 /**
@@ -1118,6 +1105,7 @@ void
 controller_run_app(lastfm_mainwin *win, const char *radio_url)
 {
         g_return_if_fail(win != NULL && mainwin == NULL);
+        const char *errmsg;
         mainwin = win;
         gtk_widget_show_all(GTK_WIDGET(mainwin->window));
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED, NULL);
@@ -1130,20 +1118,12 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
                 controller_show_error("Error initializing audio system");
                 return;
         }
+        errmsg = lastfm_dbus_init();
+        if (errmsg) {
+                controller_show_error(errmsg);
+                return;
+        }
 #ifdef MAEMO
-        osso_context_t *context;
-        osso_return_t result;
-        context = osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL);
-        if (!context) {
-                controller_show_error("Unable to initialize OSSO context");
-                return;
-        }
-        result = osso_rpc_set_cb_f(context, APP_DBUS_SERVICE, APP_DBUS_OBJECT,
-                                   APP_DBUS_IFACE, dbus_req_handler, NULL);
-        if (result != OSSO_OK) {
-                controller_show_error("Unable to set D-BUS callback");
-                return;
-        }
         g_signal_connect(G_OBJECT(mainwin->window), "key_press_event",
                          G_CALLBACK(key_press_cb), mainwin);
         g_signal_connect(G_OBJECT(mainwin->window), "window_state_event",
@@ -1155,7 +1135,5 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 
         gtk_main();
         mainwin = NULL;
-#ifdef MAEMO
-        osso_deinitialize(context);
-#endif
+        lastfm_dbus_close();
 }
