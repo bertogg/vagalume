@@ -1,3 +1,3 @@
-?package(vagalume):command="/usr/bin/vagalume" \
-	icon="/usr/share/vagalume/vagalume_48x48.png" needs="X11" \
+?package(vagalume):command="/usr/bin/vagalume" needs="X11" \
+	icon="/usr/share/icons/hicolor/48x48/apps/vagalume.png" \
 	section="Apps/Sound" title="Vagalume Last.fm Client"

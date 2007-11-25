@@ -29,8 +29,8 @@ static const int album_cover_size = 200;
 static const int album_cover_size = 120;
 #endif
 
-static const char *app_icon_big = APP_DATA_DIR "/vagalume_48x48.png";
-static const char *app_icon = APP_DATA_DIR "/vagalume.png";
+static const char *app_icon_big = ICON48_DIR "/vagalume.png";
+static const char *app_icon = ICON_DIR "/vagalume.png";
 static const char *play_icon = APP_DATA_DIR "/play.png";
 static const char *stop_icon = APP_DATA_DIR "/stop.png";
 static const char *next_icon = APP_DATA_DIR "/next.png";

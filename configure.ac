@@ -128,8 +128,9 @@ if test -n "$serviceentrydir"; then
    AC_DEFINE([HAVE_DBUS_SUPPORT], [1], [Defined if compiling with D-BUS])
 fi
 
-appdatadir="\${datadir}/vagalume"
-AC_SUBST(appdatadir)
+AC_SUBST(appdatadir, "\${datadir}/vagalume")
+AC_SUBST(icondir, "\${datadir}/pixmaps")
+AC_SUBST(icon48dir, "\${datadir}/icons/hicolor/48x48/apps")
 AC_SUBST(serviceentrydir)
 AC_SUBST(desktopentrydir)
 AC_SUBST(EXTRA_CFLAGS)

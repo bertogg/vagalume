@@ -30,11 +30,9 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src
 
-
-icondir = $(datadir)/pixmaps
-icon_DATA = data/pixmaps/vagalume.png
-
-appdata_DATA = data/pixmaps/*
+icon_DATA = data/icons/vagalume.png
+icon48_DATA = data/icons/48x48/*
+appdata_DATA = data/buttons/*
 desktopentry_DATA = data/vagalume.desktop
 
 if HAVE_DBUS_SUPPORT
