@@ -8,7 +8,6 @@
 
 #include "config.h"
 #include "uimisc.h"
-#include "userconfig.h"
 
 #include <gtk/gtk.h>
 #if defined(MAEMO2) || defined(MAEMO3)

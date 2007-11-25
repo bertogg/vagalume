@@ -8,7 +8,6 @@
 #include "config.h"
 
 #include <glib.h>
-#include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include <time.h>
 

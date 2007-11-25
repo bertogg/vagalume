@@ -8,11 +8,9 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "protocol.h"
 #include "mainwin.h"
 #include "radio.h"
 #include "xmlrpc.h"
-#include "userconfig.h"
 
 void controller_stop_playing(void);
 void controller_start_playing(void);

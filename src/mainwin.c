@@ -284,10 +284,10 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
                 }
                 break;
         case GDK_F7:
-                newvol = controller_increase_volume(5);
+                controller_increase_volume(5);
                 break;
         case GDK_F8:
-                newvol = controller_increase_volume(-5);
+                controller_increase_volume(-5);
                 break;
         }
         return FALSE;
