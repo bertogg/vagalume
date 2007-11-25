@@ -500,7 +500,7 @@ void
 controller_start_playing(void)
 {
         lastfm_track *track = NULL;
-        g_return_if_fail(mainwin && playlist && nowplaying != NULL);
+        g_return_if_fail(mainwin && playlist && nowplaying == NULL);
         if (!check_session()) return;
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING, NULL);
         if (lastfm_pls_size(playlist) == 0) {
