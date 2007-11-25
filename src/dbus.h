@@ -23,6 +23,7 @@
 #define APP_DBUS_METHOD_SHOWWINDOW "ShowWindow"
 #define APP_DBUS_METHOD_HIDEWINDOW "HideWindow"
 #define APP_DBUS_METHOD_CLOSEAPP "CloseApp"
+#define APP_DBUS_METHOD_TOPAPP "top_application"
 
 #ifdef HAVE_DBUS_SUPPORT
 

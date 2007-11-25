@@ -72,7 +72,7 @@ mainwin_show_window(lastfm_mainwin *w, gboolean show)
 {
         g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
         if (show) {
-                gtk_widget_show(GTK_WIDGET(w->window));
+                gtk_window_present(w->window);
         } else {
                 gtk_widget_hide(GTK_WIDGET(w->window));
         }
