@@ -706,6 +706,7 @@ lastfm_mainwin_create(void)
                                    GDK_CONTROL_MASK, 0);
 #endif
         /* Initial state */
+        gtk_widget_show_all(GTK_WIDGET(vbox));
         mainwin_set_ui_state(w, LASTFM_UI_STATE_DISCONNECTED, NULL);
         return w;
 }

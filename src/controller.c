@@ -1107,7 +1107,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         g_return_if_fail(win != NULL && mainwin == NULL);
         const char *errmsg;
         mainwin = win;
-        gtk_widget_show_all(GTK_WIDGET(mainwin->window));
+        mainwin_show_window(mainwin, TRUE);
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED, NULL);
 
         http_init();
