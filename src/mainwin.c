@@ -68,6 +68,18 @@ static const char *license =
 "http://www.gnu.org/licenses/\n";
 
 void
+mainwin_run_app(void)
+{
+        gtk_main();
+}
+
+void
+mainwin_quit_app(void)
+{
+        gtk_main_quit();
+}
+
+void
 mainwin_show_window(lastfm_mainwin *w, gboolean show)
 {
         g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
@@ -249,6 +261,38 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
         gtk_widget_set_sensitive (w->album, !dim_labels);
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(w->progressbar), 0);
 }
+
+#ifdef MAEMO
+static gboolean
+window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
+                lastfm_mainwin *win)
+{
+        win->is_fullscreen = (event->new_window_state &
+                              GDK_WINDOW_STATE_FULLSCREEN);
+        return FALSE;
+}
+
+static gboolean
+key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
+{
+        switch (event->keyval) {
+        case GDK_F6:
+                if (win->is_fullscreen) {
+                        gtk_window_unfullscreen(win->window);
+                } else {
+                        gtk_window_fullscreen(win->window);
+                }
+                break;
+        case GDK_F7:
+                newvol = controller_increase_volume(5);
+                break;
+        case GDK_F8:
+                newvol = controller_increase_volume(-5);
+                break;
+        }
+        return FALSE;
+}
+#endif /* MAEMO */
 
 static void
 play_clicked(GtkWidget *widget, gpointer data)
@@ -696,6 +740,12 @@ lastfm_mainwin_create(void)
                          G_CALLBACK(close_app), NULL);
         g_signal_connect(G_OBJECT(w->window), "delete-event",
                          G_CALLBACK(delete_event), NULL);
+#ifdef MAEMO
+        g_signal_connect(G_OBJECT(w->window), "key_press_event",
+                         G_CALLBACK(key_press_cb), w);
+        g_signal_connect(G_OBJECT(w->window), "window_state_event",
+                         G_CALLBACK(window_state_cb), w);
+#endif
         /* Shortcuts */
 #ifndef MAEMO
         gtk_widget_add_accelerator(w->play, "clicked", accel, GDK_space,

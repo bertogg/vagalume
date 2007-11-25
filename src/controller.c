@@ -7,7 +7,7 @@
 
 #include "config.h"
 
-#include <gtk/gtk.h>
+#include <glib.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include <time.h>
@@ -1032,6 +1032,18 @@ controller_play_radio_ask_url(void)
         }
 }
 
+void
+controller_increase_volume(int inc)
+{
+        if (inc != 0) {
+                char *text;
+                int newvol = lastfm_audio_increase_volume(inc);
+                text = g_strdup_printf("Volume: %d/100", newvol);
+                controller_show_banner(text);
+                g_free(text);
+        }
+}
+
 /**
  * Close the application
  */
@@ -1042,55 +1054,8 @@ controller_quit_app(void)
         lastfm_audio_clear();
         lastfm_session_destroy(session);
         session = NULL;
-        gtk_main_quit();
+        mainwin_quit_app();
 }
-
-/*
- * This enables the hardware fullscreen key. Only makes sense for
- * Maemo really
- */
-#ifdef MAEMO
-static gboolean
-window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
-                lastfm_mainwin *win)
-{
-        win->is_fullscreen = (event->new_window_state &
-                              GDK_WINDOW_STATE_FULLSCREEN);
-        return FALSE;
-}
-
-static gboolean
-key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
-{
-        gboolean volume_changed = FALSE;
-        int newvol = 0;
-        switch (event->keyval) {
-        case GDK_F6:
-                if (win->is_fullscreen) {
-                        gtk_window_unfullscreen(win->window);
-                } else {
-                        gtk_window_fullscreen(win->window);
-                }
-                break;
-        case GDK_F7:
-                newvol = lastfm_audio_increase_volume(5);
-                volume_changed = TRUE;
-                break;
-        case GDK_F8:
-                newvol = lastfm_audio_increase_volume(-5);
-                volume_changed = TRUE;
-                break;
-        }
-
-        if (volume_changed) {
-                char *text = g_strdup_printf("Volume: %d/100", newvol);
-                controller_show_banner(text);
-                g_free(text);
-        }
-        return FALSE;
-}
-
-#endif /* MAEMO */
 
 /**
  * Start running the application, initializing all of its
@@ -1123,17 +1088,11 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
                 controller_show_error(errmsg);
                 return;
         }
-#ifdef MAEMO
-        g_signal_connect(G_OBJECT(mainwin->window), "key_press_event",
-                         G_CALLBACK(key_press_cb), mainwin);
-        g_signal_connect(G_OBJECT(mainwin->window), "window_state_event",
-                         G_CALLBACK(window_state_cb), mainwin);
-#endif
         if (radio_url) {
                 controller_play_radio_by_url(radio_url);
         }
 
-        gtk_main();
+        mainwin_run_app();
         mainwin = NULL;
         lastfm_dbus_close();
 }

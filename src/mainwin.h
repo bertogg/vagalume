@@ -35,5 +35,7 @@ void mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state s,
                           const lastfm_track *t);
 void mainwin_show_progress(lastfm_mainwin *w, guint length, guint played);
 void mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size);
+void mainwin_run_app(void);
+void mainwin_quit_app(void);
 
 #endif
