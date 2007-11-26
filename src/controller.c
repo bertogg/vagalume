@@ -644,10 +644,11 @@ controller_download_track(void)
 void
 controller_love_track(void)
 {
-        g_return_if_fail(nowplaying != NULL);
+        g_return_if_fail(nowplaying != NULL && mainwin != NULL);
         if (controller_confirm_dialog("Really mark track as loved?")) {
                 nowplaying_rating = RSP_RATING_LOVE;
                 controller_show_banner("Marking track as loved");
+                mainwin_set_track_as_loved(mainwin);
         }
 }
 

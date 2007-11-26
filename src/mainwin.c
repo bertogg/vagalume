@@ -181,6 +181,14 @@ mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
 }
 
 void
+mainwin_set_track_as_loved(lastfm_mainwin *w)
+{
+        g_return_if_fail(w != NULL);
+        gtk_widget_set_sensitive (w->lovebutton, FALSE);
+        gtk_widget_set_sensitive (w->love, FALSE);
+}
+
+void
 mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                      const lastfm_track *t)
 {
@@ -200,7 +208,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_widget_hide (w->stop);
                 gtk_widget_set_sensitive (w->play, TRUE);
                 gtk_widget_set_sensitive (w->next, FALSE);
-                gtk_widget_set_sensitive (w->love, FALSE);
+                gtk_widget_set_sensitive (w->lovebutton, FALSE);
                 gtk_widget_set_sensitive (w->ban, FALSE);
                 gtk_widget_set_sensitive (w->dloadbutton, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
@@ -222,12 +230,13 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_widget_show (w->stop);
                 gtk_widget_set_sensitive (w->stop, TRUE);
                 gtk_widget_set_sensitive (w->next, TRUE);
-                gtk_widget_set_sensitive (w->love, TRUE);
+                gtk_widget_set_sensitive (w->lovebutton, TRUE);
                 gtk_widget_set_sensitive (w->ban, TRUE);
                 gtk_widget_set_sensitive (w->dloadbutton,
                                           t->free_track_url != NULL);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
                 gtk_widget_set_sensitive (w->actionsmenu, TRUE);
+                gtk_widget_set_sensitive (w->love, TRUE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 gtk_widget_set_sensitive (w->dload, t->free_track_url != NULL);
                 break;
@@ -240,7 +249,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_widget_show (w->stop);
                 gtk_widget_set_sensitive (w->stop, FALSE);
                 gtk_widget_set_sensitive (w->next, FALSE);
-                gtk_widget_set_sensitive (w->love, FALSE);
+                gtk_widget_set_sensitive (w->lovebutton, FALSE);
                 gtk_widget_set_sensitive (w->ban, FALSE);
                 gtk_widget_set_sensitive (w->dloadbutton, FALSE);
                 gtk_widget_set_sensitive (w->radiomenu, FALSE);
@@ -628,6 +637,7 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         w->actionsmenu = GTK_WIDGET(actions);
         w->settings = GTK_WIDGET(settings);
         w->dload = GTK_WIDGET(dload);
+        w->love = GTK_WIDGET(love);
         return GTK_WIDGET(bar);
 }
 
@@ -661,7 +671,7 @@ lastfm_mainwin_create(void)
         w->play = gtk_button_new_with_label("");
         w->stop = gtk_button_new_with_label("");
         w->next = gtk_button_new_with_label("");
-        w->love = gtk_button_new_with_label("");
+        w->lovebutton = gtk_button_new_with_label("");
         w->ban = gtk_button_new_with_label("");
         w->dloadbutton = gtk_button_new_with_label("");
         gtk_button_set_image(GTK_BUTTON(w->play),
@@ -670,7 +680,7 @@ lastfm_mainwin_create(void)
                              gtk_image_new_from_file(stop_icon));
         gtk_button_set_image(GTK_BUTTON(w->next),
                              gtk_image_new_from_file(next_icon));
-        gtk_button_set_image(GTK_BUTTON(w->love),
+        gtk_button_set_image(GTK_BUTTON(w->lovebutton),
                              gtk_image_new_from_file(love_icon));
         gtk_button_set_image(GTK_BUTTON(w->ban),
                              gtk_image_new_from_file(ban_icon));
@@ -714,7 +724,7 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(buthbox, w->play, TRUE, TRUE, 0);
         gtk_box_pack_start(buthbox, w->stop, TRUE, TRUE, 0);
         gtk_box_pack_start(buthbox, w->next, TRUE, TRUE, 0);
-        gtk_box_pack_start(buthbox, w->love, TRUE, TRUE, 0);
+        gtk_box_pack_start(buthbox, w->lovebutton, TRUE, TRUE, 0);
         gtk_box_pack_start(buthbox, w->dloadbutton, TRUE, TRUE, 0);
         gtk_box_pack_start(buthbox, w->ban, TRUE, TRUE, 0);
 #ifdef MAEMO
@@ -735,7 +745,7 @@ lastfm_mainwin_create(void)
                          G_CALLBACK(next_clicked), NULL);
         g_signal_connect(G_OBJECT(w->stop), "clicked",
                          G_CALLBACK(stop_clicked), NULL);
-        g_signal_connect(G_OBJECT(w->love), "clicked",
+        g_signal_connect(G_OBJECT(w->lovebutton), "clicked",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(w->ban), "clicked",
                          G_CALLBACK(ban_track_selected), NULL);
