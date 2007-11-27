@@ -24,7 +24,6 @@ vagalume_SOURCES = \
 	http.c http.h \
 	main.c \
 	mainwin.c mainwin.h \
-	md5.c md5.h \
 	playlist.c playlist.h \
 	protocol.c protocol.h \
 	radio.c radio.h \
@@ -33,6 +32,10 @@ vagalume_SOURCES = \
 	userconfig.c userconfig.h \
 	util.c util.h \
 	xmlrpc.c xmlrpc.h
+
+if USE_INTERNAL_MD5
+vagalume_SOURCES += md5/md5.c md5/md5.h
+endif
 
 if HAVE_DBUS_SUPPORT
 vagalume_SOURCES += dbus.c

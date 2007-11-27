@@ -44,6 +44,30 @@ AC_CHECK_LIB(curl, curl_easy_escape,
    have_curl_easy_escape=0
 )
 
+# Check whether to use libgcrypt
+AC_ARG_ENABLE(libgcrypt, [
+  --enable-libgcrypt      compute MD5 using libgcrypt (default if available)
+  --disable-libgcrypt     use internal MD5 algorithm],
+  use_libgcrypt=$enableval, use_libgcrypt=detect)
+
+AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
+   have_libgcrypt="yes", have_libgcrypt="no")
+
+if test "$use_libgcrypt" = "detect"; then
+   use_libgcrypt="$have_libgcrypt"
+elif test "$use_libgcrypt" = "yes" -a "$have_libgcrypt" = "no"; then
+   AC_MSG_ERROR([ligcrypt not found, install it or use --disable-libgcrypt])
+fi
+
+if test "$use_libgcrypt" = "yes"; then
+   AC_DEFINE([HAVE_LIBGCRYPT],[1],[Defined if compiling with libgcrypt])
+   EXTRA_LIBS="$EXTRA_LIBS -lgcrypt"
+   echo "Using libgcrypt to compute md5sums"
+else
+   echo "Using internal implementation to compute md5sums"
+fi
+AM_CONDITIONAL(USE_INTERNAL_MD5, test "$use_libgcrypt" = "no")
+
 # Autodetect platform
 if $PKG_CONFIG --exists libosso; then
    DETECTED_PLATFORM=maemo
