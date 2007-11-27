@@ -1050,6 +1050,10 @@ controller_play_radio_ask_url(void)
         }
 }
 
+/**
+ * Increase (or decrease) the audio volume
+ * @param inc Level of increase
+ */
 void
 controller_increase_volume(int inc)
 {
