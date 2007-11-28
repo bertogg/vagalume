@@ -152,6 +152,39 @@ controller_show_progress(gpointer data)
 }
 
 /**
+ * Set the list of friends, deleting the previous one.
+ * @param user The user ID. If it's different from the active user,
+ *             no changes will be made.
+ * @param list The list of friends
+ */
+static void
+set_friend_list(const char *user, GList *list)
+{
+        g_return_if_fail(user != NULL && usercfg != NULL);
+        if (!strcmp(user, usercfg->username)) {
+                g_list_foreach(friends, (GFunc) g_free, NULL);
+                g_list_free(friends);
+                friends = list;
+        }
+}
+
+/**
+ * Set a new RSP session, deleting the previous one.
+ * @param user The user ID. If it's different from the active user,
+ *             no changes will be made.
+ * @param sess The new session (can be NULL)
+ */
+static void
+set_rsp_session(const char *user, rsp_session *sess)
+{
+        g_return_if_fail(user != NULL && usercfg != NULL);
+        if (!strcmp(user, usercfg->username)) {
+                if (sess != NULL) rsp_session_destroy(sess);
+                rsp_sess = sess;
+        }
+}
+
+/**
  * Scrobble a track using the Audioscrobbler Realtime Submission
  * Protocol. This can take some seconds, so it must be called using
  * g_thread_create() to avoid freezing the UI.
@@ -301,11 +334,8 @@ rsp_session_init_thread(gpointer data)
                 GList *list;
                 lastfm_get_friends(username, &list);
                 gdk_threads_enter();
-                rsp_session_destroy(rsp_sess);
-                rsp_sess = s;
-                g_list_foreach(friends, (GFunc) g_free, NULL);
-                g_list_free(friends);
-                friends = list;
+                set_rsp_session(username, s);
+                set_friend_list(username, list);
                 gdk_threads_leave();
         }
         g_free(username);
@@ -322,7 +352,8 @@ void
 controller_open_usercfg(void)
 {
         g_return_if_fail(mainwin != NULL);
-        gboolean userpwchanged = FALSE;
+        gboolean userchanged = FALSE;
+        gboolean pwchanged = FALSE;
         gboolean changed;
         char *olduser = usercfg != NULL ? g_strdup(usercfg->username) :
                                           g_strdup("");
@@ -331,15 +362,19 @@ controller_open_usercfg(void)
         changed = ui_usercfg_dialog(mainwin->window, &usercfg);
         if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
-                if (strcmp(olduser, usercfg->username) ||
-                    strcmp(oldpw, usercfg->password)) {
-                        userpwchanged = TRUE;
-                }
+                userchanged = strcmp(olduser, usercfg->username);
+                pwchanged = strcmp(oldpw, usercfg->password);
                 http_set_proxy(usercfg->http_proxy);
         }
-        if (session != NULL && userpwchanged) {
-                lastfm_session_destroy(session);
-                session = NULL;
+        if (userchanged || pwchanged) {
+                if (session != NULL) {
+                        lastfm_session_destroy(session);
+                        session = NULL;
+                }
+                set_rsp_session(olduser, NULL);
+                if (userchanged) {
+                        set_friend_list(olduser, NULL);
+                }
                 controller_stop_playing();
         }
         g_free(olduser);
