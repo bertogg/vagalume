@@ -322,24 +322,58 @@ controller_set_nowplaying(lastfm_track *track)
  * @return NULL (not used)
  */
 static gpointer
-rsp_session_init_thread(gpointer data)
+get_user_extradata_thread(gpointer data)
 {
         g_return_val_if_fail(usercfg != NULL && rsp_sess == NULL, NULL);
+        gboolean finished = FALSE;
+        gboolean rsp_ok = FALSE;
+        gboolean friends_ok = FALSE;
+        rsp_session *sess = NULL;
+        GList *friends = NULL;
         gdk_threads_enter();
-        char *username = g_strdup(usercfg->username);
-        char *password = g_strdup(usercfg->password);
+        char *user = g_strdup(usercfg->username);
+        char *pass = g_strdup(usercfg->password);
         gdk_threads_leave();
-        if (username && password) {
-                rsp_session *s = rsp_session_new(username, password, NULL);
-                GList *list;
-                lastfm_get_friends(username, &list);
-                gdk_threads_enter();
-                set_rsp_session(username, s);
-                set_friend_list(username, list);
-                gdk_threads_leave();
+        if (!user || !pass || user[0] == '\0' || pass[0] == '\0') {
+                finished = TRUE;
         }
-        g_free(username);
-        g_free(password);
+        while (!finished) {
+                if (!rsp_ok) {
+                        sess = rsp_session_new(user, pass, NULL);
+                        if (sess != NULL) {
+                                g_debug("RSP session ready");
+                                rsp_ok = TRUE;
+                                gdk_threads_enter();
+                                set_rsp_session(user, sess);
+                                gdk_threads_leave();
+                        } else {
+                                g_warning("Error creating RSP session");
+                        }
+                }
+                if (!friends_ok) {
+                        friends_ok = lastfm_get_friends(user, &friends);
+                        if (friends_ok) {
+                                g_debug("Friend list ready");
+                                gdk_threads_enter();
+                                set_friend_list(user, friends);
+                                gdk_threads_leave();
+                        } else {
+                                g_warning("Error getting friend list");
+                        }
+                }
+                if (rsp_ok && friends_ok) {
+                        finished = TRUE;
+                } else {
+                        gdk_threads_enter();
+                        if (!usercfg || strcmp(usercfg->username, user)) {
+                                finished = TRUE;
+                        }
+                        gdk_threads_leave();
+                        if (!finished) g_usleep(G_USEC_PER_SEC * 60);
+                }
+        }
+        g_free(user);
+        g_free(pass);
         return NULL;
 }
 
@@ -371,9 +405,9 @@ controller_open_usercfg(void)
                         lastfm_session_destroy(session);
                         session = NULL;
                 }
-                set_rsp_session(olduser, NULL);
+                set_rsp_session(usercfg->username, NULL);
                 if (userchanged) {
-                        set_friend_list(olduser, NULL);
+                        set_friend_list(usercfg->username, NULL);
                 }
                 controller_stop_playing();
         }
@@ -439,10 +473,7 @@ check_session(void)
         } else {
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED, NULL);
                 retvalue = TRUE;
-                if (rsp_sess == NULL) {
-                        g_thread_create(rsp_session_init_thread, NULL,
-                                        FALSE, NULL);
-                }
+                g_thread_create(get_user_extradata_thread, NULL, FALSE, NULL);
         }
         return retvalue;
 }
