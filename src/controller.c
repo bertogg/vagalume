@@ -179,7 +179,7 @@ set_rsp_session(const char *user, rsp_session *sess)
 {
         g_return_if_fail(user != NULL && usercfg != NULL);
         if (!strcmp(user, usercfg->username)) {
-                if (sess != NULL) rsp_session_destroy(sess);
+                if (rsp_sess != NULL) rsp_session_destroy(rsp_sess);
                 rsp_sess = sess;
         }
 }
