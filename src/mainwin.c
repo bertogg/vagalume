@@ -90,6 +90,17 @@ mainwin_show_window(lastfm_mainwin *w, gboolean show)
         }
 }
 
+/* Don't use gtk_button_new() in Nokia 770 or icons won't appear */
+static GtkWidget *
+new_button(void)
+{
+#ifdef MAEMO2
+        return gtk_button_new_with_label("");
+#else
+        return gtk_button_new();
+#endif
+}
+
 void
 mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
 {
@@ -667,13 +678,12 @@ lastfm_mainwin_create(void)
         buthbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
         ctrlvbox = GTK_BOX(gtk_vbox_new(FALSE, 5));
         /* Buttons */
-        /* Don't use gtk_button_new() or icons won't appear in Nokia 770 */
-        w->play = gtk_button_new_with_label("");
-        w->stop = gtk_button_new_with_label("");
-        w->next = gtk_button_new_with_label("");
-        w->lovebutton = gtk_button_new_with_label("");
-        w->ban = gtk_button_new_with_label("");
-        w->dloadbutton = gtk_button_new_with_label("");
+        w->play = new_button();
+        w->stop = new_button();
+        w->next = new_button();
+        w->lovebutton = new_button();
+        w->ban = new_button();
+        w->dloadbutton = new_button();
         gtk_button_set_image(GTK_BUTTON(w->play),
                              gtk_image_new_from_file(play_icon));
         gtk_button_set_image(GTK_BUTTON(w->stop),
