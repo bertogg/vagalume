@@ -26,6 +26,7 @@ static rsp_session *rsp_sess = NULL;
 static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
 static GList *friends = NULL;
+static GList *tags = NULL;
 static lastfm_track *nowplaying = NULL;
 static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
@@ -165,6 +166,23 @@ set_friend_list(const char *user, GList *list)
                 g_list_foreach(friends, (GFunc) g_free, NULL);
                 g_list_free(friends);
                 friends = list;
+        }
+}
+
+/**
+ * Set the list of tags, deleting the previous one.
+ * @param user The user ID. If it's different from the active user,
+ *             no changes will be made.
+ * @param list The list of tags
+ */
+static void
+set_tag_list(const char *user, GList *list)
+{
+        g_return_if_fail(user != NULL && usercfg != NULL);
+        if (!strcmp(user, usercfg->username)) {
+                g_list_foreach(tags, (GFunc) g_free, NULL);
+                g_list_free(tags);
+                tags = list;
         }
 }
 
@@ -328,8 +346,10 @@ get_user_extradata_thread(gpointer data)
         gboolean finished = FALSE;
         gboolean rsp_ok = FALSE;
         gboolean friends_ok = FALSE;
+        gboolean tags_ok = FALSE;
         rsp_session *sess = NULL;
         GList *friends = NULL;
+        GList *tags = NULL;
         gdk_threads_enter();
         char *user = g_strdup(usercfg->username);
         char *pass = g_strdup(usercfg->password);
@@ -361,7 +381,18 @@ get_user_extradata_thread(gpointer data)
                                 g_warning("Error getting friend list");
                         }
                 }
-                if (rsp_ok && friends_ok) {
+                if (!tags_ok) {
+                        tags_ok = lastfm_get_tags(user, &tags);
+                        if (tags_ok) {
+                                g_debug("Tag list ready");
+                                gdk_threads_enter();
+                                set_tag_list(user, tags);
+                                gdk_threads_leave();
+                        } else {
+                                g_warning("Error getting tag list");
+                        }
+                }
+                if (rsp_ok && friends_ok && tags_ok) {
                         finished = TRUE;
                 } else {
                         gdk_threads_enter();
@@ -408,6 +439,7 @@ controller_open_usercfg(void)
                 set_rsp_session(usercfg->username, NULL);
                 if (userchanged) {
                         set_friend_list(usercfg->username, NULL);
+                        set_tag_list(usercfg->username, NULL);
                 }
                 controller_stop_playing();
         }
@@ -981,9 +1013,10 @@ controller_play_radio(lastfm_radio type)
                         usercfg->username, 100);
         } else if (type == LASTFM_USERTAG_RADIO) {
                 static char *previous = NULL;
-                char *tag = ui_input_dialog(mainwin->window, "Enter tag",
-                                            "Enter one of your tags",
-                                            previous);
+                char *tag;
+                tag = ui_input_dialog_with_list(mainwin->window, "Enter tag",
+                                                "Enter one of your tags",
+                                                tags, previous);
                 if (tag != NULL) {
                         url = lastfm_usertag_radio_url(usercfg->username, tag);
                         /* Store the new value for later use */
@@ -1055,8 +1088,10 @@ controller_play_globaltag_radio(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        char *tag = ui_input_dialog(mainwin->window, "Enter tag",
-                                    "Enter a global tag", previous);
+        char *tag;
+        tag = ui_input_dialog_with_list(mainwin->window, "Enter tag",
+                                        "Enter a global tag",
+                                        tags, previous);
         if (tag != NULL) {
                 url = lastfm_radio_url(LASTFM_GLOBALTAG_RADIO, tag);
                 controller_play_radio_by_url(url);

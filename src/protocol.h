@@ -35,5 +35,6 @@ lastfm_session *lastfm_session_copy(const lastfm_session *session);
 void lastfm_session_destroy(lastfm_session *session);
 gboolean lastfm_set_radio(lastfm_session *s, const char *radio_url);
 gboolean lastfm_get_friends(const char *username, GList **friendlist);
+gboolean lastfm_get_tags(const char *username, GList **taglist);
 
 #endif

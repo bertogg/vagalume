@@ -20,6 +20,8 @@ static const char *handshake_url =
        "?version=" LASTFM_APP_VERSION "&platform=" APP_OS_LC;
 static const char *friends_url =
        "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
+static const char *tags_url =
+       "http://ws.audioscrobbler.com/1.0/user/%s/tags.txt";
 static const char *custom_pls_path =
        "/1.0/webclient/getresourceplaylist.php";
 static const xmlChar *free_track_rel = (xmlChar *)
@@ -409,5 +411,38 @@ lastfm_get_friends(const char *username, GList **friendlist)
         g_free(url);
         g_free(buffer);
         *friendlist = list;
+        return found;
+}
+
+/**
+ * Obtain the list of tags from a user
+ * @param username The user name
+ * @param taglist Where the list of tags (char *) will be written
+ * @return Whether the operation has been successful or not
+ */
+gboolean
+lastfm_get_tags(const char *username, GList **taglist)
+{
+        g_return_val_if_fail(username != NULL && taglist != NULL, FALSE);
+        GList *list = NULL;
+        char *url = g_strdup_printf(tags_url, username);
+        char *buffer = NULL;
+        gboolean found = http_get_buffer(url, &buffer, NULL);
+        if (buffer != NULL) {
+                char **tags = g_strsplit(buffer, "\n", 0);
+                int i;
+                for (i = 0; tags[i] != NULL; i++) {
+                        char **fields = g_strsplit(tags[i], ",", 0);
+                        if (fields[0] && fields[1]) {
+                                char *tag = g_strstrip(fields[1]);
+                                list = g_list_append(list, g_strdup(tag));
+                        }
+                        g_strfreev(fields);
+                }
+                g_strfreev(tags);
+        }
+        g_free(url);
+        g_free(buffer);
+        *taglist = list;
         return found;
 }
