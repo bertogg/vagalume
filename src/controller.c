@@ -382,7 +382,7 @@ get_user_extradata_thread(gpointer data)
                         }
                 }
                 if (!tags_ok) {
-                        tags_ok = lastfm_get_tags(user, &tags);
+                        tags_ok = lastfm_get_user_tags(user, &tags);
                         if (tags_ok) {
                                 g_debug("Tag list ready");
                                 gdk_threads_enter();
