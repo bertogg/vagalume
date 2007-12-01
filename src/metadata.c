@@ -65,9 +65,9 @@ lastfm_get_friends(const char *username, GList **friendlist)
  * Obtain the name of a <tag> attribute in an XML tag list
  * @param doc The XML document
  * @param node The xmlNode pointing to the <tag> attribute
- * @return The name of the tag
+ * @return A newly-allocate string with the name of the tag (or NULL)
  */
-static const char *
+static char *
 get_xml_tag_name(xmlDoc *doc, const xmlNode *node)
 {
         g_return_val_if_fail(node != NULL, NULL);
@@ -75,9 +75,11 @@ get_xml_tag_name(xmlDoc *doc, const xmlNode *node)
         while (child != NULL) {
                 const xmlChar *name = child->name;
                 if (!xmlStrcmp(name, (const xmlChar *) "name")) {
+                        char *tagname = NULL;
                         xmlNode *content = child->xmlChildrenNode;
-                        const char *tagname = (const char *)
-                                xmlNodeListGetString(doc, content, 1);
+                        xmlChar *tag = xmlNodeListGetString(doc, content, 1);
+                        if (tag != NULL) tagname = g_strdup((char *) tag);
+                        xmlFree(tag);
                         return tagname;
                 }
                 child = child->next;
@@ -120,10 +122,9 @@ parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
         while (node != NULL) {
                 const xmlChar *name = node->name;
                 if (!xmlStrcmp(name, (const xmlChar *) "tag")) {
-                        const char *tagname = get_xml_tag_name(doc, node);
+                        char *tagname = get_xml_tag_name(doc, node);
                         if (tagname != NULL) {
-                                *tags = g_list_append(*tags,
-                                                      g_strdup(tagname));
+                                *tags = g_list_append(*tags, tagname);
                         }
                 }
                 node = node->next;
