@@ -21,7 +21,7 @@ static const char *handshake_url =
 static const char *friends_url =
        "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
 static const char *tags_url =
-       "http://ws.audioscrobbler.com/1.0/user/%s/tags.txt";
+       "http://ws.audioscrobbler.com/1.0/user/%s/tags.xml";
 static const char *custom_pls_path =
        "/1.0/webclient/getresourceplaylist.php";
 static const xmlChar *free_track_rel = (xmlChar *)
@@ -284,7 +284,6 @@ lastfm_parse_playlist(const char *buffer, size_t bufsize)
                 lastfm_pls_destroy(pls);
                 pls = NULL;
         }
-        xmlCleanupParser();
         return pls;
 }
 
@@ -415,6 +414,74 @@ lastfm_get_friends(const char *username, GList **friendlist)
 }
 
 /**
+ * Obtain the name of a <tag> attribute in an XML tag list
+ * @param doc The XML document
+ * @param node The xmlNode pointing to the <tag> attribute
+ * @return The name of the tag
+ */
+static const char *
+get_xml_tag_name(xmlDoc *doc, const xmlNode *node)
+{
+        g_return_val_if_fail(node != NULL, NULL);
+        const xmlNode *child = node->xmlChildrenNode;
+        while (child != NULL) {
+                const xmlChar *name = child->name;
+                if (!xmlStrcmp(name, (const xmlChar *) "name")) {
+                        xmlNode *content = child->xmlChildrenNode;
+                        const char *tagname = (const char *)
+                                xmlNodeListGetString(doc, content, 1);
+                        return tagname;
+                }
+                child = child->next;
+        }
+        g_warning("Found <tag> element with no name");
+        return NULL;
+}
+
+/**
+ * Parse an XML tag list
+ * @param buffer A buffer where the XML document is stored
+ * @param bufsize The size of the buffer
+ * @param tags Where the list of tags will be written
+ * @return Whether a list (even an empty list) has been found or not
+ */
+static gboolean
+parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
+{
+        g_return_val_if_fail(buffer && bufsize > 0 && tags, FALSE);
+        xmlDoc *doc = NULL;
+        const xmlNode *node = NULL;
+        gboolean retval = FALSE;
+        *tags = NULL;
+        doc = xmlParseMemory(buffer, bufsize);
+        if (doc != NULL) {
+                node = xmlDocGetRootElement(doc);
+                if (!xmlStrcmp(node->name, (const xmlChar *) "toptags")) {
+                        node = node->xmlChildrenNode;
+                        retval = TRUE;
+                } else {
+                        g_warning("Tag list not in the expected format");
+                        node = NULL;
+                }
+        } else {
+                g_warning("Tag list is not an XML document");
+        }
+        while (node != NULL) {
+                const xmlChar *name = node->name;
+                if (!xmlStrcmp(name, (const xmlChar *) "tag")) {
+                        const char *tagname = get_xml_tag_name(doc, node);
+                        if (tagname != NULL) {
+                                *tags = g_list_append(*tags,
+                                                      g_strdup(tagname));
+                        }
+                }
+                node = node->next;
+        }
+        if (doc != NULL) xmlFreeDoc(doc);
+        return retval;
+}
+
+/**
  * Obtain the list of tags from a user
  * @param username The user name
  * @param taglist Where the list of tags (char *) will be written
@@ -424,25 +491,17 @@ gboolean
 lastfm_get_tags(const char *username, GList **taglist)
 {
         g_return_val_if_fail(username != NULL && taglist != NULL, FALSE);
-        GList *list = NULL;
         char *url = g_strdup_printf(tags_url, username);
         char *buffer = NULL;
-        gboolean found = http_get_buffer(url, &buffer, NULL);
+        size_t bufsize;
+        gboolean found = FALSE;
+        http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) {
-                char **tags = g_strsplit(buffer, "\n", 0);
-                int i;
-                for (i = 0; tags[i] != NULL; i++) {
-                        char **fields = g_strsplit(tags[i], ",", 0);
-                        if (fields[0] && fields[1]) {
-                                char *tag = g_strstrip(fields[1]);
-                                list = g_list_append(list, g_strdup(tag));
-                        }
-                        g_strfreev(fields);
-                }
-                g_strfreev(tags);
+                found = parse_xml_tags(buffer, bufsize, taglist);
+        } else {
+                *taglist = NULL;
         }
         g_free(url);
         g_free(buffer);
-        *taglist = list;
         return found;
 }
