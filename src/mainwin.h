@@ -17,6 +17,7 @@ typedef struct {
         GtkWidget *lovebutton, *ban, *dloadbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
+        GtkWidget *tagalbum, *recommalbum;
         GtkWidget *album_cover;
         GtkWidget *progressbar;
         gboolean is_fullscreen;

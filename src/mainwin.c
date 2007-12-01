@@ -247,6 +247,8 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                                           t->free_track_url != NULL);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
                 gtk_widget_set_sensitive (w->actionsmenu, TRUE);
+                gtk_widget_set_sensitive (w->tagalbum, t->album[0] != '\0');
+                gtk_widget_set_sensitive (w->recommalbum, t->album[0] != '\0');
                 gtk_widget_set_sensitive (w->love, TRUE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 gtk_widget_set_sensitive (w->dload, t->free_track_url != NULL);
@@ -649,6 +651,8 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         w->settings = GTK_WIDGET(settings);
         w->dload = GTK_WIDGET(dload);
         w->love = GTK_WIDGET(love);
+        w->tagalbum = GTK_WIDGET(tagalbum);
+        w->recommalbum = GTK_WIDGET(recommalbum);
         return GTK_WIDGET(bar);
 }
 
