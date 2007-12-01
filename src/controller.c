@@ -12,6 +12,7 @@
 #include <time.h>
 
 #include "controller.h"
+#include "metadata.h"
 #include "scrobbler.h"
 #include "playlist.h"
 #include "audio.h"

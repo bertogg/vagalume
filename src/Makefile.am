@@ -24,6 +24,7 @@ vagalume_SOURCES = \
 	http.c http.h \
 	main.c \
 	mainwin.c mainwin.h \
+	metadata.c metadata.h \
 	playlist.c playlist.h \
 	protocol.c protocol.h \
 	radio.c radio.h \
