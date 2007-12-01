@@ -36,8 +36,10 @@ void lastfm_session_destroy(lastfm_session *session);
 gboolean lastfm_set_radio(lastfm_session *s, const char *radio_url);
 gboolean lastfm_get_friends(const char *username, GList **friendlist);
 gboolean lastfm_get_user_tags(const char *username, GList **taglist);
-gboolean lastfm_get_artist_tags(const lastfm_track *track, GList **taglist);
-gboolean lastfm_get_album_tags(const lastfm_track *track, GList **taglist);
-gboolean lastfm_get_track_tags(const lastfm_track *track, GList **taglist);
+gboolean lastfm_get_user_track_tags(const char *username,
+                                    const lastfm_track *track,
+                                    request_type req, GList **taglist);
+gboolean lastfm_get_track_tags(const lastfm_track *track,
+                               request_type req, GList **taglist);
 
 #endif

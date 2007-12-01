@@ -10,6 +10,12 @@
 
 #include <glib.h>
 
+typedef enum {
+        REQUEST_ARTIST,
+        REQUEST_TRACK,
+        REQUEST_ALBUM
+} request_type;
+
 typedef struct {
         char *stream_url;
         char *title;

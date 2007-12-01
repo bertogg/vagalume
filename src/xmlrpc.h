@@ -12,12 +12,6 @@
 #include <glib.h>
 #include "playlist.h"
 
-typedef enum {
-        REQUEST_ARTIST,
-        REQUEST_TRACK,
-        REQUEST_ALBUM
-} request_type;
-
 gboolean tag_track(const char *user, const char *password,
                    const lastfm_track *track, request_type type, GSList *tags);
 gboolean love_ban_track(const char *user, const char *password,

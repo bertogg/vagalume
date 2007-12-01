@@ -28,6 +28,12 @@ static const char *album_tags_url =
        "http://ws.audioscrobbler.com/1.0/album/%s/%s/toptags.xml";
 static const char *track_tags_url =
        "http://ws.audioscrobbler.com/1.0/track/%s/%s/toptags.xml";
+static const char *user_artist_tags_url =
+       "http://ws.audioscrobbler.com/1.0/user/%s/artisttags.xml?artist=%s";
+static const char *user_album_tags_url =
+ "http://ws.audioscrobbler.com/1.0/user/%s/albumtags.xml?artist=%s&album=%s";
+static const char *user_track_tags_url =
+ "http://ws.audioscrobbler.com/1.0/user/%s/tracktags.xml?artist=%s&track=%s";
 static const char *custom_pls_path =
        "/1.0/webclient/getresourceplaylist.php";
 static const xmlChar *free_track_rel = (xmlChar *)
@@ -462,7 +468,10 @@ parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
         doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
                 node = xmlDocGetRootElement(doc);
-                if (!xmlStrcmp(node->name, (const xmlChar *) "toptags")) {
+                if (!xmlStrcmp(node->name, (const xmlChar *) "toptags") ||
+                    !xmlStrcmp(node->name, (const xmlChar *) "albumtags") ||
+                    !xmlStrcmp(node->name, (const xmlChar *) "artisttags") ||
+                    !xmlStrcmp(node->name, (const xmlChar *) "tracktags")) {
                         node = node->xmlChildrenNode;
                         retval = TRUE;
                 } else {
@@ -527,61 +536,86 @@ lastfm_get_user_tags(const char *username, GList **taglist)
 }
 
 /**
- * Obtain the list of tags from an artist
- * @param track A track from that artist
+ * Obtain the list of tags that the user set to a track
+ * @param username The user ID
+ * @param track The track
+ * @param req Which tags to obtain (artist, album, track)
  * @param taglist Where the list of tags (char *) will be written
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_artist_tags(const lastfm_track *track, GList **taglist)
+lastfm_get_user_track_tags(const char *username, const lastfm_track *track,
+                           request_type req, GList **taglist)
 {
-        g_return_val_if_fail(track != NULL && taglist != NULL, FALSE);
+        g_return_val_if_fail(username && track && taglist, FALSE);
         char *artist = escape_url(track->artist, TRUE);
-        char *url = g_strdup_printf(artist_tags_url, artist);
+        char *album = NULL;
+        char *title = NULL;
+        char *url = NULL;
+        switch (req) {
+        case REQUEST_ARTIST:
+                url = g_strdup_printf(user_artist_tags_url, username, artist);
+                break;
+        case REQUEST_ALBUM:
+                g_return_val_if_fail(track->album[0] != '\0', FALSE);
+                album = escape_url(track->album, TRUE);
+                url = g_strdup_printf(user_album_tags_url, username,
+                                      artist, album);
+                break;
+        case REQUEST_TRACK:
+                title = escape_url(track->title, TRUE);
+                url = g_strdup_printf(user_track_tags_url, username,
+                                      artist, title);
+                break;
+        default:
+                g_return_val_if_reached(FALSE);
+                break;
+        }
         gboolean found = lastfm_get_tags(url, taglist);
-        g_free(artist);
-        g_free(url);
-        return found;
-}
-
-/**
- * Obtain the list of tags from an album
- * @param track A track from that album
- * @param taglist Where the list of tags (char *) will be written
- * @return Whether the operation has been successful or not
- */
-gboolean
-lastfm_get_album_tags(const lastfm_track *track, GList **taglist)
-{
-        g_return_val_if_fail(track != NULL && taglist != NULL, FALSE);
-        char *artist = escape_url(track->artist, TRUE);
-        char *album = escape_url(track->album, TRUE);
-        char *url;
-        url = g_strdup_printf(album_tags_url, artist, album);
-        gboolean found = lastfm_get_tags(url, taglist);
-        g_free(url);
         g_free(artist);
         g_free(album);
+        g_free(title);
+        g_free(url);
         return found;
 }
 
 /**
  * Obtain the list of tags from a track
  * @param track The track
+ * @param req Which tags to obtain (artist, album, track)
  * @param taglist Where the list of tags (char *) will be written
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_track_tags(const lastfm_track *track, GList **taglist)
+lastfm_get_track_tags(const lastfm_track *track, request_type req,
+                      GList **taglist)
 {
         g_return_val_if_fail(track != NULL && taglist != NULL, FALSE);
         char *artist = escape_url(track->artist, TRUE);
-        char *title = escape_url(track->title, TRUE);
-        char *url;
-        url = g_strdup_printf(track_tags_url, artist, title);
+        char *album = NULL;
+        char *title = NULL;
+        char *url = NULL;
+        switch (req) {
+        case REQUEST_ARTIST:
+                url = g_strdup_printf(artist_tags_url, artist);
+                break;
+        case REQUEST_ALBUM:
+                g_return_val_if_fail(track->album[0] != '\0', FALSE);
+                album = escape_url(track->album, TRUE);
+                url = g_strdup_printf(album_tags_url, artist, album);
+                break;
+        case REQUEST_TRACK:
+                title = escape_url(track->title, TRUE);
+                url = g_strdup_printf(track_tags_url, artist, title);
+                break;
+        default:
+                g_return_val_if_reached(FALSE);
+                break;
+        }
         gboolean found = lastfm_get_tags(url, taglist);
-        g_free(url);
         g_free(artist);
+        g_free(album);
         g_free(title);
+        g_free(url);
         return found;
 }
