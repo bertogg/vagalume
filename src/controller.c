@@ -27,7 +27,7 @@ static rsp_session *rsp_sess = NULL;
 static lastfm_mainwin *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
 static GList *friends = NULL;
-static GList *tags = NULL;
+static GList *usertags = NULL;
 static lastfm_track *nowplaying = NULL;
 static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
@@ -171,19 +171,19 @@ set_friend_list(const char *user, GList *list)
 }
 
 /**
- * Set the list of tags, deleting the previous one.
+ * Set the list of user tags, deleting the previous one.
  * @param user The user ID. If it's different from the active user,
  *             no changes will be made.
  * @param list The list of tags
  */
 static void
-set_tag_list(const char *user, GList *list)
+set_user_tag_list(const char *user, GList *list)
 {
         g_return_if_fail(user != NULL && usercfg != NULL);
         if (!strcmp(user, usercfg->username)) {
-                g_list_foreach(tags, (GFunc) g_free, NULL);
-                g_list_free(tags);
-                tags = list;
+                g_list_foreach(usertags, (GFunc) g_free, NULL);
+                g_list_free(usertags);
+                usertags = list;
         }
 }
 
@@ -347,10 +347,10 @@ get_user_extradata_thread(gpointer data)
         gboolean finished = FALSE;
         gboolean rsp_ok = FALSE;
         gboolean friends_ok = FALSE;
-        gboolean tags_ok = FALSE;
+        gboolean usertags_ok = FALSE;
         rsp_session *sess = NULL;
         GList *friends = NULL;
-        GList *tags = NULL;
+        GList *usertags = NULL;
         gdk_threads_enter();
         char *user = g_strdup(usercfg->username);
         char *pass = g_strdup(usercfg->password);
@@ -382,18 +382,18 @@ get_user_extradata_thread(gpointer data)
                                 g_warning("Error getting friend list");
                         }
                 }
-                if (!tags_ok) {
-                        tags_ok = lastfm_get_user_tags(user, &tags);
-                        if (tags_ok) {
+                if (!usertags_ok) {
+                        usertags_ok = lastfm_get_user_tags(user, &usertags);
+                        if (usertags_ok) {
                                 g_debug("Tag list ready");
                                 gdk_threads_enter();
-                                set_tag_list(user, tags);
+                                set_user_tag_list(user, usertags);
                                 gdk_threads_leave();
                         } else {
                                 g_warning("Error getting tag list");
                         }
                 }
-                if (rsp_ok && friends_ok && tags_ok) {
+                if (rsp_ok && friends_ok && usertags_ok) {
                         finished = TRUE;
                 } else {
                         gdk_threads_enter();
@@ -440,7 +440,7 @@ controller_open_usercfg(void)
                 set_rsp_session(usercfg->username, NULL);
                 if (userchanged) {
                         set_friend_list(usercfg->username, NULL);
-                        set_tag_list(usercfg->username, NULL);
+                        set_user_tag_list(usercfg->username, NULL);
                 }
                 controller_stop_playing();
         }
@@ -818,25 +818,22 @@ tag_track_thread(gpointer data)
  * @param type The type of tag (artist, track, album)
  */
 void
-controller_tag_track(request_type type)
+controller_tag_track()
 {
-        g_return_if_fail(usercfg != NULL && nowplaying != NULL);
+        g_return_if_fail(mainwin && usercfg && nowplaying);
+        request_type type = REQUEST_ARTIST;
         char *tags = NULL;
-        const char *text;
-        if (type == REQUEST_ARTIST) {
-                text = "Enter a comma-separated list\nof tags for this artist";
-        } else if (type == REQUEST_TRACK) {
-                text = "Enter a comma-separated list\nof tags for this track";
-        } else {
-                text = "Enter a comma-separated list\nof tags for this album";
-        }
-        tags = ui_input_dialog(mainwin->window, "Enter tags", text, NULL);
+        lastfm_track *track = lastfm_track_copy(nowplaying);
+        tags = lastfm_tagwin_get_tags(mainwin->window, usertags,
+                                      track, &type);
         if (tags != NULL) {
                 tag_data *d = g_new0(tag_data, 1);
-                d->track = lastfm_track_copy(nowplaying);
+                d->track = track;
                 d->taglist = tags;
                 d->type = type;
                 g_thread_create(tag_track_thread,d,FALSE,NULL);
+        } else {
+                lastfm_track_destroy(track);
         }
 }
 
@@ -894,6 +891,7 @@ controller_recomm_track(request_type type)
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         char *rcpt = NULL;
         char *body = NULL;;
+        lastfm_track *track = lastfm_track_copy(nowplaying);
         const char *text = "Recommend to this user...";
         rcpt = ui_input_dialog_with_list(mainwin->window, "Recommendation",
                                          text, friends, NULL);
@@ -904,13 +902,14 @@ controller_recomm_track(request_type type)
         if (body != NULL) {
                 g_strstrip(rcpt);
                 recomm_data *d = g_new0(recomm_data, 1);
-                d->track = lastfm_track_copy(nowplaying);
+                d->track = track;
                 d->rcpt = rcpt;
                 d->text = body;
                 d->type = type;
                 g_thread_create(recomm_track_thread,d,FALSE,NULL);
         } else {
                 controller_show_info("Recommendation cancelled");
+                lastfm_track_destroy(track);
                 g_free(rcpt);
         }
 }
@@ -1017,7 +1016,7 @@ controller_play_radio(lastfm_radio type)
                 char *tag;
                 tag = ui_input_dialog_with_list(mainwin->window, "Enter tag",
                                                 "Enter one of your tags",
-                                                tags, previous);
+                                                usertags, previous);
                 if (tag != NULL) {
                         url = lastfm_usertag_radio_url(usercfg->username, tag);
                         /* Store the new value for later use */
@@ -1092,7 +1091,7 @@ controller_play_globaltag_radio(void)
         char *tag;
         tag = ui_input_dialog_with_list(mainwin->window, "Enter tag",
                                         "Enter a global tag",
-                                        tags, previous);
+                                        usertags, previous);
         if (tag != NULL) {
                 url = lastfm_radio_url(LASTFM_GLOBALTAG_RADIO, tag);
                 controller_play_radio_by_url(url);

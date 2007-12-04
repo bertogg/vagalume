@@ -11,7 +11,16 @@
 
 #include <gtk/gtk.h>
 #include "userconfig.h"
+#include "playlist.h"
 
+typedef struct {
+        GtkWindow *window;
+        GtkEntry *entry;
+        lastfm_track *track;
+} lastfm_tagwin;
+
+char *lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
+                             const lastfm_track *track, request_type *type);
 void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text);
 void ui_warning_dialog(GtkWindow *parent, const char *text);

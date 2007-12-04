@@ -24,7 +24,7 @@ void controller_play_radio_ask_url(void);
 void controller_play_group_radio(void);
 void controller_play_globaltag_radio(void);
 void controller_play_similarartist_radio(void);
-void controller_tag_track(request_type type);
+void controller_tag_track(void);
 void controller_recomm_track(request_type type);
 void controller_add_to_playlist(void);
 void controller_download_track(void);
