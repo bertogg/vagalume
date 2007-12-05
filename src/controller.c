@@ -57,6 +57,20 @@ typedef struct {
         char *image_url;             /* URL of the album cover */
 } getcover_data;
 
+/*
+ * Callback called after check_session() in all cases.
+ * success indicates whether the session has been successfully set
+ * data is user-provided data, and must be freed by the caller
+ */
+typedef void (*check_session_cb)(gboolean success, gpointer data);
+
+typedef struct {
+        char *user;
+        char *pass;
+        check_session_cb cb;
+        gpointer cbdata;
+} check_session_thread_data;
+
 /**
  * Show an error dialog with an OK button
  *
@@ -334,16 +348,16 @@ controller_set_nowplaying(lastfm_track *track)
 }
 
 /**
- * Initializes an RSP session and get list of friends. This is done in
- * a thread to avoid freezing the UI.
+ * Initializes an RSP session and get list of friends. This must be
+ * called only from check_session_thread() !!
  *
  * @param data Not used
  * @return NULL (not used)
  */
-static gpointer
-get_user_extradata_thread(gpointer data)
+static void
+get_user_extradata(void)
 {
-        g_return_val_if_fail(usercfg != NULL && rsp_sess == NULL, NULL);
+        g_return_if_fail(usercfg != NULL && rsp_sess == NULL);
         gboolean finished = FALSE;
         gboolean rsp_ok = FALSE;
         gboolean friends_ok = FALSE;
@@ -406,7 +420,6 @@ get_user_extradata_thread(gpointer data)
         }
         g_free(user);
         g_free(pass);
-        return NULL;
 }
 
 /**
@@ -467,48 +480,101 @@ check_usercfg(void)
 /**
  * Check if there's a Last.fm session opened. If not, try to create
  * one (and an RSP session as well).
+ * This is done in a thread to avoid freezing the UI. After this, the
+ * callback supplied to check_session() will be called, see below for
+ * details
  *
- * FIXME: This is done synchronously so it will freeze the UI during
- * its processing. However this will only happen once each time the
- * program is run, so fortunately it's not that critical.
- *
- * @return TRUE if a session exists, false otherwise
+ * @param userdata A check_session_thread_data, containing the
+ *                 callback and other info necessary for creating
+ *                 a new session.
+ * @return NULL (not used)
  */
-static gboolean
-check_session(void)
+static gpointer
+check_session_thread(gpointer userdata)
 {
-        if (session != NULL) return TRUE;
+        g_return_val_if_fail(userdata != NULL, NULL);
+        check_session_thread_data *data;
+        gboolean connected = FALSE;
         lastfm_err err = LASTFM_ERR_NONE;
-        gboolean retvalue = FALSE;
-        check_usercfg();
-        if (usercfg != NULL) {
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING,
-                                     NULL);
-                flush_ui_events();
-                session = lastfm_session_new(usercfg->username,
-                                             usercfg->password,
-                                             &err);
-        }
-        if (session == NULL || session->id == NULL) {
+        lastfm_session *s;
+        data = (check_session_thread_data *) userdata;
+        s = lastfm_session_new(data->user, data->pass, &err);
+        if (s == NULL || s->id == NULL) {
+                gdk_threads_enter();
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED,
                                      NULL);
-                if (usercfg == NULL) {
-                        controller_show_warning("You need to enter your "
-                                                "Last.fm\nusername and "
-                                                "password to be able\n"
-                                                "to use this program.");
-                } else if (err == LASTFM_ERR_LOGIN) {
+                if (err == LASTFM_ERR_LOGIN) {
                         controller_show_warning("Unable to login to Last.fm\n"
                                                 "Check username and password");
                 } else {
                         controller_show_warning("Network connection error");
                 }
+                gdk_threads_leave();
         } else {
+                gdk_threads_enter();
+                session = s;
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED, NULL);
-                retvalue = TRUE;
-                g_thread_create(get_user_extradata_thread, NULL, FALSE, NULL);
+                gdk_threads_leave();
+                connected = TRUE;
         }
-        return retvalue;
+        /* Call the callback */
+        if (data->cb != NULL) {
+                gdk_threads_enter();
+                (*(data->cb))(connected, data->cbdata);
+                gdk_threads_leave();
+        }
+        /* Free memory */
+        g_free(data->user);
+        g_free(data->pass);
+        g_free(data);
+        if (connected) {
+                get_user_extradata();
+        }
+        return NULL;
+}
+
+/**
+ * Check if there's a Last.fm session opened. If not, try to create
+ * one (and an RSP session as well).
+ * The actual connection is performed in check_session_thread() to
+ * avoid freezing the UI
+ *
+ * @param cb A callback that will be called after the check, with a
+ *           boolean as its first parameter indicating whether a valid
+ *           session exists or not
+ * @param cbdata Second parameter that will be passed to the callback,
+ *               must be freed by the caller (if necessary)
+ */
+static void
+check_session(check_session_cb cb, gpointer cbdata)
+{
+        if (session != NULL) {
+                if (cb != NULL) (*cb)(TRUE, cbdata);
+        } else {
+                check_usercfg();
+                if (usercfg != NULL) {
+                        check_session_thread_data *data;
+                        data = g_new(check_session_thread_data, 1);
+                        data->user = g_strdup(usercfg->username);
+                        data->pass = g_strdup(usercfg->password);
+                        data->cb = cb;
+                        data->cbdata = cbdata;
+                        g_thread_create(check_session_thread, data,
+                                        FALSE, NULL);
+                        mainwin_set_ui_state(mainwin,
+                                             LASTFM_UI_STATE_CONNECTING,
+                                             NULL);
+                } else {
+                        mainwin_set_ui_state(mainwin,
+                                             LASTFM_UI_STATE_DISCONNECTED,
+                                             NULL);
+                        controller_show_warning("You need to enter your "
+                                                "Last.fm\nusername and "
+                                                "password to be able\n"
+                                                "to use this program.");
+                        if (cb != NULL) (*cb)(FALSE, cbdata);
+                }
+        }
 }
 
 /**
@@ -611,13 +677,18 @@ controller_audio_started_cb(void)
 /**
  * Play the next track from the playlist, getting a new playlist if
  * necessary, see start_playing_get_pls_thread().
+ *
+ * This is the callback of controller_start_playing()
+ *
+ * @param connected Whether a valid session exists or not
+ * @param userdata Not used
  */
-void
-controller_start_playing(void)
+static void
+controller_start_playing_cb(gboolean connected, gpointer userdata)
 {
+        if (!connected) return;
         lastfm_track *track = NULL;
         g_return_if_fail(mainwin && playlist && nowplaying == NULL);
-        if (!check_session()) return;
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING, NULL);
         if (lastfm_pls_size(playlist) == 0) {
                 lastfm_session *s = lastfm_session_copy(session);
@@ -635,6 +706,20 @@ controller_start_playing(void)
                                   (GCallback) controller_audio_started_cb,
                                   NULL);
         }
+}
+
+/**
+ * Play the next track from the playlist, getting a new playlist if
+ * necessary, see start_playing_get_pls_thread().
+ * This only calls check_session() the actual code is in
+ * controller_start_playing_cb()
+ */
+void
+controller_start_playing(void)
+{
+        check_session_cb cb;
+        cb = (check_session_cb) controller_start_playing_cb;
+        check_session(cb, NULL);
 }
 
 /**
@@ -970,12 +1055,18 @@ controller_add_to_playlist(void)
  * Start playing a radio by its URL, stopping the current track if
  * necessary
  *
- * @param url The URL of the radio to be played
+ * This is the callback of check_session()
+ *
+ * @param connected Whether a valid session exists or not
+ * @param url The URL of the radio to be played (freed by this function)
  */
-void
-controller_play_radio_by_url(const char *url)
+static void
+controller_play_radio_by_url_cb(gboolean connected, char *url)
 {
-        if (!check_session()) return;
+        if (!connected) {
+                g_free(url);
+                return;
+        }
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
@@ -996,17 +1087,39 @@ controller_play_radio_by_url(const char *url)
                 controller_stop_playing();
                 controller_show_info("Invalid radio URL");
         }
+        g_free(url);
+}
+
+/**
+ * Start playing a radio by its URL, stopping the current track if
+ * necessary
+ * This only calls check_session() the actual code is in
+ * controller_play_radio_by_url_cb()
+ *
+ * @param url The URL of the radio to be played
+ */
+void
+controller_play_radio_by_url(const char *url)
+{
+        check_session_cb cb;
+        cb = (check_session_cb) controller_play_radio_by_url_cb;
+        check_session(cb, g_strdup(url));
 }
 
 /**
  * Start playing a radio by its type. In all cases it will be the
  * radio of the user running the application, not someone else's radio
- * @param type Radio type
+ *
+ * This is the callback of controller_play_radio()
+ *
+ * @param connected Whether a valid session exists or not
+ * @param userdata The radio type (passed as a gpointer)
  */
-void
-controller_play_radio(lastfm_radio type)
+static void
+controller_play_radio_cb(gboolean connected, gpointer userdata)
 {
-        if (!check_session()) return;
+        if (!connected) return;
+        lastfm_radio type = GPOINTER_TO_INT(userdata);
         char *url = NULL;
         if (type == LASTFM_RECOMMENDED_RADIO) {
                 url = lastfm_recommended_radio_url(
@@ -1033,14 +1146,35 @@ controller_play_radio(lastfm_radio type)
 }
 
 /**
- * Start playing other user's radio by its type. It will pop up a
- * dialog to ask the user whose radio is going to be played
+ * Start playing a radio by its type. In all cases it will be the
+ * radio of the user running the application, not someone else's radio
+ *
+ * This only calls check_session() the actual code is in
+ * controller_play_radio_cb()
+ *
  * @param type Radio type
  */
 void
-controller_play_others_radio(lastfm_radio type)
+controller_play_radio(lastfm_radio type)
 {
-        if (!check_session()) return;
+        check_session_cb cb;
+        cb = (check_session_cb) controller_play_radio_cb;
+        check_session(cb, GINT_TO_POINTER(type));
+}
+
+/**
+ * Start playing other user's radio by its type. It will pop up a
+ * dialog to ask the user whose radio is going to be played
+ * This is the callback of controller_play_radio()
+ *
+ * @param connected Whether a valid session exists or not
+ * @param userdata The radio type (passed as a gpointer)
+ */
+static void
+controller_play_others_radio_cb(gboolean connected, gpointer userdata)
+{
+        if (!connected) return;
+        lastfm_radio type = GPOINTER_TO_INT(userdata);
         static char *previous = NULL;
         char *url = NULL;
         char *user = ui_input_dialog_with_list(mainwin->window,
@@ -1056,6 +1190,23 @@ controller_play_others_radio(lastfm_radio type)
                 g_free(previous);
                 previous = user;
         }
+}
+
+/**
+ * Start playing other user's radio by its type. It will pop up a
+ * dialog to ask the user whose radio is going to be played
+ *
+ * This only calls check_session() the actual code is in
+ * controller_play_others_radio_cb()
+ *
+ * @param type Radio type
+ */
+void
+controller_play_others_radio(lastfm_radio type)
+{
+        check_session_cb cb;
+        cb = (check_session_cb) controller_play_others_radio_cb;
+        check_session(cb, GINT_TO_POINTER(type));
 }
 
 /**
