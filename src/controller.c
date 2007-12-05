@@ -59,15 +59,16 @@ typedef struct {
 
 /*
  * Callback called after check_session() in all cases.
- * success indicates whether the session has been successfully set
  * data is user-provided data, and must be freed by the caller
+ * Different callbacks must be supplied for success and failure
  */
-typedef void (*check_session_cb)(gboolean success, gpointer data);
+typedef void (*check_session_cb)(gpointer data);
 
 typedef struct {
         char *user;
         char *pass;
-        check_session_cb cb;
+        check_session_cb success_cb;
+        check_session_cb failure_cb;
         gpointer cbdata;
 } check_session_thread_data;
 
@@ -518,11 +519,13 @@ check_session_thread(gpointer userdata)
                 connected = TRUE;
         }
         /* Call the callback */
-        if (data->cb != NULL) {
-                gdk_threads_enter();
-                (*(data->cb))(connected, data->cbdata);
-                gdk_threads_leave();
+        gdk_threads_enter();
+        if (connected && data->success_cb != NULL) {
+                (*(data->success_cb))(data->cbdata);
+        } else if (!connected && data->failure_cb != NULL) {
+                (*(data->failure_cb))(data->cbdata);
         }
+        gdk_threads_leave();
         /* Free memory */
         g_free(data->user);
         g_free(data->pass);
@@ -539,17 +542,17 @@ check_session_thread(gpointer userdata)
  * The actual connection is performed in check_session_thread() to
  * avoid freezing the UI
  *
- * @param cb A callback that will be called after the check, with a
- *           boolean as its first parameter indicating whether a valid
- *           session exists or not
- * @param cbdata Second parameter that will be passed to the callback,
+ * @param success_cb A callback in case this function succeeds
+ * @param failure_cb A callback in case this function fails
+ * @param cbdata Parameter that will be passed to both callbacks,
  *               must be freed by the caller (if necessary)
  */
 static void
-check_session(check_session_cb cb, gpointer cbdata)
+check_session(check_session_cb success_cb, check_session_cb failure_cb,
+              gpointer cbdata)
 {
         if (session != NULL) {
-                if (cb != NULL) (*cb)(TRUE, cbdata);
+                if (success_cb != NULL) (*success_cb)(cbdata);
         } else {
                 check_usercfg();
                 if (usercfg != NULL) {
@@ -557,7 +560,8 @@ check_session(check_session_cb cb, gpointer cbdata)
                         data = g_new(check_session_thread_data, 1);
                         data->user = g_strdup(usercfg->username);
                         data->pass = g_strdup(usercfg->password);
-                        data->cb = cb;
+                        data->success_cb = success_cb;
+                        data->failure_cb = failure_cb;
                         data->cbdata = cbdata;
                         g_thread_create(check_session_thread, data,
                                         FALSE, NULL);
@@ -572,7 +576,7 @@ check_session(check_session_cb cb, gpointer cbdata)
                                                 "Last.fm\nusername and "
                                                 "password to be able\n"
                                                 "to use this program.");
-                        if (cb != NULL) (*cb)(FALSE, cbdata);
+                        if (failure_cb != NULL) (*failure_cb)(cbdata);
                 }
         }
 }
@@ -678,15 +682,13 @@ controller_audio_started_cb(void)
  * Play the next track from the playlist, getting a new playlist if
  * necessary, see start_playing_get_pls_thread().
  *
- * This is the callback of controller_start_playing()
+ * This is the success callback of controller_start_playing()
  *
- * @param connected Whether a valid session exists or not
  * @param userdata Not used
  */
 static void
-controller_start_playing_cb(gboolean connected, gpointer userdata)
+controller_start_playing_cb(gpointer userdata)
 {
-        if (!connected) return;
         lastfm_track *track = NULL;
         g_return_if_fail(mainwin && playlist && nowplaying == NULL);
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING, NULL);
@@ -719,7 +721,7 @@ controller_start_playing(void)
 {
         check_session_cb cb;
         cb = (check_session_cb) controller_start_playing_cb;
-        check_session(cb, NULL);
+        check_session(cb, NULL, NULL);
 }
 
 /**
@@ -1055,18 +1057,13 @@ controller_add_to_playlist(void)
  * Start playing a radio by its URL, stopping the current track if
  * necessary
  *
- * This is the callback of check_session()
+ * This is the success callback of controller_play_radio_by_url()
  *
- * @param connected Whether a valid session exists or not
  * @param url The URL of the radio to be played (freed by this function)
  */
 static void
-controller_play_radio_by_url_cb(gboolean connected, char *url)
+controller_play_radio_by_url_cb(char *url)
 {
-        if (!connected) {
-                g_free(url);
-                return;
-        }
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
@@ -1103,22 +1100,20 @@ controller_play_radio_by_url(const char *url)
 {
         check_session_cb cb;
         cb = (check_session_cb) controller_play_radio_by_url_cb;
-        check_session(cb, g_strdup(url));
+        check_session(cb, (check_session_cb) g_free, g_strdup(url));
 }
 
 /**
  * Start playing a radio by its type. In all cases it will be the
  * radio of the user running the application, not someone else's radio
  *
- * This is the callback of controller_play_radio()
+ * This is the success callback of controller_play_radio()
  *
- * @param connected Whether a valid session exists or not
  * @param userdata The radio type (passed as a gpointer)
  */
 static void
-controller_play_radio_cb(gboolean connected, gpointer userdata)
+controller_play_radio_cb(gpointer userdata)
 {
-        if (!connected) return;
         lastfm_radio type = GPOINTER_TO_INT(userdata);
         char *url = NULL;
         if (type == LASTFM_RECOMMENDED_RADIO) {
@@ -1159,21 +1154,20 @@ controller_play_radio(lastfm_radio type)
 {
         check_session_cb cb;
         cb = (check_session_cb) controller_play_radio_cb;
-        check_session(cb, GINT_TO_POINTER(type));
+        check_session(cb, NULL, GINT_TO_POINTER(type));
 }
 
 /**
  * Start playing other user's radio by its type. It will pop up a
  * dialog to ask the user whose radio is going to be played
- * This is the callback of controller_play_radio()
  *
- * @param connected Whether a valid session exists or not
+ * This is the success callback of controller_play_radio()
+ *
  * @param userdata The radio type (passed as a gpointer)
  */
 static void
-controller_play_others_radio_cb(gboolean connected, gpointer userdata)
+controller_play_others_radio_cb(gpointer userdata)
 {
-        if (!connected) return;
         lastfm_radio type = GPOINTER_TO_INT(userdata);
         static char *previous = NULL;
         char *url = NULL;
@@ -1206,7 +1200,7 @@ controller_play_others_radio(lastfm_radio type)
 {
         check_session_cb cb;
         cb = (check_session_cb) controller_play_others_radio_cb;
-        check_session(cb, GINT_TO_POINTER(type));
+        check_session(cb, NULL, GINT_TO_POINTER(type));
 }
 
 /**
