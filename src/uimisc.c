@@ -216,6 +216,7 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
         dialog = ui_base_dialog(parent, title);
         label = gtk_label_new(text);
         combo = gtk_combo_box_entry_new_with_model(model, 0);
+        g_object_unref(G_OBJECT(model));
         gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
         gtk_box_pack_start(GTK_BOX(dialog->vbox), combo, FALSE, FALSE, 10);
         gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -265,6 +266,7 @@ artist_track_album_selection_combo(const lastfm_track *t)
                 g_free(text);
         }
         combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
+        g_object_unref(G_OBJECT(store));
         renderer = gtk_cell_renderer_text_new();
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo),
@@ -359,6 +361,8 @@ lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
         globalmodel = ui_create_options_list(NULL);
         usercombo = gtk_combo_box_new_with_model(usermodel);
         globalcombo = gtk_combo_box_new_with_model(globalmodel);
+        g_object_unref(G_OBJECT(usermodel));
+        g_object_unref(G_OBJECT(globalmodel));
         userrender = gtk_cell_renderer_text_new();
         globalrender = gtk_cell_renderer_text_new();
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(usercombo),
