@@ -19,6 +19,12 @@
 #endif
 #include <string.h>
 
+enum {
+        ARTIST_TRACK_ALBUM_TYPE = 0,
+        ARTIST_TRACK_ALBUM_TEXT,
+        ARTIST_TRACK_ALBUM_NCOLS
+};
+
 void
 flush_ui_events(void)
 {
@@ -224,6 +230,49 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
         return retvalue;
 }
 
+static GtkWidget *
+artist_track_album_selection_combo(const lastfm_track *t)
+{
+        g_return_val_if_fail(t != NULL, NULL);
+        char *text;
+        GtkWidget *combo;
+        GtkCellRenderer *renderer;
+        GtkTreeIter iter;
+        GtkListStore *store;
+        store = gtk_list_store_new(ARTIST_TRACK_ALBUM_NCOLS,
+                                   G_TYPE_INT, G_TYPE_STRING);
+
+        text = g_strconcat("Artist: ", t->artist, NULL);
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter,
+                           ARTIST_TRACK_ALBUM_TYPE, REQUEST_ARTIST,
+                           ARTIST_TRACK_ALBUM_TEXT, text, -1);
+        g_free(text);
+
+        text = g_strconcat("Track: ", t->title, NULL);
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter,
+                           ARTIST_TRACK_ALBUM_TYPE, REQUEST_TRACK,
+                           ARTIST_TRACK_ALBUM_TEXT, text, -1);
+        g_free(text);
+
+        if (t->album[0] != '\0') {
+                text = g_strconcat("Album: ", t->album, NULL);
+                gtk_list_store_append(store, &iter);
+                gtk_list_store_set(store, &iter,
+                                   ARTIST_TRACK_ALBUM_TYPE, REQUEST_ALBUM,
+                                   ARTIST_TRACK_ALBUM_TEXT, text, -1);
+                g_free(text);
+        }
+        combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
+        renderer = gtk_cell_renderer_text_new();
+        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+        gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo),
+                                       renderer, "text", 1, NULL);
+
+        return combo;
+}
+
 static void
 tagwin_selection_changed(GtkComboBox *combo, gpointer data)
 {
@@ -262,11 +311,9 @@ lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
 {
         g_return_val_if_fail(track != NULL && type != NULL, NULL);
         lastfm_tagwin *t;
-        gint rows = track->album[0] == '\0' ? 2 : 3;
-        char *text = NULL, *retvalue = NULL;
-        GtkBox *combosbox, *userbox, *globalbox;
-        GtkTable *selector;
-        GtkWidget *chooselabel, *seltrack, *selartist, *selalbum;
+        char *retvalue = NULL;
+        GtkBox *combosbox, *userbox, *globalbox, *selbox;
+        GtkWidget *sellabel, *selcombo;
         GtkWidget *entrylabel, *entry;
         GtkWidget *userlabel, *usercombo, *globallabel, *globalcombo;
         GtkTreeModel *usermodel, *globalmodel;
@@ -278,43 +325,23 @@ lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
         gtk_box_set_homogeneous(GTK_BOX(dialog->vbox), FALSE);
         gtk_box_set_spacing(GTK_BOX(dialog->vbox), 5);
 
-        /* Table to select what to tag */
-        selector = GTK_TABLE(gtk_table_new(rows, 2, FALSE));
-        chooselabel = gtk_label_new("Tag this ...");
+        /* Combo to select what to tag */
+        selbox = GTK_BOX(gtk_hbox_new(FALSE, 10));
+        sellabel = gtk_label_new("Tag this");
+        selcombo = artist_track_album_selection_combo(track);
+        gtk_box_pack_start(selbox, sellabel, FALSE, FALSE, 0);
+        gtk_box_pack_start(selbox, selcombo, TRUE, TRUE, 0);
 
-        text = g_strconcat("_Artist: ", track->artist, NULL);
-        selartist = gtk_radio_button_new_with_mnemonic(NULL, text);
-        g_free(text);
-
-        text = g_strconcat("_Track: ", track->title, NULL);
-        seltrack = gtk_radio_button_new_with_mnemonic_from_widget(
-                GTK_RADIO_BUTTON(selartist), text);
-        g_free(text);
-
-        gtk_table_attach_defaults(selector, chooselabel, 0, 1, 0, rows);
-        gtk_table_attach_defaults(selector, selartist, 1, 2, 0, 1);
-        gtk_table_attach_defaults(selector, seltrack, 1, 2, 1, 2);
-
-        if (rows == 3) {
-                text = g_strconcat("A_lbum: ", track->album, NULL);
-                selalbum = gtk_radio_button_new_with_mnemonic_from_widget(
-                        GTK_RADIO_BUTTON(selartist), text);
-                g_free(text);
-                gtk_table_attach_defaults(selector, selalbum, 1, 2, 2, 3);
-        }
         switch (*type) {
-        case REQUEST_ALBUM:
-                g_return_val_if_fail(rows == 3, NULL);
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(selalbum),
-                                             TRUE);
-                break;
         case REQUEST_ARTIST:
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(selartist),
-                                             TRUE);
+                gtk_combo_box_set_active(GTK_COMBO_BOX(selcombo), 0);
                 break;
         case REQUEST_TRACK:
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(seltrack),
-                                             TRUE);
+                gtk_combo_box_set_active(GTK_COMBO_BOX(selcombo), 1);
+                break;
+        case REQUEST_ALBUM:
+                g_return_val_if_fail(track->album[0] != '\0', NULL);
+                gtk_combo_box_set_active(GTK_COMBO_BOX(selcombo), 2);
                 break;
         default:
                 g_return_val_if_reached(NULL);
@@ -343,13 +370,13 @@ lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(globalcombo),
                                        globalrender, "text", 0, NULL);
 
-        /* Boxes for combos */
+        /* Boxes for tag combos */
         combosbox = GTK_BOX(gtk_hbox_new(TRUE, 10));
         userbox = GTK_BOX(gtk_vbox_new(TRUE, 0));
         globalbox = GTK_BOX(gtk_vbox_new(TRUE, 0));
 
         /* Widget packing */
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(selector),
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(selbox),
                            FALSE, FALSE, 0);
         gtk_box_pack_start(GTK_BOX(dialog->vbox), entrylabel, TRUE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(dialog->vbox), entry, TRUE, TRUE, 0);
@@ -377,19 +404,12 @@ lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
                 retvalue = g_strdup(gtk_entry_get_text(t->entry));
-                if (gtk_toggle_button_get_active(
-                            GTK_TOGGLE_BUTTON(seltrack))) {
-                        *type = REQUEST_TRACK;
-                } else if (gtk_toggle_button_get_active(
-                                   GTK_TOGGLE_BUTTON(selalbum))) {
-                        *type = REQUEST_ALBUM;
-                } else if (gtk_toggle_button_get_active(
-                                   GTK_TOGGLE_BUTTON(selartist))) {
-                        *type = REQUEST_ARTIST;
-                } else {
-                        lastfm_tagwin_destroy(t);
-                        g_return_val_if_reached(NULL);
-                }
+                GtkTreeModel *model;
+                GtkTreeIter iter;
+                model = gtk_combo_box_get_model(GTK_COMBO_BOX(selcombo));
+                gtk_combo_box_get_active_iter(GTK_COMBO_BOX(selcombo), &iter);
+                gtk_tree_model_get(model, &iter,
+                                   ARTIST_TRACK_ALBUM_TYPE, type, -1);
         }
         lastfm_tagwin_destroy(t);
         return retvalue;
