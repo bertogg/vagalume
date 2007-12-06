@@ -27,6 +27,7 @@ static int http_pipe[2] = { -1, -1 };
 static GThread *http_thread = NULL;
 static gboolean audio_started = FALSE;
 static GCallback audio_started_callback = NULL;
+static GMainLoop *loop = NULL;
 
 static void
 close_previous_playback(void)
@@ -70,8 +71,6 @@ get_audio_thread(gpointer userdata)
 static gboolean
 bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 {
-        GMainLoop *loop = (GMainLoop *) data;
-
         switch (GST_MESSAGE_TYPE (msg)) {
         case GST_MESSAGE_ERROR: {
                 gchar *debug;
@@ -130,7 +129,6 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 gboolean
 lastfm_audio_init(void)
 {
-        GMainLoop *loop;
         GstBus *bus;
         failed_tracks_mutex = g_mutex_new();
         /* initialize GStreamer */
@@ -152,7 +150,7 @@ lastfm_audio_init(void)
                 return FALSE;
         }
         bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
-        gst_bus_add_watch (bus, bus_call, loop);
+        gst_bus_add_watch (bus, bus_call, NULL);
         gst_object_unref (bus);
 
 #ifdef MAEMO
@@ -213,6 +211,7 @@ lastfm_audio_clear(void)
         gst_object_unref (GST_OBJECT (pipeline));
         pipeline = NULL;
         close_previous_playback();
+        g_main_loop_unref(loop);
 }
 
 guint
