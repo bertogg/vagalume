@@ -305,6 +305,7 @@ lastfm_tagwin_destroy(lastfm_tagwin *w)
 {
         gtk_widget_destroy(GTK_WIDGET(w->window));
         lastfm_track_destroy(w->track);
+        g_free(w);
 }
 
 char *
