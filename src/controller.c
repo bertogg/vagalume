@@ -1319,22 +1319,7 @@ void
 controller_quit_app(void)
 {
         controller_stop_playing();
-        lastfm_audio_clear();
         mainwin_quit_app();
-        lastfm_session_destroy(session);
-        session = NULL;
-        rsp_session_destroy(rsp_sess);
-        rsp_sess = NULL;
-        g_free(mainwin);
-        mainwin = NULL;
-        lastfm_pls_destroy(playlist);
-        playlist = NULL;
-        if (usercfg != NULL) {
-                set_user_tag_list(usercfg->username, NULL);
-                set_friend_list(usercfg->username, NULL);
-                lastfm_usercfg_destroy(usercfg);
-                usercfg = NULL;
-        }
 }
 
 /**
@@ -1373,6 +1358,21 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         }
 
         mainwin_run_app();
+
+        lastfm_session_destroy(session);
+        session = NULL;
+        rsp_session_destroy(rsp_sess);
+        rsp_sess = NULL;
+        lastfm_pls_destroy(playlist);
+        playlist = NULL;
+        lastfm_mainwin_destroy(mainwin);
         mainwin = NULL;
+        if (usercfg != NULL) {
+                set_user_tag_list(usercfg->username, NULL);
+                set_friend_list(usercfg->username, NULL);
+                lastfm_usercfg_destroy(usercfg);
+                usercfg = NULL;
+        }
+        lastfm_audio_clear();
         lastfm_dbus_close();
 }

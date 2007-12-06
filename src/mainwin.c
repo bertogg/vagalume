@@ -637,6 +637,12 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         return GTK_WIDGET(bar);
 }
 
+void
+lastfm_mainwin_destroy(lastfm_mainwin *w)
+{
+        g_free(w);
+}
+
 lastfm_mainwin *
 lastfm_mainwin_create(void)
 {

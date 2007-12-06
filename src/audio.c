@@ -211,6 +211,7 @@ lastfm_audio_clear(void)
         gst_object_unref (GST_OBJECT (pipeline));
         pipeline = NULL;
         close_previous_playback();
+        if (http_thread != NULL) g_thread_join(http_thread);
         g_main_loop_unref(loop);
 }
 

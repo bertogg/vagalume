@@ -32,6 +32,7 @@ typedef enum {
 } lastfm_ui_state;
 
 lastfm_mainwin *lastfm_mainwin_create(void);
+void lastfm_mainwin_destroy(lastfm_mainwin *w);
 void mainwin_show_window(lastfm_mainwin *w, gboolean show);
 void mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state s,
                           const lastfm_track *t);
