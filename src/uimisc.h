@@ -13,25 +13,8 @@
 #include "userconfig.h"
 #include "playlist.h"
 
-typedef struct {
-        GtkWindow *window;
-        GtkEntry *entry;
-        GtkComboBox *selcombo;
-        GtkComboBox *globalcombo;
-        GtkWidget *globallabel;
-        lastfm_track *track;
-        char *tags_artist;
-        char *tags_track;
-        char *tags_album;
-        GtkTreeModel *poptags_artist;
-        GtkTreeModel *poptags_track;
-        GtkTreeModel *poptags_album;
-        gboolean updating_artist, updating_track, updating_album;
-        int refcount;
-} lastfm_tagwin;
-
-char *lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
-                             const lastfm_track *track, request_type *type);
+char *tagwin_get_tags(GtkWindow *parent, GList *usertags,
+                      const lastfm_track *track, request_type *type);
 void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text);
 void ui_warning_dialog(GtkWindow *parent, const char *text);

@@ -23,7 +23,24 @@
 static void tagwin_selcombo_changed(GtkComboBox *combo, gpointer data);
 
 typedef struct {
-        lastfm_tagwin *w;
+        GtkWindow *window;
+        GtkEntry *entry;
+        GtkComboBox *selcombo;
+        GtkComboBox *globalcombo;
+        GtkWidget *globallabel;
+        lastfm_track *track;
+        char *tags_artist;
+        char *tags_track;
+        char *tags_album;
+        GtkTreeModel *poptags_artist;
+        GtkTreeModel *poptags_track;
+        GtkTreeModel *poptags_album;
+        gboolean updating_artist, updating_track, updating_album;
+        int refcount;
+} tagwin;
+
+typedef struct {
+        tagwin *w;
         request_type type;
 } get_track_tags_data;
 
@@ -297,8 +314,8 @@ artist_track_album_combo_get_selected(GtkComboBox *combo)
 }
 
 
-void
-lastfm_tagwin_destroy(lastfm_tagwin *w)
+static void
+tagwin_destroy(tagwin *w)
 {
         g_return_if_fail(w != NULL);
         gtk_widget_destroy(GTK_WIDGET(w->window));
@@ -309,31 +326,31 @@ lastfm_tagwin_destroy(lastfm_tagwin *w)
         if (w->poptags_artist) g_object_unref(w->poptags_artist);
         if (w->poptags_track) g_object_unref(w->poptags_track);
         if (w->poptags_album) g_object_unref(w->poptags_album);
-        g_slice_free(lastfm_tagwin, w);
+        g_slice_free(tagwin, w);
 }
 
-lastfm_tagwin *
-lastfm_tagwin_create(void)
+static tagwin *
+tagwin_create(void)
 {
-        lastfm_tagwin *w = g_slice_new0(lastfm_tagwin);
+        tagwin *w = g_slice_new0(tagwin);
         w->refcount = 1;
         return w;
 }
 
-lastfm_tagwin *
-lastfm_tagwin_ref(lastfm_tagwin *w)
+static tagwin *
+tagwin_ref(tagwin *w)
 {
         g_return_val_if_fail (w != NULL && w->refcount > 0, NULL);
         w->refcount++;
         return w;
 }
 
-void
-lastfm_tagwin_unref(lastfm_tagwin *w)
+static void
+tagwin_unref(tagwin *w)
 {
         g_return_if_fail (w != NULL && w->refcount > 0);
         w->refcount--;
-        if (w->refcount == 0) lastfm_tagwin_destroy(w);
+        if (w->refcount == 0) tagwin_destroy(w);
 }
 
 static gpointer
@@ -341,30 +358,31 @@ get_track_tags_thread(gpointer userdata)
 {
         get_track_tags_data *data = (get_track_tags_data *) userdata;
         g_return_val_if_fail(data && data->w && data->w->track, NULL);
+        GtkTreeModel *model;
         GList *list = NULL;
-        gboolean found;
-        found = lastfm_get_track_tags(data->w->track, data->type, &list);
+
+        lastfm_get_track_tags(data->w->track, data->type, &list);
+
         gdk_threads_enter();
-        if (found) {
-                GtkTreeModel *model = ui_create_options_list(list);
-                switch (data->type) {
-                case REQUEST_ARTIST:
-                        data->w->poptags_artist = model;
-                        break;
-                case REQUEST_TRACK:
-                        data->w->poptags_track = model;
-                        break;
-                case REQUEST_ALBUM:
-                        data->w->poptags_album = model;
-                        break;
-                default:
-                        gdk_threads_leave();
-                        g_return_val_if_reached(NULL);
-                }
+        model = ui_create_options_list(list);
+        switch (data->type) {
+        case REQUEST_ARTIST:
+                data->w->poptags_artist = model;
+                break;
+        case REQUEST_TRACK:
+                data->w->poptags_track = model;
+                break;
+        case REQUEST_ALBUM:
+                data->w->poptags_album = model;
+                break;
+        default:
+                gdk_threads_leave();
+                g_return_val_if_reached(NULL);
         }
         tagwin_selcombo_changed(data->w->selcombo, data->w);
-        lastfm_tagwin_unref(data->w);
+        tagwin_unref(data->w);
         gdk_threads_leave();
+
         g_list_foreach(list, (GFunc) g_free, NULL);
         g_list_free(list);
         g_slice_free(get_track_tags_data, data);
@@ -374,7 +392,7 @@ get_track_tags_thread(gpointer userdata)
 static void
 tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
 {
-        lastfm_tagwin *w = (lastfm_tagwin *) data;
+        tagwin *w = (tagwin *) data;
         GtkTreeModel *model = NULL;
         gboolean updated = TRUE;
         request_type type = artist_track_album_combo_get_selected(combo);
@@ -404,7 +422,7 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
         }
         if (!updated) {
                 get_track_tags_data *data = g_slice_new(get_track_tags_data);
-                data->w = lastfm_tagwin_ref(w);
+                data->w = tagwin_ref(w);
                 data->type = type;
                 g_thread_create(get_track_tags_thread, data, FALSE, NULL);
         }
@@ -416,7 +434,7 @@ static void
 tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 {
         if (gtk_combo_box_get_active(combo) == -1) return;
-        lastfm_tagwin *w = (lastfm_tagwin *) data;
+        tagwin *w = (tagwin *) data;
         g_return_if_fail(w != NULL && w->entry != NULL);
         char *current = g_strchomp(g_strdup(gtk_entry_get_text(w->entry)));
         const char *selected = gtk_combo_box_get_active_text(combo);
@@ -438,11 +456,11 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 }
 
 char *
-lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
+tagwin_get_tags(GtkWindow *parent, GList *usertags,
                        const lastfm_track *track, request_type *type)
 {
         g_return_val_if_fail(track != NULL && type != NULL, NULL);
-        lastfm_tagwin *t;
+        tagwin *t;
         char *retvalue = NULL;
         GtkBox *combosbox, *userbox, *globalbox, *selbox;
         GtkWidget *sellabel, *selcombo;
@@ -523,7 +541,7 @@ lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
         gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(combosbox),
                            TRUE, TRUE, 0);
 
-        t = lastfm_tagwin_create();
+        t = tagwin_create();
         t->track = lastfm_track_copy(track);
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
@@ -548,6 +566,6 @@ lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
                         GTK_COMBO_BOX(selcombo));
         }
         gtk_widget_hide(GTK_WIDGET(t->window));
-        lastfm_tagwin_unref(t);
+        tagwin_unref(t);
         return retvalue;
 }
