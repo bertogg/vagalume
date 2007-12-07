@@ -16,7 +16,18 @@
 typedef struct {
         GtkWindow *window;
         GtkEntry *entry;
+        GtkComboBox *selcombo;
+        GtkComboBox *globalcombo;
+        GtkWidget *globallabel;
         lastfm_track *track;
+        char *tags_artist;
+        char *tags_track;
+        char *tags_album;
+        GtkTreeModel *poptags_artist;
+        GtkTreeModel *poptags_track;
+        GtkTreeModel *poptags_album;
+        gboolean updating_artist, updating_track, updating_album;
+        int refcount;
 } lastfm_tagwin;
 
 char *lastfm_tagwin_get_tags(GtkWindow *parent, GList *usertags,
