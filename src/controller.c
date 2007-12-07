@@ -911,7 +911,8 @@ controller_tag_track()
         request_type type = REQUEST_ARTIST;
         char *tags = NULL;
         lastfm_track *track = lastfm_track_copy(nowplaying);
-        tags = tagwin_get_tags(mainwin->window, usertags, track, &type);
+        tags = tagwin_get_tags(mainwin->window, usercfg->username, usertags,
+                               track, &type);
         if (tags != NULL) {
                 tag_data *d = g_new0(tag_data, 1);
                 d->track = track;

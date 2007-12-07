@@ -13,7 +13,7 @@
 #include "userconfig.h"
 #include "playlist.h"
 
-char *tagwin_get_tags(GtkWindow *parent, GList *usertags,
+char *tagwin_get_tags(GtkWindow *parent, const char *user, GList *usertags,
                       const lastfm_track *track, request_type *type);
 void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text);

@@ -9,6 +9,7 @@
 #include "config.h"
 #include "uimisc.h"
 #include "metadata.h"
+#include "util.h"
 
 #include <gtk/gtk.h>
 #if defined(MAEMO2) || defined(MAEMO3)
@@ -24,11 +25,13 @@ static void tagwin_selcombo_changed(GtkComboBox *combo, gpointer data);
 
 typedef struct {
         GtkWindow *window;
+        GtkWidget *entrylabel;
         GtkEntry *entry;
         GtkComboBox *selcombo;
         GtkComboBox *globalcombo;
         GtkWidget *globallabel;
         lastfm_track *track;
+        char *user;
         char *tags_artist;
         char *tags_track;
         char *tags_album;
@@ -320,6 +323,7 @@ tagwin_destroy(tagwin *w)
         g_return_if_fail(w != NULL);
         gtk_widget_destroy(GTK_WIDGET(w->window));
         lastfm_track_destroy(w->track);
+        g_free(w->user);
         g_free(w->tags_artist);
         g_free(w->tags_track);
         g_free(w->tags_album);
@@ -359,21 +363,29 @@ get_track_tags_thread(gpointer userdata)
         get_track_tags_data *data = (get_track_tags_data *) userdata;
         g_return_val_if_fail(data && data->w && data->w->track, NULL);
         GtkTreeModel *model;
-        GList *list = NULL;
+        char *usertags;
+        GList *userlist = NULL;
+        GList *globallist = NULL;
 
-        lastfm_get_track_tags(data->w->track, data->type, &list);
+        lastfm_get_user_track_tags(data->w->user, data->w->track,
+                                   data->type, &userlist);
+        lastfm_get_track_tags(data->w->track, data->type, &globallist);
 
         gdk_threads_enter();
-        model = ui_create_options_list(list);
+        usertags = str_glist_join(userlist, ", ");
+        model = ui_create_options_list(globallist);
         switch (data->type) {
         case REQUEST_ARTIST:
                 data->w->poptags_artist = model;
+                data->w->tags_artist = usertags;
                 break;
         case REQUEST_TRACK:
                 data->w->poptags_track = model;
+                data->w->tags_track = usertags;
                 break;
         case REQUEST_ALBUM:
                 data->w->poptags_album = model;
+                data->w->tags_album = usertags;
                 break;
         default:
                 gdk_threads_leave();
@@ -383,8 +395,10 @@ get_track_tags_thread(gpointer userdata)
         tagwin_unref(data->w);
         gdk_threads_leave();
 
-        g_list_foreach(list, (GFunc) g_free, NULL);
-        g_list_free(list);
+        g_list_foreach(userlist, (GFunc) g_free, NULL);
+        g_list_free(userlist);
+        g_list_foreach(globallist, (GFunc) g_free, NULL);
+        g_list_free(globallist);
         g_slice_free(get_track_tags_data, data);
         return NULL;
 }
@@ -394,22 +408,26 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
 {
         tagwin *w = (tagwin *) data;
         GtkTreeModel *model = NULL;
+        const char *usertags = NULL;
         gboolean updated = TRUE;
         request_type type = artist_track_album_combo_get_selected(combo);
         switch (type) {
         case REQUEST_ARTIST:
                 model = w->poptags_artist;
+                usertags = w->tags_artist;
                 updated = w->updating_artist;
                 w->updating_artist = TRUE;
                 break;
         case REQUEST_TRACK:
                 model = w->poptags_track;
+                usertags = w->tags_track;
                 updated = w->updating_track;
                 w->updating_track = TRUE;
                 break;
         case REQUEST_ALBUM:
                 g_return_if_fail(w->track->album[0] != '\0');
                 model = w->poptags_album;
+                usertags = w->tags_album;
                 updated = w->updating_album;
                 w->updating_album = TRUE;
                 break;
@@ -426,6 +444,9 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
                 data->type = type;
                 g_thread_create(get_track_tags_thread, data, FALSE, NULL);
         }
+        gtk_entry_set_text(w->entry, usertags ? usertags : "");
+        gtk_entry_set_editable(w->entry, updated);
+        gtk_widget_set_sensitive(GTK_WIDGET(w->entrylabel), updated);
         gtk_widget_set_sensitive(GTK_WIDGET(w->globalcombo), updated);
         gtk_widget_set_sensitive(GTK_WIDGET(w->globallabel), updated);
 }
@@ -456,10 +477,10 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 }
 
 char *
-tagwin_get_tags(GtkWindow *parent, GList *usertags,
-                       const lastfm_track *track, request_type *type)
+tagwin_get_tags(GtkWindow *parent, const char *user, GList *usertags,
+                const lastfm_track *track, request_type *type)
 {
-        g_return_val_if_fail(track != NULL && type != NULL, NULL);
+        g_return_val_if_fail(track && type && user, NULL);
         tagwin *t;
         char *retvalue = NULL;
         GtkBox *combosbox, *userbox, *globalbox, *selbox;
@@ -545,9 +566,11 @@ tagwin_get_tags(GtkWindow *parent, GList *usertags,
         t->track = lastfm_track_copy(track);
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
+        t->entrylabel = entrylabel;
         t->selcombo = GTK_COMBO_BOX(selcombo);
         t->globalcombo = GTK_COMBO_BOX(globalcombo);
         t->globallabel = globallabel;
+        t->user = g_strdup(user);
 
         /* Signals */
         g_signal_connect(G_OBJECT(selcombo), "changed",

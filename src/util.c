@@ -14,7 +14,6 @@
 #include "md5/md5.h"
 #endif
 
-#include <glib.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -63,4 +62,26 @@ compute_auth_token(const char *password, const char *timestamp)
         g_free(md5password);
         g_free(tmp);
         return retval;
+}
+
+/**
+ * Joins all the strings (char *) in a GList using an optional
+ * separator between them
+ * @param list The GList
+ * @param separator The separator
+ * @return A newly allocated string
+ */
+char *
+str_glist_join(const GList *list, const char *separator)
+{
+        if (list == NULL) return g_strdup("");
+        const GList *iter = list;
+        GString *str = g_string_sized_new(100);
+        for (; iter != NULL; iter = iter->next) {
+                str = g_string_append(str, (char *) iter->data);
+                if (iter->next != NULL && separator != NULL) {
+                        str = g_string_append(str, separator);
+                }
+        }
+        return g_string_free(str, FALSE);
 }
