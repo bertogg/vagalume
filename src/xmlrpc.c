@@ -153,7 +153,7 @@ xmlrpc_send_request(const char *request, const char *name)
 }
 
 /**
- * Tags an artist, track or album, Previous tags won't be overwritten.
+ * Tags an artist, track or album, Previous tags will be overwritten.
  *
  * @param user The user's Last.fm ID
  * @param password The user's password
@@ -173,7 +173,7 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
         const char *method;
         param1 = string_param(track->artist);
         param3 = array_param(tags);
-        param4 = string_param("append");        /* use "set" to overwrite */
+        param4 = string_param("set");                  /* or use "append" */
         if (type == REQUEST_ARTIST) {
                 method = "tagArtist";
                 param2 = NULL;
