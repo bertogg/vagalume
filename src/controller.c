@@ -911,8 +911,8 @@ controller_tag_track()
         request_type type = REQUEST_ARTIST;
         char *tags = NULL;
         lastfm_track *track = lastfm_track_copy(nowplaying);
-        tags = tagwin_get_tags(mainwin->window, usercfg->username, usertags,
-                               track, &type);
+        tags = tagwin_run(mainwin->window, usercfg->username, usertags,
+                          track, &type);
         if (tags != NULL) {
                 tag_data *d = g_new0(tag_data, 1);
                 d->track = track;
@@ -966,27 +966,21 @@ recomm_track_thread(gpointer data)
 }
 
 /**
- * Ask the user a recipient and recommend the current artist, track or
- * album album (yes, the name of the function is misleading but I
- * can't think of a better one)
- *
- * @param type The type of recommendation (artist, track, album)
+ * Ask the user a recipient and a message and recommend the current
+ * artist, track or album (chosen by the user)
  */
 void
-controller_recomm_track(request_type type)
+controller_recomm_track(void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         char *rcpt = NULL;
-        char *body = NULL;;
+        char *body = NULL;
+        request_type type = REQUEST_TRACK;
         lastfm_track *track = lastfm_track_copy(nowplaying);
-        const char *text = "Recommend to this user...";
-        rcpt = ui_input_dialog_with_list(mainwin->window, "Recommendation",
-                                         text, friends, NULL);
-        if (rcpt != NULL) {
-                body = ui_input_dialog(mainwin->window, "Recommendation",
-                                       "Recommendation message", NULL);
-        }
-        if (body != NULL) {
+        gboolean accept;
+        accept = recommwin_run(mainwin->window, &rcpt, &body, friends,
+                               track, &type);
+        if (accept && rcpt && body && rcpt[0] && body[0]) {
                 g_strstrip(rcpt);
                 recomm_data *d = g_new0(recomm_data, 1);
                 d->track = track;
@@ -995,9 +989,13 @@ controller_recomm_track(request_type type)
                 d->type = type;
                 g_thread_create(recomm_track_thread,d,FALSE,NULL);
         } else {
-                controller_show_info("Recommendation cancelled");
+                if (accept) {
+                        controller_show_info("You must type a user name\n"
+                                             "and a recommendation message.");
+                }
                 lastfm_track_destroy(track);
                 g_free(rcpt);
+                g_free(body);
         }
 }
 

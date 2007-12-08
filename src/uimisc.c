@@ -260,7 +260,7 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
         return retvalue;
 }
 
-static GtkWidget *
+static GtkComboBox *
 artist_track_album_selection_combo(const lastfm_track *t)
 {
         g_return_val_if_fail(t != NULL, NULL);
@@ -301,7 +301,7 @@ artist_track_album_selection_combo(const lastfm_track *t)
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo),
                                        renderer, "text", 1, NULL);
 
-        return combo;
+        return GTK_COMBO_BOX(combo);
 }
 
 static request_type
@@ -478,14 +478,15 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 }
 
 char *
-tagwin_get_tags(GtkWindow *parent, const char *user, const GList *usertags,
-                const lastfm_track *track, request_type *type)
+tagwin_run(GtkWindow *parent, const char *user, const GList *usertags,
+           const lastfm_track *track, request_type *type)
 {
         g_return_val_if_fail(track && type && user, NULL);
         tagwin *t;
         char *retvalue = NULL;
         GtkBox *combosbox, *userbox, *globalbox, *selbox;
-        GtkWidget *sellabel, *selcombo;
+        GtkWidget *sellabel;
+        GtkComboBox *selcombo;
         GtkWidget *entrylabel, *entry;
         GtkWidget *userlabel, *usercombo, *globallabel, *globalcombo;
         GtkTreeModel *usermodel, *globalmodel;
@@ -502,18 +503,18 @@ tagwin_get_tags(GtkWindow *parent, const char *user, const GList *usertags,
         sellabel = gtk_label_new("Tag this");
         selcombo = artist_track_album_selection_combo(track);
         gtk_box_pack_start(selbox, sellabel, FALSE, FALSE, 0);
-        gtk_box_pack_start(selbox, selcombo, TRUE, TRUE, 0);
+        gtk_box_pack_start(selbox, GTK_WIDGET(selcombo), TRUE, TRUE, 0);
 
         switch (*type) {
         case REQUEST_ARTIST:
-                gtk_combo_box_set_active(GTK_COMBO_BOX(selcombo), 0);
+                gtk_combo_box_set_active(selcombo, 0);
                 break;
         case REQUEST_TRACK:
-                gtk_combo_box_set_active(GTK_COMBO_BOX(selcombo), 1);
+                gtk_combo_box_set_active(selcombo, 1);
                 break;
         case REQUEST_ALBUM:
                 g_return_val_if_fail(track->album[0] != '\0', NULL);
-                gtk_combo_box_set_active(GTK_COMBO_BOX(selcombo), 2);
+                gtk_combo_box_set_active(selcombo, 2);
                 break;
         default:
                 g_return_val_if_reached(NULL);
@@ -568,7 +569,7 @@ tagwin_get_tags(GtkWindow *parent, const char *user, const GList *usertags,
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
         t->entrylabel = entrylabel;
-        t->selcombo = GTK_COMBO_BOX(selcombo);
+        t->selcombo = selcombo;
         t->globalcombo = GTK_COMBO_BOX(globalcombo);
         t->globallabel = globallabel;
         t->user = g_strdup(user);
@@ -581,15 +582,111 @@ tagwin_get_tags(GtkWindow *parent, const char *user, const GList *usertags,
         g_signal_connect(G_OBJECT(globalcombo), "changed",
                          G_CALLBACK(tagwin_tagcombo_changed), t);
 
-        tagwin_selcombo_changed(t->selcombo, t);
+        tagwin_selcombo_changed(selcombo, t);
         gtk_widget_grab_focus(entry);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
                 retvalue = g_strdup(gtk_entry_get_text(t->entry));
-                *type = artist_track_album_combo_get_selected(
-                        GTK_COMBO_BOX(selcombo));
+                *type = artist_track_album_combo_get_selected(selcombo);
         }
         gtk_widget_hide(GTK_WIDGET(t->window));
         tagwin_unref(t);
         return retvalue;
+}
+
+gboolean
+recommwin_run(GtkWindow *parent, char **user, char **message,
+              const GList *friends, const lastfm_track *track,
+              request_type *type)
+{
+        g_return_val_if_fail(user && message && track && type, FALSE);
+        gboolean retval = FALSE;
+        GtkDialog *dialog;
+        GtkTreeModel *usermodel;
+        GtkBox *selbox, *userbox;
+        GtkWidget *sellabel;
+        GtkComboBox *selcombo;
+        GtkWidget *userlabel, *usercombo;
+        GtkWidget *textframe, *textlabel;
+        GtkTextView *textview;
+        GtkWidget *sw;
+
+        /* Dialog and basic settings */
+        dialog = ui_base_dialog(parent, "Send a recommendation");
+        gtk_box_set_homogeneous(GTK_BOX(dialog->vbox), FALSE);
+        gtk_box_set_spacing(GTK_BOX(dialog->vbox), 5);
+
+        /* Combo to select what to recommend */
+        selbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
+        sellabel = gtk_label_new("Recommend this");
+        selcombo = artist_track_album_selection_combo(track);
+        gtk_box_pack_start(selbox, sellabel, FALSE, FALSE, 0);
+        gtk_box_pack_start(selbox, GTK_WIDGET(selcombo), TRUE, TRUE, 0);
+
+        switch (*type) {
+        case REQUEST_ARTIST:
+                gtk_combo_box_set_active(selcombo, 0);
+                break;
+        case REQUEST_TRACK:
+                gtk_combo_box_set_active(selcombo, 1);
+                break;
+        case REQUEST_ALBUM:
+                g_return_val_if_fail(track->album[0] != '\0', FALSE);
+                gtk_combo_box_set_active(selcombo, 2);
+                break;
+        default:
+                g_return_val_if_reached(FALSE);
+                break;
+        }
+
+        /* Combo to select the recipient of the recommendation */
+        userbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
+        userlabel = gtk_label_new("Send recommendation to");
+        usermodel = ui_create_options_list(friends);
+        usercombo = gtk_combo_box_entry_new_with_model(usermodel, 0);
+        g_object_unref(usermodel);
+        gtk_box_pack_start(userbox, userlabel, FALSE, FALSE, 0);
+        gtk_box_pack_start(userbox, usercombo, TRUE, TRUE, 0);
+
+        /* Message of the recommendation */
+        textlabel = gtk_label_new("Recommendation message");
+        textframe = gtk_frame_new(NULL);
+        sw = gtk_scrolled_window_new(NULL, NULL);
+        textview = GTK_TEXT_VIEW(gtk_text_view_new());
+        g_object_set(textframe, "height-request", 50, NULL);
+        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),
+                                       GTK_POLICY_AUTOMATIC,
+                                       GTK_POLICY_AUTOMATIC);
+        gtk_text_view_set_accepts_tab(textview, FALSE);
+        gtk_text_view_set_wrap_mode(textview, GTK_WRAP_WORD_CHAR);
+        gtk_container_add(GTK_CONTAINER(textframe), GTK_WIDGET(sw));
+        gtk_container_add(GTK_CONTAINER(sw), GTK_WIDGET(textview));
+
+        /* Widget packing */
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(selbox),
+                           FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(userbox),
+                           FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(textlabel),
+                           TRUE, TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(textframe),
+                           TRUE, TRUE, 0);
+
+        gtk_widget_show_all(GTK_WIDGET(dialog));
+        if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
+                GtkEntry *entry = GTK_ENTRY(GTK_BIN(usercombo)->child);
+                GtkTextIter start, end;
+                GtkTextBuffer *buf = gtk_text_view_get_buffer(textview);
+                gtk_text_buffer_get_bounds(buf, &start, &end);
+                *message = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
+                *type = artist_track_album_combo_get_selected(selcombo);
+                *user = g_strstrip(g_strdup(gtk_entry_get_text(entry)));
+                retval = TRUE;
+        } else {
+                *message = NULL;
+                *user = NULL;
+                retval = FALSE;
+        }
+        gtk_widget_destroy(GTK_WIDGET(dialog));
+        return retval;
 }

@@ -247,7 +247,6 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                                           t->free_track_url != NULL);
                 gtk_widget_set_sensitive (w->radiomenu, TRUE);
                 gtk_widget_set_sensitive (w->actionsmenu, TRUE);
-                gtk_widget_set_sensitive (w->recommalbum, t->album[0] != '\0');
                 gtk_widget_set_sensitive (w->love, TRUE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 gtk_widget_set_sensitive (w->dload, t->free_track_url != NULL);
@@ -410,8 +409,7 @@ tag_track_selected(GtkWidget *widget, gpointer data)
 static void
 recomm_track_selected(GtkWidget *widget, gpointer data)
 {
-        request_type type = GPOINTER_TO_INT(data);
-        controller_recomm_track(type);
+        controller_recomm_track();
 }
 
 static void
@@ -455,8 +453,6 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
         GtkWidget *love, *ban, *tag, *dorecomm, *addtopls, *dload;
-        GtkMenuShell *dorecommsub;
-        GtkWidget *recommartist, *recommtrack, *recommalbum;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
         GtkWidget *about;
@@ -572,44 +568,28 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         /* Actions */
         actions = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Actions"));
         actionssub = GTK_MENU_SHELL(gtk_menu_new());
-        dorecommsub = GTK_MENU_SHELL(gtk_menu_new());
         love = gtk_menu_item_new_with_label("Love this track");
         ban = gtk_menu_item_new_with_label("Ban this track");
         addtopls = gtk_menu_item_new_with_label("Add to playlist");
         dload = gtk_menu_item_new_with_label("Download this track");
         tag = gtk_menu_item_new_with_label("Tag...");
-        dorecomm = gtk_menu_item_new_with_label("Recommend");
-        recommartist = gtk_menu_item_new_with_label("This artist...");
-        recommtrack = gtk_menu_item_new_with_label("This track...");
-        recommalbum = gtk_menu_item_new_with_label("This album...");
+        dorecomm = gtk_menu_item_new_with_label("Recommend...");
         gtk_menu_shell_append(bar, GTK_WIDGET(actions));
         gtk_menu_item_set_submenu(actions, GTK_WIDGET(actionssub));
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(dorecomm),
-                                  GTK_WIDGET(dorecommsub));
         gtk_menu_shell_append(actionssub, love);
         gtk_menu_shell_append(actionssub, ban);
         gtk_menu_shell_append(actionssub, addtopls);
         gtk_menu_shell_append(actionssub, dload);
         gtk_menu_shell_append(actionssub, tag);
         gtk_menu_shell_append(actionssub, dorecomm);
-        gtk_menu_shell_append(dorecommsub, recommartist);
-        gtk_menu_shell_append(dorecommsub, recommtrack);
-        gtk_menu_shell_append(dorecommsub, recommalbum);
         g_signal_connect(G_OBJECT(love), "activate",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(ban), "activate",
                          G_CALLBACK(ban_track_selected), NULL);
         g_signal_connect(G_OBJECT(tag), "activate",
                          G_CALLBACK(tag_track_selected), NULL);
-        g_signal_connect(G_OBJECT(recommartist), "activate",
-                         G_CALLBACK(recomm_track_selected),
-                         GINT_TO_POINTER(REQUEST_ARTIST));
-        g_signal_connect(G_OBJECT(recommtrack), "activate",
-                         G_CALLBACK(recomm_track_selected),
-                         GINT_TO_POINTER(REQUEST_TRACK));
-        g_signal_connect(G_OBJECT(recommalbum), "activate",
-                         G_CALLBACK(recomm_track_selected),
-                         GINT_TO_POINTER(REQUEST_ALBUM));
+        g_signal_connect(G_OBJECT(dorecomm), "activate",
+                         G_CALLBACK(recomm_track_selected), NULL);
         g_signal_connect(G_OBJECT(addtopls), "activate",
                          G_CALLBACK(add_to_playlist_selected), NULL);
         g_signal_connect(G_OBJECT(dload), "activate",
@@ -633,7 +613,6 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         w->settings = GTK_WIDGET(settings);
         w->dload = GTK_WIDGET(dload);
         w->love = GTK_WIDGET(love);
-        w->recommalbum = GTK_WIDGET(recommalbum);
         return GTK_WIDGET(bar);
 }
 

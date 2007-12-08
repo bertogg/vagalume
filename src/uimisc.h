@@ -13,9 +13,11 @@
 #include "userconfig.h"
 #include "playlist.h"
 
-char *tagwin_get_tags(GtkWindow *parent, const char *user,
-                      const GList *usertags, const lastfm_track *track,
-                      request_type *type);
+char *tagwin_run(GtkWindow *parent, const char *user, const GList *usertags,
+                 const lastfm_track *track, request_type *type);
+gboolean recommwin_run(GtkWindow *parent, char **user, char **message,
+                       const GList *friends, const lastfm_track *track,
+                       request_type *type);
 void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text);
 void ui_warning_dialog(GtkWindow *parent, const char *text);
