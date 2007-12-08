@@ -13,8 +13,9 @@
 #include "userconfig.h"
 #include "playlist.h"
 
-char *tagwin_get_tags(GtkWindow *parent, const char *user, GList *usertags,
-                      const lastfm_track *track, request_type *type);
+char *tagwin_get_tags(GtkWindow *parent, const char *user,
+                      const GList *usertags, const lastfm_track *track,
+                      request_type *type);
 void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text);
 void ui_warning_dialog(GtkWindow *parent, const char *text);
@@ -22,7 +23,7 @@ void ui_error_dialog(GtkWindow *parent, const char *text);
 char *ui_input_dialog(GtkWindow *parent, const char *title,
                       const char *text, const char *value);
 char *ui_input_dialog_with_list(GtkWindow *parent, const char *title,
-                                const char *text, GList *elems,
+                                const char *text, const GList *elems,
                                 const char *value);
 gboolean ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg);
 gboolean ui_confirm_dialog(GtkWindow *parent, const char *text);

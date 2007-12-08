@@ -218,10 +218,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
 }
 
 static GtkTreeModel *
-ui_create_options_list(GList *elems)
+ui_create_options_list(const GList *elems)
 {
         GtkTreeIter iter;
-        GList *current = elems;
+        const GList *current = elems;
         GtkListStore *store = gtk_list_store_new (1, G_TYPE_STRING);;
 
         for (; current != NULL; current = g_list_next(current)) {
@@ -233,7 +233,8 @@ ui_create_options_list(GList *elems)
 
 char *
 ui_input_dialog_with_list(GtkWindow *parent, const char *title,
-                          const char *text, GList *elems, const char *value)
+                          const char *text, const GList *elems,
+                          const char *value)
 {
         GtkDialog *dialog;
         GtkWidget *label;
@@ -477,7 +478,7 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 }
 
 char *
-tagwin_get_tags(GtkWindow *parent, const char *user, GList *usertags,
+tagwin_get_tags(GtkWindow *parent, const char *user, const GList *usertags,
                 const lastfm_track *track, request_type *type)
 {
         g_return_val_if_fail(track && type && user, NULL);
