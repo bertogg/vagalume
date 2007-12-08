@@ -10,7 +10,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, libgst0.10-dsp
 Description: A small Last.fm client for Gnome and Maemo
  Vagalume is a Last.fm client designed for the Gnome desktop
- environment. It's small and doesn't have much features yet but it has
+ environment. It's small and doesn't have many features yet but it has
  the most basic functionalities. Vagalume is also designed to work in
  the Maemo platform, used by some Nokia devices such as the N800 and N810
 XB-Maemo-Icon-26:
