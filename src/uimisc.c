@@ -477,13 +477,14 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
         gtk_combo_box_set_active(combo, -1);
 }
 
-char *
-tagwin_run(GtkWindow *parent, const char *user, const GList *usertags,
-           const lastfm_track *track, request_type *type)
+gboolean
+tagwin_run(GtkWindow *parent, const char *user, char **newtags,
+           const GList *usertags, const lastfm_track *track,
+           request_type *type)
 {
-        g_return_val_if_fail(track && type && user, NULL);
+        g_return_val_if_fail(track && type && user && newtags, FALSE);
         tagwin *t;
-        char *retvalue = NULL;
+        gboolean retvalue = FALSE;
         GtkBox *combosbox, *userbox, *globalbox, *selbox;
         GtkWidget *sellabel;
         GtkComboBox *selcombo;
@@ -513,11 +514,11 @@ tagwin_run(GtkWindow *parent, const char *user, const GList *usertags,
                 gtk_combo_box_set_active(selcombo, 1);
                 break;
         case REQUEST_ALBUM:
-                g_return_val_if_fail(track->album[0] != '\0', NULL);
+                g_return_val_if_fail(track->album[0] != '\0', FALSE);
                 gtk_combo_box_set_active(selcombo, 2);
                 break;
         default:
-                g_return_val_if_reached(NULL);
+                g_return_val_if_reached(FALSE);
                 break;
         }
 
@@ -586,8 +587,12 @@ tagwin_run(GtkWindow *parent, const char *user, const GList *usertags,
         gtk_widget_grab_focus(entry);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
-                retvalue = g_strdup(gtk_entry_get_text(t->entry));
+                *newtags = g_strdup(gtk_entry_get_text(t->entry));
                 *type = artist_track_album_combo_get_selected(selcombo);
+                retvalue = TRUE;
+        } else {
+                *newtags = NULL;
+                retvalue = FALSE;
         }
         gtk_widget_hide(GTK_WIDGET(t->window));
         tagwin_unref(t);

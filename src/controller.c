@@ -911,15 +911,19 @@ controller_tag_track()
         request_type type = REQUEST_ARTIST;
         char *tags = NULL;
         lastfm_track *track = lastfm_track_copy(nowplaying);
-        tags = tagwin_run(mainwin->window, usercfg->username, usertags,
-                          track, &type);
-        if (tags != NULL) {
+        gboolean accept;
+        accept = tagwin_run(mainwin->window, usercfg->username, &tags,
+                            usertags, track, &type);
+        if (accept && tags != NULL && tags[0] != '\0') {
                 tag_data *d = g_new0(tag_data, 1);
                 d->track = track;
                 d->taglist = tags;
                 d->type = type;
                 g_thread_create(tag_track_thread,d,FALSE,NULL);
         } else {
+                if (accept) {
+                        controller_show_info("You must type a list of tags");
+                }
                 lastfm_track_destroy(track);
         }
 }
