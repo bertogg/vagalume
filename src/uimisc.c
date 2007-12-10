@@ -529,7 +529,13 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         /* Combo boxes */
         userlabel = gtk_label_new("Your favourite tags");
         globallabel = gtk_label_new("Popular tags for this");
-        usermodel = ui_create_options_list(usertags);
+        if (usertags != NULL) {
+                usermodel = ui_create_options_list(usertags);
+        } else {
+                GList *nonelist = g_list_append(NULL, "(none)");
+                usermodel = ui_create_options_list(nonelist);
+                g_list_free(nonelist);
+        }
         globalmodel = ui_create_options_list(NULL);
         usercombo = gtk_combo_box_new_with_model(usermodel);
         globalcombo = gtk_combo_box_new_with_model(globalmodel);
@@ -545,6 +551,11 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
                                        userrender, "text", 0, NULL);
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(globalcombo),
                                        globalrender, "text", 0, NULL);
+        if (usertags == NULL) {
+                gtk_widget_set_sensitive(GTK_WIDGET(userlabel), FALSE);
+                gtk_widget_set_sensitive(GTK_WIDGET(usercombo), FALSE);
+                gtk_combo_box_set_active(GTK_COMBO_BOX(usercombo), 0);
+        }
 
         /* Boxes for tag combos */
         combosbox = GTK_BOX(gtk_hbox_new(TRUE, 10));
