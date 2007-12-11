@@ -11,6 +11,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "connection.h"
 #include "controller.h"
 #include "metadata.h"
 #include "scrobbler.h"
@@ -532,6 +533,17 @@ check_session_thread(gpointer userdata)
 }
 
 /**
+ * This is the callback of connection_go_online(). It'll just create
+ * a thread and let the process continue
+ * @param data A pointer with data to pass to the thread
+ */
+static void
+check_session_conn_cb(gpointer data)
+{
+        g_thread_create(check_session_thread, data, FALSE, NULL);
+}
+
+/**
  * Check if there's a Last.fm session opened. If not, try to create
  * one (and an RSP session as well).
  * The actual connection is performed in check_session_thread() to
@@ -558,8 +570,7 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
                         data->success_cb = success_cb;
                         data->failure_cb = failure_cb;
                         data->cbdata = cbdata;
-                        g_thread_create(check_session_thread, data,
-                                        FALSE, NULL);
+                        connection_go_online(check_session_conn_cb, data);
                         mainwin_set_ui_state(mainwin,
                                              LASTFM_UI_STATE_CONNECTING,
                                              NULL);
@@ -1363,6 +1374,9 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
                 return;
         }
         errmsg = lastfm_dbus_init();
+        if (!errmsg) {
+                errmsg = connection_init();
+        }
         if (errmsg) {
                 controller_show_error(errmsg);
                 return;

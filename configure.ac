@@ -116,6 +116,12 @@ if test "$PLATFORM" = "maemo"; then
    EXTRA_CFLAGS="$EXTRA_CFLAGS $OSSO_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $OSSO_LIBS"
 
+   PKG_CHECK_MODULES(CONIC, conic, [have_conic=1], [have_conic=0])
+   if test "$have_conic" = "1"; then
+      EXTRA_CFLAGS="$EXTRA_CFLAGS $CONIC_CFLAGS"
+      EXTRA_LIBS="$EXTRA_LIBS $CONIC_LIBS"
+   fi
+
    desktopentrydir=`$PKG_CONFIG osso-af-settings --variable=desktopentrydir`
    serviceentrydir=`$PKG_CONFIG osso-af-settings --variable=dbusservicedir`
 
@@ -150,6 +156,11 @@ fi
 AM_CONDITIONAL(HAVE_DBUS_SUPPORT, test -n "$serviceentrydir")
 if test -n "$serviceentrydir"; then
    AC_DEFINE([HAVE_DBUS_SUPPORT], [1], [Defined if compiling with D-BUS])
+fi
+
+AM_CONDITIONAL(HAVE_CONIC, test "$have_conic" = "1")
+if test "$have_conic" = "1"; then
+   AC_DEFINE([HAVE_CONIC], [1], [Defined if building with libconic])
 fi
 
 AC_SUBST(appdatadir, "\${datadir}/vagalume")

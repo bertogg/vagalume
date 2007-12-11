@@ -18,6 +18,7 @@ vagalume_CFLAGS= $(EXTRA_CFLAGS) -DAPP_DATA_DIR=\"$(appdatadir)\" \
 
 vagalume_SOURCES = \
 	audio.c audio.h \
+	connection.h \
 	controller.c controller.h \
 	dbus.h \
 	globaldefs.h \
@@ -36,6 +37,10 @@ vagalume_SOURCES = \
 
 if USE_INTERNAL_MD5
 vagalume_SOURCES += md5/md5.c md5/md5.h
+endif
+
+if HAVE_CONIC
+vagalume_SOURCES += connection.c
 endif
 
 if HAVE_DBUS_SUPPORT

@@ -1,9 +1,7 @@
 List of features that need to be implemented (in no particular order):
 
-* Ask the user if the connection is down
 * Alarm clock
 * Send recommendations to many users at once
-* Tag dialog: view track's popular tags (from you and from others)
 * A decent UI
 * History
 * Support for different languages
