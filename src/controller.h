@@ -13,6 +13,7 @@
 #include "xmlrpc.h"
 
 void controller_stop_playing(void);
+void controller_disconnect(void);
 void controller_start_playing(void);
 void controller_skip_track(void);
 void controller_love_track(void);

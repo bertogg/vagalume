@@ -447,16 +447,11 @@ controller_open_usercfg(void)
                 http_set_proxy(usercfg->http_proxy);
         }
         if (userchanged || pwchanged) {
-                if (session != NULL) {
-                        lastfm_session_destroy(session);
-                        session = NULL;
-                }
-                set_rsp_session(usercfg->username, NULL);
                 if (userchanged) {
                         set_friend_list(usercfg->username, NULL);
                         set_user_tag_list(usercfg->username, NULL);
                 }
-                controller_stop_playing();
+                controller_disconnect();
         }
         g_free(olduser);
         g_free(oldpw);
@@ -762,6 +757,23 @@ controller_skip_track(void)
         g_return_if_fail(mainwin != NULL);
         finish_playing_track();
         controller_start_playing();
+}
+
+/**
+ * Stop the track being played and disconnect from Last.fm, clearing
+ * the active session (if any)
+ */
+void
+controller_disconnect(void)
+{
+        if (session != NULL) {
+                lastfm_session_destroy(session);
+                session = NULL;
+        }
+        if (usercfg != NULL) {
+                set_rsp_session(usercfg->username, NULL);
+        }
+        controller_stop_playing();
 }
 
 /**
