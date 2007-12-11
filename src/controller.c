@@ -931,10 +931,14 @@ void
 controller_tag_track()
 {
         g_return_if_fail(mainwin && usercfg && nowplaying);
-        request_type type = REQUEST_ARTIST;
+        /* Keep this static to remember the previous value */
+        static request_type type = REQUEST_ARTIST;
         char *tags = NULL;
         lastfm_track *track = lastfm_track_copy(nowplaying);
         gboolean accept;
+        if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
+                type = REQUEST_ARTIST;
+        }
         accept = tagwin_run(mainwin->window, usercfg->username, &tags,
                             usertags, track, &type);
         if (accept && tags != NULL && tags[0] != '\0') {
@@ -1002,9 +1006,13 @@ controller_recomm_track(void)
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         char *rcpt = NULL;
         char *body = NULL;
-        request_type type = REQUEST_TRACK;
+        /* Keep this static to remember the previous value */
+        static request_type type = REQUEST_TRACK;
         lastfm_track *track = lastfm_track_copy(nowplaying);
         gboolean accept;
+        if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
+                type = REQUEST_ARTIST;
+        }
         accept = recommwin_run(mainwin->window, &rcpt, &body, friends,
                                track, &type);
         if (accept && rcpt && body && rcpt[0] && body[0]) {
