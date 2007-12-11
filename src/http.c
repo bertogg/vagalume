@@ -81,6 +81,11 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
         FILE *f = fdopen(fd, "w");
         struct curl_slist *hdrs = NULL;
 
+        if (f == NULL) {
+                g_warning("Unable to fdopen() fd %d", fd);
+                close(fd);
+                return FALSE;
+        }
         g_debug("Requesting URL %s", url);
         hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
         if (headers != NULL) {
