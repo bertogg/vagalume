@@ -75,7 +75,7 @@ connection_go_online_handler(ConIcConnection *conn,
                                    NULL, NULL, data);
         g_signal_handler_disconnect(conn, id);
         (*(data->cb))(data->cbdata);
-        g_slice_free(con_ic_cb_handler_data, data);
+        g_slice_free(connection_go_online_handler_data, data);
 }
 
 /**
