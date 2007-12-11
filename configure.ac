@@ -22,21 +22,21 @@ EXTRA_CFLAGS=""
 EXTRA_LIBS=""
 
 # Basic dependencies
-PKG_CHECK_MODULES(GTK2, gtk+-2.0)
-EXTRA_CFLAGS="$EXTRA_CFLAGS $GTK2_CFLAGS"
-EXTRA_LIBS="$EXTRA_LIBS $GTK2_LIBS"
+PKG_CHECK_MODULES(Gtk2, gtk+-2.0)
+EXTRA_CFLAGS="$EXTRA_CFLAGS $Gtk2_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $Gtk2_LIBS"
 
-PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10)
-EXTRA_CFLAGS="$EXTRA_CFLAGS $GSTREAMER_CFLAGS"
-EXTRA_LIBS="$EXTRA_LIBS $GSTREAMER_LIBS"
+PKG_CHECK_MODULES(GStreamer, gstreamer-0.10)
+EXTRA_CFLAGS="$EXTRA_CFLAGS $GStreamer_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $GStreamer_LIBS"
 
-PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
-EXTRA_CFLAGS="$EXTRA_CFLAGS $LIBXML2_CFLAGS"
-EXTRA_LIBS="$EXTRA_LIBS $LIBXML2_LIBS"
+PKG_CHECK_MODULES(libxml2, libxml-2.0)
+EXTRA_CFLAGS="$EXTRA_CFLAGS $libxml2_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $libxml2_LIBS"
 
-PKG_CHECK_MODULES(LIBCURL, libcurl)
-EXTRA_CFLAGS="$EXTRA_CFLAGS $LIBCURL_CFLAGS"
-EXTRA_LIBS="$EXTRA_LIBS $LIBCURL_LIBS"
+PKG_CHECK_MODULES(libcurl, libcurl)
+EXTRA_CFLAGS="$EXTRA_CFLAGS $libcurl_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
 
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
@@ -105,21 +105,21 @@ if test "$PLATFORM" = "maemo"; then
    fi
 
    if test "$MAEMOVERS" = "2" -o "$MAEMOVERS" = "3"; then
-      PKG_CHECK_MODULES(HILDON, hildon-libs)
+      PKG_CHECK_MODULES(hildon, hildon-libs)
    else
-      PKG_CHECK_MODULES(HILDON, hildon-1)
+      PKG_CHECK_MODULES(hildon, hildon-1)
    fi
-   EXTRA_CFLAGS="$EXTRA_CFLAGS $HILDON_CFLAGS"
-   EXTRA_LIBS="$EXTRA_LIBS $HILDON_LIBS"
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $hildon_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $hildon_LIBS"
 
-   PKG_CHECK_MODULES(OSSO, libosso osso-af-settings)
-   EXTRA_CFLAGS="$EXTRA_CFLAGS $OSSO_CFLAGS"
-   EXTRA_LIBS="$EXTRA_LIBS $OSSO_LIBS"
+   PKG_CHECK_MODULES(libosso, libosso osso-af-settings)
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $libosso_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $libosso_LIBS"
 
-   PKG_CHECK_MODULES(CONIC, conic, [have_conic=1], [have_conic=0])
+   PKG_CHECK_MODULES(libconic, conic, [have_conic=1], [have_conic=0])
    if test "$have_conic" = "1"; then
-      EXTRA_CFLAGS="$EXTRA_CFLAGS $CONIC_CFLAGS"
-      EXTRA_LIBS="$EXTRA_LIBS $CONIC_LIBS"
+      EXTRA_CFLAGS="$EXTRA_CFLAGS $libconic_CFLAGS"
+      EXTRA_LIBS="$EXTRA_LIBS $libconic_LIBS"
    fi
 
    desktopentrydir=`$PKG_CONFIG osso-af-settings --variable=desktopentrydir`
