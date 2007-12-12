@@ -914,7 +914,7 @@ tag_track_thread(gpointer data)
         g_free(d);
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
-                controller_show_banner(tagged ? "Tag set correctly" :
+                controller_show_banner(tagged ? "Tags set correctly" :
                                        "Error tagging");
         }
         gdk_threads_leave();

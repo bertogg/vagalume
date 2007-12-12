@@ -34,7 +34,6 @@ typedef struct {
         GtkEntry *entry;
         GtkComboBox *selcombo;
         GtkComboBox *globalcombo;
-        GtkWidget *globallabel;
         lastfm_track *track;
         char *user;
         char *tags_artist;
@@ -469,13 +468,13 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
                         gtk_combo_box_set_model(w->globalcombo, w->nonemodel);
                         gtk_combo_box_set_active(w->globalcombo, 0);
                 }
-                gtk_entry_set_editable(w->entry, TRUE);
+                gtk_widget_set_sensitive(GTK_WIDGET(w->entry), TRUE);
                 gtk_entry_set_text(w->entry, usertags ? usertags : "");
         } else {
                 gtk_combo_box_set_model(w->globalcombo, w->retrmodel);
                 gtk_combo_box_set_active(w->globalcombo, 0);
-                gtk_entry_set_editable(w->entry, FALSE);
-                gtk_entry_set_text(w->entry, "");
+                gtk_widget_set_sensitive(GTK_WIDGET(w->entry), FALSE);
+                gtk_entry_set_text(w->entry, "retrieving ...");
         }
         if (oldstate == TAGCOMBO_STATE_NULL) {
                 get_track_tags_data *data = g_slice_new(get_track_tags_data);
