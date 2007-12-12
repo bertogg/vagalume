@@ -31,7 +31,6 @@ typedef enum {
 
 typedef struct {
         GtkWindow *window;
-        GtkWidget *entrylabel;
         GtkEntry *entry;
         GtkComboBox *selcombo;
         GtkComboBox *globalcombo;
@@ -45,6 +44,7 @@ typedef struct {
         GtkTreeModel *poptags_track;
         GtkTreeModel *poptags_album;
         GtkTreeModel *nonemodel;
+        GtkTreeModel *retrmodel;
         tagcombo_state artist_state, track_state, album_state;
         int refcount;
 } tagwin;
@@ -304,6 +304,8 @@ artist_track_album_selection_combo(const lastfm_track *t)
         combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
         g_object_unref(G_OBJECT(store));
         renderer = gtk_cell_renderer_text_new();
+        g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END,
+                     "ellipsize-set", TRUE, "width-chars", 50, NULL);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo),
                                        renderer, "text", 1, NULL);
@@ -339,6 +341,7 @@ tagwin_destroy(tagwin *w)
         if (w->poptags_track) g_object_unref(w->poptags_track);
         if (w->poptags_album) g_object_unref(w->poptags_album);
         if (w->nonemodel) g_object_unref(w->nonemodel);
+        if (w->retrmodel) g_object_unref(w->retrmodel);
         g_slice_free(tagwin, w);
 }
 
@@ -459,7 +462,6 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
                 break;
         }
         gtk_widget_set_sensitive(GTK_WIDGET(w->globalcombo), model != NULL);
-        gtk_widget_set_sensitive(GTK_WIDGET(w->globallabel), model != NULL);
         if (oldstate == TAGCOMBO_STATE_READY) {
                 if (model != NULL) {
                         gtk_combo_box_set_model(w->globalcombo, model);
@@ -470,6 +472,8 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
                 gtk_entry_set_editable(w->entry, TRUE);
                 gtk_entry_set_text(w->entry, usertags ? usertags : "");
         } else {
+                gtk_combo_box_set_model(w->globalcombo, w->retrmodel);
+                gtk_combo_box_set_active(w->globalcombo, 0);
                 gtk_entry_set_editable(w->entry, FALSE);
                 gtk_entry_set_text(w->entry, "");
         }
@@ -504,7 +508,6 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
         gtk_entry_set_text(w->entry, g_strstrip(new));
         g_free(current);
         g_free(new);
-        gtk_combo_box_set_active(combo, -1);
 }
 
 gboolean
@@ -520,7 +523,7 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         GtkComboBox *selcombo;
         GtkWidget *entrylabel, *entry;
         GtkWidget *userlabel, *usercombo, *globallabel, *globalcombo;
-        GtkTreeModel *usermodel, *nonemodel;
+        GtkTreeModel *usermodel, *nonemodel, *retrmodel;
         GtkCellRenderer *userrender, *globalrender;
         GtkDialog *dialog;
         GList *nonelist;
@@ -528,6 +531,9 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         /* A treemodel for combos with no elements */
         nonelist = g_list_append(NULL, "(none)");
         nonemodel = ui_create_options_list(nonelist);
+        g_list_free(nonelist);
+        nonelist = g_list_append(NULL, "retrieving...");
+        retrmodel = ui_create_options_list(nonelist);
         g_list_free(nonelist);
 
         /* Dialog and basic settings */
@@ -571,10 +577,14 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
                 usermodel = g_object_ref(nonemodel);
         }
         usercombo = gtk_combo_box_new_with_model(usermodel);
-        globalcombo = gtk_combo_box_new_with_model(nonemodel);
+        globalcombo = gtk_combo_box_new_with_model(retrmodel);
         g_object_unref(G_OBJECT(usermodel));
         userrender = gtk_cell_renderer_text_new();
         globalrender = gtk_cell_renderer_text_new();
+        g_object_set(userrender, "ellipsize", PANGO_ELLIPSIZE_END,
+                     "ellipsize-set", TRUE, "width-chars", 25, NULL);
+        g_object_set(globalrender, "ellipsize", PANGO_ELLIPSIZE_END,
+                     "ellipsize-set", TRUE, "width-chars", 25, NULL);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(usercombo),
                                    userrender, FALSE);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(globalcombo),
@@ -584,7 +594,6 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(globalcombo),
                                        globalrender, "text", 0, NULL);
         if (usertags == NULL) {
-                gtk_widget_set_sensitive(GTK_WIDGET(userlabel), FALSE);
                 gtk_widget_set_sensitive(GTK_WIDGET(usercombo), FALSE);
                 gtk_combo_box_set_active(GTK_COMBO_BOX(usercombo), 0);
         }
@@ -612,11 +621,10 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         t->track = lastfm_track_copy(track);
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
-        t->entrylabel = entrylabel;
         t->selcombo = selcombo;
         t->globalcombo = GTK_COMBO_BOX(globalcombo);
-        t->globallabel = globallabel;
         t->nonemodel = nonemodel;
+        t->retrmodel = retrmodel;
         t->user = g_strdup(user);
 
         /* Signals */
