@@ -305,7 +305,7 @@ artist_track_album_selection_combo(const lastfm_track *t)
         g_object_unref(G_OBJECT(store));
         renderer = gtk_cell_renderer_text_new();
         g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END,
-                     "ellipsize-set", TRUE, "width-chars", 50, NULL);
+                     "ellipsize-set", TRUE, "width", 350, NULL);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo),
                                        renderer, "text", 1, NULL);
@@ -582,9 +582,9 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         userrender = gtk_cell_renderer_text_new();
         globalrender = gtk_cell_renderer_text_new();
         g_object_set(userrender, "ellipsize", PANGO_ELLIPSIZE_END,
-                     "ellipsize-set", TRUE, "width-chars", 25, NULL);
+                     "ellipsize-set", TRUE, "width", 200, NULL);
         g_object_set(globalrender, "ellipsize", PANGO_ELLIPSIZE_END,
-                     "ellipsize-set", TRUE, "width-chars", 25, NULL);
+                     "ellipsize-set", TRUE, "width", 200, NULL);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(usercombo),
                                    userrender, FALSE);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(globalcombo),
