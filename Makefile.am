@@ -6,14 +6,6 @@
 # This file is published under the GNU GPLv3.
 #
 
-EXTRA_DIST = \
-	autogen.sh \
-	debian/changelog \
-	debian/control \
-	debian/copyright \
-	debian/rules \
-	debian/compat
-
 MAINTAINERCLEANFILES = \
 	Makefile.in \
 	aclocal.m4 \

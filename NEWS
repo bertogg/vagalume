@@ -1,3 +1,29 @@
+0.4 (13 Dec 2007)
+  * New tag dialog that replaces all three previous dialogs, with
+    the ability to see and modify previously set tags and to see the
+    list of popular tags for a particular artist, track or album
+  * New recommendation dialog that replaces all three previuos menu
+    entries
+  * Show the user's list of tags in "Play music tagged..." dialogs
+  * ConIc support: now Last.fm connects the device to the Internet if
+    it's offline (only if libconic is available: IT OS2007 and OS2008)
+  * HTTP proxy support
+  * Official Last.fm application ID for Vagalume! ('vag')
+  * Don't download the album cover if the window is not visible
+  * The time displayed in the progress bar is now more accurate
+  * Install .desktop file for Gnome too
+  * Debian menu file
+  * D-BUS handlers for play, stop, skip, love, ban, show/hide window and
+    close app
+  * Ability to show/hide the window without stopping playback (by now
+    it can only be done using D-BUS)
+  * Disable the love button and menu entry after setting a track as loved
+  * Support for computing MD5 sums using libgcrypt (optional)
+  * If an error happens setting the RSP session or downloading the
+    list of friends, retry until succeeded
+  * The initial login to last.fm is now asynchronous
+  * Fixed some other minor bugs
+
 0.3a (21 Nov 2007)
   * Fixed a bug that showed buttons with no icons in the Nokia 770
 
