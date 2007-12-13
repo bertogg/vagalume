@@ -164,24 +164,26 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
 {
         g_return_val_if_fail(cfg != NULL, FALSE);
         GtkDialog *dialog;
-        GtkWidget *label1, *label2, *label3, *label4, *label5;
+        GtkWidget *userlabel, *pwlabel, *scroblabel, *discovlabel;
+        GtkWidget *proxylabel;
         GtkEntry *user, *pw, *proxy;
         GtkWidget *scrobble, *discovery;
-        GtkTable *table;
+        GtkTable *acctable, *conntable;
+        GtkNotebook *nb;
         gboolean changed = FALSE;
 
         dialog = ui_base_dialog(parent, "User settings");
-        label1 = gtk_label_new("Username:");
-        label2 = gtk_label_new("Password:");
-        label3 = gtk_label_new("HTTP proxy (host:port):");
-        label4 = gtk_label_new("Enable scrobbling:");
-        label5 = gtk_label_new("Discovery mode:");
+        userlabel = gtk_label_new("Username:");
+        pwlabel = gtk_label_new("Password:");
+        scroblabel = gtk_label_new("Enable scrobbling:");
+        discovlabel = gtk_label_new("Discovery mode:");
+        proxylabel = gtk_label_new("HTTP proxy (host:port):");
         user = GTK_ENTRY(gtk_entry_new());
         pw = GTK_ENTRY(gtk_entry_new());
-        proxy = GTK_ENTRY(gtk_entry_new());
         scrobble = gtk_check_button_new();
         discovery = gtk_check_button_new();
         gtk_entry_set_visibility(pw, FALSE);
+        proxy = GTK_ENTRY(gtk_entry_new());
         if (*cfg != NULL) {
                 gtk_entry_set_text(user, (*cfg)->username);
                 gtk_entry_set_text(pw, (*cfg)->password);
@@ -194,19 +196,30 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
                                              TRUE);
         }
-        table = GTK_TABLE(gtk_table_new(5, 2, FALSE));
-        gtk_table_attach(table, label1, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(table, label2, 0, 1, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(table, label3, 0, 1, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(table, label4, 0, 1, 3, 4, 0, 0, 5, 5);
-        gtk_table_attach(table, label5, 0, 1, 4, 5, 0, 0, 5, 5);
-        gtk_table_attach(table, GTK_WIDGET(user), 1, 2, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(table, GTK_WIDGET(pw), 1, 2, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(table, GTK_WIDGET(proxy), 1, 2, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(table, scrobble, 1, 2, 3, 4, 0, 0, 5, 5);
-        gtk_table_attach(table, discovery, 1, 2, 4, 5, 0, 0, 5, 5);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(table),
+
+        acctable = GTK_TABLE(gtk_table_new(4, 2, FALSE));
+        gtk_table_attach(acctable, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(acctable, pwlabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(acctable, scroblabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(acctable, discovlabel, 0, 1, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(acctable, GTK_WIDGET(user), 1, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(acctable, GTK_WIDGET(pw), 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(acctable, scrobble, 1, 2, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(acctable, discovery, 1, 2, 3, 4, 0, 0, 5, 5);
+
+        conntable = GTK_TABLE(gtk_table_new(1, 2, FALSE));
+        gtk_table_attach(conntable, proxylabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(conntable, GTK_WIDGET(proxy), 1, 2, 0, 1, 0, 0, 5, 5);
+
+        nb = GTK_NOTEBOOK(gtk_notebook_new());
+        gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
+                                 gtk_label_new("Account"));
+        gtk_notebook_append_page(nb, GTK_WIDGET(conntable),
+                                 gtk_label_new("Connection"));
+
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(nb),
                            FALSE, FALSE, 10);
+
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
                 if (*cfg == NULL) *cfg = lastfm_usercfg_new();
