@@ -517,7 +517,6 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         g_return_val_if_fail(track && type && user && newtags, FALSE);
         tagwin *t;
         gboolean retvalue = FALSE;
-        GtkBox *combosbox, *userbox, *globalbox, *selbox;
         GtkWidget *sellabel;
         GtkComboBox *selcombo;
         GtkWidget *entrylabel, *entry;
@@ -526,6 +525,8 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         GtkCellRenderer *userrender, *globalrender;
         GtkDialog *dialog;
         GList *nonelist;
+        GtkTable *table;
+        GtkWidget *alig;
 
         /* A treemodel for combos with no elements */
         nonelist = g_list_append(NULL, "(none)");
@@ -541,11 +542,8 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         gtk_box_set_spacing(GTK_BOX(dialog->vbox), 5);
 
         /* Combo to select what to tag */
-        selbox = GTK_BOX(gtk_hbox_new(FALSE, 10));
         sellabel = gtk_label_new("Tag this");
         selcombo = artist_track_album_selection_combo(track);
-        gtk_box_pack_start(selbox, sellabel, FALSE, FALSE, 0);
-        gtk_box_pack_start(selbox, GTK_WIDGET(selcombo), TRUE, TRUE, 0);
 
         switch (*type) {
         case REQUEST_ARTIST:
@@ -564,7 +562,8 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         }
 
         /* Text entry */
-        entrylabel = gtk_label_new("Enter a comma-separated list of tags");
+        entrylabel = gtk_label_new("Enter a comma-separated\nlist of tags");
+        gtk_label_set_justify(GTK_LABEL(entrylabel), GTK_JUSTIFY_RIGHT);
         entry = gtk_entry_new();
 
         /* Combo boxes */
@@ -581,9 +580,9 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         userrender = gtk_cell_renderer_text_new();
         globalrender = gtk_cell_renderer_text_new();
         g_object_set(userrender, "ellipsize", PANGO_ELLIPSIZE_END,
-                     "ellipsize-set", TRUE, "width", 200, NULL);
+                     "ellipsize-set", TRUE, "width", 350, NULL);
         g_object_set(globalrender, "ellipsize", PANGO_ELLIPSIZE_END,
-                     "ellipsize-set", TRUE, "width", 200, NULL);
+                     "ellipsize-set", TRUE, "width", 350, NULL);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(usercombo),
                                    userrender, FALSE);
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(globalcombo),
@@ -597,24 +596,44 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
                 gtk_combo_box_set_active(GTK_COMBO_BOX(usercombo), 0);
         }
 
-        /* Boxes for tag combos */
-        combosbox = GTK_BOX(gtk_hbox_new(TRUE, 10));
-        userbox = GTK_BOX(gtk_vbox_new(TRUE, 0));
-        globalbox = GTK_BOX(gtk_vbox_new(TRUE, 0));
-
         /* Widget packing */
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(selbox),
-                           FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), entrylabel, TRUE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), entry, TRUE, TRUE, 0);
-        gtk_box_pack_start(userbox, userlabel, FALSE, FALSE, 0);
-        gtk_box_pack_start(userbox, usercombo, FALSE, FALSE, 0);
-        gtk_box_pack_start(globalbox, globallabel, FALSE, FALSE, 0);
-        gtk_box_pack_start(globalbox, globalcombo, FALSE, FALSE, 0);
-        gtk_box_pack_start(combosbox, GTK_WIDGET(userbox), FALSE, FALSE, 0);
-        gtk_box_pack_start(combosbox, GTK_WIDGET(globalbox), FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(combosbox),
-                           TRUE, TRUE, 0);
+        table = GTK_TABLE(gtk_table_new(4, 2, FALSE));
+        gtk_table_set_row_spacings(table, 5);
+        gtk_table_set_col_spacings(table, 20);
+        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(table),
+                           TRUE, TRUE, 5);
+
+        alig = gtk_alignment_new(1, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(alig), sellabel);
+        gtk_table_attach_defaults(table, alig, 0, 1, 0, 1);
+
+        alig = gtk_alignment_new(0, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(alig), GTK_WIDGET(selcombo));
+        gtk_table_attach_defaults(table, alig, 1, 2, 0, 1);
+
+        alig = gtk_alignment_new(1, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(alig), entrylabel);
+        gtk_table_attach_defaults(table, alig, 0, 1, 1, 2);
+
+        alig = gtk_alignment_new(0, 0.5, 1, 0);
+        gtk_container_add(GTK_CONTAINER(alig), GTK_WIDGET(entry));
+        gtk_table_attach_defaults(table, alig, 1, 2, 1, 2);
+
+        alig = gtk_alignment_new(1, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(alig), userlabel);
+        gtk_table_attach_defaults(table, alig, 0, 1, 2, 3);
+
+        alig = gtk_alignment_new(0, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(alig), usercombo);
+        gtk_table_attach_defaults(table, alig, 1, 2, 2, 3);
+
+        alig = gtk_alignment_new(1, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(alig), globallabel);
+        gtk_table_attach_defaults(table, alig, 0, 1, 3, 4);
+
+        alig = gtk_alignment_new(0, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(alig), globalcombo);
+        gtk_table_attach_defaults(table, alig, 1, 2, 3, 4);
 
         t = tagwin_create();
         t->track = lastfm_track_copy(track);
