@@ -9,7 +9,7 @@ the following operating systems:
    * Internet Tablet OS 2007 (Nokia N800)
    * Internet Tablet OS 2008 (Nokia N810 and updated N800)
 
-Besides that, it should work in a standard PCs as well. Vagalume has
+Besides that, it should work in standard PCs as well. Vagalume has
 been tested and developed in a desktop PC with a Debian GNU/Linux
 system, but it should work in any other Unix-like system that meets
 the following requirements:

@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Version=1.0
 Type=Application
-Categories=GNOME;GTK;Application;AudioVideo;Player;
+Categories=Audio;AudioVideo;GNOME;GTK;Application;Player;
 Name=Vagalume Last.fm Client
 Exec=/usr/bin/vagalume
 Icon=vagalume
