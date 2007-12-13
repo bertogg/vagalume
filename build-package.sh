@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+set -e
 
 if pkg-config --exists libosso; then # Compile for Maemo
     if [ ! -f debian/control.debian ]; then
