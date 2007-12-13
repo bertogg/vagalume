@@ -425,6 +425,16 @@ get_user_extradata(void)
 }
 
 /**
+ * Apply all user cfg settings
+ */
+static void
+apply_usercfg(void)
+{
+        g_return_if_fail(usercfg != NULL);
+        http_set_proxy(usercfg->http_proxy);
+}
+
+/**
  * Open the user settings dialog and save the new settings to the
  * configuration file. If the username or password have been modified,
  * close the current session.
@@ -445,7 +455,7 @@ controller_open_usercfg(void)
                 write_usercfg(usercfg);
                 userchanged = strcmp(olduser, usercfg->username);
                 pwchanged = strcmp(oldpw, usercfg->password);
-                http_set_proxy(usercfg->http_proxy);
+                apply_usercfg();
         }
         if (userchanged || pwchanged) {
                 if (userchanged) {
@@ -461,16 +471,18 @@ controller_open_usercfg(void)
 /**
  * Check if the user settings exist (whether they are valid or
  * not). If they don't exist, read the config file or open the
- * settings dialog. This should only return FALSE the first time the
- * user runs the program.
+ * settings dialog (if ask == TRUE). This should only return FALSE
+ * the first time the user runs the program.
  *
+ * @param ask If TRUE, open the settings dialog if necessary
  * @return TRUE if the settings exist, FALSE otherwise
  */
 static gboolean
-check_usercfg(void)
+check_usercfg(gboolean ask)
 {
         if (usercfg == NULL) usercfg = read_usercfg();
-        if (usercfg == NULL) controller_open_usercfg();
+        if (usercfg == NULL && ask) controller_open_usercfg();
+        if (usercfg != NULL) apply_usercfg();
         return (usercfg != NULL);
 }
 
@@ -561,7 +573,7 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
         if (session != NULL) {
                 if (success_cb != NULL) (*success_cb)(cbdata);
         } else {
-                check_usercfg();
+                check_usercfg(TRUE);
                 if (usercfg != NULL) {
                         check_session_thread_data *data;
                         data = g_new(check_session_thread_data, 1);
@@ -1374,7 +1386,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED, NULL);
 
         http_init();
-        usercfg = read_usercfg();
+        check_usercfg(FALSE);
         playlist = lastfm_pls_new();
 
         if (!lastfm_audio_init()) {
