@@ -431,7 +431,11 @@ static void
 apply_usercfg(void)
 {
         g_return_if_fail(usercfg != NULL);
-        http_set_proxy(usercfg->http_proxy);
+        if (usercfg->use_proxy) {
+                http_set_proxy(usercfg->http_proxy);
+        } else {
+                http_set_proxy(NULL);
+        }
 }
 
 /**

@@ -165,9 +165,9 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         g_return_val_if_fail(cfg != NULL, FALSE);
         GtkDialog *dialog;
         GtkWidget *userlabel, *pwlabel, *scroblabel, *discovlabel;
-        GtkWidget *proxylabel;
+        GtkWidget *useproxylabel, *proxylabel;
         GtkEntry *user, *pw, *proxy;
-        GtkWidget *scrobble, *discovery;
+        GtkWidget *scrobble, *discovery, *useproxy;
         GtkTable *acctable, *conntable;
         GtkNotebook *nb;
         gboolean changed = FALSE;
@@ -177,13 +177,15 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         pwlabel = gtk_label_new("Password:");
         scroblabel = gtk_label_new("Enable scrobbling:");
         discovlabel = gtk_label_new("Discovery mode:");
-        proxylabel = gtk_label_new("HTTP proxy (host:port):");
+        useproxylabel = gtk_label_new("Use HTTP proxy");
+        proxylabel = gtk_label_new("Proxy address:");
         user = GTK_ENTRY(gtk_entry_new());
         pw = GTK_ENTRY(gtk_entry_new());
         scrobble = gtk_check_button_new();
         discovery = gtk_check_button_new();
         gtk_entry_set_visibility(pw, FALSE);
         proxy = GTK_ENTRY(gtk_entry_new());
+        useproxy = gtk_check_button_new();
         if (*cfg != NULL) {
                 gtk_entry_set_text(user, (*cfg)->username);
                 gtk_entry_set_text(pw, (*cfg)->password);
@@ -192,6 +194,8 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                                              (*cfg)->enable_scrobbling);
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
                                              (*cfg)->discovery_mode);
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(useproxy),
+                                             (*cfg)->use_proxy);
         } else {
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
                                              TRUE);
@@ -207,9 +211,11 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_table_attach(acctable, scrobble, 1, 2, 2, 3, 0, 0, 5, 5);
         gtk_table_attach(acctable, discovery, 1, 2, 3, 4, 0, 0, 5, 5);
 
-        conntable = GTK_TABLE(gtk_table_new(1, 2, FALSE));
-        gtk_table_attach(conntable, proxylabel, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(conntable, GTK_WIDGET(proxy), 1, 2, 0, 1, 0, 0, 5, 5);
+        conntable = GTK_TABLE(gtk_table_new(2, 2, FALSE));
+        gtk_table_attach(conntable, useproxylabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(conntable, proxylabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(conntable, useproxy, 1, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(conntable, GTK_WIDGET(proxy), 1, 2, 1, 2, 0, 0, 5, 5);
 
         nb = GTK_NOTEBOOK(gtk_notebook_new());
         gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
@@ -230,6 +236,8 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                         GTK_TOGGLE_BUTTON(scrobble));
                 (*cfg)->discovery_mode = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(discovery));
+                (*cfg)->use_proxy = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(useproxy));
                 changed = TRUE;
         }
         gtk_widget_destroy(GTK_WIDGET(dialog));
