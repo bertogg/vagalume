@@ -119,6 +119,8 @@ ui_base_dialog(GtkWindow *parent, const char *title)
                                              GTK_STOCK_CANCEL,
                                              GTK_RESPONSE_REJECT,
                                              NULL);
+        gtk_dialog_set_default_response(GTK_DIALOG(dialog),
+                                        GTK_RESPONSE_ACCEPT);
         return GTK_DIALOG(dialog);
 }
 
@@ -151,6 +153,7 @@ ui_input_dialog(GtkWindow *parent, const char *title,
         gtk_box_pack_start(GTK_BOX(dialog->vbox),
                            GTK_WIDGET(entry), FALSE, FALSE, 10);
         if (value != NULL) gtk_entry_set_text(entry, value);
+        gtk_entry_set_activates_default(entry, TRUE);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
                 retvalue = g_strstrip(g_strdup(gtk_entry_get_text(entry)));
@@ -186,6 +189,9 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_entry_set_visibility(pw, FALSE);
         proxy = GTK_ENTRY(gtk_entry_new());
         useproxy = gtk_check_button_new();
+        gtk_entry_set_activates_default(user, TRUE);
+        gtk_entry_set_activates_default(pw, TRUE);
+        gtk_entry_set_activates_default(proxy, TRUE);
         if (*cfg != NULL) {
                 gtk_entry_set_text(user, (*cfg)->username);
                 gtk_entry_set_text(pw, (*cfg)->password);
@@ -279,6 +285,8 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
         if (value != NULL) {
                 gtk_entry_set_text(GTK_ENTRY(GTK_BIN(combo)->child), value);
         }
+        gtk_entry_set_activates_default(GTK_ENTRY(GTK_BIN(combo)->child),
+                                        TRUE);
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
                 GtkEntry *entry = GTK_ENTRY(GTK_BIN(combo)->child);
                 retvalue = g_strstrip(g_strdup(gtk_entry_get_text(entry)));
@@ -586,6 +594,7 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         entrylabel = gtk_label_new("Enter a comma-separated\nlist of tags");
         gtk_label_set_justify(GTK_LABEL(entrylabel), GTK_JUSTIFY_RIGHT);
         entry = gtk_entry_new();
+        gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
 
         /* Combo boxes */
         userlabel = gtk_label_new("Your favourite tags");
@@ -740,6 +749,8 @@ recommwin_run(GtkWindow *parent, char **user, char **message,
         userlabel = gtk_label_new("Send recommendation to");
         usermodel = ui_create_options_list(friends);
         usercombo = gtk_combo_box_entry_new_with_model(usermodel, 0);
+        gtk_entry_set_activates_default(GTK_ENTRY(GTK_BIN(usercombo)->child),
+                                        TRUE);
         g_object_unref(usermodel);
         gtk_box_pack_start(userbox, userlabel, FALSE, FALSE, 0);
         gtk_box_pack_start(userbox, usercombo, TRUE, TRUE, 0);
