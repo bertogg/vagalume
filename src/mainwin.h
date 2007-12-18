@@ -21,6 +21,8 @@ typedef struct {
         GtkProgressBar *progressbar;
         gboolean is_fullscreen;
         gboolean is_hidden;
+        gboolean showing_msg;
+        guint lastmsg_id;
 } lastfm_mainwin;
 
 typedef enum {
@@ -36,6 +38,7 @@ void mainwin_show_window(lastfm_mainwin *w, gboolean show);
 void mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state s,
                           const lastfm_track *t);
 void mainwin_show_progress(lastfm_mainwin *w, guint length, guint played);
+void mainwin_show_status_msg(lastfm_mainwin *w, const char *text);
 void mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size);
 void mainwin_set_track_as_loved(lastfm_mainwin *w);
 void mainwin_run_app(void);

@@ -187,7 +187,41 @@ mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
                          played/60, played%60);
         }
         gtk_progress_bar_set_fraction(w->progressbar, fraction);
-        gtk_progress_bar_set_text(w->progressbar, count);
+        if (!w->showing_msg) {
+                gtk_progress_bar_set_text(w->progressbar, count);
+        }
+}
+
+typedef struct {
+        lastfm_mainwin *win;
+        guint msgid;
+} remove_status_msg_data;
+
+static gboolean
+remove_status_msg(gpointer data)
+{
+        g_return_val_if_fail(data != NULL, FALSE);
+        remove_status_msg_data *d = (remove_status_msg_data *) data;
+        if (d->win->lastmsg_id == d->msgid) {
+                d->win->showing_msg = FALSE;
+                gtk_progress_bar_set_text(d->win->progressbar, " ");
+        }
+        g_slice_free(remove_status_msg_data, d);
+        return FALSE;
+}
+
+void
+mainwin_show_status_msg(lastfm_mainwin *w, const char *text)
+{
+        g_return_if_fail(w != NULL && text != NULL);
+        remove_status_msg_data *d;
+        w->lastmsg_id++;
+        w->showing_msg = TRUE;
+        gtk_progress_bar_set_text(w->progressbar, text);
+        d = g_slice_new(remove_status_msg_data);
+        d->win = w;
+        d->msgid = w->lastmsg_id;
+        g_timeout_add(1500, remove_status_msg, d);
 }
 
 void

@@ -117,7 +117,11 @@ controller_show_info(const char *text)
 void
 controller_show_banner(const char *text)
 {
+#ifdef MAEMO
         ui_info_banner(mainwin->window, text);
+#else
+        mainwin_show_status_msg(mainwin, text);
+#endif
 }
 
 /**

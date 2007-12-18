@@ -104,6 +104,7 @@ ui_info_banner(GtkWindow *parent, const char *text)
         hildon_banner_show_information(GTK_WIDGET(parent), NULL, text);
 #else
         /* TODO: Implement a notification banner for Gnome */
+        g_warning("Info banner not implemented!!");
 #endif
 }
 
