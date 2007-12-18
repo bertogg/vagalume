@@ -608,6 +608,18 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         gtk_menu_shell_append(bar, quit);
 #endif
 
+        /* Keyboard shortcuts */
+        gtk_widget_add_accelerator(ban, "activate", accel, GDK_b,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(love, "activate", accel, GDK_l,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(dorecomm, "activate", accel, GDK_r,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(tag, "activate", accel, GDK_t,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(addtopls, "activate", accel, GDK_p,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
         w->radiomenu = GTK_WIDGET(radio);
         w->actionsmenu = GTK_WIDGET(actions);
         w->settings = GTK_WIDGET(settings);
