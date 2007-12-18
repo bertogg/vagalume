@@ -186,9 +186,8 @@ mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
                 snprintf(count, bufsize, "%u:%02u / ??:??",
                          played/60, played%60);
         }
-        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(w->progressbar),
-                                      fraction);
-        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar), count);
+        gtk_progress_bar_set_fraction(w->progressbar, fraction);
+        gtk_progress_bar_set_text(w->progressbar, count);
 }
 
 void
@@ -209,8 +208,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
         case LASTFM_UI_STATE_DISCONNECTED:
         case LASTFM_UI_STATE_STOPPED:
                 dim_labels = FALSE;
-                gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar),
-                                          "Stopped");
+                gtk_progress_bar_set_text(w->progressbar, "Stopped");
                 gtk_label_set_text(GTK_LABEL(w->playlist), "Stopped");
                 gtk_label_set_text(GTK_LABEL(w->artist), NULL);
                 gtk_label_set_text(GTK_LABEL(w->track), NULL);
@@ -235,8 +233,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 }
                 mainwin_update_track_info(w, t);
                 dim_labels = FALSE;
-                gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar),
-                                          "Playing...");
+                gtk_progress_bar_set_text(w->progressbar, "Playing...");
                 gtk_widget_hide (w->play);
                 gtk_widget_show (w->stop);
                 gtk_widget_set_sensitive (w->stop, TRUE);
@@ -253,8 +250,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 break;
         case LASTFM_UI_STATE_CONNECTING:
                 dim_labels = TRUE;
-                gtk_progress_bar_set_text(GTK_PROGRESS_BAR(w->progressbar),
-                                          "Connecting...");
+                gtk_progress_bar_set_text(w->progressbar, "Connecting...");
                 gtk_label_set_text(GTK_LABEL(w->playlist), "Connecting...");
                 gtk_widget_hide (w->play);
                 gtk_widget_show (w->stop);
@@ -279,7 +275,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
         gtk_widget_set_sensitive (w->artist, !dim_labels);
         gtk_widget_set_sensitive (w->track, !dim_labels);
         gtk_widget_set_sensitive (w->album, !dim_labels);
-        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(w->progressbar), 0);
+        gtk_progress_bar_set_fraction(w->progressbar, 0);
 }
 
 static gboolean
@@ -696,7 +692,7 @@ lastfm_mainwin_create(void)
         /* Menu */
         menu = create_main_menu(w, accel);
         /* Progress bar */
-        w->progressbar = gtk_progress_bar_new();
+        w->progressbar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
         gtk_progress_set_text_alignment(GTK_PROGRESS(w->progressbar),
                                         0.5, 0.5);
         /* Layout */
@@ -712,7 +708,8 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(coverbox, cover_frame, FALSE, FALSE, 5);
         gtk_box_pack_start(coverbox, GTK_WIDGET(labelbox), TRUE, TRUE, 0);
         gtk_box_pack_start(ctrlvbox, GTK_WIDGET(buthbox), TRUE, TRUE, 5);
-        gtk_box_pack_start(ctrlvbox, w->progressbar, FALSE, FALSE, 0);
+        gtk_box_pack_start(ctrlvbox, GTK_WIDGET(w->progressbar),
+                           FALSE, FALSE, 0);
         gtk_box_pack_start(buthbox, w->play, TRUE, TRUE, 0);
         gtk_box_pack_start(buthbox, w->stop, TRUE, TRUE, 0);
         gtk_box_pack_start(buthbox, w->next, TRUE, TRUE, 0);

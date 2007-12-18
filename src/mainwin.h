@@ -18,7 +18,7 @@ typedef struct {
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
         GtkWidget *album_cover;
-        GtkWidget *progressbar;
+        GtkProgressBar *progressbar;
         gboolean is_fullscreen;
         gboolean is_hidden;
 } lastfm_mainwin;
