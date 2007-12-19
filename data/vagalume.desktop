@@ -15,5 +15,5 @@ X-Osso-URI-Actions=lastfm;
 
 [X-Osso-URI-Action Handler lastfm]
 Method=PlayUrl
-Name=lastfm_play_uri
+Name=uri_link_play
 TranslationDomain=osso-uri
