@@ -26,6 +26,7 @@ void lastfm_usercfg_destroy(lastfm_usercfg *cfg);
 void lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username);
 void lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password);
 void lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy);
+void lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir);
 lastfm_usercfg *read_usercfg(void);
 gboolean write_usercfg(lastfm_usercfg *cfg);
 

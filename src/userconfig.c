@@ -25,7 +25,7 @@ cfg_get_val(const char *line, const char *key)
         regmatch_t pmatch[2];
         char *value = NULL;
         char *regex;
-        regex = g_strconcat("^ *", key, " *= *\"\\([^\"]*\\)\" *$", NULL);
+        regex = g_strconcat("^ *", key, " *= *\"\\(.*\\)\" *$", NULL);
         int comp = regcomp(&creg, regex, 0);
         g_free(regex);
         g_return_val_if_fail(comp == 0, NULL);
@@ -90,6 +90,15 @@ lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy)
         g_free(cfg->http_proxy);
         cfg->http_proxy = g_strdup(proxy);
         if (cfg->http_proxy) g_strstrip(cfg->http_proxy);
+}
+
+void
+lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir)
+{
+        g_return_if_fail(cfg != NULL);
+        g_free(cfg->download_dir);
+        cfg->download_dir = g_strdup(dir);
+        if (cfg->download_dir) g_strstrip(cfg->download_dir);
 }
 
 lastfm_usercfg *
@@ -158,6 +167,8 @@ read_usercfg(void)
                         cfg->use_proxy = !strcmp(val, "1");
                 } else if ((val = cfg_get_val(buf, "http_proxy")) != NULL) {
                         lastfm_usercfg_set_http_proxy(cfg, val);
+                } else if ((val = cfg_get_val(buf, "download_dir")) != NULL) {
+                        lastfm_usercfg_set_download_dir(cfg, val);
                 }
                 g_free(val);
         }
@@ -187,10 +198,11 @@ write_usercfg(lastfm_usercfg *cfg)
 #endif
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n"
                     "http_proxy=\"%s\"\nuse_proxy=\"%d\"\n"
-                    "scrobble=\"%d\"\ndiscovery=\"%d\"\n",
+                    "scrobble=\"%d\"\ndiscovery=\"%d\"\n"
+                    "download_dir=\"%s\"",
                     cfg->username, base64pw, cfg->http_proxy,
                     !!cfg->use_proxy, !!cfg->enable_scrobbling,
-                    !!cfg->discovery_mode) <= 0) {
+                    !!cfg->discovery_mode, cfg->download_dir) <= 0) {
                 g_warning("Error writing to config file");
                 retval = FALSE;
         }

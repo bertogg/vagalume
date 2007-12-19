@@ -163,16 +163,58 @@ ui_input_dialog(GtkWindow *parent, const char *title,
         return retvalue;
 }
 
+static char *
+ui_select_download_dir(GtkWindow *parent, const char *curdir)
+{
+        GtkWidget *dialog;
+        char *dir = NULL;
+        dialog = gtk_file_chooser_dialog_new(
+                "Select download directory", parent,
+                GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+                GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+                NULL);
+        if (curdir != NULL) {
+                gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog),
+                                              curdir);
+        }
+        if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+                dir = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        }
+        gtk_widget_destroy(dialog);
+        return dir;
+}
+
+typedef struct {
+        GtkWindow *win;
+        GtkEntry *entry;
+} change_dir_selected_data;
+
+static void
+change_dir_selected(GtkWidget *widget, gpointer data)
+{
+        change_dir_selected_data *d = (change_dir_selected_data *) data;
+        g_return_if_fail(d != NULL && GTK_IS_ENTRY(d->entry));
+        char *dir;
+        dir = ui_select_download_dir(d->win, gtk_entry_get_text(d->entry));
+        if (dir != NULL) {
+                gtk_entry_set_text(d->entry, dir);
+                g_free(dir);
+        }
+}
+
 gboolean
 ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
 {
         g_return_val_if_fail(cfg != NULL, FALSE);
+        change_dir_selected_data *windata;
         GtkDialog *dialog;
         GtkWidget *userlabel, *pwlabel, *scroblabel, *discovlabel;
         GtkWidget *useproxylabel, *proxylabel;
-        GtkEntry *user, *pw, *proxy;
+        GtkWidget *dllabel, *dlbutton;
+        GtkEntry *user, *pw, *proxy, *dlentry;
         GtkWidget *scrobble, *discovery, *useproxy;
-        GtkTable *acctable, *conntable;
+        GtkTable *acctable, *conntable, *dltable;
         GtkNotebook *nb;
         gboolean changed = FALSE;
 
@@ -183,6 +225,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         discovlabel = gtk_label_new("Discovery mode:");
         useproxylabel = gtk_label_new("Use HTTP proxy");
         proxylabel = gtk_label_new("Proxy address:");
+        dllabel = gtk_label_new("Select download directory");
         user = GTK_ENTRY(gtk_entry_new());
         pw = GTK_ENTRY(gtk_entry_new());
         scrobble = gtk_check_button_new();
@@ -190,6 +233,11 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_entry_set_visibility(pw, FALSE);
         proxy = GTK_ENTRY(gtk_entry_new());
         useproxy = gtk_check_button_new();
+        dlentry = GTK_ENTRY(gtk_entry_new());
+        dlbutton = gtk_button_new();
+        gtk_button_set_image(GTK_BUTTON(dlbutton),
+                             gtk_image_new_from_stock(GTK_STOCK_DIRECTORY,
+                                                      GTK_ICON_SIZE_BUTTON));
         gtk_entry_set_activates_default(user, TRUE);
         gtk_entry_set_activates_default(pw, TRUE);
         gtk_entry_set_activates_default(proxy, TRUE);
@@ -197,6 +245,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 gtk_entry_set_text(user, (*cfg)->username);
                 gtk_entry_set_text(pw, (*cfg)->password);
                 gtk_entry_set_text(proxy, (*cfg)->http_proxy);
+                gtk_entry_set_text(dlentry, (*cfg)->download_dir);
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
                                              (*cfg)->enable_scrobbling);
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
@@ -224,14 +273,29 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_table_attach(conntable, useproxy, 1, 2, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(conntable, GTK_WIDGET(proxy), 1, 2, 1, 2, 0, 0, 5, 5);
 
+        dltable = GTK_TABLE(gtk_table_new(2, 2, FALSE));
+        gtk_table_attach(dltable, dllabel, 0, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(dltable, GTK_WIDGET(dlentry), 0, 1, 1, 2,
+                         GTK_EXPAND | GTK_FILL, 0, 5, 5);
+        gtk_table_attach(dltable, dlbutton, 1, 2, 1, 2, 0, 0, 5, 5);
+
         nb = GTK_NOTEBOOK(gtk_notebook_new());
         gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
                                  gtk_label_new("Account"));
         gtk_notebook_append_page(nb, GTK_WIDGET(conntable),
                                  gtk_label_new("Connection"));
+        gtk_notebook_append_page(nb, GTK_WIDGET(dltable),
+                                 gtk_label_new("Download"));
 
         gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(nb),
                            FALSE, FALSE, 10);
+
+        windata = g_slice_new(change_dir_selected_data);
+        windata->win = GTK_WINDOW(dialog);
+        windata->entry = GTK_ENTRY(dlentry);
+
+        g_signal_connect(G_OBJECT(dlbutton), "clicked",
+                         G_CALLBACK(change_dir_selected), windata);
 
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
@@ -239,6 +303,8 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 lastfm_usercfg_set_username(*cfg, gtk_entry_get_text(user));
                 lastfm_usercfg_set_password(*cfg, gtk_entry_get_text(pw));
                 lastfm_usercfg_set_http_proxy(*cfg, gtk_entry_get_text(proxy));
+                lastfm_usercfg_set_download_dir(*cfg,
+                                                gtk_entry_get_text(dlentry));
                 (*cfg)->enable_scrobbling = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(scrobble));
                 (*cfg)->discovery_mode = gtk_toggle_button_get_active(
@@ -248,6 +314,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 changed = TRUE;
         }
         gtk_widget_destroy(GTK_WIDGET(dialog));
+        g_slice_free(change_dir_selected_data, windata);
         return changed;
 }
 
