@@ -13,6 +13,7 @@
 #include "userconfig.h"
 #include "playlist.h"
 
+GtkWidget *compat_gtk_button_new(void);
 gboolean tagwin_run(GtkWindow *parent, const char *user, char **newtags,
                     const GList *usertags, const lastfm_track *track,
                     request_type *type);

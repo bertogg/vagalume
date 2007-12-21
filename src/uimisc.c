@@ -67,6 +67,17 @@ flush_ui_events(void)
         while (gtk_events_pending()) gtk_main_iteration();
 }
 
+/* Don't use gtk_button_new() in Nokia 770 or icons won't appear */
+GtkWidget *
+compat_gtk_button_new(void)
+{
+#ifdef MAEMO2
+        return gtk_button_new_with_label("");
+#else
+        return gtk_button_new();
+#endif
+}
+
 static void
 ui_show_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
 {
@@ -244,7 +255,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         proxy = GTK_ENTRY(gtk_entry_new());
         useproxy = gtk_check_button_new();
         dlentry = GTK_ENTRY(gtk_entry_new());
-        dlbutton = gtk_button_new();
+        dlbutton = compat_gtk_button_new();
         gtk_button_set_image(GTK_BUTTON(dlbutton),
                              gtk_image_new_from_stock(GTK_STOCK_DIRECTORY,
                                                       GTK_ICON_SIZE_BUTTON));
