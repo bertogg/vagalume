@@ -15,9 +15,11 @@
 #if defined(MAEMO2) || defined(MAEMO3)
 #include <hildon-widgets/hildon-program.h>
 #include <hildon-widgets/hildon-banner.h>
+#include <hildon-widgets/hildon-file-chooser-dialog.h>
 #elif defined(MAEMO4)
 #include <hildon/hildon-program.h>
 #include <hildon/hildon-banner.h>
+#include <hildon/hildon-file-chooser-dialog.h>
 #endif
 #include <string.h>
 
@@ -168,17 +170,23 @@ ui_select_download_dir(GtkWindow *parent, const char *curdir)
 {
         GtkWidget *dialog;
         char *dir = NULL;
+#ifdef MAEMO
+        dialog = hildon_file_chooser_dialog_new(
+                parent, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+#else
         dialog = gtk_file_chooser_dialog_new(
                 "Select download directory", parent,
                 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-                GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+                GTK_STOCK_OK, GTK_RESPONSE_OK,
+                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                 NULL);
+#endif
+        gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
         if (curdir != NULL) {
                 gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog),
                                               curdir);
         }
-        if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+        if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
                 dir = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         }
         gtk_widget_destroy(dialog);
@@ -217,6 +225,8 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         GtkTable *acctable, *conntable, *dltable;
         GtkNotebook *nb;
         gboolean changed = FALSE;
+        const lastfm_usercfg *origcfg = cfg;
+        if (*cfg == NULL) *cfg = lastfm_usercfg_new();
 
         dialog = ui_base_dialog(parent, "User settings");
         userlabel = gtk_label_new("Username:");
@@ -241,21 +251,16 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_entry_set_activates_default(user, TRUE);
         gtk_entry_set_activates_default(pw, TRUE);
         gtk_entry_set_activates_default(proxy, TRUE);
-        if (*cfg != NULL) {
-                gtk_entry_set_text(user, (*cfg)->username);
-                gtk_entry_set_text(pw, (*cfg)->password);
-                gtk_entry_set_text(proxy, (*cfg)->http_proxy);
-                gtk_entry_set_text(dlentry, (*cfg)->download_dir);
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
-                                             (*cfg)->enable_scrobbling);
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
-                                             (*cfg)->discovery_mode);
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(useproxy),
-                                             (*cfg)->use_proxy);
-        } else {
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
-                                             TRUE);
-        }
+        gtk_entry_set_text(user, (*cfg)->username);
+        gtk_entry_set_text(pw, (*cfg)->password);
+        gtk_entry_set_text(proxy, (*cfg)->http_proxy);
+        gtk_entry_set_text(dlentry, (*cfg)->download_dir);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
+                                     (*cfg)->enable_scrobbling);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
+                                     (*cfg)->discovery_mode);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(useproxy),
+                                     (*cfg)->use_proxy);
 
         acctable = GTK_TABLE(gtk_table_new(4, 2, FALSE));
         gtk_table_attach(acctable, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
@@ -299,7 +304,6 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
 
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
-                if (*cfg == NULL) *cfg = lastfm_usercfg_new();
                 lastfm_usercfg_set_username(*cfg, gtk_entry_get_text(user));
                 lastfm_usercfg_set_password(*cfg, gtk_entry_get_text(pw));
                 lastfm_usercfg_set_http_proxy(*cfg, gtk_entry_get_text(proxy));
@@ -312,6 +316,11 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 (*cfg)->use_proxy = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(useproxy));
                 changed = TRUE;
+        } else if (origcfg == NULL) {
+                /* If settings haven't been modified, restore the
+                   original pointer if it was NULL */
+                lastfm_usercfg_destroy(*cfg);
+                *cfg = NULL;
         }
         gtk_widget_destroy(GTK_WIDGET(dialog));
         g_slice_free(change_dir_selected_data, windata);

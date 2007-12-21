@@ -106,11 +106,13 @@ if test "$PLATFORM" = "maemo"; then
 
    if test "$MAEMOVERS" = "2" -o "$MAEMOVERS" = "3"; then
       PKG_CHECK_MODULES(hildon, hildon-libs)
+      PKG_CHECK_MODULES(hildonfm, hildon-fm)
    else
       PKG_CHECK_MODULES(hildon, hildon-1)
+      PKG_CHECK_MODULES(hildonfm, hildon-fm-2)
    fi
-   EXTRA_CFLAGS="$EXTRA_CFLAGS $hildon_CFLAGS"
-   EXTRA_LIBS="$EXTRA_LIBS $hildon_LIBS"
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $hildon_CFLAGS $hildonfm_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $hildon_LIBS $hildonfm_LIBS"
 
    PKG_CHECK_MODULES(libosso, libosso osso-af-settings)
    EXTRA_CFLAGS="$EXTRA_CFLAGS $libosso_CFLAGS"

@@ -138,7 +138,7 @@ read_usercfg(void)
         g_free(cfgfile);
         if (fd == NULL) {
                 g_debug("Config file not found");
-                return FALSE;
+                return NULL;
         }
         cfg = lastfm_usercfg_new();
         while (fgets(buf, bufsize, fd)) {
@@ -199,7 +199,7 @@ write_usercfg(lastfm_usercfg *cfg)
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n"
                     "http_proxy=\"%s\"\nuse_proxy=\"%d\"\n"
                     "scrobble=\"%d\"\ndiscovery=\"%d\"\n"
-                    "download_dir=\"%s\"",
+                    "download_dir=\"%s\"\n",
                     cfg->username, base64pw, cfg->http_proxy,
                     !!cfg->use_proxy, !!cfg->enable_scrobbling,
                     !!cfg->discovery_mode, cfg->download_dir) <= 0) {
