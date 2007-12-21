@@ -19,6 +19,7 @@ typedef struct {
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
         GtkWidget *album_cover;
         GtkProgressBar *progressbar;
+        GString *progressbar_text;
         gboolean is_fullscreen;
         gboolean is_hidden;
         gboolean showing_msg;

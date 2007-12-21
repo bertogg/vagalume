@@ -170,6 +170,18 @@ mainwin_update_track_info(lastfm_mainwin *w, const lastfm_track *t)
         g_free(text);
 }
 
+static void
+set_progress_bar_text(lastfm_mainwin *w, const char *text)
+{
+        g_return_if_fail(w != NULL);
+        if (w->showing_msg) {
+                /* If showing a status message, save text for later */
+                g_string_assign(w->progressbar_text, text);
+        } else {
+                gtk_progress_bar_set_text(w->progressbar, text);
+        }
+}
+
 void
 mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
 {
@@ -187,9 +199,7 @@ mainwin_show_progress(lastfm_mainwin *w, guint length, guint played)
                          played/60, played%60);
         }
         gtk_progress_bar_set_fraction(w->progressbar, fraction);
-        if (!w->showing_msg) {
-                gtk_progress_bar_set_text(w->progressbar, count);
-        }
+        set_progress_bar_text(w, count);
 }
 
 typedef struct {
@@ -204,7 +214,9 @@ remove_status_msg(gpointer data)
         remove_status_msg_data *d = (remove_status_msg_data *) data;
         if (d->win->lastmsg_id == d->msgid) {
                 d->win->showing_msg = FALSE;
-                gtk_progress_bar_set_text(d->win->progressbar, " ");
+                /* Restore saved text */
+                gtk_progress_bar_set_text(d->win->progressbar,
+                                          d->win->progressbar_text->str);
         }
         g_slice_free(remove_status_msg_data, d);
         return FALSE;
@@ -216,7 +228,13 @@ mainwin_show_status_msg(lastfm_mainwin *w, const char *text)
         g_return_if_fail(w != NULL && text != NULL);
         remove_status_msg_data *d;
         w->lastmsg_id++;
-        w->showing_msg = TRUE;
+        if (!(w->showing_msg)) {
+                const char *old;
+                w->showing_msg = TRUE;
+                /* Save current text for later */
+                old = gtk_progress_bar_get_text(w->progressbar);
+                g_string_assign(w->progressbar_text, old ? old : " ");
+        }
         gtk_progress_bar_set_text(w->progressbar, text);
         d = g_slice_new(remove_status_msg_data);
         d->win = w;
@@ -242,7 +260,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
         case LASTFM_UI_STATE_DISCONNECTED:
         case LASTFM_UI_STATE_STOPPED:
                 dim_labels = FALSE;
-                gtk_progress_bar_set_text(w->progressbar, "Stopped");
+                set_progress_bar_text(w, "Stopped");
                 gtk_label_set_text(GTK_LABEL(w->playlist), "Stopped");
                 gtk_label_set_text(GTK_LABEL(w->artist), NULL);
                 gtk_label_set_text(GTK_LABEL(w->track), NULL);
@@ -267,7 +285,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 }
                 mainwin_update_track_info(w, t);
                 dim_labels = FALSE;
-                gtk_progress_bar_set_text(w->progressbar, "Playing...");
+                set_progress_bar_text(w, "Playing...");
                 gtk_widget_hide (w->play);
                 gtk_widget_show (w->stop);
                 gtk_widget_set_sensitive (w->stop, TRUE);
@@ -284,7 +302,7 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 break;
         case LASTFM_UI_STATE_CONNECTING:
                 dim_labels = TRUE;
-                gtk_progress_bar_set_text(w->progressbar, "Connecting...");
+                set_progress_bar_text(w, "Connecting...");
                 gtk_label_set_text(GTK_LABEL(w->playlist), "Connecting...");
                 gtk_widget_hide (w->play);
                 gtk_widget_show (w->stop);
@@ -661,6 +679,7 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
 void
 lastfm_mainwin_destroy(lastfm_mainwin *w)
 {
+        g_string_free(w->progressbar_text, TRUE);
         g_free(w);
 }
 
@@ -673,6 +692,8 @@ lastfm_mainwin_create(void)
         GtkWidget *menu;
         GtkWidget *cover_frame;
         GtkAccelGroup *accel = gtk_accel_group_new();
+        w->progressbar_text = g_string_sized_new(30);
+        g_string_assign(w->progressbar_text, " ");
         /* Window */
 #ifdef MAEMO
         w->window = GTK_WINDOW(hildon_window_new());
