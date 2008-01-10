@@ -236,7 +236,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         GtkTable *acctable, *conntable, *dltable;
         GtkNotebook *nb;
         gboolean changed = FALSE;
-        const lastfm_usercfg *origcfg = cfg;
+        const lastfm_usercfg *origcfg = *cfg;
         if (*cfg == NULL) *cfg = lastfm_usercfg_new();
 
         dialog = ui_base_dialog(parent, "User settings");

@@ -15,6 +15,13 @@
 #include "controller.h"
 #include "http.h"
 
+static const char *gst_sink_envvar = "VAGALUME_GST_SINK";
+#ifdef MAEMO
+static const char *default_sink = "dspmp3sink";
+#else
+static const char *default_sink = "autoaudiosink";
+#endif
+
 static GstElement *pipeline = NULL;
 static GstElement *source = NULL;
 static GstElement *decoder = NULL;
@@ -125,6 +132,16 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
         return TRUE;
 }
 
+static const char *
+audio_sink_name(void)
+{
+        const char *user_sink = g_getenv(gst_sink_envvar);
+        if (user_sink == NULL || *user_sink == '\0') {
+                return default_sink;
+        } else {
+                return user_sink;
+        }
+}
 
 gboolean
 lastfm_audio_init(void)
@@ -139,12 +156,11 @@ lastfm_audio_init(void)
         pipeline = gst_pipeline_new (NULL);
         source = gst_element_factory_make ("fdsrc", NULL);
 #ifdef MAEMO
-        sink = gst_element_factory_make ("dspmp3sink", NULL);
-        decoder = sink; /* Unused, this is only for the assertions */
+        decoder = source; /* Unused, this is only for the assertions */
 #else
         decoder = gst_element_factory_make ("mad", NULL);
-        sink = gst_element_factory_make ("autoaudiosink", NULL);
 #endif
+        sink = gst_element_factory_make (audio_sink_name(), NULL);
         if (!pipeline || !source || !decoder || !sink) {
                 g_critical ("Error creating GStreamer elements");
                 return FALSE;
