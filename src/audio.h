@@ -14,7 +14,7 @@ gboolean lastfm_audio_init(void);
 gboolean lastfm_audio_play(const char *url, GCallback audio_started_cb,
                            const char *session_id);
 gboolean lastfm_audio_stop(void);
-guint lastfm_audio_get_running_time(void);
+int lastfm_audio_get_running_time(void);
 int lastfm_audio_get_volume(void);
 void lastfm_audio_set_volume(int vol);
 int lastfm_audio_increase_volume(int inc);

@@ -231,7 +231,7 @@ lastfm_audio_clear(void)
         g_main_loop_unref(loop);
 }
 
-guint
+int
 lastfm_audio_get_running_time(void)
 {
         g_return_val_if_fail(pipeline != NULL, 0);
@@ -239,9 +239,10 @@ lastfm_audio_get_running_time(void)
         GstFormat format = GST_FORMAT_TIME;
         if (gst_element_query_position(pipeline, &format, &t)) {
                 /* Round to nearest integer */
-                return (t + 500000000) / 1000000000;
+                t = (t + 500000000) / 1000000000;
+                return t;
         } else {
-                return 0;
+                return -1;
         }
 }
 
