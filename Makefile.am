@@ -24,7 +24,7 @@ SUBDIRS = src
 
 icon_DATA = data/icons/vagalume.png
 icon48_DATA = data/icons/48x48/*
-appdata_DATA = data/buttons/*
+appdata_DATA = data/buttons/$(PLATFORM)/*
 desktopentry_DATA = data/vagalume.desktop
 
 if HAVE_DBUS_SUPPORT

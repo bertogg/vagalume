@@ -14,7 +14,8 @@
 typedef struct {
         GtkWindow *window;
         GtkWidget *play, *stop, *next;
-        GtkWidget *lovebutton, *ban, *dloadbutton;
+        GtkWidget *lovebutton, *banbutton, *recommendbutton;
+        GtkWidget *dloadbutton, *tagbutton, *addplbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
         GtkWidget *album_cover;

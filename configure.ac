@@ -172,6 +172,7 @@ AC_SUBST(serviceentrydir)
 AC_SUBST(desktopentrydir)
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LIBS)
+AC_SUBST(PLATFORM)
 
 # Produce output files
 AC_OUTPUT(
