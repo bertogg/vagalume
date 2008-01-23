@@ -491,16 +491,27 @@ open_user_settings(GtkWidget *widget, gpointer data)
 }
 
 static gboolean
-set_button_img(GtkWidget *widget, GdkEventButton *event, gpointer data)
+image_button_event_received(GtkWidget *widget, GdkEventButton *event,
+                            gpointer data)
 {
         GtkWidget *image = gtk_image_new_from_pixbuf(GDK_PIXBUF(data));
         gtk_button_set_image(GTK_BUTTON(widget), image);
+        if (event->type == GDK_BUTTON_RELEASE) {
+                gpointer mouse_over;
+                mouse_over = g_object_get_data(G_OBJECT(widget), "mouse_over");
+                /* If the mouse is over the button, emit a "clicked" event */
+                if (mouse_over) gtk_button_clicked(GTK_BUTTON(widget));
+        }
         return FALSE;
 }
 
 static gboolean
-stop_event(GtkWidget *widget, GdkEventCrossing *event, gpointer user_data)
+image_button_set_mouse_over(GtkWidget *widget, GdkEventCrossing *event,
+                            gpointer data)
 {
+        /* Store whether the mouse is over the button */
+        g_object_set_data_full(G_OBJECT(widget), "mouse_over", data, NULL);
+        /* Stop this event from being propagated */
         return TRUE;
 }
 
@@ -513,6 +524,7 @@ image_button_new(char *img)
          * destroyed along with the button */
         GdkPixbuf *normal, *pressed;
         char *normalstr, *pressedstr;
+        GtkWidget *image;
 
         /* Load the images */
         normalstr = g_strdup_printf("%s/%s.png", APP_DATA_DIR, img);
@@ -523,19 +535,21 @@ image_button_new(char *img)
         g_free(pressedstr);
 
         button = compat_gtk_button_new();
-        set_button_img(button, NULL, normal);
+        image = gtk_image_new_from_pixbuf(GDK_PIXBUF(normal));
+        gtk_button_set_image(GTK_BUTTON(button), image);
         gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
         g_object_set(button, "can-focus", FALSE, NULL);
 
         g_signal_connect(button, "button-press-event",
-                         G_CALLBACK(set_button_img), pressed);
+                         G_CALLBACK(image_button_event_received), pressed);
         g_signal_connect(button, "button-release-event",
-                         G_CALLBACK(set_button_img), normal);
-        g_signal_connect(button, "button-release-event",
-                         G_CALLBACK(gtk_button_clicked), NULL);
-        /* Don't highlight the button when the mouse is over */
+                         G_CALLBACK(image_button_event_received), normal);
+        /* Store when the mouse enters or leaves the button */
         g_signal_connect(button, "enter-notify-event",
-                         G_CALLBACK(stop_event), NULL);
+                         G_CALLBACK(image_button_set_mouse_over),
+                         GINT_TO_POINTER(1));
+        g_signal_connect(button, "leave-notify-event",
+                         G_CALLBACK(image_button_set_mouse_over), NULL);
         return button;
 }
 
