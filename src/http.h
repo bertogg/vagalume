@@ -10,11 +10,15 @@
 
 #include <glib.h>
 
+typedef gboolean (*http_download_progress_cb)(gpointer userdata,
+                                              double dltotal, double dlnow);
+
 void http_set_proxy(const char *proxy);
 char *escape_url(const char *url, gboolean escape);
 gboolean http_get_buffer(const char *url, char **buffer, size_t *bufsize);
 gboolean http_get_to_fd(const char *url, int fd, const GSList *headers);
-gboolean http_download_file(const char *url, const char *filename);
+gboolean http_download_file(const char *url, const char *filename,
+                            http_download_progress_cb cb, gpointer userdata);
 gboolean http_post_buffer(const char *url, const char *postdata,
                           char **retdata, const GSList *headers);
 void http_init(void);

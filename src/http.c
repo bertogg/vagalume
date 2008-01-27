@@ -18,6 +18,11 @@ typedef struct {
         size_t size;
 } curl_buffer;
 
+typedef struct {
+        http_download_progress_cb cb;
+        gpointer userdata;
+} http_dl_progress_wrapper_data;
+
 void
 http_set_proxy(const char *proxy)
 {
@@ -114,11 +119,27 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
         }
 }
 
+static int
+http_dl_progress_wrapper(void *data, double dltotal, double dlnow,
+                             double ultotal, double ulnow)
+{
+        http_dl_progress_wrapper_data *wrapdata;
+        wrapdata = (http_dl_progress_wrapper_data *) data;
+        g_return_val_if_fail(wrapdata != NULL && wrapdata->cb != NULL, -1);
+        if ((*(wrapdata->cb))(wrapdata->userdata, dltotal, dlnow)) {
+                return 0;
+        } else {
+                return -1;
+        }
+}
+
 gboolean
-http_download_file(const char *url, const char *filename)
+http_download_file(const char *url, const char *filename,
+                   http_download_progress_cb cb, gpointer userdata)
 {
         g_return_val_if_fail(url != NULL && filename != NULL, FALSE);
         struct stat statdata;
+        http_dl_progress_wrapper_data *wrapdata = NULL;
         CURLcode retcode;
         CURL *handle = NULL;
         FILE *f = NULL;
@@ -136,9 +157,21 @@ http_download_file(const char *url, const char *filename)
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
+        if (cb != NULL) {
+                wrapdata = g_slice_new(http_dl_progress_wrapper_data);
+                wrapdata->cb = cb;
+                wrapdata->userdata = userdata;
+                curl_easy_setopt(handle, CURLOPT_PROGRESSFUNCTION,
+                                 http_dl_progress_wrapper);
+                curl_easy_setopt(handle, CURLOPT_PROGRESSDATA, wrapdata);
+                curl_easy_setopt(handle, CURLOPT_NOPROGRESS, FALSE);
+        }
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         fclose(f);
+        if (wrapdata != NULL) {
+                g_slice_free(http_dl_progress_wrapper_data, wrapdata);
+        }
         if (retcode == CURLE_OK) {
                 return TRUE;
         } else {
