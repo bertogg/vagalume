@@ -7,6 +7,7 @@
 
 #include "http.h"
 #include "globaldefs.h"
+#include "util.h"
 #include <curl/curl.h>
 #include <string.h>
 #include <sys/types.h>
@@ -138,12 +139,11 @@ http_download_file(const char *url, const char *filename,
                    http_download_progress_cb cb, gpointer userdata)
 {
         g_return_val_if_fail(url != NULL && filename != NULL, FALSE);
-        struct stat statdata;
         http_dl_progress_wrapper_data *wrapdata = NULL;
         CURLcode retcode;
         CURL *handle = NULL;
         FILE *f = NULL;
-        if (stat(filename, &statdata)) {
+        if (!file_exists(filename)) {
                 f = fopen(filename, "w");
         } else {
                 g_warning("File %s already exists", filename);

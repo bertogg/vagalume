@@ -18,9 +18,11 @@
 #include "playlist.h"
 #include "audio.h"
 #include "uimisc.h"
+#include "dlwin.h"
 #include "http.h"
 #include "globaldefs.h"
 #include "dbus.h"
+#include "util.h"
 
 static lastfm_session *session = NULL;
 static lastfm_pls *playlist = NULL;
@@ -810,59 +812,30 @@ controller_disconnect(void)
 }
 
 /**
- * Download a track. This will take some time, so it must be called
- * using g_thread_create() to avoid freezing the UI.
- * @param data Pointer to the lastfm_track to be downloaded
- * @return NULL (this value is not used)
- */
-static gpointer
-download_track_thread(gpointer data)
-{
-        lastfm_track *t = (lastfm_track *) data;
-        g_return_val_if_fail(t != NULL && t->free_track_url != NULL, NULL);
-        char *filename = NULL;
-        gdk_threads_enter();
-        if (usercfg != NULL) {
-                filename = g_strconcat(usercfg->download_dir, "/",
-                                       t->artist, " - ", t->title, ".mp3",
-                                       NULL);
-        }
-        gdk_threads_leave();
-        if (filename != NULL) {
-                g_debug("Downloading track to %s", filename);
-                gdk_threads_enter();
-                controller_show_banner("Downloading track");
-                gdk_threads_leave();
-                if (http_download_file(t->free_track_url, filename,
-                                       NULL, NULL)) {
-                        g_debug("Downloaded track %s", filename);
-                        gdk_threads_enter();
-                        controller_show_banner("Track downloaded");
-                        gdk_threads_leave();
-                } else {
-                        g_warning("Error downloading track %s", filename);
-                        gdk_threads_enter();
-                        controller_show_banner("Error downloading track");
-                        gdk_threads_leave();
-                }
-                g_free(filename);
-        } else {
-                g_warning("Could not find user cfg!!!");
-        }
-        lastfm_track_destroy(t);
-        return NULL;
-}
-
-/**
  * Download the currently play track (if it's free)
  */
 void
 controller_download_track(void)
 {
-        g_return_if_fail(nowplaying && nowplaying->free_track_url);
+        g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
         lastfm_track *t = lastfm_track_copy(nowplaying);
         if (controller_confirm_dialog("Download this track?")) {
-                g_thread_create(download_track_thread, t, FALSE, NULL);
+                char *filename, *dstpath;
+                gboolean download = TRUE;
+                filename = g_strconcat(t->artist, " - ", t->title, ".mp3",
+                                       NULL);
+                dstpath = g_strconcat(usercfg->download_dir, "/", filename,
+                                       NULL);
+                if (file_exists(dstpath)) {
+                        download = controller_confirm_dialog("File exists. "
+                                                             "Overwrite?");
+                }
+                if (download) {
+                        dlwin_download_file(t->free_track_url, filename,
+                                            dstpath);
+                }
+                g_free(filename);
+                g_free(dstpath);
         } else {
                 lastfm_track_destroy(t);
         }

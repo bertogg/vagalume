@@ -21,6 +21,7 @@ vagalume_SOURCES = \
 	connection.h \
 	controller.c controller.h \
 	dbus.h \
+	dlwin.c dlwin.h \
 	globaldefs.h \
 	http.c http.h \
 	main.c \

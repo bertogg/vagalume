@@ -16,6 +16,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 /**
  * Computes the MD5 hash of a NULL-terminated string
@@ -84,4 +85,16 @@ str_glist_join(const GList *list, const char *separator)
                 }
         }
         return g_string_free(str, FALSE);
+}
+
+/**
+ * Checks whether a file exists
+ * @param filename Full path to the file
+ * @return TRUE if it exists, FALSE otherwise
+ */
+gboolean
+file_exists(const char *filename)
+{
+        g_return_val_if_fail(filename, FALSE);
+        return !access(filename, F_OK);
 }

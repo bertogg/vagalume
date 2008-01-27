@@ -12,5 +12,6 @@
 char *get_md5_hash(const char *str);
 char *compute_auth_token(const char *password, const char *timestamp);
 char *str_glist_join(const GList *list, const char *separator);
+gboolean file_exists(const char *filename);
 
 #endif
