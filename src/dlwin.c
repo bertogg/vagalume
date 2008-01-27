@@ -5,6 +5,7 @@
  * This file is published under the GNU GPLv3
  */
 
+#include "globaldefs.h"
 #include "dlwin.h"
 #include "http.h"
 
@@ -118,8 +119,8 @@ dlwin_download_file(const char *url, const char *filename,
                     const char *dstpath)
 {
         GtkWidget *label;
-        const int labelsize = 100;
-        char labeltext[labelsize];
+        const int textsize = 100;
+        char text[textsize];
         GtkBox *box, *butbox;
         dlwin *w = g_slice_new(dlwin);
         w->cancelled = FALSE;
@@ -128,9 +129,12 @@ dlwin_download_file(const char *url, const char *filename,
 
         /* Widget creation */
         w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-        gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
-        snprintf(labeltext, labelsize, "Downloading file\n%s", filename);
-        label = gtk_label_new(labeltext);
+        gtk_container_set_border_width(GTK_CONTAINER(w->window), 10);
+        gtk_window_set_icon_from_file(GTK_WINDOW(w->window), APP_ICON, NULL);
+        snprintf(text, textsize, "Downloading %s", filename);
+        gtk_window_set_title(GTK_WINDOW(w->window), text);
+        snprintf(text, textsize, "Downloading file\n%s", filename);
+        label = gtk_label_new(text);
         gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
         w->progressbar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
         w->cancelbutton = gtk_button_new_with_mnemonic("_Cancel");

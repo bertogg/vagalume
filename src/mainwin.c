@@ -35,8 +35,6 @@ static const int primary_button_size = 60;
 static const int secondary_button_size = 35;
 #endif
 
-static const char *app_icon_big = ICON48_DIR "/vagalume.png";
-static const char *app_icon = ICON_DIR "/vagalume.png";
 static const char *cover_background = APP_DATA_DIR "/cover.png";
 
 static const char *authors[] = {
@@ -475,7 +473,7 @@ static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
-        GdkPixbuf *logo = gdk_pixbuf_new_from_file(app_icon_big, NULL);
+        GdkPixbuf *logo = gdk_pixbuf_new_from_file(APP_ICON_BIG, NULL);
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", appdescr, "copyright", copyright,
                               "license", license, "version", APP_VERSION,
@@ -767,7 +765,7 @@ lastfm_mainwin_create(void)
         gtk_window_set_default_size(w->window, 500, -1);
 #endif
         gtk_window_add_accel_group(w->window, accel);
-        gtk_window_set_icon_from_file(w->window, app_icon, NULL);
+        gtk_window_set_icon_from_file(w->window, APP_ICON, NULL);
         gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
         /* Boxes */
         vbox = GTK_BOX(gtk_vbox_new(FALSE, 5));

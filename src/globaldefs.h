@@ -22,4 +22,7 @@
 #define LASTFM_APP_ID "vag"
 #define LASTFM_APP_VERSION "0.1"
 
+#define APP_ICON ICON_DIR "/vagalume.png"
+#define APP_ICON_BIG ICON48_DIR "/vagalume.png"
+
 #endif
