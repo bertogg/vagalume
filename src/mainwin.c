@@ -766,14 +766,14 @@ lastfm_mainwin_create(void)
 #endif
         gtk_window_add_accel_group(w->window, accel);
         gtk_window_set_icon_from_file(w->window, APP_ICON, NULL);
-        gtk_container_set_border_width(GTK_CONTAINER(w->window), 0);
+        gtk_container_set_border_width(GTK_CONTAINER(w->window), 2);
         /* Boxes */
         vbox = GTK_BOX(gtk_vbox_new(FALSE, 5));
         centralbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         image_box_holder = GTK_BOX(gtk_hbox_new(FALSE, 0));
         image_box_holder2 = GTK_BOX(gtk_vbox_new(FALSE, 5));
         labelbox = GTK_BOX(gtk_vbox_new(TRUE, 5));
-        buttonshbox = GTK_BOX(gtk_hbox_new(FALSE, 10));
+        buttonshbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
         secondary_bbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
         secondary_bar_vbox = GTK_BOX(gtk_vbox_new(FALSE, 2));
         /* Buttons */
