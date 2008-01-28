@@ -9,12 +9,15 @@
 MAINTAINERCLEANFILES = \
 	Makefile.in \
 	aclocal.m4 \
+	build-stamp \
 	compile \
 	config.guess \
 	config.h.in \
 	config.h.in~ \
 	config.sub \
 	configure \
+	debian/files \
+	debian/vagalume.* \
 	depcomp \
 	install-sh \
 	ltmain.sh \
