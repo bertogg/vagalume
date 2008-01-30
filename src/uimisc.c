@@ -114,7 +114,7 @@ ui_info_banner(GtkWindow *parent, const char *text)
 {
         g_return_if_fail(parent != NULL && text != NULL);
 #ifdef MAEMO
-        hildon_banner_show_information(GTK_WIDGET(parent), NULL, text);
+        hildon_banner_show_information(NULL, NULL, text);
 #else
         /* TODO: Implement a notification banner for Gnome */
         g_warning("Info banner not implemented!!");

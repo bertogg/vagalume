@@ -1,6 +1,6 @@
 /*
  * controller.c -- Where the control of the program is
- * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ * Copyright (C) 2007, 2008 Alberto Garcia <agarcia@igalia.com>
  *
  * This file is published under the GNU GPLv3
  */
@@ -136,7 +136,12 @@ gboolean
 controller_confirm_dialog(const char *text)
 {
         g_return_val_if_fail(mainwin != NULL, FALSE);
+
+#ifdef MAEMO
+        return ui_confirm_dialog(NULL, text);
+#else
         return ui_confirm_dialog(mainwin->window, text);
+#endif
 }
 
 /**
@@ -175,6 +180,16 @@ controller_show_progress(gpointer data)
                 lastfm_track_destroy(tr);
                 return FALSE;
         }
+}
+
+/**
+ * Gets the track that is currently being played
+ * @return The track
+ */
+lastfm_track *
+controller_get_current_track(void)
+{
+  return nowplaying;
 }
 
 /**
@@ -355,6 +370,9 @@ controller_set_nowplaying(lastfm_track *track)
                 d->start = 0;
                 g_thread_create(set_nowplaying_thread,d,FALSE,NULL);
         }
+
+        /* Notify the playback status */
+        lastfm_dbus_notify_playback(track);
 }
 
 /**
@@ -781,6 +799,9 @@ controller_stop_playing(void)
                 LASTFM_UI_STATE_DISCONNECTED;
         mainwin_set_ui_state(mainwin, new_state, NULL);
         finish_playing_track();
+
+        /* Notify the playback status */
+        lastfm_dbus_notify_playback(NULL);
 }
 
 /**
@@ -1388,7 +1409,11 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
                 controller_play_radio_by_url(radio_url);
         }
 
+        lastfm_dbus_notify_started();
+
         mainwin_run_app();
+
+        lastfm_dbus_notify_closing();
 
         lastfm_session_destroy(session);
         session = NULL;

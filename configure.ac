@@ -133,6 +133,22 @@ if test "$PLATFORM" = "maemo"; then
       AC_MSG_ERROR([Unable to find dbus service directory])
    fi
 
+   PKG_CHECK_MODULES(SBPLUGIN, gtk+-2.0 glib-2.0 hildon-1 libhildondesktop
+                               gconf-2.0 libhildonwm libosso osso-af-settings
+                               dbus-1, [have_sb_plugin=1], [have_sb_plugin=0])
+
+   if test "$have_sb_plugin" = "1"; then
+      sbplugindesktopentrydir=`$PKG_CONFIG osso-af-settings \
+                               --variable=statusbardesktopentrydir`
+      sbplugindir=`$PKG_CONFIG osso-af-settings --variable=hildondesktoplibdir`
+
+      if test "x$sbplugindesktopentrydir" = "x"; then
+         AC_MSG_ERROR([Unable to find .desktop directory])
+      elif test "x$sbplugindir" = "x"; then
+         AC_MSG_ERROR([Unable to find hildon desktop libs directory])
+      fi
+   fi
+
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])
    if test "$MAEMOVERS" = "2"; then
       AC_DEFINE([MAEMO2], [], [Defined if building for Maemo 2 (gregale)])
@@ -163,6 +179,16 @@ fi
 AM_CONDITIONAL(HAVE_CONIC, test "$have_conic" = "1")
 if test "$have_conic" = "1"; then
    AC_DEFINE([HAVE_CONIC], [1], [Defined if building with libconic])
+fi
+
+AM_CONDITIONAL(HAVE_MAEMO_SB_PLUGIN, test "$have_sb_plugin" = "1")
+if test "$have_sb_plugin" = "1"; then
+   AC_DEFINE([HAVE_MAEMO_SB_PLUGIN], [1],
+             [Defined if building the Maemo status bar plugin])
+   AC_SUBST(SBPLUGIN_LIBS)
+   AC_SUBST(SBPLUGIN_CFLAGS)
+   AC_SUBST(sbplugindesktopentrydir)
+   AC_SUBST(sbplugindir)
 fi
 
 AC_SUBST(appdatadir, "\${datadir}/vagalume")

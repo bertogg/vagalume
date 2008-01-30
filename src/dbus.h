@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "globaldefs.h"
+#include "controller.h"
 
 #define APP_DBUS_SERVICE "com.igalia." APP_NAME_LC
 #define APP_DBUS_OBJECT "/com/igalia/" APP_NAME_LC
@@ -24,17 +25,33 @@
 #define APP_DBUS_METHOD_HIDEWINDOW "HideWindow"
 #define APP_DBUS_METHOD_CLOSEAPP "CloseApp"
 #define APP_DBUS_METHOD_TOPAPP "top_application"
+#define APP_DBUS_METHOD_REQUEST_STATUS "request_status"
+
+#define SB_PLUGIN_DBUS_SERVICE "com.igalia.vagalume_sb_plugin"
+#define SB_PLUGIN_DBUS_OBJECT "/com/igalia/vagalume_sb_plugin"
+#define SB_PLUGIN_DBUS_IFACE SB_PLUGIN_DBUS_SERVICE
+#define SB_PLUGIN_DBUS_METHOD_NOTIFY "notify"
+#define SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING "playing"
+#define SB_PLUGIN_DBUS_METHOD_NOTIFY_STOPPED "stopped"
+#define SB_PLUGIN_DBUS_METHOD_NOTIFY_STARTED "started"
+#define SB_PLUGIN_DBUS_METHOD_NOTIFY_CLOSING "closing"
 
 #ifdef HAVE_DBUS_SUPPORT
 
 const char *lastfm_dbus_init(void);
 void lastfm_dbus_close(void);
+void lastfm_dbus_notify_playback(lastfm_track *track);
+void lastfm_dbus_notify_started(void);
+void lastfm_dbus_notify_closing(void);
 
 #else
 
-const char *lastfm_dbus_init() { return NULL; }
+const char *lastfm_dbus_init(void) { return NULL; }
 void lastfm_dbus_close(void) { }
+void lastfm_dbus_notify_playback(lastfm_track *track) { }
+void lastfm_dbus_notify_started() { }
+void lastfm_dbus_notify_closing() { }
 
-#endif
+#endif /* HAVE_DBUS_SUPPORT */
 
 #endif

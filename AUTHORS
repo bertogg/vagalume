@@ -1,9 +1,12 @@
 Alberto Garcia Gonzalez <agarcia@igalia.com>
-Core development
+* Core development
+
+Mario Sánchez Prada <msanchez@igalia.com>
+* Maemo status bar plugin
+* Icons, UI enhancements
 
 Felipe Erias Morandeira <femorandeira@igalia.com>
-Mario Sanchez Prada <msanchez@igalia.com>
-Icons, UI enhancements
+* Icons, UI enhancements
 
 Xabier Rodríguez Calvar <xrcalvar@igalia.com>
-Help with ConIc support
+* Help with ConIc support

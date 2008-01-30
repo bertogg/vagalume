@@ -15,6 +15,9 @@
 #define APP_VERSION VERSION
 #define APP_OS KERNEL_NAME
 #define APP_OS_LC KERNEL_NAME_LC
+#define SB_PLUGIN_NAME "Vagalume Status Bar Plugin"
+#define SB_PLUGIN_NAME_LC "vagalume-sb-plugin"
+#define SB_PLUGIN_VERSION VERSION
 
 #define APP_FULLNAME APP_NAME " " APP_VERSION " (" APP_OS "/" ARCH ")"
 

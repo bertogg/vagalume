@@ -1,7 +1,7 @@
 #
 # This file is part of Vagalume
 #
-# Copyright (C) 2007 Alberto Garcia Gonzalez
+# Copyright (C) 2007, 2008 Alberto Garcia Gonzalez
 #
 # This file is published under the GNU GPLv3.
 #
@@ -46,4 +46,19 @@ endif
 
 if HAVE_DBUS_SUPPORT
 vagalume_SOURCES += dbus.c
+endif
+
+if HAVE_MAEMO_SB_PLUGIN
+sbplugin_LTLIBRARIES = libvagalumesbplugin.la
+
+libvagalumesbplugin_la_SOURCES = \
+	dbus.h \
+	globaldefs.h \
+	vagalume-sb-plugin.c vagalume-sb-plugin.h
+
+libvagalumesbplugin_la_LIBADD = $(SBPLUGIN_LIBS)
+
+libvagalumesbplugin_la_CFLAGS = $(SBPLUGIN_CFLAGS) \
+	-DAPP_DATA_DIR=\"$(appdatadir)\" \
+	-DICON_DIR=\"$(icondir)\"
 endif

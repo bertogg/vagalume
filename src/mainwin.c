@@ -1,6 +1,7 @@
 /*
  * mainwin.c -- Functions to control the main program window
- * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ * Copyright (C) 2007, 2008 Alberto Garcia <agarcia@igalia.com>
+ * Copyright (C) 2008 Felipe Erias Morandeira <femorandeira@igalia.com>
  *
  * This file is published under the GNU GPLv3.
  */
@@ -38,17 +39,17 @@ static const int secondary_button_size = 35;
 static const char *cover_background = APP_DATA_DIR "/cover.png";
 
 static const char *authors[] = {
-        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>",
+        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>\n",
+        "Mario Sanchez Prada\n<msanchez@igalia.com>",
         NULL
 };
 static const char *artists[] = {
-        "Felipe Erias Morandeira\n<femorandeira@igalia.com>\n",
-        "Mario Sanchez Prada\n<msanchez@igalia.com>",
+        "Felipe Erias Morandeira\n<femorandeira@igalia.com>",
         NULL
 };
 
 static const char *appdescr = "A Last.fm client for Gnome and Maemo";
-static const char *copyright = "(c) 2007 Alberto Garcia Gonzalez";
+static const char *copyright = "(c) 2007, 2008 Alberto Garcia Gonzalez";
 static const char *website = "http://people.igalia.com/berto/";
 static const char *license =
 "Vagalume is free software: you can redistribute\n"

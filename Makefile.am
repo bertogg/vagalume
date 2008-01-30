@@ -1,7 +1,7 @@
 #
 # This file is part of Vagalume
 #
-# Copyright (C) 2007 Alberto Garcia Gonzalez
+# Copyright (C) 2007, 2008 Alberto Garcia Gonzalez
 #
 # This file is published under the GNU GPLv3.
 #
@@ -21,7 +21,8 @@ MAINTAINERCLEANFILES = \
 	depcomp \
 	install-sh \
 	ltmain.sh \
-	missing
+	missing \
+	mkinstalldirs
 
 SUBDIRS = src
 
@@ -32,4 +33,8 @@ desktopentry_DATA = data/vagalume.desktop
 
 if HAVE_DBUS_SUPPORT
 serviceentry_DATA = data/vagalume.service
+endif
+
+if HAVE_MAEMO_SB_PLUGIN
+sbplugindesktopentry_DATA = data/vagalume-sb-plugin.desktop
 endif

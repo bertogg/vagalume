@@ -1,12 +1,12 @@
 /*
  * dbus.c -- D-BUS interface
  * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ * Copyright (C) 2008 Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This file is published under the GNU GPLv3
  */
 
 #include "dbus.h"
-#include "controller.h"
 
 #include <gtk/gtk.h>
 #include <strings.h>
@@ -94,6 +94,19 @@ closeapp_handler_idle(gpointer data)
 }
 
 #ifdef MAEMO
+static gboolean
+requeststatus_handler_idle(gpointer data)
+{
+        lastfm_track *current_track = NULL;
+
+        current_track = controller_get_current_track();
+        gdk_threads_enter();
+        lastfm_dbus_notify_playback(current_track);
+        gdk_threads_leave();
+
+        return FALSE;
+}
+
 static gint
 dbus_req_handler(const gchar* interface, const gchar* method,
                  GArray* arguments, gpointer data, osso_rpc_t* retval)
@@ -121,6 +134,8 @@ dbus_req_handler(const gchar* interface, const gchar* method,
                 g_idle_add(closeapp_handler_idle, NULL);
         } else if (!strcasecmp(method, APP_DBUS_METHOD_TOPAPP)) {
                 g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
+        } else if (!strcasecmp(method, APP_DBUS_METHOD_REQUEST_STATUS)) {
+                g_idle_add(requeststatus_handler_idle, NULL);
         }
         return OSSO_OK;
 }
@@ -145,5 +160,91 @@ void
 lastfm_dbus_close(void)
 {
         osso_deinitialize(context);
+}
+
+void
+lastfm_dbus_notify_playback (lastfm_track *track)
+{
+        osso_return_t result;
+        const char *notify_type = NULL;
+
+        if (track != NULL) {
+
+                /* Now playing */
+
+                notify_type = SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING;
+                result = osso_rpc_async_run(context,
+                                            SB_PLUGIN_DBUS_SERVICE,
+                                            SB_PLUGIN_DBUS_OBJECT,
+                                            SB_PLUGIN_DBUS_IFACE,
+                                            SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                                            NULL,
+                                            NULL,
+                                            DBUS_TYPE_STRING, notify_type,
+                                            DBUS_TYPE_STRING, track->artist,
+                                            DBUS_TYPE_STRING, track->title,
+                                            DBUS_TYPE_STRING, track->album,
+                                            DBUS_TYPE_INVALID);
+
+        } else {
+
+                /* Stopped */
+
+                notify_type = SB_PLUGIN_DBUS_METHOD_NOTIFY_STOPPED;
+                result = osso_rpc_async_run(context,
+                                            SB_PLUGIN_DBUS_SERVICE,
+                                            SB_PLUGIN_DBUS_OBJECT,
+                                            SB_PLUGIN_DBUS_IFACE,
+                                            SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                                            NULL,
+                                            NULL,
+                                            DBUS_TYPE_STRING, notify_type,
+                                            DBUS_TYPE_INVALID);
+        }
+
+        if (result != OSSO_OK) {
+                g_warning("Error sending DBus message");
+        }
+}
+
+void
+lastfm_dbus_notify_started(void)
+{
+        osso_return_t result;
+
+        result = osso_rpc_async_run(context,
+                                    SB_PLUGIN_DBUS_SERVICE,
+                                    SB_PLUGIN_DBUS_OBJECT,
+                                    SB_PLUGIN_DBUS_IFACE,
+                                    SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                                    NULL,
+                                    NULL,
+                                    DBUS_TYPE_STRING,
+                                    SB_PLUGIN_DBUS_METHOD_NOTIFY_STARTED,
+                                    DBUS_TYPE_INVALID);
+
+        if (result != OSSO_OK) {
+                g_warning("Error sending DBus message");
+        }
+}
+
+void
+lastfm_dbus_notify_closing(void)
+{
+        osso_return_t result;
+
+        result = osso_rpc_async_run(context,
+                                    SB_PLUGIN_DBUS_SERVICE,
+                                    SB_PLUGIN_DBUS_OBJECT,
+                                    SB_PLUGIN_DBUS_IFACE,
+                                    SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                                    NULL,
+                                    NULL,
+                                    DBUS_TYPE_STRING,
+                                    SB_PLUGIN_DBUS_METHOD_NOTIFY_CLOSING,
+                                    DBUS_TYPE_INVALID);
+        if (result != OSSO_OK) {
+                g_warning("Error sending DBus message");
+        }
 }
 #endif /* MAEMO */
