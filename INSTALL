@@ -11,3 +11,7 @@ in other non-Debian system then run:
 
 In both cases the system should detect automatically if it's compiling
 for Maemo or for a standard computer.
+
+For rpm-based systems a vagalume.spec file is provided, thanks to
+the kind contribution of Tim Wegener. This file is known to work
+in the Fedora distribution.
