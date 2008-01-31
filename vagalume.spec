@@ -8,8 +8,8 @@ Group: Applications/Multimedia
 URL: http://people.igalia.com/berto/
 Source0: %{name}_%{version}-1.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc, gtk2-devel, gstreamer-devel, curl-devel
-Requires: gtk2, gstreamer, curl
+BuildRequires: gcc, gtk2-devel, gstreamer-devel, curl-devel, libxml2-devel
+Requires: gtk2, gstreamer, curl, libxml2
 
 %description
 Vagalume is a Last.fm client designed for the Gnome desktop
