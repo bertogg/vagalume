@@ -35,6 +35,7 @@ static lastfm_track *nowplaying = NULL;
 static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
+static gboolean stopping_after_track = FALSE;
 
 typedef struct {
         lastfm_track *track;
@@ -767,9 +768,13 @@ controller_start_playing_cb(gpointer userdata)
 void
 controller_start_playing(void)
 {
-        check_session_cb cb;
-        cb = (check_session_cb) controller_start_playing_cb;
-        check_session(cb, NULL, NULL);
+        if (stopping_after_track) {
+                controller_stop_playing();
+        } else {
+                check_session_cb cb;
+                cb = (check_session_cb) controller_start_playing_cb;
+                check_session(cb, NULL, NULL);
+        }
 }
 
 /**
@@ -799,6 +804,7 @@ controller_stop_playing(void)
                 LASTFM_UI_STATE_DISCONNECTED;
         mainwin_set_ui_state(mainwin, new_state, NULL);
         finish_playing_track();
+        stopping_after_track = FALSE;
 
         /* Notify the playback status */
         lastfm_dbus_notify_playback(NULL);
@@ -860,6 +866,16 @@ controller_download_track(void)
         } else {
                 lastfm_track_destroy(t);
         }
+}
+
+/**
+ * Tells Vagalume to stop (or not) after the current track
+ * @param stop Whether to stop or not
+ */
+void
+controller_set_stop_after(gboolean stop)
+{
+	stopping_after_track = stop;
 }
 
 /**

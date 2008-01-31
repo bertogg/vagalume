@@ -314,6 +314,8 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_widget_set_sensitive (w->settings, FALSE);
                 gtk_window_set_title(w->window, APP_NAME);
                 gtk_widget_set_sensitive(w->album_cover, FALSE);
+                gtk_check_menu_item_set_active(
+                        GTK_CHECK_MENU_ITEM(w->stopafter), FALSE);
                 break;
         default:
                 g_critical("Unknown ui state received: %d", state);
@@ -432,6 +434,14 @@ static void
 url_radio_selected(GtkWidget *widget, gpointer data)
 {
         controller_play_radio_ask_url();
+}
+
+static void
+stop_after_selected(GtkWidget *widget, gpointer data)
+{
+        GtkCheckMenuItem *item = GTK_CHECK_MENU_ITEM(widget);
+        gboolean stop = gtk_check_menu_item_get_active(item);
+        controller_set_stop_after(stop);
 }
 
 static void
@@ -561,7 +571,7 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         GtkMenuShell *lastfmsub, *radiosub, *actionssub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
-        GtkWidget *love, *ban, *tag, *dorecomm, *addtopls, *dload;
+        GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
         GtkWidget *about;
@@ -677,6 +687,8 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         /* Actions */
         actions = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Actions"));
         actionssub = GTK_MENU_SHELL(gtk_menu_new());
+        stopafter =
+                gtk_check_menu_item_new_with_label("Stop after this track");
         love = gtk_menu_item_new_with_label("Love this track");
         ban = gtk_menu_item_new_with_label("Ban this track");
         addtopls = gtk_menu_item_new_with_label("Add to playlist");
@@ -691,6 +703,9 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         gtk_menu_shell_append(actionssub, dload);
         gtk_menu_shell_append(actionssub, tag);
         gtk_menu_shell_append(actionssub, dorecomm);
+        gtk_menu_shell_append(actionssub, stopafter);
+        g_signal_connect(G_OBJECT(stopafter), "toggled",
+                         G_CALLBACK(stop_after_selected), NULL);
         g_signal_connect(G_OBJECT(love), "activate",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(ban), "activate",
@@ -731,9 +746,10 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
 
         w->radiomenu = GTK_WIDGET(radio);
         w->actionsmenu = GTK_WIDGET(actions);
-        w->settings = GTK_WIDGET(settings);
-        w->dload = GTK_WIDGET(dload);
-        w->love = GTK_WIDGET(love);
+        w->settings = settings;
+        w->dload = dload;
+        w->love = love;
+        w->stopafter = stopafter;
         return GTK_WIDGET(bar);
 }
 

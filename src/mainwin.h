@@ -18,6 +18,7 @@ typedef struct {
         GtkWidget *dloadbutton, *tagbutton, *addplbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
+        GtkWidget *stopafter;
         GtkWidget *album_cover;
         GtkProgressBar *progressbar;
         GString *progressbar_text;
