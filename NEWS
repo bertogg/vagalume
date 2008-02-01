@@ -1,3 +1,16 @@
+0.5 (01 Feb 2008)
+  * Status bar plugin (Maemo OS2008 only) (thanks Mario Sanchez)
+  * New buttons and other UI improvements (thanks Felipe Erias)
+  * Fix random problem scrobbling tracks
+  * Download window to see the progress of downloads
+  * New "Stop after this track" menu entry (thanks Tim Wegener)
+  * Keyboard shortcuts to love, ban, recommend, tag and add to playlist
+  * New configuration setting: download directory
+  * Environment variables VAGALUME_GST_SINK and VAGALUME_GST_DECODER
+    to set GStreamer sinks and decoders other than the default ones
+  * Info messages are shown in the progress bar (Gnome-only)
+  * vagalume.spec file for rpm-based distros (thanks Tim Wegener)
+
 0.4 (14 Dec 2007)
   * New tag dialog that replaces all three previous dialogs, with
     the ability to see and modify previously set tags and to see the
