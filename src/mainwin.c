@@ -847,11 +847,11 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(buttonshbox, w->next, FALSE, FALSE, 0);
 
         gtk_box_pack_start(secondary_bbox, w->lovebutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(secondary_bbox, w->banbutton, TRUE, FALSE, 0);
         gtk_box_pack_start(secondary_bbox, w->recommendbutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(secondary_bbox, w->dloadbutton, TRUE, FALSE, 0);
         gtk_box_pack_start(secondary_bbox, w->tagbutton, TRUE, FALSE, 0);
         gtk_box_pack_start(secondary_bbox, w->addplbutton, TRUE, FALSE, 0);
+        gtk_box_pack_start(secondary_bbox, w->dloadbutton, TRUE, FALSE, 0);
+        gtk_box_pack_start(secondary_bbox, w->banbutton, TRUE, FALSE, 0);
 
         gtk_box_pack_start(secondary_bar_vbox,
                            GTK_WIDGET(secondary_bbox), FALSE, FALSE, 0);
