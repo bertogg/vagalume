@@ -150,6 +150,12 @@ dlwin_download_file(const char *url, const char *filename,
         gtk_box_pack_start(butbox, w->cancelbutton, TRUE, FALSE, 0);
         gtk_box_pack_start(butbox, w->closebutton, TRUE, FALSE, 0);
 
+#ifdef MAEMO
+        /* Small hack to make this window a bit less ugly */
+        gtk_widget_set_size_request(GTK_WIDGET(w->cancelbutton), 300, 80);
+        gtk_widget_set_size_request(GTK_WIDGET(w->closebutton), 300, 80);
+#endif
+
         g_signal_connect(G_OBJECT(w->cancelbutton), "clicked",
                          G_CALLBACK(cancel_clicked), w);
         g_signal_connect(G_OBJECT(w->closebutton), "clicked",
