@@ -187,9 +187,16 @@ http_get_buffer(const char *url, char **buffer, size_t *bufsize)
         curl_buffer dstbuf = { NULL, 0 };
         CURLcode retcode;
         CURL *handle;
+        const char *pwpos = strstr(url, "passwordmd5=");
         struct curl_slist *hdrs = NULL;
 
-        g_debug("Requesting URL %s", url);
+        if (pwpos == NULL) {
+                g_debug("Requesting URL %s", url);
+        } else {
+                char *newurl = g_strndup(url, pwpos - url);
+                g_debug("Requesting URL %spasswordmd5=<hidden>", newurl);
+                g_free(newurl);
+        }
         handle = curl_easy_init();
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, http_copy_buffer);
