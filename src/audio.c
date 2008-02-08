@@ -18,11 +18,11 @@
 static const char *gst_decoder_envvar = "VAGALUME_GST_DECODER";
 static const char *gst_sink_envvar = "VAGALUME_GST_SINK";
 #ifdef MAEMO
-static const char *default_decoder = NULL;
-static const char *default_sink = "dspmp3sink";
+static const char *default_decoders[] = { NULL };
+static const char *default_sinks[] = { "dspmp3sink", NULL };
 #else
-static const char *default_decoder = "mad";
-static const char *default_sink = "autoaudiosink";
+static const char *default_decoders[] = { "mad", "flump3dec", NULL };
+static const char *default_sinks[] = { "autoaudiosink", "alsasink", NULL };
 #endif
 
 static GstElement *pipeline = NULL;
@@ -135,33 +135,48 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
         return TRUE;
 }
 
-static const char *
-audio_decoder_name(void)
+static GstElement *
+audio_element_create(const char **elem_names, const char *envvar)
 {
-        const char *user_decoder = g_getenv(gst_decoder_envvar);
-        if (user_decoder == NULL || *user_decoder == '\0') {
-                return default_decoder;
+        g_return_val_if_fail(elem_names != NULL, NULL);
+        GstElement *retval = NULL;
+        const char *user_elem_name;
+
+        if (envvar != NULL) user_elem_name = g_getenv(envvar);
+
+        /* Try to create the element given in the environment variable */
+        if (user_elem_name != NULL && *user_elem_name != '\0') {
+                retval = gst_element_factory_make(user_elem_name, NULL);
+                g_debug("Creating GStreamer element %s: %s", user_elem_name,
+                        retval ? "success" : "ERROR");
         } else {
-                return user_decoder;
+                /* Else try each element in the list */
+                int i;
+                for (i = 0; !retval && elem_names[i]; i++) {
+                        retval = gst_element_factory_make(elem_names[i], NULL);
+                        g_debug("Creating GStreamer element %s: %s",
+                                elem_names[i], retval ? "success" : "ERROR");
+                }
         }
+        return retval;
 }
 
-static const char *
-audio_sink_name(void)
+static GstElement *
+audio_decoder_create(void)
 {
-        const char *user_sink = g_getenv(gst_sink_envvar);
-        if (user_sink == NULL || *user_sink == '\0') {
-                return default_sink;
-        } else {
-                return user_sink;
-        }
+        return audio_element_create(default_decoders, gst_decoder_envvar);
+}
+
+static GstElement *
+audio_sink_create(void)
+{
+        return audio_element_create(default_sinks, gst_sink_envvar);
 }
 
 gboolean
 lastfm_audio_init(void)
 {
         GstBus *bus;
-        const char *decoder_name;
         failed_tracks_mutex = g_mutex_new();
         /* initialize GStreamer */
         gst_init (NULL, NULL);
@@ -170,13 +185,12 @@ lastfm_audio_init(void)
         /* set up */
         pipeline = gst_pipeline_new (NULL);
         source = gst_element_factory_make ("fdsrc", NULL);
-        decoder_name = audio_decoder_name();
-        if (!decoder_name) {
-                decoder = source; /* Unused, this is only for the assertions */
-        } else {
-                decoder = gst_element_factory_make (decoder_name, NULL);
-        }
-        sink = gst_element_factory_make (audio_sink_name(), NULL);
+#ifdef MAEMO
+        decoder = source; /* Unused, this is only for the assertions */
+#else
+        decoder = audio_decoder_create();
+#endif
+        sink = audio_sink_create();
         if (!pipeline || !source || !decoder || !sink) {
                 g_critical ("Error creating GStreamer elements");
                 return FALSE;
