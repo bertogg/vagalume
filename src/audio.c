@@ -28,6 +28,7 @@ static const char *default_sinks[] = { "autoaudiosink", "alsasink", NULL };
 static GstElement *pipeline = NULL;
 static GstElement *source = NULL;
 static GstElement *decoder = NULL;
+static GstElement *convert = NULL;
 static GstElement *sink = NULL;
 
 static int failed_tracks = 0;
@@ -187,11 +188,13 @@ lastfm_audio_init(void)
         source = gst_element_factory_make ("fdsrc", NULL);
 #ifdef MAEMO
         decoder = source; /* Unused, this is only for the assertions */
+        convert = source;
 #else
         decoder = audio_decoder_create();
+        convert = gst_element_factory_make ("audioconvert", NULL);
 #endif
         sink = audio_sink_create();
-        if (!pipeline || !source || !decoder || !sink) {
+        if (!pipeline || !source || !decoder || !convert || !sink) {
                 g_critical ("Error creating GStreamer elements");
                 return FALSE;
         }
@@ -203,8 +206,9 @@ lastfm_audio_init(void)
         gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
         gst_element_link_many (source, sink, NULL);
 #else
-        gst_bin_add_many (GST_BIN (pipeline), source, decoder, sink, NULL);
-        gst_element_link_many (source, decoder, sink, NULL);
+        gst_bin_add_many (GST_BIN (pipeline), source, decoder,
+                          convert, sink, NULL);
+        gst_element_link_many (source, decoder, convert, sink, NULL);
 #endif
 
         lastfm_audio_set_volume(80);
