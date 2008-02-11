@@ -43,34 +43,44 @@ typedef struct {
         const int icon_size;
         const int button_width;
         const int button_height;
+        const char *tooltip;
 } button_data;
 
 static const button_data play_button = {
-        "media-playback-start", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1
+        "media-playback-start", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1,
+        "Start playing"
 };
 static const button_data stop_button = {
-        "media-playback-stop", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1
+        "media-playback-stop", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1,
+        "Stop playing"
 };
 static const button_data next_button = {
-        "media-skip-forward", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1
+        "media-skip-forward", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1,
+        "Skip this track"
 };
 static const button_data love_button = {
-        "emblem-favorite", SMALLBUTTON_IMG_SIZE, -1, -1
+        "emblem-favorite", SMALLBUTTON_IMG_SIZE, -1, -1,
+        "Mark as loved"
 };
 static const button_data ban_button = {
-        "process-stop", SMALLBUTTON_IMG_SIZE, -1, -1
+        "process-stop", SMALLBUTTON_IMG_SIZE, -1, -1,
+        "Ban this track"
 };
 static const button_data recommend_button = {
-        "mail-message-new", SMALLBUTTON_IMG_SIZE, -1, -1
+        "mail-message-new", SMALLBUTTON_IMG_SIZE, -1, -1,
+        "Recommend this track"
 };
 static const button_data dload_button = {
-        "document-save", SMALLBUTTON_IMG_SIZE, -1, -1
+        "document-save", SMALLBUTTON_IMG_SIZE, -1, -1,
+        "Download this track"
 };
 static const button_data tag_button = {
-        "accessories-text-editor", SMALLBUTTON_IMG_SIZE, -1, -1
+        "accessories-text-editor", SMALLBUTTON_IMG_SIZE, -1, -1,
+        "Edit tags for this track"
 };
 static const button_data addpl_button = {
-        "list-add", SMALLBUTTON_IMG_SIZE, -1, -1
+        "list-add", SMALLBUTTON_IMG_SIZE, -1, -1,
+        "Add this track to playlist"
 };
 
 static const char *cover_background = APP_DATA_DIR "/cover.png";
@@ -564,6 +574,7 @@ image_button_new(const button_data *data)
         g_return_val_if_fail(data->icon_name && data->icon_size > 0, NULL);
         GtkWidget *button = compat_gtk_button_new();
         GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
+        static GtkTooltips *tooltips = NULL;
 
         g_object_set_data(G_OBJECT(button), "button_data", (gpointer)data);
 
@@ -574,6 +585,12 @@ image_button_new(const button_data *data)
 
         gtk_widget_set_size_request(button, data->button_width,
                                     data->button_height);
+
+        if (data->tooltip != NULL) {
+                if (tooltips == NULL) tooltips = gtk_tooltips_new();
+                gtk_tooltips_set_tip(tooltips, button,
+                                     data->tooltip, data->tooltip);
+        }
 
         return button;
 }
