@@ -41,6 +41,10 @@ Vagalume is (c) 2007, 2008 Alberto Garcia Gonzalez <agarcia@igalia.com>
 http://people.igalia.com/berto/
 https://garage.maemo.org/projects/vagalume/
 
+The default icons have been taken from the Gnome icon theme,
+downloaded from this URL:
+ftp://ftp.gnome.org/pub/gnome/sources/gnome-icon-theme/2.20/
+
 Vagalume also contains a free MD5 implementation that is
 (c) 1999 Aladdin Enterprises.
 See the files src/md5.c and src/md5.h for details

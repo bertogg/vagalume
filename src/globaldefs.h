@@ -28,4 +28,6 @@
 #define APP_ICON ICON_DIR "/vagalume.png"
 #define APP_ICON_BIG ICON48_DIR "/vagalume.png"
 
+#define THEME_ICONS_DIR APP_DATA_DIR "/icons"
+
 #endif

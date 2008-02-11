@@ -49,6 +49,9 @@ main (int argc, char **argv)
         gtk_init (&argc, &argv);
         g_set_application_name(APP_NAME);
 
+        gtk_icon_theme_append_search_path(
+                gtk_icon_theme_get_default(), THEME_ICONS_DIR);
+
         mainwin = lastfm_mainwin_create();
         controller_run_app(mainwin, radio);
         g_free(radio);

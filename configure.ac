@@ -171,6 +171,8 @@ else
 
 fi
 
+AM_CONDITIONAL(MAEMO_PLATFORM, test "$PLATFORM" = "maemo")
+
 AM_CONDITIONAL(HAVE_DBUS_SUPPORT, test -n "$serviceentrydir")
 if test -n "$serviceentrydir"; then
    AC_DEFINE([HAVE_DBUS_SUPPORT], [1], [Defined if compiling with D-BUS])

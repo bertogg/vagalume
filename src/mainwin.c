@@ -25,16 +25,53 @@
 #include "xmlrpc.h"
 
 #ifdef MAEMO
-static const int album_cover_size = 200;
-static const int cover_frame_size = 230;
-static const int primary_button_size = 110;
-static const int secondary_button_size = 63;
+#        define ALBUM_COVER_SIZE 200
+#        define COVER_FRAME_SIZE 230
+#        define BIGBUTTON_IMG_SIZE 64
+#        define SMALLBUTTON_IMG_SIZE 50
 #else
-static const int album_cover_size = 110;
-static const int cover_frame_size = 130;
-static const int primary_button_size = 60;
-static const int secondary_button_size = 35;
+#        define ALBUM_COVER_SIZE 110
+#        define COVER_FRAME_SIZE 130
+#        define BIGBUTTON_IMG_SIZE 48
+#        define SMALLBUTTON_IMG_SIZE 24
 #endif
+
+#define BIGBUTTON_SIZE ((COVER_FRAME_SIZE - 5) / 2)
+
+typedef struct {
+        const char *icon_name;
+        const int icon_size;
+        const int button_width;
+        const int button_height;
+} button_data;
+
+static const button_data play_button = {
+        "media-playback-start", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1
+};
+static const button_data stop_button = {
+        "media-playback-stop", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1
+};
+static const button_data next_button = {
+        "media-skip-forward", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1
+};
+static const button_data love_button = {
+        "emblem-favorite", SMALLBUTTON_IMG_SIZE, -1, -1
+};
+static const button_data ban_button = {
+        "process-stop", SMALLBUTTON_IMG_SIZE, -1, -1
+};
+static const button_data recommend_button = {
+        "mail-message-new", SMALLBUTTON_IMG_SIZE, -1, -1
+};
+static const button_data dload_button = {
+        "document-save", SMALLBUTTON_IMG_SIZE, -1, -1
+};
+static const button_data tag_button = {
+        "accessories-text-editor", SMALLBUTTON_IMG_SIZE, -1, -1
+};
+static const button_data addpl_button = {
+        "list-add", SMALLBUTTON_IMG_SIZE, -1, -1
+};
 
 static const char *cover_background = APP_DATA_DIR "/cover.png";
 
@@ -100,8 +137,8 @@ mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
                 g_return_if_fail(size > 0);
                 GError *err = NULL;
                 ldr = gdk_pixbuf_loader_new();
-                gdk_pixbuf_loader_set_size(ldr, album_cover_size,
-                                           album_cover_size);
+                gdk_pixbuf_loader_set_size(ldr, ALBUM_COVER_SIZE,
+                                           ALBUM_COVER_SIZE);
                 gdk_pixbuf_loader_write(ldr, data, size, NULL);
                 gdk_pixbuf_loader_close(ldr, &err);
                 if (err != NULL) {
@@ -499,66 +536,45 @@ open_user_settings(GtkWidget *widget, gpointer data)
         controller_open_usercfg();
 }
 
-static gboolean
-image_button_event_received(GtkWidget *widget, GdkEventButton *event,
-                            gpointer data)
+static void
+apply_icon_theme(GtkIconTheme *icon_theme, GObject* button)
 {
-        GtkWidget *image = gtk_image_new_from_pixbuf(GDK_PIXBUF(data));
-        gtk_button_set_image(GTK_BUTTON(widget), image);
-        if (event->type == GDK_BUTTON_RELEASE) {
-                gpointer mouse_over;
-                mouse_over = g_object_get_data(G_OBJECT(widget), "mouse_over");
-                /* If the mouse is over the button, emit a "clicked" event */
-                if (mouse_over) gtk_button_clicked(GTK_BUTTON(widget));
-        }
-        return FALSE;
-}
-
-static gboolean
-image_button_set_mouse_over(GtkWidget *widget, GdkEventCrossing *event,
-                            gpointer data)
-{
-        /* Store whether the mouse is over the button */
-        g_object_set_data_full(G_OBJECT(widget), "mouse_over", data, NULL);
-        /* Stop this event from being propagated */
-        return TRUE;
-}
-
-GtkWidget *
-image_button_new(char *img)
-{
-        g_return_val_if_fail(img != NULL, NULL);
-        GtkWidget *button;
-        /* TODO: Not very important, but these pixbufs should be
-         * destroyed along with the button */
-        GdkPixbuf *normal, *pressed;
-        char *normalstr, *pressedstr;
+        g_return_if_fail(button != NULL);
+        const button_data *data;
+        GdkPixbuf *pixbuf = NULL;
         GtkWidget *image;
 
-        /* Load the images */
-        normalstr = g_strdup_printf("%s/%s.png", APP_DATA_DIR, img);
-        pressedstr = g_strdup_printf("%s/%s_pressed.png", APP_DATA_DIR, img);
-        normal = gdk_pixbuf_new_from_file(normalstr, NULL);
-        pressed = gdk_pixbuf_new_from_file(pressedstr, NULL);
-        g_free(normalstr);
-        g_free(pressedstr);
+        data = (const button_data *) g_object_get_data(button, "button_data");
 
-        button = compat_gtk_button_new();
-        image = gtk_image_new_from_pixbuf(GDK_PIXBUF(normal));
-        gtk_button_set_image(GTK_BUTTON(button), image);
-        gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-        g_object_set(button, "can-focus", FALSE, NULL);
+        g_return_if_fail(data && data->icon_name && data->icon_size > 0);
 
-        g_signal_connect(button, "button-press-event",
-                         G_CALLBACK(image_button_event_received), pressed);
-        g_signal_connect(button, "button-release-event",
-                         G_CALLBACK(image_button_event_received), normal);
-        /* Store when the mouse enters or leaves the button */
-        g_signal_connect(button, "enter-notify-event",
-                         G_CALLBACK(image_button_set_mouse_over),
-                         GINT_TO_POINTER(1));
-        g_signal_connect(button, "leave-notify-event",
-                         G_CALLBACK(image_button_set_mouse_over), NULL);
+        pixbuf = gtk_icon_theme_load_icon(icon_theme, data->icon_name,
+                                          data->icon_size, 0, NULL);
+
+        if (pixbuf != NULL) {
+                image = gtk_image_new_from_pixbuf(pixbuf);
+                gtk_button_set_image(GTK_BUTTON(button), image);
+                g_object_unref (pixbuf);
+        }
+}
+
+static GtkWidget *
+image_button_new(const button_data *data)
+{
+        g_return_val_if_fail(data->icon_name && data->icon_size > 0, NULL);
+        GtkWidget *button = compat_gtk_button_new();
+        GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
+
+        g_object_set_data(G_OBJECT(button), "button_data", (gpointer)data);
+
+        apply_icon_theme(icon_theme, G_OBJECT(button));
+
+        g_signal_connect(G_OBJECT(icon_theme), "changed",
+                         G_CALLBACK(apply_icon_theme), button);
+
+        gtk_widget_set_size_request(button, data->button_width,
+                                    data->button_height);
+
         return button;
 }
 
@@ -790,19 +806,19 @@ lastfm_mainwin_create(void)
         image_box_holder = GTK_BOX(gtk_hbox_new(FALSE, 0));
         image_box_holder2 = GTK_BOX(gtk_vbox_new(FALSE, 5));
         labelbox = GTK_BOX(gtk_vbox_new(TRUE, 5));
-        buttonshbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
-        secondary_bbox = GTK_BOX(gtk_hbox_new(TRUE, 5));
+        buttonshbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
+        secondary_bbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         secondary_bar_vbox = GTK_BOX(gtk_vbox_new(FALSE, 2));
         /* Buttons */
-        w->play = image_button_new("play");
-        w->stop = image_button_new("stop");
-        w->next = image_button_new("next");
-        w->lovebutton = image_button_new("love");
-        w->banbutton = image_button_new("ban");
-        w->recommendbutton = image_button_new("recommend");
-        w->dloadbutton = image_button_new("dload");
-        w->tagbutton = image_button_new("tag");
-        w->addplbutton = image_button_new("addplist");
+        w->play = image_button_new(&play_button);
+        w->stop = image_button_new(&stop_button);
+        w->next = image_button_new(&next_button);
+        w->lovebutton = image_button_new(&love_button);
+        w->banbutton = image_button_new(&ban_button);
+        w->recommendbutton = image_button_new(&recommend_button);
+        w->dloadbutton = image_button_new(&dload_button);
+        w->tagbutton = image_button_new(&tag_button);
+        w->addplbutton = image_button_new(&addpl_button);
         /* Text labels */
         w->playlist = gtk_label_new(NULL);
         w->artist = gtk_label_new(NULL);
@@ -823,7 +839,7 @@ lastfm_mainwin_create(void)
         image_box_style->bg_pixmap_name[GTK_STATE_INSENSITIVE] = image_box_bg;
         gtk_widget_modify_style(image_box, image_box_style);
         gtk_widget_set_size_request(GTK_WIDGET(image_box),
-                                    cover_frame_size, cover_frame_size);
+                                    COVER_FRAME_SIZE, COVER_FRAME_SIZE);
         w->album_cover = gtk_image_new();
         gtk_container_add(GTK_CONTAINER(image_box), w->album_cover);
         /* Menu */
@@ -846,15 +862,15 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(buttonshbox, w->stop, FALSE, FALSE, 0);
         gtk_box_pack_start(buttonshbox, w->next, FALSE, FALSE, 0);
 
-        gtk_box_pack_start(secondary_bbox, w->lovebutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(secondary_bbox, w->recommendbutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(secondary_bbox, w->tagbutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(secondary_bbox, w->addplbutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(secondary_bbox, w->dloadbutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(secondary_bbox, w->banbutton, TRUE, FALSE, 0);
+        gtk_box_pack_start(secondary_bbox, w->lovebutton, TRUE, TRUE, 0);
+        gtk_box_pack_start(secondary_bbox, w->recommendbutton, TRUE, TRUE, 0);
+        gtk_box_pack_start(secondary_bbox, w->tagbutton, TRUE, TRUE, 0);
+        gtk_box_pack_start(secondary_bbox, w->addplbutton, TRUE, TRUE, 0);
+        gtk_box_pack_start(secondary_bbox, w->dloadbutton, TRUE, TRUE, 0);
+        gtk_box_pack_start(secondary_bbox, w->banbutton, TRUE, TRUE, 0);
 
         gtk_box_pack_start(secondary_bar_vbox,
-                           GTK_WIDGET(secondary_bbox), FALSE, FALSE, 0);
+                           GTK_WIDGET(secondary_bbox), TRUE, TRUE, 0);
         gtk_box_pack_start(secondary_bar_vbox,
                            GTK_WIDGET(w->progressbar), FALSE, FALSE, 0);
         gtk_box_pack_start(buttonshbox,
@@ -882,7 +898,7 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(vbox, w->playlist, FALSE, FALSE, 0);
         gtk_box_pack_start(vbox, gtk_hseparator_new(), FALSE, FALSE, 0);
         gtk_box_pack_start(vbox, GTK_WIDGET(centralbox), TRUE, TRUE, 0);
-        gtk_box_pack_start(vbox, GTK_WIDGET(buttonshbox), FALSE, FALSE, 0);
+        gtk_box_pack_start(vbox, GTK_WIDGET(buttonshbox), TRUE, TRUE, 0);
 
         /* Signals */
         g_signal_connect(G_OBJECT(w->play), "clicked",
