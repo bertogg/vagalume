@@ -41,25 +41,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/vagalume.desktop
 %{_datadir}/icons/hicolor/48x48/apps/vagalume.png
 %{_datadir}/pixmaps/vagalume.png
-%{_datadir}/vagalume/ban.png
-%{_datadir}/vagalume/dload.png
-%{_datadir}/vagalume/love.png
-%{_datadir}/vagalume/next.png
-%{_datadir}/vagalume/play.png
-%{_datadir}/vagalume/stop.png
-%{_datadir}/vagalume/addplist.png
-%{_datadir}/vagalume/addplist_pressed.png
-%{_datadir}/vagalume/ban_pressed.png
 %{_datadir}/vagalume/cover.png
-%{_datadir}/vagalume/dload_pressed.png
-%{_datadir}/vagalume/love_pressed.png
-%{_datadir}/vagalume/next_pressed.png
-%{_datadir}/vagalume/play_pressed.png
-%{_datadir}/vagalume/recommend.png
-%{_datadir}/vagalume/recommend_pressed.png
-%{_datadir}/vagalume/stop_pressed.png
-%{_datadir}/vagalume/tag.png
-%{_datadir}/vagalume/tag_pressed.png
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/accessories-text-editor.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/document-save.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/emblem-favorite.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/list-add.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/mail-message-new.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/media-playback-start.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/media-playback-stop.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/media-skip-forward.svg
+%{_datadir}/vagalume/icons/hicolor/scalable/actions/process-stop.svg
 
 
 %changelog
