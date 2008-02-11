@@ -51,6 +51,8 @@ endif
 if HAVE_MAEMO_SB_PLUGIN
 sbplugin_LTLIBRARIES = libvagalumesbplugin.la
 
+libvagalumesbplugin_la_LDFLAGS = -module -avoid-version
+
 libvagalumesbplugin_la_SOURCES = \
 	dbus.h \
 	globaldefs.h \
