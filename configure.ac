@@ -69,7 +69,7 @@ fi
 AM_CONDITIONAL(USE_INTERNAL_MD5, test "$use_libgcrypt" = "no")
 
 # Autodetect platform
-if $PKG_CONFIG --exists libosso; then
+if sb-conf current > /dev/null 2>&1; then
    DETECTED_PLATFORM=maemo
 else
    DETECTED_PLATFORM=gnome
