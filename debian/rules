@@ -39,34 +39,22 @@ config.status: configure
 	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr --mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" \
-		LDFLAGS="-Wl,-z,defs" --with-platform=$(PLATFORM)
+		--with-platform=$(PLATFORM)
 
 build: build-stamp
 
 build-stamp:  config.status
 	dh_testdir
-
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/vagalume.sgml > vagalume.1
-
 	touch $@
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-endif
-
-
 	dh_clean
 
 install: build
