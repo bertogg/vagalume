@@ -1,3 +1,12 @@
+0.5.1 (15 Feb 1008)
+  * Use GTK+ themeable buttons instead of the custom buttons introduced
+    in Vagalume 0.5
+  * Use the 'audioconvert' GStreamer element. Solves problems with some
+    sinks (Gnome only)
+  * Use a list of default audio decoders and sinks instead of just one
+  * Hide the MD5 password in the debug output
+  * Tooltips for all buttons
+
 0.5 (01 Feb 2008)
   * Status bar plugin (Maemo OS2008 only) (thanks Mario Sanchez)
   * New buttons and other UI improvements (thanks Felipe Erias)

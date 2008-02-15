@@ -4,13 +4,14 @@ script to generate one is provided, just run
 
 ./build-package.sh
 
-If you prefer to compile it by hand or if you're trying to compile it
-in other non-Debian system then run:
+If you prefer to compile it by hand or if you're compiling it in a
+non-Debian system then run:
 
 ./configure && make
 
 In both cases the system should detect automatically if it's compiling
-for Maemo or for a standard computer.
+for Maemo or for a standard computer. Type './configure --help' to see
+a list of configuration options.
 
 For rpm-based systems a vagalume.spec file is provided, thanks to
 the kind contribution of Tim Wegener. This file is known to work
