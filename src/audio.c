@@ -142,7 +142,7 @@ audio_element_create(const char **elem_names, const char *envvar)
 {
         g_return_val_if_fail(elem_names != NULL, NULL);
         GstElement *retval = NULL;
-        const char *user_elem_name;
+        const char *user_elem_name = NULL;
 
         if (envvar != NULL) user_elem_name = g_getenv(envvar);
 

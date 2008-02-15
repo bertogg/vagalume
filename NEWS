@@ -6,6 +6,7 @@
   * Use a list of default audio decoders and sinks instead of just one
   * Hide the MD5 password in the debug output
   * Tooltips for all buttons
+  * Manual page
 
 0.5 (01 Feb 2008)
   * Status bar plugin (Maemo OS2008 only) (thanks Mario Sanchez)

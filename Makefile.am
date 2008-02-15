@@ -17,7 +17,9 @@ MAINTAINERCLEANFILES = \
 	config.sub \
 	configure \
 	debian/files \
-	debian/vagalume.* \
+	debian/vagalume.postinst.debhelper \
+	debian/vagalume.postrm.debhelper \
+	debian/vagalume.substvars \
 	depcomp \
 	install-sh \
 	ltmain.sh \
@@ -25,6 +27,8 @@ MAINTAINERCLEANFILES = \
 	mkinstalldirs
 
 SUBDIRS = src
+
+man1_MANS = vagalume.1
 
 icon_DATA = data/icons/vagalume.png
 icon48_DATA = data/icons/48x48/*
