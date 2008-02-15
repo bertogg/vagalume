@@ -5,9 +5,7 @@ Upstream Author: Alberto Garcia Gonzalez <agarcia@igalia.com>
 
 Vagalume is (c) 2007, 2008 Alberto Garcia Gonzalez
 
-Vagalume also contains a free MD5 implementation that is
-(c) 1999 Aladdin Enterprises.
-See the files src/md5.c and src/md5.h for details
+See README and AUTHORS files for more details.
 
 Vagalume is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 3 as

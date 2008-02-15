@@ -2,7 +2,8 @@
  * connection.c -- Internet connection handling
  * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
  *
- * This file is published under the GNU GPLv3
+ * This file is part of Vagalume and is published under the GNU GPLv3
+ * See the README file for more details.
  */
 
 #include "connection.h"

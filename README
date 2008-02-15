@@ -7,12 +7,13 @@ the following operating systems:
 
    * Internet Tablet OS 2006 (Nokia 770)
    * Internet Tablet OS 2007 (Nokia N800)
+   * Internet Tablet OS 2007 (Nokia 770)
    * Internet Tablet OS 2008 (Nokia N810 and updated N800)
 
-Besides that, it should work in standard PCs as well. Vagalume has
-been tested and developed in a desktop PC with a Debian GNU/Linux
-system, but it should work in any other Unix-like system that meets
-the following requirements:
+Besides that, it also works in standard PCs. Vagalume has been tested
+and developed in a desktop PC running Debian GNU/Linux, but it is
+reported to work in other GNU/Linux distributions and it should work
+in any Unix-like system that meets the following requirements:
 
    * GStreamer 0.10
    * GTK+ 2
@@ -47,7 +48,7 @@ ftp://ftp.gnome.org/pub/gnome/sources/gnome-icon-theme/2.20/
 
 Vagalume also contains a free MD5 implementation that is
 (c) 1999 Aladdin Enterprises.
-See the files src/md5.c and src/md5.h for details
+See the files src/md5/md5.c and src/md5/md5.h for details
 
 See AUTHORS file for details on other contributors
 

@@ -1,9 +1,9 @@
 #
-# This file is part of Vagalume
+# This file is part of Vagalume and is published under the GNU GPLv3.
 #
 # Copyright (C) 2007, 2008 Alberto Garcia Gonzalez
 #
-# This file is published under the GNU GPLv3.
+# See the README file for more details.
 #
 
 MAINTAINERCLEANFILES = \
