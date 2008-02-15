@@ -1,7 +1,7 @@
 
 Summary: A small Last.fm client for Gnome and Maemo
 Name: vagalume
-Version: 0.5
+Version: 0.5.1
 Release: 1
 License: GPL3
 Group: Applications/Multimedia
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 15 2008 Alberto Garcia <agarcia@igalia.com> - 0.5.1-1
+- Updated for 0.5.1.
+
 * Mon Jan 28 2008 Tim Wegener <twegener@madabar.com> - 0.5-1
 - Updated for 0.5.
 
