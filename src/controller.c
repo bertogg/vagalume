@@ -1148,7 +1148,10 @@ controller_play_radio_by_url_cb(char *url)
                 controller_skip_track();
         } else {
                 controller_stop_playing();
-                controller_show_info("Invalid radio URL");
+                controller_show_info("Invalid radio URL. Either\n"
+                                     "this radio doesn't exist\n"
+                                     "or it is only available\n"
+                                     "for Last.fm subscribers");
         }
         g_free(url);
 }
