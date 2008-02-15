@@ -1,6 +1,6 @@
 # Initialization and basic checks
 AC_INIT(Makefile.am)
-AM_INIT_AUTOMAKE(vagalume, 0.5)
+AM_INIT_AUTOMAKE(vagalume, 0.5.1)
 AM_CONFIG_HEADER(config.h)
 
 AC_CANONICAL_HOST
