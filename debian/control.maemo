@@ -1,6 +1,6 @@
 Source: vagalume
 Section: user/multimedia
-Priority: extra
+Priority: optional
 Maintainer: Alberto Garcia <agarcia@igalia.com>
 Build-Depends: debhelper (>= 4)
 Standards-Version: 3.7.2

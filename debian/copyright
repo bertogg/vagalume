@@ -15,4 +15,5 @@ Vagalume is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-See the COPYING file for more details.
+On Debian systems, the complete text of the license can be found
+in the file /usr/share/common-licenses/GPL-3
