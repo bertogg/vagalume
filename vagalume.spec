@@ -51,6 +51,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/media-playback-stop.svg
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/media-skip-forward.svg
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/process-stop.svg
+%{_mandir}/man1/vagalume.1.gz
 
 
 %changelog
