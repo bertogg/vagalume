@@ -28,8 +28,6 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src
 
-man1_MANS = vagalume.1
-
 icon_DATA = data/icons/vagalume.png
 icon48_DATA = data/icons/48x48/*
 appdata_DATA = data/$(PLATFORM)/*
@@ -43,6 +41,7 @@ themesmallicon_DATA = data/buttons/small/*.png
 else
 themeicondir = $(appdatadir)/icons/hicolor/scalable/actions
 themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg
+man1_MANS = vagalume.1
 endif
 
 if HAVE_DBUS_SUPPORT
