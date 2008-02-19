@@ -3,7 +3,7 @@ Section: user/multimedia
 Priority: optional
 Maintainer: Alberto Garcia <agarcia@igalia.com>
 Build-Depends: debhelper (>= 4)
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
 
 Package: vagalume
 Architecture: any
