@@ -1,14 +1,8 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
-
 
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
@@ -35,7 +29,6 @@ endif
 
 config.status: configure
 	dh_testdir
-	# Add here commands to configure the package.
 	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr --mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" \
@@ -45,7 +38,6 @@ build: build-stamp
 
 build-stamp:  config.status
 	dh_testdir
-	# Add here commands to compile the package.
 	$(MAKE)
 	touch $@
 
@@ -53,7 +45,6 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
 	dh_clean
 
@@ -63,13 +54,11 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	# Add here commands to install the package into debian/vagalume.
 	$(MAKE) DESTDIR=$(CURDIR)/debian/vagalume install
 
 
 # Build architecture-independent files here.
 binary-indep: build install
-# We have nothing to do by default.
 
 # Build architecture-dependent files here.
 binary-arch: build install
