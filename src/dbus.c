@@ -15,7 +15,7 @@
 #ifdef MAEMO
 #include <libosso.h>
 
-static osso_context_t *context;
+static osso_context_t *context = NULL;
 #endif
 
 static gboolean
@@ -141,6 +141,14 @@ dbus_req_handler(const gchar* interface, const gchar* method,
         return OSSO_OK;
 }
 
+static void
+hw_event_handler(osso_hw_state_t *state, gpointer data) {
+        /* The device is about to be shutdown */
+        if (state->shutdown_ind) {
+                controller_disconnect();
+        }
+}
+
 const char *
 lastfm_dbus_init(void)
 {
@@ -154,6 +162,12 @@ lastfm_dbus_init(void)
         if (result != OSSO_OK) {
                 return "Unable to set D-BUS callback";
         }
+
+        result = osso_hw_set_event_cb(context, NULL, hw_event_handler, NULL);
+        if (result != OSSO_OK) {
+                return "Unable to set hw callback";
+        }
+
         return NULL;
 }
 
