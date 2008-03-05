@@ -5,7 +5,7 @@ Version: 0.5.1
 Release: 1
 License: GPL3
 Group: Applications/Multimedia
-URL: http://people.igalia.com/berto/
+URL: http://vagalume.igalia.com/
 Source0: %{name}_%{version}-1.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc, gtk2-devel, gstreamer-devel >= 0.10, curl-devel, libxml2-devel >= 2.0

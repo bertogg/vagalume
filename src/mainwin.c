@@ -98,7 +98,7 @@ static const char *artists[] = {
 
 static const char *appdescr = "A Last.fm client for Gnome and Maemo";
 static const char *copyright = "(c) 2007, 2008 Alberto Garcia Gonzalez";
-static const char *website = "http://people.igalia.com/berto/";
+static const char *website = "http://vagalume.igalia.com/";
 static const char *license =
 "Vagalume is free software: you can redistribute\n"
 "it and/or modify it under the terms of the GNU\n"
