@@ -234,7 +234,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         GtkWidget *dllabel, *dlbutton;
         GtkEntry *user, *pw, *proxy, *dlentry;
         GtkWidget *scrobble, *discovery, *useproxy;
-        GtkTable *acctable, *conntable, *dltable;
+        GtkWidget *impidginlabel, *imgajimlabel, *imgossiplabel;
+        GtkWidget *imtelepathylabel;
+        GtkWidget *impidgin, *imgajim, *imgossip, *imtelepathy;
+        GtkTable *acctable, *conntable, *dltable, *imtable;
         GtkNotebook *nb;
         gboolean changed = FALSE;
         const lastfm_usercfg *origcfg = *cfg;
@@ -248,6 +251,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         useproxylabel = gtk_label_new("Use HTTP proxy");
         proxylabel = gtk_label_new("Proxy address:");
         dllabel = gtk_label_new("Select download directory");
+        impidginlabel = gtk_label_new("Update Pidgin status:");
+        imgajimlabel = gtk_label_new("Update Gajim status:");
+        imgossiplabel = gtk_label_new("Update Gossip status:");
+        imtelepathylabel = gtk_label_new("Update Telepathy status:");
         user = GTK_ENTRY(gtk_entry_new());
         pw = GTK_ENTRY(gtk_entry_new());
         scrobble = gtk_check_button_new();
@@ -257,6 +264,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         useproxy = gtk_check_button_new();
         dlentry = GTK_ENTRY(gtk_entry_new());
         dlbutton = compat_gtk_button_new();
+        impidgin = gtk_check_button_new();
+        imgajim = gtk_check_button_new();
+        imgossip = gtk_check_button_new();
+        imtelepathy = gtk_check_button_new();
         gtk_button_set_image(GTK_BUTTON(dlbutton),
                              gtk_image_new_from_stock(GTK_STOCK_DIRECTORY,
                                                       GTK_ICON_SIZE_BUTTON));
@@ -273,6 +284,14 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                                      (*cfg)->discovery_mode);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(useproxy),
                                      (*cfg)->use_proxy);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(impidgin),
+                                     (*cfg)->im_pidgin);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(imgajim),
+                                     (*cfg)->im_gajim);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(imgossip),
+                                     (*cfg)->im_gossip);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(imtelepathy),
+                                     (*cfg)->im_telepathy);
 
         acctable = GTK_TABLE(gtk_table_new(4, 2, FALSE));
         gtk_table_attach(acctable, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
@@ -296,6 +315,16 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
         gtk_table_attach(dltable, dlbutton, 1, 2, 1, 2, 0, 0, 5, 5);
 
+        imtable = GTK_TABLE(gtk_table_new(4, 2, FALSE));
+        gtk_table_attach(imtable, impidginlabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgajimlabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgossiplabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imtelepathylabel, 0, 1, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(imtable, impidgin, 1, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgajim, 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgossip, 1, 2, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imtelepathy, 1, 2, 3, 4, 0, 0, 5, 5);
+
         nb = GTK_NOTEBOOK(gtk_notebook_new());
         gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
                                  gtk_label_new("Account"));
@@ -303,6 +332,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                                  gtk_label_new("Connection"));
         gtk_notebook_append_page(nb, GTK_WIDGET(dltable),
                                  gtk_label_new("Download"));
+#ifdef SET_IM_STATUS
+        gtk_notebook_append_page(nb, GTK_WIDGET(imtable),
+                                 gtk_label_new("IM Status"));
+#endif
 
         gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(nb),
                            FALSE, FALSE, 10);
@@ -327,6 +360,14 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                         GTK_TOGGLE_BUTTON(discovery));
                 (*cfg)->use_proxy = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(useproxy));
+                (*cfg)->im_pidgin = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(impidgin));
+                (*cfg)->im_gajim = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(imgajim));
+                (*cfg)->im_gossip = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(imgossip));
+                (*cfg)->im_telepathy = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(imtelepathy));
                 changed = TRUE;
         } else if (origcfg == NULL) {
                 /* If settings haven't been modified, restore the

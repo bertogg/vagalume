@@ -24,6 +24,7 @@
 #include "globaldefs.h"
 #include "dbus.h"
 #include "util.h"
+#include "imstatus/imstatus.h"
 
 static lastfm_session *session = NULL;
 static lastfm_pls *playlist = NULL;
@@ -364,6 +365,11 @@ controller_set_nowplaying(lastfm_track *track)
                 lastfm_track_destroy(nowplaying);
         }
         nowplaying = track;
+        if (track == NULL) {
+                im_clear_status();
+        } else {
+                im_set_status(track);
+        }
         nowplaying_since = 0;
         nowplaying_rating = RSP_RATING_NONE;
         if (track != NULL && usercfg->enable_scrobbling) {
@@ -463,6 +469,14 @@ apply_usercfg(void)
                 http_set_proxy(usercfg->http_proxy);
         } else {
                 http_set_proxy(NULL);
+        }
+        im_clear_status();
+        im_set_cfg(usercfg->im_pidgin,
+                   usercfg->im_gajim,
+                   usercfg->im_gossip,
+                   usercfg->im_telepathy);
+        if (nowplaying != NULL) {
+                im_set_status(nowplaying);
         }
 }
 

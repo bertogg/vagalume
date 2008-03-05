@@ -21,7 +21,9 @@ AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
 EXTRA_CFLAGS=""
 EXTRA_LIBS=""
 
-# Basic dependencies
+#####################################
+### Basic dependencies - Required ###
+#####################################
 PKG_CHECK_MODULES(Gtk2, gtk+-2.0)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $Gtk2_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $Gtk2_LIBS"
@@ -38,6 +40,16 @@ PKG_CHECK_MODULES(libcurl, libcurl)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $libcurl_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
 
+#####################################
+### Other dependencies - Optional ###
+#####################################
+PKG_CHECK_MODULES(dbus_glib, dbus-glib-1, [have_dbus_glib="yes"],
+                  [have_dbus_glib="no"])
+
+# Check if libgcrypt is installed
+AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
+   have_libgcrypt="yes", have_libgcrypt="no")
+
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
    AC_DEFINE([HAVE_CURL_EASY_ESCAPE],[1],[If curl_easy_escape() exists]),
@@ -49,9 +61,6 @@ AC_ARG_ENABLE(libgcrypt, [
   --enable-libgcrypt      compute MD5 using libgcrypt (default if available)
   --disable-libgcrypt     use internal MD5 algorithm],
   use_libgcrypt=$enableval, use_libgcrypt=detect)
-
-AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
-   have_libgcrypt="yes", have_libgcrypt="no")
 
 if test "$use_libgcrypt" = "detect"; then
    use_libgcrypt="$have_libgcrypt"
@@ -67,6 +76,28 @@ else
    echo "Using internal implementation to compute md5sums"
 fi
 AM_CONDITIONAL(USE_INTERNAL_MD5, test "$use_libgcrypt" = "no")
+
+# Check whether to use the "Set IM status" feature
+AC_ARG_ENABLE(im-status, [
+  --enable-im-status      Enable "Set IM status" feature (default if available)
+  --disable-im-status     Disable "Set IM status" feature],
+  set_im_status=$enableval, set_im_status=detect)
+
+if test "$set_im_status" = "detect"; then
+   set_im_status="$have_dbus_glib"
+elif test "$set_im_status" = "yes" -a "$have_dbus_glib" = "no"; then
+   AC_MSG_ERROR([dbus-glib not found, install it or use --disable-im-status])
+fi
+
+if test "$set_im_status" = "yes"; then
+   AC_DEFINE([SET_IM_STATUS],[1],[Defined if "Set IM Status" is enabled])
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $dbus_glib_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $dbus_glib_LIBS"
+   echo "\"Set IM status\" feature enabled"
+else
+   echo "\"Set IM status\" feature disabled"
+fi
+AM_CONDITIONAL(SET_IM_STATUS, test "$set_im_status" = "yes")
 
 # Autodetect platform
 if $PKG_CONFIG --exists libosso && readlink /etc|grep -q ^/targets; then

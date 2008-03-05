@@ -113,6 +113,10 @@ lastfm_usercfg_new(void)
         cfg->use_proxy = FALSE;
         cfg->enable_scrobbling = TRUE;
         cfg->discovery_mode = FALSE;
+        cfg->im_pidgin = FALSE;
+        cfg->im_gajim = FALSE;
+        cfg->im_gossip = FALSE;
+        cfg->im_telepathy = FALSE;
         return cfg;
 }
 
@@ -170,6 +174,14 @@ read_usercfg(void)
                         lastfm_usercfg_set_http_proxy(cfg, val);
                 } else if ((val = cfg_get_val(buf, "download_dir")) != NULL) {
                         lastfm_usercfg_set_download_dir(cfg, val);
+                } else if ((val = cfg_get_val(buf, "im_pidgin")) != NULL) {
+                        cfg->im_pidgin = !strcmp(val, "1");
+                } else if ((val = cfg_get_val(buf, "im_gajim")) != NULL) {
+                        cfg->im_gajim = !strcmp(val, "1");
+                } else if ((val = cfg_get_val(buf, "im_gossip")) != NULL) {
+                        cfg->im_gossip = !strcmp(val, "1");
+                } else if ((val = cfg_get_val(buf, "im_telepathy")) != NULL) {
+                        cfg->im_telepathy = !strcmp(val, "1");
                 }
                 g_free(val);
         }
@@ -200,10 +212,18 @@ write_usercfg(lastfm_usercfg *cfg)
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n"
                     "http_proxy=\"%s\"\nuse_proxy=\"%d\"\n"
                     "scrobble=\"%d\"\ndiscovery=\"%d\"\n"
-                    "download_dir=\"%s\"\n",
+                    "download_dir=\"%s\"\n"
+                    "im_pidgin=\"%d\"\n"
+                    "im_gajim=\"%d\"\n"
+                    "im_gossip=\"%d\"\n"
+                    "im_telepathy=\"%d\"\n",
                     cfg->username, base64pw, cfg->http_proxy,
                     !!cfg->use_proxy, !!cfg->enable_scrobbling,
-                    !!cfg->discovery_mode, cfg->download_dir) <= 0) {
+                    !!cfg->discovery_mode, cfg->download_dir,
+                    !!cfg->im_pidgin,
+                    !!cfg->im_gajim,
+                    !!cfg->im_gossip,
+                    !!cfg->im_telepathy) <= 0) {
                 g_warning("Error writing to config file");
                 retval = FALSE;
         }

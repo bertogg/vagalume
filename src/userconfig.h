@@ -20,6 +20,10 @@ typedef struct {
         gboolean use_proxy;
         gboolean discovery_mode;
         gboolean enable_scrobbling;
+        gboolean im_pidgin;
+        gboolean im_gajim;
+        gboolean im_gossip;
+        gboolean im_telepathy;
 } lastfm_usercfg;
 
 lastfm_usercfg *lastfm_usercfg_new(void);
