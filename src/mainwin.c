@@ -171,40 +171,44 @@ static void
 mainwin_update_track_info(lastfm_mainwin *w, const lastfm_track *t)
 {
         g_return_if_fail(w != NULL && t != NULL);
-        char *text;
+        GString *text = g_string_sized_new(50);
         char *markup;
 
         markup = g_markup_escape_text(t->artist, -1);
-        text = g_strconcat("<b>Artist:</b>\n", markup, "", NULL);
-        gtk_label_set_markup(GTK_LABEL(w->artist), text);
-        g_free(text);
+        g_string_assign(text, "<b>Artist:</b>\n");
+        g_string_append(text, markup);
+        gtk_label_set_markup(GTK_LABEL(w->artist), text->str);
         g_free(markup);
 
         markup = g_markup_escape_text(t->title, -1);
-        text = g_strconcat("<b>Title:</b>\n", markup, "", NULL);
-        gtk_label_set_markup(GTK_LABEL(w->track), text);
-        g_free(text);
+        g_string_assign(text, "<b>Title:</b>\n");
+        g_string_append(text, markup);
+        gtk_label_set_markup(GTK_LABEL(w->track), text->str);
         g_free(markup);
 
         if (t->album[0] != '\0') {
                 markup = g_markup_escape_text(t->album, -1);
-                text = g_strconcat("<b>Album:</b>\n", markup, "", NULL);
-                gtk_label_set_markup(GTK_LABEL(w->album), text);
-                g_free(text);
+                g_string_assign(text, "<b>Album:</b>\n");
+                g_string_append(text, markup);
+                gtk_label_set_markup(GTK_LABEL(w->album), text->str);
                 g_free(markup);
         } else {
                 gtk_label_set_text(GTK_LABEL(w->album), "");
         }
 
         markup = g_markup_escape_text(t->pls_title, -1);
-        text = g_strconcat("<b>Listening to <i>", markup, "</i></b>", NULL);
-        gtk_label_set_markup(GTK_LABEL(w->playlist), text);
-        g_free(text);
+        g_string_assign(text, "<b>Listening to <i>");
+        g_string_append(text, markup);
+        g_string_append(text, "</i></b>");
+        gtk_label_set_markup(GTK_LABEL(w->playlist), text->str);
         g_free(markup);
 
-        text = g_strconcat(t->artist, " - ", t->title, NULL);
-        gtk_window_set_title(w->window, text);
-        g_free(text);
+        g_string_assign(text, t->artist);
+        g_string_append(text, " - ");
+        g_string_append(text, t->title);
+        gtk_window_set_title(w->window, text->str);
+
+        g_string_free(text, TRUE);
 }
 
 static void
