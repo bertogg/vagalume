@@ -9,13 +9,27 @@
 #include "playlist.h"
 
 /**
+ * Creates a new lastfm_track object
+ * @return The new track
+ */
+lastfm_track *
+lastfm_track_new(void)
+{
+        lastfm_track *track = g_slice_new0(lastfm_track);
+        track->refcount = 1;
+        track->mutex = g_mutex_new();
+        return track;
+}
+
+/**
  * Destroy a lastfm_track object freeing all its allocated memory
  * @param track Track to be destroyed, or NULL
  */
-void
+static void
 lastfm_track_destroy(lastfm_track *track)
 {
         if (track == NULL) return;
+        g_mutex_free(track->mutex);
         g_free(track->stream_url);
         g_free(track->title);
         g_free(track->artist);
@@ -24,30 +38,38 @@ lastfm_track_destroy(lastfm_track *track)
         g_free(track->image_url);
         g_free(track->trackauth);
         g_free(track->free_track_url);
-        g_free(track);
+        g_slice_free(lastfm_track, track);
 }
 
 /**
- * Copy a lastfm_track object
- * @param track The object to copy, or NULL
- * @return A newly created lastfm_track object, or NULL
+ * Increments the reference counter of a lastfm_track object
+ * @param track The track
+ * @return The same track
  */
 lastfm_track *
-lastfm_track_copy(const lastfm_track *track)
+lastfm_track_ref(lastfm_track *track)
 {
-        if (track == NULL) return NULL;
-        lastfm_track *ret;
-        ret = g_new0(lastfm_track, 1);
-        *ret = *track;
-        ret->stream_url = g_strdup(track->stream_url);
-        ret->title = g_strdup(track->title);
-        ret->artist = g_strdup(track->artist);
-        ret->album = g_strdup(track->album);
-        ret->pls_title = g_strdup(track->pls_title);
-        ret->image_url = g_strdup(track->image_url);
-        ret->trackauth = g_strdup(track->trackauth);
-        ret->free_track_url = g_strdup(track->free_track_url);
-        return ret;
+        g_return_val_if_fail(track != NULL, NULL);
+        g_mutex_lock(track->mutex);
+        track->refcount++;
+        g_mutex_unlock(track->mutex);
+        return track;
+}
+
+/**
+ * Decrements the reference counter of a lastfm_track object. If it
+ * reaches 0, then the track is destroyed
+ * @param track The track
+ */
+void
+lastfm_track_unref(lastfm_track *track)
+{
+        g_return_if_fail(track != NULL);
+        gboolean destroy;
+        g_mutex_lock(track->mutex);
+        destroy = (--(track->refcount) == 0);
+        g_mutex_unlock(track->mutex);
+        if (destroy) lastfm_track_destroy(track);
 }
 
 /**
@@ -67,7 +89,7 @@ lastfm_pls_size(lastfm_pls *pls)
  * the track from the playlist (as it can only be played once).
  * @param pls The playlist
  * @return The next track (or NULL if the list is empty). It should be
- * destroyed with lastfm_track_destroy() when no longer used.
+ * unref'ed with lastfm_track_unref() when no longer used.
  */
 lastfm_track *
 lastfm_pls_get_track(lastfm_pls *pls)
@@ -115,7 +137,7 @@ lastfm_pls_clear(lastfm_pls *pls)
         g_return_if_fail (pls != NULL);
         lastfm_track *track;
         while ((track = lastfm_pls_get_track(pls)) != NULL) {
-                lastfm_track_destroy(track);
+                lastfm_track_unref(track);
         }
 }
 

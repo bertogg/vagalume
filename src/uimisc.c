@@ -490,7 +490,7 @@ tagwin_destroy(tagwin *w)
 {
         g_return_if_fail(w != NULL);
         gtk_widget_destroy(GTK_WIDGET(w->window));
-        lastfm_track_destroy(w->track);
+        lastfm_track_unref(w->track);
         g_free(w->user);
         g_free(w->tags_artist);
         g_free(w->tags_track);
@@ -670,8 +670,7 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 
 gboolean
 tagwin_run(GtkWindow *parent, const char *user, char **newtags,
-           const GList *usertags, const lastfm_track *track,
-           request_type *type)
+           const GList *usertags, lastfm_track *track, request_type *type)
 {
         g_return_val_if_fail(track && type && user && newtags, FALSE);
         tagwin *t;
@@ -796,7 +795,7 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         gtk_table_attach_defaults(table, alig, 1, 2, 3, 4);
 
         t = tagwin_create();
-        t->track = lastfm_track_copy(track);
+        t->track = lastfm_track_ref(track);
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
         t->selcombo = selcombo;

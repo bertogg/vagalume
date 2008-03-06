@@ -180,7 +180,7 @@ controller_show_progress(gpointer data)
                 }
                 return TRUE;
         } else {
-                lastfm_track_destroy(tr);
+                lastfm_track_unref(tr);
                 return FALSE;
         }
 }
@@ -282,7 +282,7 @@ scrobble_track_thread(gpointer data)
         }
         g_free(user);
         g_free(pass);
-        lastfm_track_destroy(d->track);
+        lastfm_track_unref(d->track);
         g_free(d);
         return NULL;
 }
@@ -309,7 +309,7 @@ controller_scrobble_track(void)
                         nowplaying_rating = RSP_RATING_SKIP;
                 }
                 rsp_data *d = g_new0(rsp_data, 1);
-                d->track = lastfm_track_copy(nowplaying);
+                d->track = lastfm_track_ref(nowplaying);
                 d->start = nowplaying_since;
                 d->rating = nowplaying_rating;
                 g_thread_create(scrobble_track_thread,d,FALSE,NULL);
@@ -343,7 +343,7 @@ set_nowplaying_thread(gpointer data)
                 rsp_set_nowplaying(s, d->track);
                 rsp_session_destroy(s);
         }
-        lastfm_track_destroy(d->track);
+        lastfm_track_unref(d->track);
         g_free(d);
         return NULL;
 }
@@ -362,7 +362,7 @@ controller_set_nowplaying(lastfm_track *track)
 {
         g_return_if_fail(usercfg != NULL);
         if (nowplaying != NULL) {
-                lastfm_track_destroy(nowplaying);
+                lastfm_track_unref(nowplaying);
         }
         nowplaying = track;
         if (track == NULL) {
@@ -374,7 +374,7 @@ controller_set_nowplaying(lastfm_track *track)
         nowplaying_rating = RSP_RATING_NONE;
         if (track != NULL && usercfg->enable_scrobbling) {
                 rsp_data *d = g_new0(rsp_data, 1);
-                d->track = lastfm_track_copy(track);
+                d->track = lastfm_track_ref(track);
                 d->start = 0;
                 g_thread_create(set_nowplaying_thread,d,FALSE,NULL);
         }
@@ -735,7 +735,7 @@ controller_audio_started_cb(void)
         lastfm_track *track;
         nowplaying_since = time(NULL);
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING, nowplaying);
-        track = lastfm_track_copy(nowplaying);
+        track = lastfm_track_ref(nowplaying);
         controller_show_progress(track);
         showing_cover = FALSE;
         controller_show_cover();
@@ -860,7 +860,7 @@ void
 controller_download_track(void)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
-        lastfm_track *t = lastfm_track_copy(nowplaying);
+        lastfm_track *t = lastfm_track_ref(nowplaying);
         if (controller_confirm_dialog("Download this track?")) {
                 char *filename, *dstpath;
                 gboolean download = TRUE;
@@ -879,7 +879,7 @@ controller_download_track(void)
                 g_free(filename);
                 g_free(dstpath);
         } else {
-                lastfm_track_destroy(t);
+                lastfm_track_unref(t);
         }
 }
 
@@ -956,7 +956,7 @@ tag_track_thread(gpointer data)
                 g_free(user);
                 g_free(pass);
         }
-        lastfm_track_destroy(d->track);
+        lastfm_track_unref(d->track);
         g_free(d->taglist);
         g_free(d);
         gdk_threads_enter();
@@ -981,7 +981,7 @@ controller_tag_track()
         /* Keep this static to remember the previous value */
         static request_type type = REQUEST_ARTIST;
         char *tags = NULL;
-        lastfm_track *track = lastfm_track_copy(nowplaying);
+        lastfm_track *track = lastfm_track_ref(nowplaying);
         gboolean accept;
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
@@ -998,7 +998,7 @@ controller_tag_track()
                 if (accept) {
                         controller_show_info("You must type a list of tags");
                 }
-                lastfm_track_destroy(track);
+                lastfm_track_unref(track);
         }
 }
 
@@ -1036,7 +1036,7 @@ recomm_track_thread(gpointer data)
                                        "Error sending recommendation");
         }
         gdk_threads_leave();
-        lastfm_track_destroy(d->track);
+        lastfm_track_unref(d->track);
         g_free(d->rcpt);
         g_free(d->text);
         g_free(d);
@@ -1055,7 +1055,7 @@ controller_recomm_track(void)
         char *body = NULL;
         /* Keep this static to remember the previous value */
         static request_type type = REQUEST_TRACK;
-        lastfm_track *track = lastfm_track_copy(nowplaying);
+        lastfm_track *track = lastfm_track_ref(nowplaying);
         gboolean accept;
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
@@ -1075,7 +1075,7 @@ controller_recomm_track(void)
                         controller_show_info("You must type a user name\n"
                                              "and a recommendation message.");
                 }
-                lastfm_track_destroy(track);
+                lastfm_track_unref(track);
                 g_free(rcpt);
                 g_free(body);
         }
@@ -1114,7 +1114,7 @@ add_to_playlist_thread(gpointer data)
                                        "Error adding track to playlist");
         }
         gdk_threads_leave();
-        lastfm_track_destroy(t);
+        lastfm_track_unref(t);
         return NULL;
 }
 
@@ -1128,7 +1128,7 @@ controller_add_to_playlist(void)
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         if (ui_confirm_dialog(mainwin->window,
                               "Really add this track to the playlist?")) {
-                lastfm_track *track = lastfm_track_copy(nowplaying);
+                lastfm_track *track = lastfm_track_ref(nowplaying);
                 g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
         }
 }

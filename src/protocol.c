@@ -153,7 +153,7 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
         gboolean retval = FALSE;
         const xmlChar *name;
         char *val;
-        lastfm_track *track = g_new0(lastfm_track, 1);
+        lastfm_track *track = lastfm_track_new();
         track->pls_title = g_strdup(pls_title);
         track->custom_pls = custom_pls;
 
@@ -205,7 +205,7 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
                 lastfm_pls_add_track(pls, track);
                 retval = TRUE;
         }
-        if (!retval) lastfm_track_destroy(track);
+        if (!retval) lastfm_track_unref(track);
         return retval;
 }
 

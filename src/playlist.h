@@ -29,14 +29,18 @@ typedef struct {
         char *trackauth;
         char *free_track_url;
         gboolean custom_pls;
+        /* Private */
+        int refcount;
+        GMutex *mutex;
 } lastfm_track;
 
 typedef struct {
         GQueue *tracks;
 } lastfm_pls;
 
-void lastfm_track_destroy(lastfm_track *track);
-lastfm_track *lastfm_track_copy(const lastfm_track *track);
+lastfm_track *lastfm_track_new(void);
+lastfm_track *lastfm_track_ref(lastfm_track *track);
+void lastfm_track_unref(lastfm_track *track);
 lastfm_track *lastfm_pls_get_track(lastfm_pls *pls);
 void lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track);
 guint lastfm_pls_size(lastfm_pls *pls);
