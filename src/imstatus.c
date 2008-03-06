@@ -4,10 +4,9 @@
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
  * See the README file for more details.
- *
- * todo: perhaps this should be incorporated into controller.c instead
  */
 
+#include <glib.h>
 #include <dbus/dbus-glib.h>
 #include "imstatus.h"
 
@@ -25,44 +24,43 @@ typedef enum
         PURPLE_STATUS_NUM_PRIMITIVES
 } PurpleStatusPrimitive;
 
-static int
-check_result(gboolean code, GError *error)
+static gboolean
+error_happened(gboolean code, GError *error)
 {
+        g_return_val_if_fail(code || error != NULL, TRUE);
         if (!code) {
                 if (error->domain == DBUS_GERROR &&
                     error->code == DBUS_GERROR_REMOTE_EXCEPTION) {
-                        g_printerr("Caught remote method exception %s: %s",
-                                   dbus_g_error_get_name (error),
-                                   error->message);
+                        g_warning("Caught remote method exception %s: %s",
+                                  dbus_g_error_get_name (error),
+                                  error->message);
                 } else {
-                        g_printerr("Error: (%d) %s\n",
-                                   error->code, error->message);
+                        g_warning("Error: (%d) %s",
+                                  error->code, error->message);
                 }
                 g_error_free(error);
-                return(1);
+                return TRUE;
         }
-        return(0);
+        return FALSE;
 }
 
 static void
 gajim_set_status(const char *message)
 {
+        g_return_if_fail(message != NULL);
         DBusGConnection *connection;
         DBusGProxy *proxy;
-        GError *error;
+        GError *error = NULL;
         gboolean result;
         char *status;
         gboolean change_status_result;
 
         g_debug("gajim_set_status");
 
-        g_type_init();
-
-        error = NULL;
         connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
         if (connection == NULL) {
-                g_printerr("Failed to open connection to bus: %s\n",
-                           error->message);
+                g_warning("Failed to open connection to bus: %s",
+                          error->message);
                 g_error_free(error);
         }
 
@@ -78,7 +76,7 @@ gajim_set_status(const char *message)
                                     G_TYPE_INVALID,
                                     G_TYPE_STRING, &status,
                                     G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         /* todo: abort if not online or chat? or dnd? */
 
@@ -93,7 +91,7 @@ gajim_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_BOOLEAN, &change_status_result,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         g_debug("change_status_result: %d", result);
 
@@ -104,9 +102,10 @@ gajim_set_status(const char *message)
 static void
 gossip_set_status(const char *message)
 {
+        g_return_if_fail(message != NULL);
         DBusGConnection *connection;
         DBusGProxy *proxy;
-        GError *error;
+        GError *error = NULL;
         gboolean result;
         char **chats;
         char *id;
@@ -115,13 +114,10 @@ gossip_set_status(const char *message)
 
         g_debug("gossip_set_status");
 
-        g_type_init();
-
-        error = NULL;
         connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
         if (connection == NULL) {
-                g_printerr("Failed to open connection to bus: %s\n",
-                           error->message);
+                g_warning("Failed to open connection to bus: %s",
+                          error->message);
                 g_error_free(error);
         }
 
@@ -138,7 +134,7 @@ gossip_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_STRV, &chats,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         id = *chats;
 
@@ -152,7 +148,7 @@ gossip_set_status(const char *message)
                                    G_TYPE_STRING, &state_str,
                                    G_TYPE_STRING, &status,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         g_debug("state_str: %s", state_str);
         g_debug("status: %s", status);
@@ -174,7 +170,7 @@ gossip_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
         g_free(state_str);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         g_object_unref(proxy);
 }
@@ -182,20 +178,18 @@ gossip_set_status(const char *message)
 static void
 pidgin_set_status(const char *message)
 {
+        g_return_if_fail(message != NULL);
         DBusGConnection *connection;
         DBusGProxy *proxy;
-        GError *error;
+        GError *error = NULL;
         gboolean result;
         unsigned int current;
         int status;
 
-        g_type_init();
-
-        error = NULL;
         connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
         if (connection == NULL) {
-                g_printerr("Failed to open connection to bus: %s\n",
-                           error->message);
+                g_warning("Failed to open connection to bus: %s",
+                          error->message);
                 g_error_free(error);
         }
 
@@ -209,7 +203,7 @@ pidgin_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_INT, &current,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         g_debug("Current: %d", current);
 
@@ -219,7 +213,7 @@ pidgin_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_INT, &status,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         /* todo: abort if not online */
 
@@ -232,14 +226,14 @@ pidgin_set_status(const char *message)
                                    G_TYPE_STRING, message,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusActivate",
                                    &error,
                                    G_TYPE_INT, current,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         g_object_unref(proxy);
 }
@@ -248,21 +242,19 @@ pidgin_set_status(const char *message)
 static void
 telepathy_set_status(const char *message)
 {
+        g_return_if_fail(message != NULL);
         DBusGConnection *connection;
         DBusGProxy *proxy;
-        GError *error;
+        GError *error = NULL;
         gboolean result;
         unsigned int presence;
 
         g_debug("telepathy_set_status");
 
-        g_type_init();
-
-        error = NULL;
         connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
         if (connection == NULL) {
-                g_printerr("Failed to open connection to bus: %s\n",
-                           error->message);
+                g_warning("Failed to open connection to bus: %s",
+                          error->message);
                 g_error_free(error);
         }
 
@@ -277,7 +269,7 @@ telepathy_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_UINT, &presence,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         /* todo: abort if not online or chat? or dnd? */
 
@@ -288,7 +280,7 @@ telepathy_set_status(const char *message)
                                    G_TYPE_STRING, message,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        g_return_if_fail(!check_result(result, error));
+        if (error_happened(result, error)) return;
 
         g_object_unref(proxy);
 }
@@ -300,7 +292,8 @@ im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track)
         g_return_if_fail(cfg != NULL && track != NULL);
         /* todo: support customizable message format */
         char *message;
-        message = g_strdup_printf("♫ %s - %s ♫", track->artist, track->title);
+        message = g_strdup_printf("\342\231\253 %s - %s \342\231\253",
+                                  track->artist, track->title);
         if (cfg->im_pidgin) pidgin_set_status(message);
         if (cfg->im_gajim) gajim_set_status(message);
         if (cfg->im_gossip) gossip_set_status(message);

@@ -9,7 +9,6 @@
 #ifndef IMSTATUS_H
 #define IMSTATUS_H
 
-#include <glib.h>
 #include "config.h"
 #include "playlist.h"
 #include "userconfig.h"
