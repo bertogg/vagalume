@@ -38,12 +38,7 @@ vagalume_SOURCES = \
 	xmlrpc.c xmlrpc.h
 
 if SET_IM_STATUS
-vagalume_SOURCES += \
-	imstatus/imgajim.c imstatus/imgajim.h \
-	imstatus/imgossip.c imstatus/imgossip.h \
-	imstatus/impidgin.c imstatus/impidgin.h \
-	imstatus/imstatus.c \
-	imstatus/imtelepathy.c imstatus/imtelepathy.h
+vagalume_SOURCES += imstatus.c
 endif
 
 if USE_INTERNAL_MD5

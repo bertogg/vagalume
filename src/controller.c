@@ -24,7 +24,7 @@
 #include "globaldefs.h"
 #include "dbus.h"
 #include "util.h"
-#include "imstatus/imstatus.h"
+#include "imstatus.h"
 
 static lastfm_session *session = NULL;
 static lastfm_pls *playlist = NULL;
