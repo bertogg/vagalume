@@ -366,9 +366,9 @@ controller_set_nowplaying(lastfm_track *track)
         }
         nowplaying = track;
         if (track == NULL) {
-                im_clear_status();
+                im_clear_status(usercfg);
         } else {
-                im_set_status(track);
+                im_set_status(usercfg, track);
         }
         nowplaying_since = 0;
         nowplaying_rating = RSP_RATING_NONE;
@@ -470,13 +470,9 @@ apply_usercfg(void)
         } else {
                 http_set_proxy(NULL);
         }
-        im_clear_status();
-        im_set_cfg(usercfg->im_pidgin,
-                   usercfg->im_gajim,
-                   usercfg->im_gossip,
-                   usercfg->im_telepathy);
+        im_clear_status(usercfg);
         if (nowplaying != NULL) {
-                im_set_status(nowplaying);
+                im_set_status(usercfg, nowplaying);
         }
 }
 

@@ -12,20 +12,17 @@
 #include <glib.h>
 #include "config.h"
 #include "playlist.h"
+#include "userconfig.h"
 
 #ifdef SET_IM_STATUS
 
-void im_set_cfg(gboolean pidgin, gboolean gajim, gboolean gossip,
-                gboolean telepathy);
-void im_set_status(const lastfm_track *track);
-void im_clear_status(void);
+void im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track);
+void im_clear_status(const lastfm_usercfg *cfg);
 
 #else
 
-void im_set_cfg(gboolean pidgin, gboolean gajim, gboolean gossip,
-                gboolean telepathy) { }
-void im_set_status(const lastfm_track *track) { }
-void im_clear_status(void) { }
+void im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track) { }
+void im_clear_status(const lastfm_usercfg *cfg) { }
 
 #endif /* SET_IM_STATUS */
 

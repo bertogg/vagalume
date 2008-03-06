@@ -8,7 +8,6 @@
  * todo: perhaps this should be incorporated into controller.c instead
  */
 
-#include <glib.h>
 #include <dbus/dbus-glib.h>
 #include "imstatus.h"
 
@@ -25,21 +24,6 @@ typedef enum
         PURPLE_STATUS_TUNE,
         PURPLE_STATUS_NUM_PRIMITIVES
 } PurpleStatusPrimitive;
-
-static gboolean do_pidgin = TRUE;
-static gboolean do_gajim = TRUE;
-static gboolean do_gossip = TRUE;
-static gboolean do_telepathy = TRUE;
-
-void
-im_set_cfg(gboolean pidgin, gboolean gajim, gboolean gossip,
-           gboolean telepathy)
-{
-        do_pidgin = pidgin;
-        do_gajim = gajim;
-        do_gossip = gossip;
-        do_telepathy = telepathy;
-}
 
 static int
 check_result(gboolean code, GError *error)
@@ -60,7 +44,7 @@ check_result(gboolean code, GError *error)
         return(0);
 }
 
-void
+static void
 gajim_set_status(const char *message)
 {
         DBusGConnection *connection;
@@ -117,7 +101,7 @@ gajim_set_status(const char *message)
         g_object_unref(proxy);
 }
 
-void
+static void
 gossip_set_status(const char *message)
 {
         DBusGConnection *connection;
@@ -195,7 +179,7 @@ gossip_set_status(const char *message)
         g_object_unref(proxy);
 }
 
-void
+static void
 pidgin_set_status(const char *message)
 {
         DBusGConnection *connection;
@@ -261,7 +245,7 @@ pidgin_set_status(const char *message)
 }
 
 
-void
+static void
 telepathy_set_status(const char *message)
 {
         DBusGConnection *connection;
@@ -311,23 +295,25 @@ telepathy_set_status(const char *message)
 
 
 void
-im_set_status(const lastfm_track *track)
+im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track)
 {
+        g_return_if_fail(cfg != NULL && track != NULL);
         /* todo: support customizable message format */
         char *message;
         message = g_strdup_printf("♫ %s - %s ♫", track->artist, track->title);
-        if (do_pidgin) pidgin_set_status(message);
-        if (do_gajim) gajim_set_status(message);
-        if (do_gossip) gossip_set_status(message);
-        if (do_telepathy) telepathy_set_status(message);
+        if (cfg->im_pidgin) pidgin_set_status(message);
+        if (cfg->im_gajim) gajim_set_status(message);
+        if (cfg->im_gossip) gossip_set_status(message);
+        if (cfg->im_telepathy) telepathy_set_status(message);
         g_free(message);
 }
 
 void
-im_clear_status(void)
+im_clear_status(const lastfm_usercfg *cfg)
 {
-        if (do_pidgin) pidgin_set_status("");
-        if (do_gajim) gajim_set_status("");
-        if (do_gossip) gossip_set_status("");
-        if (do_telepathy) telepathy_set_status("");
+        g_return_if_fail(cfg != NULL);
+        if (cfg->im_pidgin) pidgin_set_status("");
+        if (cfg->im_gajim) gajim_set_status("");
+        if (cfg->im_gossip) gossip_set_status("");
+        if (cfg->im_telepathy) telepathy_set_status("");
 }
