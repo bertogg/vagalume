@@ -122,7 +122,7 @@ lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track)
 lastfm_pls *
 lastfm_pls_new(void)
 {
-        lastfm_pls *pls = g_new0(lastfm_pls, 1);
+        lastfm_pls *pls = g_slice_new0(lastfm_pls);
         pls->tracks = g_queue_new();
         return pls;
 }
@@ -151,7 +151,7 @@ lastfm_pls_destroy(lastfm_pls *pls)
         if (pls == NULL) return;
         lastfm_pls_clear(pls);
         g_queue_free(pls->tracks);
-        g_free(pls);
+        g_slice_free(lastfm_pls, pls);
 }
 
 /**

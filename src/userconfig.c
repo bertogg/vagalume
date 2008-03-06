@@ -105,7 +105,7 @@ lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir)
 lastfm_usercfg *
 lastfm_usercfg_new(void)
 {
-        lastfm_usercfg *cfg = g_new0(lastfm_usercfg, 1);
+        lastfm_usercfg *cfg = g_slice_new0(lastfm_usercfg);
         cfg->username = g_strdup("");
         cfg->password = g_strdup("");
         cfg->http_proxy = g_strdup("");
@@ -127,7 +127,7 @@ lastfm_usercfg_destroy(lastfm_usercfg *cfg)
         g_free(cfg->password);
         g_free(cfg->http_proxy);
         g_free(cfg->download_dir);
-        g_free(cfg);
+        g_slice_free(lastfm_usercfg, cfg);
 }
 
 lastfm_usercfg *

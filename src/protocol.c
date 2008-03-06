@@ -66,7 +66,7 @@ lastfm_session_destroy(lastfm_session *session)
         g_free(session->id);
         g_free(session->base_url);
         g_free(session->base_path);
-        g_free(session);
+        g_slice_free(lastfm_session, session);
 }
 
 /**
@@ -78,7 +78,7 @@ lastfm_session *
 lastfm_session_copy(const lastfm_session *session)
 {
         if (session == NULL) return NULL;
-        lastfm_session *s = g_new0(lastfm_session, 1);
+        lastfm_session *s = g_slice_new0(lastfm_session);
         *s = *session;
         s->id = g_strdup(session->id);
         s->base_url = g_strdup(session->base_url);
@@ -116,7 +116,7 @@ lastfm_session_new(const char *username, const char *password,
 
         g_free(buffer);
 
-        lastfm_session *s = g_new0(lastfm_session, 1);
+        lastfm_session *s = g_slice_new0(lastfm_session);
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
         s->base_url = g_strdup(g_hash_table_lookup(response, "base_url"));
         s->base_path = g_strdup(g_hash_table_lookup(response, "base_path"));

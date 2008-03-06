@@ -283,7 +283,7 @@ scrobble_track_thread(gpointer data)
         g_free(user);
         g_free(pass);
         lastfm_track_unref(d->track);
-        g_free(d);
+        g_slice_free(rsp_data, d);
         return NULL;
 }
 
@@ -308,7 +308,7 @@ controller_scrobble_track(void)
                     played < nowplaying->duration/2000 && played < 240) {
                         nowplaying_rating = RSP_RATING_SKIP;
                 }
-                rsp_data *d = g_new0(rsp_data, 1);
+                rsp_data *d = g_slice_new0(rsp_data);
                 d->track = lastfm_track_ref(nowplaying);
                 d->start = nowplaying_since;
                 d->rating = nowplaying_rating;
@@ -344,7 +344,7 @@ set_nowplaying_thread(gpointer data)
                 rsp_session_destroy(s);
         }
         lastfm_track_unref(d->track);
-        g_free(d);
+        g_slice_free(rsp_data, d);
         return NULL;
 }
 
@@ -373,7 +373,7 @@ controller_set_nowplaying(lastfm_track *track)
         nowplaying_since = 0;
         nowplaying_rating = RSP_RATING_NONE;
         if (track != NULL && usercfg->enable_scrobbling) {
-                rsp_data *d = g_new0(rsp_data, 1);
+                rsp_data *d = g_slice_new0(rsp_data);
                 d->track = lastfm_track_ref(track);
                 d->start = 0;
                 g_thread_create(set_nowplaying_thread,d,FALSE,NULL);
@@ -583,7 +583,7 @@ check_session_thread(gpointer userdata)
         /* Free memory */
         g_free(data->user);
         g_free(data->pass);
-        g_free(data);
+        g_slice_free(check_session_thread_data, data);
         if (connected) {
                 get_user_extradata();
         }
@@ -622,7 +622,7 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
                 check_usercfg(TRUE);
                 if (usercfg != NULL) {
                         check_session_thread_data *data;
-                        data = g_new(check_session_thread_data, 1);
+                        data = g_slice_new(check_session_thread_data);
                         data->user = g_strdup(usercfg->username);
                         data->pass = g_strdup(usercfg->password);
                         data->success_cb = success_cb;
@@ -667,7 +667,7 @@ set_album_cover_thread(gpointer data)
         gdk_threads_leave();
         g_free(buffer);
         g_free(d->image_url);
-        g_free(d);
+        g_slice_free(getcover_data, d);
         return NULL;
 }
 
@@ -715,7 +715,7 @@ controller_show_cover(void)
         if (showing_cover || nowplaying == NULL || mainwin->is_hidden) return;
         showing_cover = TRUE;
         if (nowplaying->image_url != NULL) {
-                getcover_data *d = g_new(getcover_data, 1);
+                getcover_data *d = g_slice_new(getcover_data);
                 d->track_id = nowplaying->id;
                 d->image_url = g_strdup(nowplaying->image_url);
                 g_thread_create(set_album_cover_thread, d, FALSE, NULL);
@@ -958,7 +958,7 @@ tag_track_thread(gpointer data)
         }
         lastfm_track_unref(d->track);
         g_free(d->taglist);
-        g_free(d);
+        g_slice_free(tag_data, d);
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
                 controller_show_banner(tagged ? "Tags set correctly" :
@@ -989,7 +989,7 @@ controller_tag_track()
         accept = tagwin_run(mainwin->window, usercfg->username, &tags,
                             usertags, track, &type);
         if (accept && tags != NULL && tags[0] != '\0') {
-                tag_data *d = g_new0(tag_data, 1);
+                tag_data *d = g_slice_new0(tag_data);
                 d->track = track;
                 d->taglist = tags;
                 d->type = type;
@@ -1039,7 +1039,7 @@ recomm_track_thread(gpointer data)
         lastfm_track_unref(d->track);
         g_free(d->rcpt);
         g_free(d->text);
-        g_free(d);
+        g_slice_free(recomm_data, d);
         return NULL;
 }
 
@@ -1064,7 +1064,7 @@ controller_recomm_track(void)
                                track, &type);
         if (accept && rcpt && body && rcpt[0] && body[0]) {
                 g_strstrip(rcpt);
-                recomm_data *d = g_new0(recomm_data, 1);
+                recomm_data *d = g_slice_new0(recomm_data);
                 d->track = track;
                 d->rcpt = rcpt;
                 d->text = body;

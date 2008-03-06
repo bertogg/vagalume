@@ -30,7 +30,7 @@ rsp_session_destroy(rsp_session *s)
         g_free(s->id);
         g_free(s->np_url);
         g_free(s->post_url);
-        g_free(s);
+        g_slice_free(rsp_session, s);
 }
 
 rsp_session *
@@ -38,7 +38,7 @@ rsp_session_copy(const rsp_session *s)
 {
         if (s == NULL) return NULL;
         g_return_val_if_fail(s->id && s->np_url && s->post_url, NULL);
-        rsp_session *s2 = g_new0(rsp_session, 1);
+        rsp_session *s2 = g_slice_new0(rsp_session);
         s2->id = g_strdup(s->id);
         s2->np_url = g_strdup(s->np_url);
         s2->post_url = g_strdup(s->post_url);
@@ -66,7 +66,7 @@ rsp_session_new(const char *username, const char *password,
                         /* Split in 5 parts and not 4 to prevent
                            trailing garbage from going to r[3] */
                         char **r = g_strsplit(buffer, "\n", 5);
-                        s = g_new0(rsp_session, 1);
+                        s = g_slice_new0(rsp_session);
                         if (r[0] && r[1] && r[2] && r[3]) {
                                 s->id = g_strdup(r[1]);
                                 s->np_url = g_strdup(r[2]);

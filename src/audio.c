@@ -71,8 +71,8 @@ get_audio_thread(gpointer userdata)
         if (!audio_started) transfer_ok = FALSE;
         g_free(data->url);
         g_free(data->session_id);
-        g_free(data);
         g_free(cookie);
+        g_slice_free(get_audio_thread_data, data);
         g_slist_free(headers);
         g_mutex_lock(failed_tracks_mutex);
         failed_tracks = transfer_ok ? 0 : (failed_tracks + 1);
@@ -228,7 +228,7 @@ lastfm_audio_play(const char *url, GCallback audio_started_cb,
         audio_started = FALSE;
         audio_started_callback = audio_started_cb;
         pipe(http_pipe);
-        data = g_new(get_audio_thread_data, 1);
+        data = g_slice_new(get_audio_thread_data);
         data->session_id = g_strdup(session_id);
         data->url = g_strdup(url);
         http_thread = g_thread_create(get_audio_thread, data, TRUE, NULL);

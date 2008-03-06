@@ -795,13 +795,13 @@ void
 lastfm_mainwin_destroy(lastfm_mainwin *w)
 {
         g_string_free(w->progressbar_text, TRUE);
-        g_free(w);
+        g_slice_free(lastfm_mainwin, w);
 }
 
 lastfm_mainwin *
 lastfm_mainwin_create(void)
 {
-        lastfm_mainwin *w = g_new0(lastfm_mainwin, 1);
+        lastfm_mainwin *w = g_slice_new0(lastfm_mainwin);
         GtkBox *vbox, *centralbox;
         GtkBox *image_box_holder, *image_box_holder2, *labelbox;
         GtkBox *buttonshbox, *secondary_bbox, *secondary_bar_vbox;
