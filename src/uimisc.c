@@ -232,8 +232,9 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         GtkWidget *userlabel, *pwlabel, *scroblabel, *discovlabel;
         GtkWidget *useproxylabel, *proxylabel;
         GtkWidget *dllabel, *dlbutton;
-        GtkEntry *user, *pw, *proxy, *dlentry;
+        GtkEntry *user, *pw, *proxy, *dlentry, *imtemplateentry;
         GtkWidget *scrobble, *discovery, *useproxy;
+        GtkWidget *imtemplatelabel;
         GtkWidget *impidginlabel, *imgajimlabel, *imgossiplabel;
         GtkWidget *imtelepathylabel;
         GtkWidget *impidgin, *imgajim, *imgossip, *imtelepathy;
@@ -251,6 +252,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         useproxylabel = gtk_label_new("Use HTTP proxy");
         proxylabel = gtk_label_new("Proxy address:");
         dllabel = gtk_label_new("Select download directory");
+        imtemplatelabel = gtk_label_new("Status message template:");
         impidginlabel = gtk_label_new("Update Pidgin status:");
         imgajimlabel = gtk_label_new("Update Gajim status:");
         imgossiplabel = gtk_label_new("Update Gossip status:");
@@ -264,6 +266,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         useproxy = gtk_check_button_new();
         dlentry = GTK_ENTRY(gtk_entry_new());
         dlbutton = compat_gtk_button_new();
+        imtemplateentry = GTK_ENTRY(gtk_entry_new());
         impidgin = gtk_check_button_new();
         imgajim = gtk_check_button_new();
         imgossip = gtk_check_button_new();
@@ -278,6 +281,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_entry_set_text(pw, (*cfg)->password);
         gtk_entry_set_text(proxy, (*cfg)->http_proxy);
         gtk_entry_set_text(dlentry, (*cfg)->download_dir);
+        gtk_entry_set_text(imtemplateentry, (*cfg)->imstatus_template);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
                                      (*cfg)->enable_scrobbling);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
@@ -315,15 +319,18 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
         gtk_table_attach(dltable, dlbutton, 1, 2, 1, 2, 0, 0, 5, 5);
 
-        imtable = GTK_TABLE(gtk_table_new(4, 2, FALSE));
-        gtk_table_attach(imtable, impidginlabel, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgajimlabel, 0, 1, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgossiplabel, 0, 1, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imtelepathylabel, 0, 1, 3, 4, 0, 0, 5, 5);
-        gtk_table_attach(imtable, impidgin, 1, 2, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgajim, 1, 2, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgossip, 1, 2, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imtelepathy, 1, 2, 3, 4, 0, 0, 5, 5);
+        imtable = GTK_TABLE(gtk_table_new(5, 2, FALSE));
+        gtk_table_attach(imtable, imtemplatelabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(imtable, impidginlabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgajimlabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgossiplabel, 0, 1, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imtelepathylabel, 0, 1, 4, 5, 0, 0, 5, 5);
+        gtk_table_attach(imtable, GTK_WIDGET(imtemplateentry), 1, 2, 0, 1,
+                         0, 0, 5, 5);
+        gtk_table_attach(imtable, impidgin, 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgajim, 1, 2, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imgossip, 1, 2, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(imtable, imtelepathy, 1, 2, 4, 5, 0, 0, 5, 5);
 
         nb = GTK_NOTEBOOK(gtk_notebook_new());
         gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
@@ -354,6 +361,8 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 lastfm_usercfg_set_http_proxy(*cfg, gtk_entry_get_text(proxy));
                 lastfm_usercfg_set_download_dir(*cfg,
                                                 gtk_entry_get_text(dlentry));
+                lastfm_usercfg_set_imstatus_template(*cfg,
+                                                     gtk_entry_get_text(imtemplateentry));
                 (*cfg)->enable_scrobbling = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(scrobble));
                 (*cfg)->discovery_mode = gtk_toggle_button_get_active(

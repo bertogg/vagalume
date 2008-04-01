@@ -17,6 +17,7 @@
 #include "userconfig.h"
 
 #define CONFIG_FILE ".vagalumerc"
+#define DEFAULT_IMSTATUS_TEMPLATE "\342\231\253 {artist} - {title} \342\231\253"
 
 static char *
 cfg_get_val(const char *line, const char *key)
@@ -102,6 +103,15 @@ lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir)
         if (cfg->download_dir) g_strstrip(cfg->download_dir);
 }
 
+void
+lastfm_usercfg_set_imstatus_template(lastfm_usercfg *cfg, const char *str)
+{
+        g_return_if_fail(cfg != NULL);
+        g_free(cfg->imstatus_template);
+        cfg->imstatus_template = g_strdup(str);
+        if (cfg->imstatus_template) g_strstrip(cfg->imstatus_template);
+}
+
 lastfm_usercfg *
 lastfm_usercfg_new(void)
 {
@@ -110,6 +120,7 @@ lastfm_usercfg_new(void)
         cfg->password = g_strdup("");
         cfg->http_proxy = g_strdup("");
         cfg->download_dir = default_download_dir();
+        cfg->imstatus_template = g_strdup(DEFAULT_IMSTATUS_TEMPLATE);
         cfg->use_proxy = FALSE;
         cfg->enable_scrobbling = TRUE;
         cfg->discovery_mode = FALSE;
@@ -127,6 +138,7 @@ lastfm_usercfg_destroy(lastfm_usercfg *cfg)
         g_free(cfg->password);
         g_free(cfg->http_proxy);
         g_free(cfg->download_dir);
+        g_free(cfg->imstatus_template);
         g_slice_free(lastfm_usercfg, cfg);
 }
 
@@ -174,6 +186,8 @@ read_usercfg(void)
                         lastfm_usercfg_set_http_proxy(cfg, val);
                 } else if ((val = cfg_get_val(buf, "download_dir")) != NULL) {
                         lastfm_usercfg_set_download_dir(cfg, val);
+                } else if ((val = cfg_get_val(buf, "imstatus_template")) != NULL) {
+                        lastfm_usercfg_set_imstatus_template(cfg, val);
                 } else if ((val = cfg_get_val(buf, "im_pidgin")) != NULL) {
                         cfg->im_pidgin = !strcmp(val, "1");
                 } else if ((val = cfg_get_val(buf, "im_gajim")) != NULL) {
@@ -213,13 +227,16 @@ write_usercfg(lastfm_usercfg *cfg)
                     "http_proxy=\"%s\"\nuse_proxy=\"%d\"\n"
                     "scrobble=\"%d\"\ndiscovery=\"%d\"\n"
                     "download_dir=\"%s\"\n"
+                    "imstatus_template=\"%s\"\n"
                     "im_pidgin=\"%d\"\n"
                     "im_gajim=\"%d\"\n"
                     "im_gossip=\"%d\"\n"
                     "im_telepathy=\"%d\"\n",
                     cfg->username, base64pw, cfg->http_proxy,
                     !!cfg->use_proxy, !!cfg->enable_scrobbling,
-                    !!cfg->discovery_mode, cfg->download_dir,
+                    !!cfg->discovery_mode,
+                    cfg->download_dir,
+                    cfg->imstatus_template,
                     !!cfg->im_pidgin,
                     !!cfg->im_gajim,
                     !!cfg->im_gossip,

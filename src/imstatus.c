@@ -8,6 +8,8 @@
 
 #include <glib.h>
 #include <dbus/dbus-glib.h>
+#include <string.h>
+#include "util.h"
 #include "imstatus.h"
 
 typedef enum
@@ -290,15 +292,28 @@ void
 im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track)
 {
         g_return_if_fail(cfg != NULL && track != NULL);
-        /* todo: support customizable message format */
-        char *message;
-        message = g_strdup_printf("\342\231\253 %s - %s \342\231\253",
-                                  track->artist, track->title);
-        if (cfg->im_pidgin) pidgin_set_status(message);
-        if (cfg->im_gajim) gajim_set_status(message);
-        if (cfg->im_gossip) gossip_set_status(message);
-        if (cfg->im_telepathy) telepathy_set_status(message);
-        g_free(message);
+        const char *artist_keyword = "{artist}";
+        const char *title_keyword = "{title}";
+        const char *pos;
+        GString *message = g_string_new(cfg->imstatus_template);
+
+        pos = strstr(message->str, artist_keyword);
+        if (pos) {
+                g_string_erase(message, pos - message->str, strlen(artist_keyword));
+                g_string_insert(message, pos - message->str, track->artist);
+        }
+
+        pos = strstr(message->str, title_keyword);
+        if (pos) {
+                g_string_erase(message, pos - message->str, strlen(title_keyword));
+                g_string_insert(message, pos - message->str, track->title);
+        }
+
+        if (cfg->im_pidgin) pidgin_set_status(message->str);
+        if (cfg->im_gajim) gajim_set_status(message->str);
+        if (cfg->im_gossip) gossip_set_status(message->str);
+        if (cfg->im_telepathy) telepathy_set_status(message->str);
+        g_string_free(message, TRUE);
 }
 
 void

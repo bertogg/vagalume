@@ -17,6 +17,7 @@ typedef struct {
         char *password; /* Never NULL, even if not defined */
         char *http_proxy; /* Never NULL, even if not defined */
         char *download_dir; /* Never NULL */
+        char *imstatus_template;
         gboolean use_proxy;
         gboolean discovery_mode;
         gboolean enable_scrobbling;
@@ -32,6 +33,7 @@ void lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username);
 void lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password);
 void lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy);
 void lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir);
+void lastfm_usercfg_set_imstatus_template(lastfm_usercfg *cfg, const char *str);
 lastfm_usercfg *read_usercfg(void);
 gboolean write_usercfg(lastfm_usercfg *cfg);
 
