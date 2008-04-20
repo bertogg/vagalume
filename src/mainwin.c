@@ -400,6 +400,7 @@ window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
 static gboolean
 key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
 {
+        int volchange = 0;
         switch (event->keyval) {
         case GDK_F6:
                 if (win->is_fullscreen) {
@@ -409,11 +410,17 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
                 }
                 break;
         case GDK_F7:
-                controller_increase_volume(5);
+                volchange = 5;
                 break;
         case GDK_F8:
-                controller_increase_volume(-5);
+                volchange = -5;
                 break;
+        }
+        if (volchange != 0) {
+                int newvol = controller_increase_volume(volchange);
+                char *text = g_strdup_printf("Volume: %d/100", newvol);
+                controller_show_banner(text);
+                g_free(text);
         }
         return FALSE;
 }

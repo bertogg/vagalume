@@ -86,6 +86,16 @@ showwindow_handler_idle(gpointer data)
 }
 
 static gboolean
+volumechange_handler_idle(gpointer data)
+{
+        gint volchange = GPOINTER_TO_INT(data);
+        gdk_threads_enter();
+        controller_increase_volume(volchange);
+        gdk_threads_leave();
+        return FALSE;
+}
+
+static gboolean
 closeapp_handler_idle(gpointer data)
 {
         gdk_threads_enter();
@@ -133,6 +143,10 @@ dbus_req_handler(const gchar* interface, const gchar* method,
                 g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(FALSE));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_CLOSEAPP)) {
                 g_idle_add(closeapp_handler_idle, NULL);
+        } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEUP)) {
+                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER(5));
+        } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEDOWN)) {
+                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER(-5));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_TOPAPP)) {
                 g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_REQUEST_STATUS)) {

@@ -25,6 +25,8 @@
 #define APP_DBUS_METHOD_SHOWWINDOW "ShowWindow"
 #define APP_DBUS_METHOD_HIDEWINDOW "HideWindow"
 #define APP_DBUS_METHOD_CLOSEAPP "CloseApp"
+#define APP_DBUS_METHOD_VOLUMEUP "VolumeUp"
+#define APP_DBUS_METHOD_VOLUMEDOWN "VolumeDown"
 #define APP_DBUS_METHOD_TOPAPP "top_application"
 #define APP_DBUS_METHOD_REQUEST_STATUS "request_status"
 

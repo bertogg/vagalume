@@ -1378,17 +1378,18 @@ controller_play_radio_ask_url(void)
 /**
  * Increase (or decrease) the audio volume
  * @param inc Level of increase
+ * @return The new level
  */
-void
+int
 controller_increase_volume(int inc)
 {
+        int newvol;
         if (inc != 0) {
-                char *text;
-                int newvol = lastfm_audio_increase_volume(inc);
-                text = g_strdup_printf("Volume: %d/100", newvol);
-                controller_show_banner(text);
-                g_free(text);
+                newvol = lastfm_audio_increase_volume(inc);
+        } else {
+                newvol = lastfm_audio_get_volume();
         }
+        return newvol;
 }
 
 /**
