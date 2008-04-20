@@ -261,6 +261,9 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         pw = GTK_ENTRY(gtk_entry_new());
         scrobble = gtk_check_button_new();
         discovery = gtk_check_button_new();
+#ifdef MAEMO
+        hildon_gtk_entry_set_input_mode(pw, HILDON_GTK_INPUT_MODE_FULL);
+#endif
         gtk_entry_set_visibility(pw, FALSE);
         proxy = GTK_ENTRY(gtk_entry_new());
         useproxy = gtk_check_button_new();

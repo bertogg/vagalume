@@ -18,5 +18,4 @@ List of features that need to be implemented (in no particular order):
 * Add option to disable confirmation dialogs
 * Global hotkeys for the desktop
 * Pause button
-* Allow changing the volume via DBUS
 * Don't show confirmation dialogs on DBUS callbacks
