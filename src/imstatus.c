@@ -12,6 +12,8 @@
 #include "util.h"
 #include "imstatus.h"
 
+static char *saved_pidgin_status = NULL;
+
 typedef enum
 {
         PURPLE_STATUS_UNSET = 0,
@@ -222,6 +224,15 @@ pidgin_set_status(const char *message)
         g_debug("Type: %d", status);
         g_debug("message: %s", message);
 
+        if (saved_pidgin_status == NULL) {
+                dbus_g_proxy_call(proxy, "PurpleSavedstatusGetMessage",
+                                  &error,
+                                  G_TYPE_INT, current,
+                                  G_TYPE_INVALID,
+                                  G_TYPE_STRING, &saved_pidgin_status,
+                                  G_TYPE_INVALID);
+        }
+
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusSetMessage",
                                    &error,
                                    G_TYPE_INT, current,
@@ -320,7 +331,11 @@ void
 im_clear_status(const lastfm_usercfg *cfg)
 {
         g_return_if_fail(cfg != NULL);
-        if (cfg->im_pidgin) pidgin_set_status("");
+        if (cfg->im_pidgin && saved_pidgin_status != NULL) {
+                pidgin_set_status(saved_pidgin_status);
+                g_free(saved_pidgin_status);
+                saved_pidgin_status = NULL;
+        }
         if (cfg->im_gajim) gajim_set_status("");
         if (cfg->im_gossip) gossip_set_status("");
         if (cfg->im_telepathy) telepathy_set_status("");

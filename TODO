@@ -10,7 +10,6 @@ List of features that need to be implemented (in no particular order):
 * Configuration setting to select different decoder/sinks
 * Drop down of favourite artists for similar artists radio
 * Auto download of free tracks
-* Set status message in IM client for current track
 * Add links to launch browser to go to last.fm page
 * Get proxy setting from environment/maemo settings
 * Notify user on successful scrobble

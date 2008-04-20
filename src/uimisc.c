@@ -262,6 +262,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         scrobble = gtk_check_button_new();
         discovery = gtk_check_button_new();
 #ifdef MAEMO
+        /* This disables the automatic capitalization */
         hildon_gtk_entry_set_input_mode(pw, HILDON_GTK_INPUT_MODE_FULL);
 #endif
         gtk_entry_set_visibility(pw, FALSE);

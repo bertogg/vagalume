@@ -631,8 +631,6 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         lastfmsub = GTK_MENU_SHELL(gtk_menu_new());
         settings = gtk_menu_item_new_with_label("Settings...");
         quit = gtk_menu_item_new_with_label("Quit");
-        gtk_widget_add_accelerator(quit, "activate", accel, GDK_q,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);
@@ -787,6 +785,8 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         gtk_widget_add_accelerator(tag, "activate", accel, GDK_t,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
         gtk_widget_add_accelerator(addtopls, "activate", accel, GDK_p,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(quit, "activate", accel, GDK_q,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
         w->radiomenu = GTK_WIDGET(radio);
