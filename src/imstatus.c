@@ -1,6 +1,7 @@
 /*
  * imstatus.c -- set IM status to current track
  * Copyright (C) 2008 Tim Wegener <twegener@fastmail.fm>
+ * Copyright (C) 2008 Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
  * See the README file for more details.
@@ -48,11 +49,34 @@ error_happened(gboolean code, GError *error)
         return FALSE;
 }
 
+static DBusGProxy *
+get_dbus_proxy(const char *dest, const char *objpath, const char *iface)
+{
+        g_return_val_if_fail (dest && objpath && iface, NULL);
+        DBusGConnection *connection;
+        DBusGProxy *proxy = NULL;
+        GError *error = NULL;
+
+        connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+        if (connection != NULL) {
+                proxy = dbus_g_proxy_new_for_name(connection,
+                                                  dest, objpath, iface);
+        } else {
+                g_warning("Failed to open connection to bus: %s",
+                          (error && error->message) ?
+                          error->message : "(unknown error)");
+        }
+
+        if (error != NULL) g_error_free(error);
+        if (connection != NULL) dbus_g_connection_unref(connection);
+
+        return proxy;
+}
+
 static void
 gajim_set_status(const char *message)
 {
         g_return_if_fail(message != NULL);
-        DBusGConnection *connection;
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
@@ -61,19 +85,11 @@ gajim_set_status(const char *message)
 
         g_debug("gajim_set_status");
 
-        connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
-        if (connection == NULL) {
-                g_warning("Failed to open connection to bus: %s",
-                          error->message);
-                g_error_free(error);
-        }
+        proxy = get_dbus_proxy("org.gajim.dbus",
+                               "/org/gajim/dbus/RemoteObject",
+                               "org.gajim.dbus.RemoteInterface");
 
-        proxy = dbus_g_proxy_new_for_name(connection,
-                                          "org.gajim.dbus",
-                                          "/org/gajim/dbus/RemoteObject",
-                                          "org.gajim.dbus.RemoteInterface");
-
-        g_return_if_fail(proxy != NULL);
+        if (proxy == NULL) return;
 
         result = dbus_g_proxy_call (proxy, "get_status", &error,
                                     G_TYPE_STRING, "",
@@ -107,7 +123,6 @@ static void
 gossip_set_status(const char *message)
 {
         g_return_if_fail(message != NULL);
-        DBusGConnection *connection;
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
@@ -118,19 +133,11 @@ gossip_set_status(const char *message)
 
         g_debug("gossip_set_status");
 
-        connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
-        if (connection == NULL) {
-                g_warning("Failed to open connection to bus: %s",
-                          error->message);
-                g_error_free(error);
-        }
+        proxy = get_dbus_proxy("org.gnome.Gossip",
+                               "/org/gnome/Gossip",
+                               "org.gnome.Gossip");
 
-        proxy = dbus_g_proxy_new_for_name(connection,
-                                          "org.gnome.Gossip",
-                                          "/org/gnome/Gossip",
-                                          "org.gnome.Gossip");
-
-        error = NULL;
+        if (proxy == NULL) return;
 
         g_debug("GetOpenChats");
 
@@ -183,24 +190,17 @@ static void
 pidgin_set_status(const char *message)
 {
         g_return_if_fail(message != NULL);
-        DBusGConnection *connection;
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
         unsigned int current;
         int status;
 
-        connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
-        if (connection == NULL) {
-                g_warning("Failed to open connection to bus: %s",
-                          error->message);
-                g_error_free(error);
-        }
+        proxy = get_dbus_proxy("im.pidgin.purple.PurpleService",
+                               "/im/pidgin/purple/PurpleObject",
+                               "im.pidgin.purple.PurpleInterface");
 
-        proxy = dbus_g_proxy_new_for_name(connection,
-                                          "im.pidgin.purple.PurpleService",
-                                          "/im/pidgin/purple/PurpleObject",
-                                          "im.pidgin.purple.PurpleInterface");
+        if (proxy == NULL) return;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusGetCurrent",
                                    &error,
@@ -256,7 +256,6 @@ static void
 telepathy_set_status(const char *message)
 {
         g_return_if_fail(message != NULL);
-        DBusGConnection *connection;
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
@@ -264,19 +263,11 @@ telepathy_set_status(const char *message)
 
         g_debug("telepathy_set_status");
 
-        connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
-        if (connection == NULL) {
-                g_warning("Failed to open connection to bus: %s",
-                          error->message);
-                g_error_free(error);
-        }
+        proxy = get_dbus_proxy("org.freedesktop.Telepathy.MissionControl",
+                               "/org/freedesktop/Telepathy/MissionControl",
+                               "org.freedesktop.Telepathy.MissionControl");
 
-        proxy = dbus_g_proxy_new_for_name(connection,
-                                          "org.freedesktop.Telepathy.MissionControl",
-                                          "/org/freedesktop/Telepathy/MissionControl",
-                                          "org.freedesktop.Telepathy.MissionControl");
-
-        g_return_if_fail(proxy != NULL);
+        if (proxy == NULL) return;
 
         result = dbus_g_proxy_call(proxy, "GetPresence", &error,
                                    G_TYPE_INVALID,
