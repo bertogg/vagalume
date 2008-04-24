@@ -61,7 +61,7 @@ static gboolean
 lovetrack_handler_idle(gpointer data)
 {
         gdk_threads_enter();
-        controller_love_track();
+        controller_love_track(FALSE);
         gdk_threads_leave();
         return FALSE;
 }
@@ -70,7 +70,7 @@ static gboolean
 bantrack_handler_idle(gpointer data)
 {
         gdk_threads_enter();
-        controller_ban_track();
+        controller_ban_track(FALSE);
         gdk_threads_leave();
         return FALSE;
 }

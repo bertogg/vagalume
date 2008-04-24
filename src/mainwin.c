@@ -514,13 +514,13 @@ stop_after_selected(GtkWidget *widget, gpointer data)
 static void
 love_track_selected(GtkWidget *widget, gpointer data)
 {
-        controller_love_track();
+        controller_love_track(TRUE);
 }
 
 static void
 ban_track_selected(GtkWidget *widget, gpointer data)
 {
-        controller_ban_track();
+        controller_ban_track(TRUE);
 }
 
 static void

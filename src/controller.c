@@ -892,29 +892,37 @@ controller_set_stop_after(gboolean stop)
 /**
  * Mark the currently playing track as a loved track. This will be
  * used when scrobbling it.
+ * @param interactive If called interactively
  */
 void
-controller_love_track(void)
+controller_love_track(gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL && mainwin != NULL);
-        if (controller_confirm_dialog("Really mark track as loved?")) {
+        if (!interactive ||
+            controller_confirm_dialog("Really mark track as loved?")) {
                 nowplaying_rating = RSP_RATING_LOVE;
-                controller_show_banner("Marking track as loved");
                 mainwin_set_track_as_loved(mainwin);
+                if (interactive) {
+                        controller_show_banner("Marking track as loved");
+                }
         }
 }
 
 /**
  * Ban this track, marking it as banned and skipping it
+ * @param interactive If called interactively
  */
 void
-controller_ban_track(void)
+controller_ban_track(gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL);
-        if (controller_confirm_dialog("Really ban this track?")) {
+        if (!interactive ||
+            controller_confirm_dialog("Really ban this track?")) {
                 nowplaying_rating = RSP_RATING_BAN;
-                controller_show_banner("Banning track");
                 controller_skip_track();
+                if (interactive) {
+                        controller_show_banner("Banning track");
+                }
         }
 }
 
