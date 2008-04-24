@@ -50,6 +50,7 @@ endif
 
 if HAVE_DBUS_SUPPORT
 serviceentry_DATA = data/vagalume.service
+bin_SCRIPTS = contrib/vagalumectl
 endif
 
 if HAVE_MAEMO_SB_PLUGIN

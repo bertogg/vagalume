@@ -1,0 +1,140 @@
+#!/bin/sh
+#
+# A shell script for easily managing some of the
+# Vagalume features available via its D-Bus interface.
+#
+# Copyright (C) 2008 Mario Sanchez Prada <msanchez@igalia.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of version 2 of the GNU General Public
+# License as published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+set -e
+
+PROGNAME="$(basename $0)"
+
+# Delay to be used in the 'ugly' sleep after starting Vagalume
+# when it's not running yet. It helps (but not ensure) the command
+# to be finally executed after Vagalume has started.
+STARTUP_DELAY=25
+
+# D-Bus basic parameters
+DBUS_SERVICE='com.igalia.vagalume'
+DBUS_OBJECT=/com/igalia/vagalume
+DBUS_IFACE=com.igalia.vagalume
+
+# Available D-Bus commands
+DBUS_METHOD_PLAY="Play"
+DBUS_METHOD_STOP="Stop"
+DBUS_METHOD_SKIP="Skip"
+DBUS_METHOD_PLAYURL="PlayUrl"
+DBUS_METHOD_CLOSEAPP="CloseApp"
+DBUS_METHOD_TOPAPP="top_application"
+
+# Print the usage for this shell script
+print_usage ()
+{
+    echo "Usage:"
+    echo "  $PROGNAME <COMMAND>"
+    echo "     (Vagalume will be automatically started if not already running)"
+    echo
+    echo "  COMMAND:"
+    echo "     play:              start playing the current radio"
+    echo "     skip:              skip to the nex song in the current radio"
+    echo "     stop:              stop playing the current radio"
+    echo "     tag <TAG>:         change to a 'global tag' radio."
+    echo "     artist <ARTIST>:   change to a 'similar artists' radio"
+    echo "     group <GROUP>:     change to a 'last.fm group' radio"
+    echo "     loved <USER>:      change to a 'loved' radio for a specific user"
+    echo "     neighbours <USER>: change to a 'neighbours' radio for a specific user"
+    echo "     personal <USER>:    change to a 'personal' radio for a specific user"
+    echo "     playlist <USER>:   change to a 'playlist' radio for a specific user"
+    echo "     playurl <URL>:     just play the specified URL on Vagalume"
+    echo "     start:             start Vagalume (if not already running)"
+    echo "     close:             close Vagalume (if not already closed)"
+    echo "     help:              print this information"
+    echo
+    echo " Double quotes are REQUIRED when specifying parameters to some commands,"
+    echo " such as TAG or ARTIST, because of the white spaces they might contain, e.g:"
+    echo
+    echo "     $ $PROGNAME tag \"hard rock\""
+    echo "     $ $PROGNAME artist \"Led Zeppelin\""
+    echo
+}
+
+# Invalid parameters: print usage and exit with error code
+invalid_params ()
+{
+    print_usage;
+    exit 1;
+}
+
+# Check number of parameteres
+if [ $# -lt 1 ]; then
+    invalid_params;
+fi
+
+# Check the command and execute it
+COMMAND=${1}
+if [ $# -eq 1 ]; then
+  # Commands requiring no parameters
+  case ${COMMAND} in
+    "stop") DBUS_METHOD_CALL=${DBUS_METHOD_STOP};;
+    "play") DBUS_METHOD_CALL=${DBUS_METHOD_PLAY};;
+    "skip") DBUS_METHOD_CALL=${DBUS_METHOD_SKIP};;
+    "start") DBUS_METHOD_CALL=${DBUS_METHOD_TOPAPP};;
+    "close") DBUS_METHOD_CALL=${DBUS_METHOD_CLOSEAPP};;
+    "help") print_usage; exit 0;;
+    *) invalid_params;;
+  esac
+elif [ $# -eq 2 ]; then
+  # Commands requiring a parameter
+  ENCODED_PARAM=`echo ${2} | tr " " "+"`
+  case ${COMMAND} in
+    "tag") URL="lastfm://globaltags/"${ENCODED_PARAM};;
+    "artist") URL="lastfm://artist/"${ENCODED_PARAM};;
+    "group") URL="lastfm://group/"${ENCODED_PARAM};;
+    "loved") URL="lastfm://user/"${ENCODED_PARAM}"/loved";;
+    "neighbours") URL="lastfm://user/"${ENCODED_PARAM}"/neighbours";;
+    "personal") URL="lastfm://user/"${ENCODED_PARAM};;
+    "playlist") URL="lastfm://user/"${ENCODED_PARAM}"/playlist";;
+    "playurl") URL=${ENCODED_PARAM};;
+    *) invalid_params;;
+  esac;
+  DBUS_METHOD_CALL="playurl string:"${URL}
+else
+  invalid_params;
+fi
+
+# Check whether vagalume is or not already running
+if ! pidof vagalume > /dev/null; then
+  if [ ${COMMAND} != "close" ] && [ ${COMMAND} != "start" ]; then
+      echo "Vagalume not running: starting..."
+      dbus-send --type=method_call \
+          --dest=${DBUS_SERVICE} ${DBUS_OBJECT} ${DBUS_IFACE}.${DBUS_METHOD_TOPAPP}
+      sleep ${STARTUP_DELAY}
+  elif [ ${COMMAND} == "close" ]; then
+      # Exit cleanly without executing the 'close' command when Vagalume is not running
+      echo "Vagalume not running: no need to close it";
+      exit 0;
+  fi
+elif [ ${COMMAND} == "start" ]; then
+    echo "Vagalume already running.";
+    exit 0;
+fi
+
+# At last, execute the command
+dbus-send --type=method_call \
+          --dest=${DBUS_SERVICE} ${DBUS_OBJECT} ${DBUS_IFACE}.${DBUS_METHOD_CALL}
+
+echo "Command '"$COMMAND"' successfully executed"
