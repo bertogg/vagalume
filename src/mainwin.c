@@ -429,6 +429,9 @@ is_topmost_cb(GObject *obj, GParamSpec *arg, lastfm_mainwin *win)
         g_return_if_fail(win != NULL && HILDON_IS_WINDOW(win->window));
         HildonWindow *hildonwin = HILDON_WINDOW(win->window);
         win->is_hidden = !hildon_window_get_is_topmost(hildonwin);
+        if (!win->is_hidden) {
+                controller_show_cover();
+        }
 }
 
 static gboolean
