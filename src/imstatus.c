@@ -14,6 +14,7 @@
 #include "imstatus.h"
 
 static char *saved_pidgin_status = NULL;
+static char *saved_telepathy_status = NULL;
 
 typedef enum
 {
@@ -275,6 +276,13 @@ telepathy_set_status(const char *message)
                                    G_TYPE_INVALID);
         if (error_happened(result, error)) return;
 
+        if (saved_telepathy_status == NULL) {
+                dbus_g_proxy_call(proxy, "GetPresenceMessage", &error,
+                                  G_TYPE_INVALID,
+                                  G_TYPE_STRING, &saved_telepathy_status,
+                                  G_TYPE_INVALID);
+        }
+
         /* todo: abort if not online or chat? or dnd? */
 
         g_debug("presence: %d", presence);
@@ -329,5 +337,9 @@ im_clear_status(const lastfm_usercfg *cfg)
         }
         if (cfg->im_gajim) gajim_set_status("");
         if (cfg->im_gossip) gossip_set_status("");
-        if (cfg->im_telepathy) telepathy_set_status("");
+        if (cfg->im_telepathy && saved_telepathy_status != NULL) {
+                telepathy_set_status(saved_telepathy_status);
+                g_free(saved_telepathy_status);
+                saved_telepathy_status = NULL;
+        }
 }
