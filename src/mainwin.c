@@ -397,6 +397,14 @@ window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
 }
 
 #ifdef MAEMO
+static void
+is_topmost_cb(GObject *obj, GParamSpec *arg, lastfm_mainwin *win)
+{
+        g_return_if_fail(win != NULL && HILDON_IS_WINDOW(win->window));
+        HildonWindow *hildonwin = HILDON_WINDOW(win->window);
+        win->is_hidden = !hildon_window_get_is_topmost(hildonwin);
+}
+
 static gboolean
 key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
 {
@@ -953,6 +961,8 @@ lastfm_mainwin_create(void)
         g_signal_connect(G_OBJECT(w->window), "delete-event",
                          G_CALLBACK(delete_event), NULL);
 #ifdef MAEMO
+        g_signal_connect(G_OBJECT(w->window), "notify::is-topmost",
+                         G_CALLBACK(is_topmost_cb), w);
         g_signal_connect(G_OBJECT(w->window), "key_press_event",
                          G_CALLBACK(key_press_cb), w);
 #endif
