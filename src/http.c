@@ -15,6 +15,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+/* HTTP connections will abort after this time */
+const int http_timeout = 10;
+
 typedef struct {
         char *buffer;
         size_t size;
@@ -107,7 +110,7 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
         curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
         curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, 5);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
@@ -158,6 +161,8 @@ http_download_file(const char *url, const char *filename,
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         if (cb != NULL) {
                 wrapdata = g_slice_new(http_dl_progress_wrapper_data);
                 wrapdata->cb = cb;
@@ -204,6 +209,8 @@ http_get_buffer(const char *url, char **buffer, size_t *bufsize)
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, &dstbuf);
         hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
@@ -253,6 +260,8 @@ http_post_buffer(const char *url, const char *postdata, char **retdata,
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_POSTFIELDS, postdata);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
+        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
