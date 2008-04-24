@@ -18,3 +18,4 @@ List of features that need to be implemented (in no particular order):
 * Global hotkeys for the desktop
 * Pause button
 * Don't show confirmation dialogs on DBUS callbacks
+* Multi-user support
