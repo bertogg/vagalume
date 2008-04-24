@@ -55,7 +55,7 @@ static const button_data stop_button = {
         "media-playback-stop", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1,
         "Stop playing"
 };
-static const button_data next_button = {
+static const button_data skip_button = {
         "media-skip-forward", BIGBUTTON_IMG_SIZE, BIGBUTTON_SIZE, -1,
         "Skip this track"
 };
@@ -291,6 +291,24 @@ mainwin_set_track_as_loved(lastfm_mainwin *w)
         gtk_widget_set_sensitive (w->love, FALSE);
 }
 
+static void
+menu_enable_all_items(GtkWidget *menu, gboolean enable)
+{
+        g_return_if_fail(GTK_IS_MENU(menu));
+        GList *l;
+        GList *items = gtk_container_get_children(GTK_CONTAINER(menu));
+        for (l = items; l != NULL; l = g_list_next(l)) {
+                GtkWidget *item, *submenu;
+                item = GTK_WIDGET(l->data);
+                submenu = gtk_menu_item_get_submenu(GTK_MENU_ITEM(item));
+                if (submenu != NULL) {
+                        menu_enable_all_items(submenu, enable);
+                } else {
+                        gtk_widget_set_sensitive(item, enable);
+                }
+        }
+}
+
 void
 mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                      const lastfm_track *t)
@@ -308,16 +326,19 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 gtk_label_set_text(GTK_LABEL(w->album), NULL);
                 gtk_widget_show (w->play);
                 gtk_widget_hide (w->stop);
+                gtk_widget_show (w->playbutton);
+                gtk_widget_hide (w->stopbutton);
+                menu_enable_all_items (w->actionsmenu, FALSE);
+                menu_enable_all_items (w->radiomenu, TRUE);
                 gtk_widget_set_sensitive (w->play, TRUE);
-                gtk_widget_set_sensitive (w->next, FALSE);
+                gtk_widget_set_sensitive (w->playbutton, TRUE);
+                gtk_widget_set_sensitive (w->skipbutton, FALSE);
                 gtk_widget_set_sensitive (w->lovebutton, FALSE);
                 gtk_widget_set_sensitive (w->banbutton, FALSE);
                 gtk_widget_set_sensitive (w->recommendbutton, FALSE);
                 gtk_widget_set_sensitive (w->dloadbutton, FALSE);
                 gtk_widget_set_sensitive (w->tagbutton, FALSE);
                 gtk_widget_set_sensitive (w->addplbutton, FALSE);
-                gtk_widget_set_sensitive (w->radiomenu, TRUE);
-                gtk_widget_set_sensitive (w->actionsmenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 gtk_window_set_title(w->window, APP_NAME);
                 mainwin_set_album_cover(w, NULL, 0);
@@ -331,9 +352,14 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 dim_labels = FALSE;
                 set_progress_bar_text(w, "Playing...");
                 gtk_widget_hide (w->play);
+                gtk_widget_hide (w->playbutton);
                 gtk_widget_show (w->stop);
-                gtk_widget_set_sensitive (w->stop, TRUE);
-                gtk_widget_set_sensitive (w->next, TRUE);
+                gtk_widget_show (w->stopbutton);
+                menu_enable_all_items (w->actionsmenu, TRUE);
+                menu_enable_all_items (w->radiomenu, TRUE);
+                gtk_widget_set_sensitive (w->play, FALSE);
+                gtk_widget_set_sensitive (w->stopbutton, TRUE);
+                gtk_widget_set_sensitive (w->skipbutton, TRUE);
                 gtk_widget_set_sensitive (w->lovebutton, TRUE);
                 gtk_widget_set_sensitive (w->banbutton, TRUE);
                 gtk_widget_set_sensitive (w->recommendbutton, TRUE);
@@ -341,8 +367,6 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                                           t->free_track_url != NULL);
                 gtk_widget_set_sensitive (w->tagbutton, TRUE);
                 gtk_widget_set_sensitive (w->addplbutton, TRUE);
-                gtk_widget_set_sensitive (w->radiomenu, TRUE);
-                gtk_widget_set_sensitive (w->actionsmenu, TRUE);
                 gtk_widget_set_sensitive (w->love, TRUE);
                 gtk_widget_set_sensitive (w->settings, TRUE);
                 gtk_widget_set_sensitive (w->dload, t->free_track_url != NULL);
@@ -352,17 +376,19 @@ mainwin_set_ui_state(lastfm_mainwin *w, lastfm_ui_state state,
                 set_progress_bar_text(w, "Connecting...");
                 gtk_label_set_text(GTK_LABEL(w->playlist), "Connecting...");
                 gtk_widget_hide (w->play);
+                gtk_widget_hide (w->playbutton);
                 gtk_widget_show (w->stop);
-                gtk_widget_set_sensitive (w->stop, FALSE);
-                gtk_widget_set_sensitive (w->next, FALSE);
+                gtk_widget_show (w->stopbutton);
+                menu_enable_all_items (w->actionsmenu, FALSE);
+                menu_enable_all_items (w->radiomenu, FALSE);
+                gtk_widget_set_sensitive (w->stopbutton, FALSE);
+                gtk_widget_set_sensitive (w->skipbutton, FALSE);
                 gtk_widget_set_sensitive (w->lovebutton, FALSE);
                 gtk_widget_set_sensitive (w->recommendbutton, FALSE);
                 gtk_widget_set_sensitive (w->banbutton, FALSE);
                 gtk_widget_set_sensitive (w->dloadbutton, FALSE);
                 gtk_widget_set_sensitive (w->tagbutton, FALSE);
                 gtk_widget_set_sensitive (w->addplbutton, FALSE);
-                gtk_widget_set_sensitive (w->radiomenu, FALSE);
-                gtk_widget_set_sensitive (w->actionsmenu, FALSE);
                 gtk_widget_set_sensitive (w->settings, FALSE);
                 gtk_window_set_title(w->window, APP_NAME);
                 gtk_widget_set_sensitive(w->album_cover, FALSE);
@@ -435,19 +461,19 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
 #endif /* MAEMO */
 
 static void
-play_clicked(GtkWidget *widget, gpointer data)
+play_selected(GtkWidget *widget, gpointer data)
 {
         controller_start_playing();
 }
 
 static void
-stop_clicked(GtkWidget *widget, gpointer data)
+stop_selected(GtkWidget *widget, gpointer data)
 {
         controller_stop_playing();
 }
 
 static void
-next_clicked(GtkWidget *widget, gpointer data)
+skip_selected(GtkWidget *widget, gpointer data)
 {
         controller_skip_track();
 }
@@ -624,6 +650,7 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         GtkMenuShell *lastfmsub, *radiosub, *actionssub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
+        GtkWidget *play, *stop, *skip, *separ1, *separ2;
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
@@ -738,6 +765,11 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         /* Actions */
         actions = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic("_Actions"));
         actionssub = GTK_MENU_SHELL(gtk_menu_new());
+        play = gtk_menu_item_new_with_label("Play");
+        stop = gtk_menu_item_new_with_label("Stop");
+        skip = gtk_menu_item_new_with_label("Skip");
+        separ1 = gtk_separator_menu_item_new();
+        separ2 = gtk_separator_menu_item_new();
         stopafter =
                 gtk_check_menu_item_new_with_label("Stop after this track");
         love = gtk_menu_item_new_with_label("Love this track");
@@ -748,15 +780,26 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         dorecomm = gtk_menu_item_new_with_label("Recommend...");
         gtk_menu_shell_append(bar, GTK_WIDGET(actions));
         gtk_menu_item_set_submenu(actions, GTK_WIDGET(actionssub));
+        gtk_menu_shell_append(actionssub, play);
+        gtk_menu_shell_append(actionssub, stop);
+        gtk_menu_shell_append(actionssub, skip);
+        gtk_menu_shell_append(actionssub, separ1);
         gtk_menu_shell_append(actionssub, love);
         gtk_menu_shell_append(actionssub, ban);
         gtk_menu_shell_append(actionssub, addtopls);
         gtk_menu_shell_append(actionssub, dload);
         gtk_menu_shell_append(actionssub, tag);
         gtk_menu_shell_append(actionssub, dorecomm);
+        gtk_menu_shell_append(actionssub, separ2);
         gtk_menu_shell_append(actionssub, stopafter);
         g_signal_connect(G_OBJECT(stopafter), "toggled",
                          G_CALLBACK(stop_after_selected), NULL);
+        g_signal_connect(G_OBJECT(play), "activate",
+                         G_CALLBACK(play_selected), NULL);
+        g_signal_connect(G_OBJECT(stop), "activate",
+                         G_CALLBACK(stop_selected), NULL);
+        g_signal_connect(G_OBJECT(skip), "activate",
+                         G_CALLBACK(skip_selected), NULL);
         g_signal_connect(G_OBJECT(love), "activate",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(ban), "activate",
@@ -784,6 +827,12 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
 #endif
 
         /* Keyboard shortcuts */
+        gtk_widget_add_accelerator(play, "activate", accel, GDK_space,
+                                   0, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(stop, "activate", accel, GDK_space,
+                                   0, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(skip, "activate", accel, GDK_Right,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
         gtk_widget_add_accelerator(ban, "activate", accel, GDK_b,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
         gtk_widget_add_accelerator(love, "activate", accel, GDK_l,
@@ -797,8 +846,10 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         gtk_widget_add_accelerator(quit, "activate", accel, GDK_q,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-        w->radiomenu = GTK_WIDGET(radio);
-        w->actionsmenu = GTK_WIDGET(actions);
+        w->play = play;
+        w->stop = stop;
+        w->actionsmenu = GTK_WIDGET(actionssub);
+        w->radiomenu = GTK_WIDGET(radiosub);
         w->settings = settings;
         w->dload = dload;
         w->love = love;
@@ -847,9 +898,9 @@ lastfm_mainwin_create(void)
         secondary_bbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         secondary_bar_vbox = GTK_BOX(gtk_vbox_new(FALSE, 2));
         /* Buttons */
-        w->play = image_button_new(&play_button);
-        w->stop = image_button_new(&stop_button);
-        w->next = image_button_new(&next_button);
+        w->playbutton = image_button_new(&play_button);
+        w->stopbutton = image_button_new(&stop_button);
+        w->skipbutton = image_button_new(&skip_button);
         w->lovebutton = image_button_new(&love_button);
         w->banbutton = image_button_new(&ban_button);
         w->recommendbutton = image_button_new(&recommend_button);
@@ -895,9 +946,9 @@ lastfm_mainwin_create(void)
         gtk_misc_set_padding(GTK_MISC(w->track), 10, 0);
         gtk_misc_set_padding(GTK_MISC(w->album), 10, 0);
 
-        gtk_box_pack_start(buttonshbox, w->play, FALSE, FALSE, 0);
-        gtk_box_pack_start(buttonshbox, w->stop, FALSE, FALSE, 0);
-        gtk_box_pack_start(buttonshbox, w->next, FALSE, FALSE, 0);
+        gtk_box_pack_start(buttonshbox, w->playbutton, FALSE, FALSE, 0);
+        gtk_box_pack_start(buttonshbox, w->stopbutton, FALSE, FALSE, 0);
+        gtk_box_pack_start(buttonshbox, w->skipbutton, FALSE, FALSE, 0);
 
         gtk_box_pack_start(secondary_bbox, w->lovebutton, TRUE, TRUE, 0);
         gtk_box_pack_start(secondary_bbox, w->recommendbutton, TRUE, TRUE, 0);
@@ -938,12 +989,12 @@ lastfm_mainwin_create(void)
         gtk_box_pack_start(vbox, GTK_WIDGET(buttonshbox), TRUE, TRUE, 0);
 
         /* Signals */
-        g_signal_connect(G_OBJECT(w->play), "clicked",
-                         G_CALLBACK(play_clicked), NULL);
-        g_signal_connect(G_OBJECT(w->next), "clicked",
-                         G_CALLBACK(next_clicked), NULL);
-        g_signal_connect(G_OBJECT(w->stop), "clicked",
-                         G_CALLBACK(stop_clicked), NULL);
+        g_signal_connect(G_OBJECT(w->playbutton), "clicked",
+                         G_CALLBACK(play_selected), NULL);
+        g_signal_connect(G_OBJECT(w->skipbutton), "clicked",
+                         G_CALLBACK(skip_selected), NULL);
+        g_signal_connect(G_OBJECT(w->stopbutton), "clicked",
+                         G_CALLBACK(stop_selected), NULL);
         g_signal_connect(G_OBJECT(w->lovebutton), "clicked",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(w->banbutton), "clicked",
@@ -968,15 +1019,6 @@ lastfm_mainwin_create(void)
 #endif
         g_signal_connect(G_OBJECT(w->window), "window_state_event",
                          G_CALLBACK(window_state_cb), w);
-        /* Shortcuts */
-#ifndef MAEMO
-        gtk_widget_add_accelerator(w->play, "clicked", accel, GDK_space,
-                                   0, 0);
-        gtk_widget_add_accelerator(w->stop, "clicked", accel, GDK_space,
-                                   0, 0);
-        gtk_widget_add_accelerator(w->next, "clicked", accel, GDK_Right,
-                                   GDK_CONTROL_MASK, 0);
-#endif
         /* Initial state */
         gtk_widget_show_all(GTK_WIDGET(vbox));
         mainwin_set_ui_state(w, LASTFM_UI_STATE_DISCONNECTED, NULL);
