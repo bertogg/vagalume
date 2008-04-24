@@ -38,6 +38,10 @@ themebigicondir = $(appdatadir)/icons/hicolor/scalable/apps
 themebigicon_DATA = data/buttons/big/*.png
 themesmallicondir = $(appdatadir)/icons/hicolor/50x50/apps
 themesmallicon_DATA = data/buttons/small/*.png
+backupconfdir = @BACKUP_CONFIGURATION_DIR@
+backupconf_DATA = data/vagalume.conf
+restoresettingsexecscriptdir = @RESTORE_SETTINGS_SCRIPTS_DIR@
+restoresettingsexecscript_SCRIPTS = data/vagalume-rfs.sh
 else
 themeicondir = $(appdatadir)/icons/hicolor/scalable/actions
 themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg

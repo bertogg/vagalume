@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Used in Maemo when clearing the device and restoring settings
+
+rm -f @VAGALUME_CONF_FULLPATH@
+
+return 0

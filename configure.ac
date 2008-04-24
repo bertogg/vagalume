@@ -16,6 +16,8 @@ AC_DEFINE_UNQUOTED([KERNEL_NAME],"`uname -s`",[Name of the kernel])
 AC_DEFINE_UNQUOTED([KERNEL_NAME_LC],"`uname -s|tr A-Z a-z`",
                    [Name of the kernel (lowercase)])
 AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
+VAGALUME_CONF_FILE=".vagalumerc"
+AC_DEFINE_UNQUOTED(VAGALUME_CONF_FILE, "$VAGALUME_CONF_FILE", Vagalume configuration file)
 
 # Extra flags for compiler and linker
 EXTRA_CFLAGS=""
@@ -189,6 +191,15 @@ if test "$PLATFORM" = "maemo"; then
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
    fi
 
+   VAGALUME_CONF_FULLPATH="/home/user/$VAGALUME_CONF_FILE"
+   AC_SUBST(VAGALUME_CONF_FULLPATH)
+
+   BACKUP_CONFIGURATION_DIR="/etc/osso-backup/applications"
+   AC_SUBST(BACKUP_CONFIGURATION_DIR)
+
+   RESTORE_SETTINGS_SCRIPTS_DIR="/etc/osso-rfs-scripts"
+   AC_SUBST(RESTORE_SETTINGS_SCRIPTS_DIR)
+
 elif test "$PLATFORM" = "gnome"; then
 
    echo "Compiling for Gnome"
@@ -238,3 +249,7 @@ AC_OUTPUT(
 	  Makefile \
 	  src/Makefile
 )
+
+if test "$PLATFORM" = "maemo"; then
+   AC_OUTPUT(data/vagalume.conf data/vagalume-rfs.sh debian/vagalume.links)
+fi

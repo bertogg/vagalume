@@ -1,0 +1,7 @@
+<backup-configuration>
+   <locations>
+      <location type="file" category="settings" auto="true">
+         @VAGALUME_CONF_FULLPATH@
+      </location>
+   </locations>
+</backup-configuration>

@@ -16,7 +16,6 @@
 #include "config.h"
 #include "userconfig.h"
 
-#define CONFIG_FILE ".vagalumerc"
 #define DEFAULT_IMSTATUS_TEMPLATE "\342\231\253 {artist} - {title} \342\231\253"
 
 static char *
@@ -48,7 +47,7 @@ get_cfg_filename(void)
                 g_warning("HOME environment variable not set");
                 return NULL;
         }
-        return g_strconcat(homedir, "/" CONFIG_FILE, NULL);
+        return g_strconcat(homedir, "/" VAGALUME_CONF_FILE, NULL);
 }
 
 static char *
