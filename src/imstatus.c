@@ -15,6 +15,7 @@
 
 static char *saved_pidgin_status = NULL;
 static char *saved_telepathy_status = NULL;
+static char *saved_gajim_status = NULL;
 
 typedef enum
 {
@@ -102,6 +103,15 @@ gajim_set_status(const char *message)
         /* todo: abort if not online or chat? or dnd? */
 
         g_debug("status: %s", status);
+
+        if (saved_gajim_status == NULL) {
+                dbus_g_proxy_call(proxy, "get_status_message",
+                                  &error,
+                                  G_TYPE_STRING, "",
+                                  G_TYPE_INVALID,
+                                  G_TYPE_STRING, &saved_gajim_status,
+                                  G_TYPE_INVALID);
+        }
 
         /* gajim-remote help says: status, message, account */
         /* gajim/src/common/connection.py says: show, msg, auto=False */
@@ -335,7 +345,11 @@ im_clear_status(const lastfm_usercfg *cfg)
                 g_free(saved_pidgin_status);
                 saved_pidgin_status = NULL;
         }
-        if (cfg->im_gajim) gajim_set_status("");
+        if (cfg->im_gajim && saved_gajim_status != NULL) {
+                gajim_set_status(saved_gajim_status);
+                g_free(saved_gajim_status);
+                saved_gajim_status = NULL;
+        }
         if (cfg->im_gossip) gossip_set_status("");
         if (cfg->im_telepathy && saved_telepathy_status != NULL) {
                 telepathy_set_status(saved_telepathy_status);
