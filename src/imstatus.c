@@ -16,6 +16,7 @@
 static char *saved_pidgin_status = NULL;
 static char *saved_telepathy_status = NULL;
 static char *saved_gajim_status = NULL;
+static char *saved_gossip_status = NULL;
 
 typedef enum
 {
@@ -175,10 +176,13 @@ gossip_set_status(const char *message)
         g_debug("state_str: %s", state_str);
         g_debug("status: %s", status);
 
-        /* todo: check this */
-/*   g_free(chats); */
         g_strfreev(chats);
-        g_free(status);
+
+        if (saved_gossip_status == NULL) {
+                saved_gossip_status = status;
+        } else {
+                g_free(status);
+        }
 
         /* todo: abort if not online or chat? or dnd? */
 
@@ -350,7 +354,11 @@ im_clear_status(const lastfm_usercfg *cfg)
                 g_free(saved_gajim_status);
                 saved_gajim_status = NULL;
         }
-        if (cfg->im_gossip) gossip_set_status("");
+        if (cfg->im_gossip && saved_gossip_status != NULL) {
+                gossip_set_status(saved_gossip_status);
+                g_free(saved_gossip_status);
+                saved_gossip_status = NULL;
+        }
         if (cfg->im_telepathy && saved_telepathy_status != NULL) {
                 telepathy_set_status(saved_telepathy_status);
                 g_free(saved_telepathy_status);
