@@ -48,9 +48,9 @@ struct _VagalumeSbPluginPrivate
         gboolean now_playing;
         gboolean running_app;
 
-        char *artist_string;
-        char *track_string;
-        char *album_string;
+        gchar *artist_string;
+        gchar *track_string;
+        gchar *album_string;
 
         GtkWidget *button;
         GtkWidget *icon;
@@ -91,14 +91,13 @@ static void dbus_close (VagalumeSbPlugin *vsbp);
 static gint dbus_req_handler (const gchar* interface, const gchar* method,
                               GArray* arguments, gpointer data,
                               osso_rpc_t* retval);
-static void dbus_send_request (VagalumeSbPlugin *vsbp, const char *request);
+static void dbus_send_request (VagalumeSbPlugin *vsbp, const gchar *request);
 static void notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments);
 
 /* Setters */
 static void set_visibility (VagalumeSbPlugin *vsbp, gboolean visible);
-static void set_artist_string (VagalumeSbPlugin *vsbp, char *text);
-static void set_track_string (VagalumeSbPlugin *vsbp, char *text);
-static void set_album_string (VagalumeSbPlugin *vsbp, char *text);
+static void set_track_info (VagalumeSbPlugin *vsbp, const gchar *artist,
+                            const gchar *track, const gchar *album);
 
 /* Panel update functions */
 static void main_panel_create (VagalumeSbPlugin *vsbp);
@@ -281,7 +280,7 @@ dbus_req_handler(const gchar* interface, const gchar* method,
 }
 
 static void
-dbus_send_request (VagalumeSbPlugin *vsbp, const char *request)
+dbus_send_request (VagalumeSbPlugin *vsbp, const gchar *request)
 {
         VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
         osso_return_t result;
@@ -304,7 +303,7 @@ notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments)
 {
         VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
         osso_rpc_t val;
-        char *type = NULL;
+        gchar *type = NULL;
         gboolean msg_handled = FALSE;
 
         /* Ensure you have appropiate arguments */
@@ -321,9 +320,9 @@ notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments)
         if (!strcmp (type, SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING)) {
                 /* Retrieve arguments */
 
-                char *artist = NULL;
-                char *track = NULL;
-                char *album = NULL;
+                gchar *artist = NULL;
+                gchar *track = NULL;
+                gchar *album = NULL;
 
                 g_debug ("NOTIFY PLAYING RECEIVED");
 
@@ -346,9 +345,7 @@ notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments)
                 }
 
                 /* Update private attributes */
-                set_artist_string (vsbp, artist);
-                set_track_string (vsbp, track);
-                set_album_string (vsbp, album);
+                set_track_info (vsbp, artist, track, album);
                 priv->now_playing = TRUE;
 
                 msg_handled = TRUE;
@@ -360,9 +357,7 @@ notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments)
                 g_debug ("NOTIFY STOPPED RECEIVED");
 
                 /* Update private attributes */
-                set_artist_string (vsbp, NULL);
-                set_track_string (vsbp, NULL);
-                set_album_string (vsbp, NULL);
+                set_track_info (vsbp, NULL, NULL, NULL);
                 priv->now_playing = FALSE;
 
                 msg_handled = TRUE;
@@ -418,75 +413,55 @@ set_visibility (VagalumeSbPlugin *vsbp, gboolean visible)
                  (visible ? "visible" : "hidden"));
 }
 
+
 static void
-set_artist_string (VagalumeSbPlugin *vsbp, char *text)
+set_field (gchar **field, const gchar *text, const gchar *markup_fmt)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        gchar *dup_text = NULL;
         gchar *stripped_text = NULL;
         gchar *final_text = NULL;
+        gchar *final_markup_fmt = NULL;
 
-        if (priv->artist_string != NULL) {
-                g_free (priv->artist_string);
-                priv->artist_string = NULL;
+        if (*field != NULL) {
+                g_free (*field);
+                *field = NULL;
         }
 
-        stripped_text = (text != NULL) ? g_strstrip (text) : NO_ARTIST_STRING;
+        dup_text = g_strdup (text);
+        stripped_text = (text != NULL) ? g_strstrip (dup_text) : NO_ARTIST_STRING;
+        g_free (dup_text);
+
         final_text =
                 !g_str_equal (stripped_text, "") ?
                 stripped_text :
                 NO_ARTIST_STRING;
 
-        priv->artist_string = g_markup_printf_escaped ("<b>%s</b>",
-                                                       final_text);
+        if (markup_fmt != NULL) {
+                final_markup_fmt = g_strdup (markup_fmt);
+        } else {
+                final_markup_fmt = g_strdup ("%s");
+        }
 
-        g_debug ("Setting artist string to '%s'", priv->artist_string);
+        *field = g_markup_printf_escaped (final_markup_fmt,
+                                          final_text);
+
+        g_free (final_markup_fmt);
+
+        g_debug ("Setting field to '%s'", *field);
 }
 
 static void
-set_track_string (VagalumeSbPlugin *vsbp, char *text)
+set_track_info (VagalumeSbPlugin *vsbp,
+               const gchar *artist,
+               const gchar *track,
+               const gchar *album)
 {
+        g_return_if_fail(VAGALUME_IS_SB_PLUGIN(vsbp));
+
         VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
-        gchar *stripped_text = NULL;
-        gchar *final_text = NULL;
-
-        if (priv->track_string != NULL) {
-                g_free (priv->track_string);
-                priv->track_string = NULL;
-        }
-
-        stripped_text = (text != NULL) ? g_strstrip (text) : NO_TRACK_STRING;
-        final_text =
-                g_str_equal (stripped_text, "") ?
-                NO_TRACK_STRING :
-                stripped_text;
-
-        priv->track_string = g_markup_printf_escaped ("<i>%s</i>", final_text);
-
-        g_debug ("Setting track string to '%s'", priv->track_string);
-}
-
-static void
-set_album_string (VagalumeSbPlugin *vsbp, char *text)
-{
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
-        gchar *stripped_text = NULL;
-        gchar *final_text = NULL;
-
-        if (priv->album_string != NULL) {
-                g_free (priv->album_string);
-                priv->album_string = NULL;
-        }
-
-        stripped_text = (text != NULL) ? g_strstrip (text) : NO_ALBUM_STRING;
-        final_text =
-                g_str_equal (stripped_text, "") ?
-                NO_ALBUM_STRING :
-                stripped_text;
-
-        priv->album_string = g_markup_printf_escaped ("%s", final_text);
-/*      g_markup_escape_text (final_text, -1); */
-
-        g_debug ("Setting album string to '%s'", priv->album_string);
+        set_field (&priv->artist_string, artist, "<b>%s</b>");
+        set_field (&priv->track_string, track, "<i>%s</i>");
+        set_field (&priv->album_string, album, NULL);
 }
 
 
@@ -623,9 +598,7 @@ main_panel_update (VagalumeSbPlugin *vsbp)
                 gtk_widget_show (priv->stop_item);
         } else {
                 /* Not playing: set default strings */
-                set_artist_string (vsbp, NULL);
-                set_track_string (vsbp, NULL);
-                set_album_string (vsbp, NULL);
+                set_track_info (vsbp, NULL, NULL, NULL);
 
                 gtk_widget_set_sensitive (priv->play_item, TRUE);
                 gtk_widget_set_sensitive (priv->stop_item, FALSE);
