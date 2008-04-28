@@ -417,8 +417,7 @@ set_visibility (VagalumeSbPlugin *vsbp, gboolean visible)
 static void
 set_field (gchar **field, const gchar *text, const gchar *markup_fmt)
 {
-        gchar *dup_text = NULL;
-        gchar *stripped_text = NULL;
+        g_return_if_fail (text != NULL);
         gchar *final_text = NULL;
         gchar *final_markup_fmt = NULL;
 
@@ -427,25 +426,19 @@ set_field (gchar **field, const gchar *text, const gchar *markup_fmt)
                 *field = NULL;
         }
 
-        dup_text = g_strdup (text);
-        stripped_text = (text != NULL) ? g_strstrip (dup_text) : NO_ARTIST_STRING;
-        g_free (dup_text);
-
-        final_text =
-                !g_str_equal (stripped_text, "") ?
-                stripped_text :
-                NO_ARTIST_STRING;
+        final_text = g_strstrip (g_strdup (text));
 
         if (markup_fmt != NULL) {
                 final_markup_fmt = g_strdup (markup_fmt);
         } else {
-                final_markup_fmt = g_strdup ("%s");
+                final_markup_fmt = g_strdup ("<span>%s</span>");
         }
 
         *field = g_markup_printf_escaped (final_markup_fmt,
                                           final_text);
 
         g_free (final_markup_fmt);
+        g_free (final_text);
 
         g_debug ("Setting field to '%s'", *field);
 }
@@ -459,9 +452,14 @@ set_track_info (VagalumeSbPlugin *vsbp,
         g_return_if_fail(VAGALUME_IS_SB_PLUGIN(vsbp));
 
         VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
-        set_field (&priv->artist_string, artist, "<b>%s</b>");
-        set_field (&priv->track_string, track, "<i>%s</i>");
-        set_field (&priv->album_string, album, NULL);
+
+	/* Call to set_field (), always with valid data */
+        set_field (&priv->artist_string,
+		   (artist?artist:NO_ARTIST_STRING), "<b>%s</b>");
+        set_field (&priv->track_string,
+		   (track?track:NO_TRACK_STRING), "<i>%s</i>");
+        set_field (&priv->album_string,
+		   (album?album:NO_ALBUM_STRING), NULL);
 }
 
 
@@ -620,7 +618,7 @@ main_panel_update (VagalumeSbPlugin *vsbp)
         gtk_label_set_markup (GTK_LABEL (label), priv->track_string);
 
         label = gtk_bin_get_child (GTK_BIN (priv->album_item));
-        gtk_label_set_text (GTK_LABEL (label), priv->album_string);
+        gtk_label_set_markup (GTK_LABEL (label), priv->album_string);
 }
 
 
