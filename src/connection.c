@@ -6,6 +6,7 @@
  * See the README file for more details.
  */
 
+#include <glib/gi18n.h>
 #include "connection.h"
 #include "controller.h"
 #include <conicconnection.h>
@@ -51,7 +52,7 @@ connection_init(void)
 {
 	con_ic_connection = con_ic_connection_new();
 	if (con_ic_connection == NULL) {
-                return "Error initializing internet connection manager";
+                return _("Error initializing internet connection manager");
         }
         g_signal_connect (con_ic_connection, "connection-event",
                           G_CALLBACK (con_ic_status_handler), NULL);

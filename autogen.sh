@@ -6,3 +6,4 @@ aclocal
 autoconf --force
 autoheader --force
 automake --add-missing --copy --force-missing --foreign
+glib-gettextize --force --copy

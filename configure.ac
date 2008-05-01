@@ -244,10 +244,24 @@ AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(PLATFORM)
 
+################
+# Translations #
+################
+ALL_LINGUAS=""
+
+VAGALUME_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
+AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
+AM_GLIB_GNU_GETTEXT
+
+GETTEXT_PACKAGE=vagalume
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+
 # Produce output files
 AC_OUTPUT(
 	  Makefile \
 	  src/Makefile
+	  po/Makefile.in
 )
 
 if test "$PLATFORM" = "maemo"; then

@@ -7,6 +7,7 @@
  * See the README file for more details.
  */
 
+#include <glib/gi18n.h>
 #include "dbus.h"
 
 #include <gtk/gtk.h>
@@ -169,17 +170,17 @@ lastfm_dbus_init(void)
         osso_return_t result;
         context = osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL);
         if (!context) {
-                return "Unable to initialize OSSO context";
+                return _("Unable to initialize OSSO context");
         }
         result = osso_rpc_set_cb_f(context, APP_DBUS_SERVICE, APP_DBUS_OBJECT,
                                    APP_DBUS_IFACE, dbus_req_handler, NULL);
         if (result != OSSO_OK) {
-                return "Unable to set D-BUS callback";
+                return _("Unable to set D-BUS callback");
         }
 
         result = osso_hw_set_event_cb(context, NULL, hw_event_handler, NULL);
         if (result != OSSO_OK) {
-                return "Unable to set hw callback";
+                return _("Unable to set hw callback");
         }
 
         return NULL;

@@ -24,9 +24,10 @@ MAINTAINERCLEANFILES = \
 	install-sh \
 	ltmain.sh \
 	missing \
-	mkinstalldirs
+	mkinstalldirs \
+	po/Makefile.in.in
 
-SUBDIRS = src
+SUBDIRS = src po
 
 icon_DATA = data/icons/vagalume.png data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*

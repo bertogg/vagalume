@@ -17,6 +17,7 @@
  * along with Vagalume. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <string.h>
 #include <signal.h>
@@ -34,7 +35,7 @@ main (int argc, char **argv)
         /* check input arguments */
         if (argc != 1) {
                 if (argc != 2 || strncmp("lastfm://", argv[1], 9)) {
-                        g_print ("Usage: %s [lastfm radio url]\n", argv[0]);
+                        g_print (_("Usage: %s [lastfm radio url]\n"), argv[0]);
                         return -1;
                 }
         }
@@ -48,6 +49,10 @@ main (int argc, char **argv)
         gdk_threads_enter ();
         gtk_init (&argc, &argv);
         g_set_application_name(APP_NAME);
+
+        bindtextdomain (GETTEXT_PACKAGE, VAGALUME_LOCALE_DIR);
+        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+        textdomain (GETTEXT_PACKAGE);
 
         gtk_icon_theme_append_search_path(
                 gtk_icon_theme_get_default(), THEME_ICONS_DIR);

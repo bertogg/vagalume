@@ -8,6 +8,7 @@
 
 #include "config.h"
 
+#include <glib/gi18n.h>
 #include <glib.h>
 #include <string.h>
 #include <time.h>
@@ -555,10 +556,10 @@ check_session_thread(gpointer userdata)
                 mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED,
                                      NULL);
                 if (err == LASTFM_ERR_LOGIN) {
-                        controller_show_warning("Unable to login to Last.fm\n"
-                                                "Check username and password");
+                        controller_show_warning(_("Unable to login to Last.fm\n"
+                                                  "Check username and password"));
                 } else {
-                        controller_show_warning("Network connection error");
+                        controller_show_warning(_("Network connection error"));
                 }
                 gdk_threads_leave();
         } else {
@@ -632,10 +633,10 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
                         mainwin_set_ui_state(mainwin,
                                              LASTFM_UI_STATE_DISCONNECTED,
                                              NULL);
-                        controller_show_warning("You need to enter your "
-                                                "Last.fm\nusername and "
-                                                "password to be able\n"
-                                                "to use this program.");
+                        controller_show_warning(_("You need to enter your "
+                                                  "Last.fm\nusername and "
+                                                  "password to be able\n"
+                                                  "to use this program."));
                         if (failure_cb != NULL) (*failure_cb)(cbdata);
                 }
         }
@@ -686,7 +687,7 @@ start_playing_get_pls_thread(gpointer data)
         gdk_threads_enter();
         if (pls == NULL) {
                 controller_stop_playing();
-                controller_show_info("No more content to play");
+                controller_show_info(_("No more content to play"));
         } else {
                 lastfm_pls_merge(playlist, pls);
                 lastfm_pls_destroy(pls);
@@ -861,7 +862,7 @@ controller_download_track(void)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
         lastfm_track *t = lastfm_track_ref(nowplaying);
-        if (controller_confirm_dialog("Download this track?")) {
+        if (controller_confirm_dialog(_("Download this track?"))) {
                 char *filename, *dstpath;
                 gboolean download = TRUE;
                 filename = g_strconcat(t->artist, " - ", t->title, ".mp3",
@@ -869,8 +870,8 @@ controller_download_track(void)
                 dstpath = g_strconcat(usercfg->download_dir, "/", filename,
                                        NULL);
                 if (file_exists(dstpath)) {
-                        download = controller_confirm_dialog("File exists. "
-                                                             "Overwrite?");
+                        download = controller_confirm_dialog(_("File exists. "
+                                                               "Overwrite?"));
                 }
                 if (download) {
                         dlwin_download_file(t->free_track_url, filename,
@@ -903,11 +904,11 @@ controller_love_track(gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL && mainwin != NULL);
         if (!interactive ||
-            controller_confirm_dialog("Really mark track as loved?")) {
+            controller_confirm_dialog(_("Really mark track as loved?"))) {
                 nowplaying_rating = RSP_RATING_LOVE;
                 mainwin_set_track_as_loved(mainwin);
                 if (interactive) {
-                        controller_show_banner("Marking track as loved");
+                        controller_show_banner(_("Marking track as loved"));
                 }
         }
 }
@@ -921,11 +922,11 @@ controller_ban_track(gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL);
         if (!interactive ||
-            controller_confirm_dialog("Really ban this track?")) {
+            controller_confirm_dialog(_("Really ban this track?"))) {
                 nowplaying_rating = RSP_RATING_BAN;
                 controller_skip_track();
                 if (interactive) {
-                        controller_show_banner("Banning track");
+                        controller_show_banner(_("Banning track"));
                 }
         }
 }
@@ -969,8 +970,8 @@ tag_track_thread(gpointer data)
         g_slice_free(tag_data, d);
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
-                controller_show_banner(tagged ? "Tags set correctly" :
-                                       "Error tagging");
+                controller_show_banner(tagged ? _("Tags set correctly") :
+                                       _("Error tagging"));
         }
         gdk_threads_leave();
         return NULL;
@@ -1004,7 +1005,7 @@ controller_tag_track()
                 g_thread_create(tag_track_thread,d,FALSE,NULL);
         } else {
                 if (accept) {
-                        controller_show_info("You must type a list of tags");
+                        controller_show_info(_("You must type a list of tags"));
                 }
                 lastfm_track_unref(track);
         }
@@ -1040,8 +1041,8 @@ recomm_track_thread(gpointer data)
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
                 controller_show_banner(retval ?
-                                       "Recommendation sent" :
-                                       "Error sending recommendation");
+                                       _("Recommendation sent") :
+                                       _("Error sending recommendation"));
         }
         gdk_threads_leave();
         lastfm_track_unref(d->track);
@@ -1080,8 +1081,8 @@ controller_recomm_track(void)
                 g_thread_create(recomm_track_thread,d,FALSE,NULL);
         } else {
                 if (accept) {
-                        controller_show_info("You must type a user name\n"
-                                             "and a recommendation message.");
+                        controller_show_info(_("You must type a user name\n"
+                                               "and a recommendation message."));
                 }
                 lastfm_track_unref(track);
                 g_free(rcpt);
@@ -1118,8 +1119,8 @@ add_to_playlist_thread(gpointer data)
         gdk_threads_enter();
         if (mainwin && mainwin->window) {
                 controller_show_banner(retval ?
-                                       "Track added to playlist" :
-                                       "Error adding track to playlist");
+                                       _("Track added to playlist") :
+                                       _("Error adding track to playlist"));
         }
         gdk_threads_leave();
         lastfm_track_unref(t);
@@ -1135,7 +1136,7 @@ controller_add_to_playlist(void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         if (ui_confirm_dialog(mainwin->window,
-                              "Really add this track to the playlist?")) {
+                              _("Really add this track to the playlist?"))) {
                 lastfm_track *track = lastfm_track_ref(nowplaying);
                 g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
         }
@@ -1163,17 +1164,17 @@ controller_play_radio_by_url_cb(char *url)
                         controller_skip_track();
                 } else {
                         controller_stop_playing();
-                        controller_show_info("Invalid radio URL");
+                        controller_show_info(_("Invalid radio URL"));
                 }
         } else if (lastfm_set_radio(session, url)) {
                 lastfm_pls_clear(playlist);
                 controller_skip_track();
         } else {
                 controller_stop_playing();
-                controller_show_info("Invalid radio URL. Either\n"
-                                     "this radio doesn't exist\n"
-                                     "or it is only available\n"
-                                     "for Last.fm subscribers");
+                controller_show_info(_("Invalid radio URL. Either\n"
+                                       "this radio doesn't exist\n"
+                                       "or it is only available\n"
+                                       "for Last.fm subscribers"));
         }
         g_free(url);
 }
@@ -1213,8 +1214,8 @@ controller_play_radio_cb(gpointer userdata)
         } else if (type == LASTFM_USERTAG_RADIO) {
                 static char *previous = NULL;
                 char *tag;
-                tag = ui_input_dialog_with_list(mainwin->window, "Enter tag",
-                                                "Enter one of your tags",
+                tag = ui_input_dialog_with_list(mainwin->window, _("Enter tag"),
+                                                _("Enter one of your tags"),
                                                 usertags, previous);
                 if (tag != NULL) {
                         url = lastfm_usertag_radio_url(usercfg->username, tag);
@@ -1263,8 +1264,8 @@ controller_play_others_radio_cb(gpointer userdata)
         static char *previous = NULL;
         char *url = NULL;
         char *user = ui_input_dialog_with_list(mainwin->window,
-                                               "Enter user name",
-                                               "Play this user's radio",
+                                               _("Enter user name"),
+                                               _("Play this user's radio"),
                                                friends,
                                                previous);
         if (user != NULL) {
@@ -1303,8 +1304,8 @@ controller_play_group_radio(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        char *group = ui_input_dialog(mainwin->window, "Enter group",
-                                      "Enter group name", previous);
+        char *group = ui_input_dialog(mainwin->window, _("Enter group"),
+                                      _("Enter group name"), previous);
         if (group != NULL) {
                 url = lastfm_radio_url(LASTFM_GROUP_RADIO, group);
                 controller_play_radio_by_url(url);
@@ -1325,8 +1326,8 @@ controller_play_globaltag_radio(void)
         static char *previous = NULL;
         char *url = NULL;
         char *tag;
-        tag = ui_input_dialog_with_list(mainwin->window, "Enter tag",
-                                        "Enter a global tag",
+        tag = ui_input_dialog_with_list(mainwin->window, _("Enter tag"),
+                                        _("Enter a global tag"),
                                         usertags, previous);
         if (tag != NULL) {
                 url = lastfm_radio_url(LASTFM_GLOBALTAG_RADIO, tag);
@@ -1349,8 +1350,8 @@ controller_play_similarartist_radio(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        char *artist = ui_input_dialog(mainwin->window, "Enter artist",
-                                       "Enter an artist's name", previous);
+        char *artist = ui_input_dialog(mainwin->window, _("Enter artist"),
+                                       _("Enter an artist's name"), previous);
         if (artist != NULL) {
                 url = lastfm_radio_url(LASTFM_SIMILAR_ARTIST_RADIO, artist);
                 controller_play_radio_by_url(url);
@@ -1370,8 +1371,8 @@ controller_play_radio_ask_url(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        url = ui_input_dialog(mainwin->window, "Enter radio URL",
-                              "Enter the URL of the Last.fm radio",
+        url = ui_input_dialog(mainwin->window, _("Enter radio URL"),
+                              _("Enter the URL of the Last.fm radio"),
                               previous ? previous : "lastfm://");
         if (url != NULL) {
                 if (!strncmp(url, "lastfm://", 9)) {
@@ -1380,8 +1381,8 @@ controller_play_radio_ask_url(void)
                         g_free(previous);
                         previous = url;
                 } else {
-                        controller_show_info("Last.fm radio URLs must start "
-                                             "with lastfm://");
+                        controller_show_info(_("Last.fm radio URLs must start "
+                                               "with lastfm://"));
                         g_free(url);
                 }
         }
@@ -1437,7 +1438,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         playlist = lastfm_pls_new();
 
         if (!lastfm_audio_init()) {
-                controller_show_error("Error initializing audio system");
+                controller_show_error(_("Error initializing audio system"));
                 return;
         }
         errmsg = lastfm_dbus_init();

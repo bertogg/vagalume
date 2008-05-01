@@ -1,0 +1,8 @@
+# List of source files which contain translatable strings.
+src/connection.c
+src/controller.c
+src/dbus.c
+src/dlwin.c
+src/main.c
+src/mainwin.c
+src/uimisc.c

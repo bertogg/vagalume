@@ -7,6 +7,7 @@
  * See the README file for more details.
  */
 
+#include <glib/gi18n.h>
 #include "config.h"
 #include "uimisc.h"
 #include "metadata.h"
@@ -144,7 +145,7 @@ ui_confirm_dialog(GtkWindow *parent, const char *text)
 {
         g_return_val_if_fail(text != NULL, FALSE);
         gint response;
-        GtkDialog *dialog = ui_base_dialog(parent, "Confirmation");
+        GtkDialog *dialog = ui_base_dialog(parent, _("Confirmation"));
         GtkWidget *label = gtk_label_new(text);
         gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
         gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -187,7 +188,7 @@ ui_select_download_dir(GtkWindow *parent, const char *curdir)
                 parent, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 #else
         dialog = gtk_file_chooser_dialog_new(
-                "Select download directory", parent,
+                _("Select download directory"), parent,
                 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                 GTK_STOCK_OK, GTK_RESPONSE_OK,
                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -244,19 +245,20 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         const lastfm_usercfg *origcfg = *cfg;
         if (*cfg == NULL) *cfg = lastfm_usercfg_new();
 
-        dialog = ui_base_dialog(parent, "User settings");
-        userlabel = gtk_label_new("Username:");
-        pwlabel = gtk_label_new("Password:");
-        scroblabel = gtk_label_new("Enable scrobbling:");
-        discovlabel = gtk_label_new("Discovery mode:");
-        useproxylabel = gtk_label_new("Use HTTP proxy");
-        proxylabel = gtk_label_new("Proxy address:");
-        dllabel = gtk_label_new("Select download directory");
-        imtemplatelabel = gtk_label_new("Status message template:");
-        impidginlabel = gtk_label_new("Update Pidgin status:");
-        imgajimlabel = gtk_label_new("Update Gajim status:");
-        imgossiplabel = gtk_label_new("Update Gossip status:");
-        imtelepathylabel = gtk_label_new("Update Telepathy status:");
+        dialog = ui_base_dialog(parent, _("User settings"));
+        userlabel = gtk_label_new(_("Username:"));
+        pwlabel = gtk_label_new(_("Password:"));
+        scroblabel = gtk_label_new(_("Enable scrobbling:"));
+        discovlabel = gtk_label_new(_("Discovery mode:"));
+        useproxylabel = gtk_label_new(_("Use HTTP proxy"));
+        proxylabel = gtk_label_new(_("Proxy address:"));
+        dllabel = gtk_label_new(_("Select download directory"));
+        imtemplatelabel = gtk_label_new(_("Status message template:"));
+        impidginlabel = gtk_label_new(_("Update Pidgin status:"));
+        imgajimlabel = gtk_label_new(_("Update Gajim status:"));
+        imgossiplabel = gtk_label_new(_("Update Gossip status:"));
+        imtelepathylabel = gtk_label_new(_("Update Telepathy status:"));
+
         user = GTK_ENTRY(gtk_entry_new());
         pw = GTK_ENTRY(gtk_entry_new());
         scrobble = gtk_check_button_new();
@@ -338,14 +340,14 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
 
         nb = GTK_NOTEBOOK(gtk_notebook_new());
         gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
-                                 gtk_label_new("Account"));
+                                 gtk_label_new(_("Account")));
         gtk_notebook_append_page(nb, GTK_WIDGET(conntable),
-                                 gtk_label_new("Connection"));
+                                 gtk_label_new(_("Connection")));
         gtk_notebook_append_page(nb, GTK_WIDGET(dltable),
-                                 gtk_label_new("Download"));
+                                 gtk_label_new(_("Download")));
 #ifdef SET_IM_STATUS
         gtk_notebook_append_page(nb, GTK_WIDGET(imtable),
-                                 gtk_label_new("IM Status"));
+                                 gtk_label_new(_("IM Status")));
 #endif
 
         gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(nb),
@@ -450,14 +452,14 @@ artist_track_album_selection_combo(const lastfm_track *t)
         store = gtk_list_store_new(ARTIST_TRACK_ALBUM_NCOLS,
                                    G_TYPE_INT, G_TYPE_STRING);
 
-        text = g_strconcat("Artist: ", t->artist, NULL);
+        text = g_strconcat(_("Artist: "), t->artist, NULL);
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter,
                            ARTIST_TRACK_ALBUM_TYPE, REQUEST_ARTIST,
                            ARTIST_TRACK_ALBUM_TEXT, text, -1);
         g_free(text);
 
-        text = g_strconcat("Track: ", t->title, NULL);
+        text = g_strconcat(_("Track: "), t->title, NULL);
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter,
                            ARTIST_TRACK_ALBUM_TYPE, REQUEST_TRACK,
@@ -465,7 +467,7 @@ artist_track_album_selection_combo(const lastfm_track *t)
         g_free(text);
 
         if (t->album[0] != '\0') {
-                text = g_strconcat("Album: ", t->album, NULL);
+                text = g_strconcat(_("Album: "), t->album, NULL);
                 gtk_list_store_append(store, &iter);
                 gtk_list_store_set(store, &iter,
                                    ARTIST_TRACK_ALBUM_TYPE, REQUEST_ALBUM,
@@ -703,17 +705,17 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         nonelist = g_list_append(NULL, "(none)");
         nonemodel = ui_create_options_list(nonelist);
         g_list_free(nonelist);
-        nonelist = g_list_append(NULL, "retrieving...");
+        nonelist = g_list_append(NULL, _("retrieving..."));
         retrmodel = ui_create_options_list(nonelist);
         g_list_free(nonelist);
 
         /* Dialog and basic settings */
-        dialog = ui_base_dialog(parent, "Tagging");
+        dialog = ui_base_dialog(parent, _("Tagging"));
         gtk_box_set_homogeneous(GTK_BOX(dialog->vbox), FALSE);
         gtk_box_set_spacing(GTK_BOX(dialog->vbox), 5);
 
         /* Combo to select what to tag */
-        sellabel = gtk_label_new("Tag this");
+        sellabel = gtk_label_new(_("Tag this"));
         selcombo = artist_track_album_selection_combo(track);
 
         switch (*type) {
@@ -733,14 +735,14 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         }
 
         /* Text entry */
-        entrylabel = gtk_label_new("Enter a comma-separated\nlist of tags");
+        entrylabel = gtk_label_new(_("Enter a comma-separated\nlist of tags"));
         gtk_label_set_justify(GTK_LABEL(entrylabel), GTK_JUSTIFY_RIGHT);
         entry = gtk_entry_new();
         gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
 
         /* Combo boxes */
-        userlabel = gtk_label_new("Your favourite tags");
-        globallabel = gtk_label_new("Popular tags for this");
+        userlabel = gtk_label_new(_("Your favourite tags"));
+        globallabel = gtk_label_new(_("Popular tags for this"));
         if (usertags != NULL) {
                 usermodel = ui_create_options_list(usertags);
         } else {
@@ -859,13 +861,13 @@ recommwin_run(GtkWindow *parent, char **user, char **message,
         GtkWidget *sw;
 
         /* Dialog and basic settings */
-        dialog = ui_base_dialog(parent, "Send a recommendation");
+        dialog = ui_base_dialog(parent, _("Send a recommendation"));
         gtk_box_set_homogeneous(GTK_BOX(dialog->vbox), FALSE);
         gtk_box_set_spacing(GTK_BOX(dialog->vbox), 5);
 
         /* Combo to select what to recommend */
         selbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
-        sellabel = gtk_label_new("Recommend this");
+        sellabel = gtk_label_new(_("Recommend this"));
         selcombo = artist_track_album_selection_combo(track);
         gtk_box_pack_start(selbox, sellabel, FALSE, FALSE, 0);
         gtk_box_pack_start(selbox, GTK_WIDGET(selcombo), TRUE, TRUE, 0);
@@ -888,7 +890,7 @@ recommwin_run(GtkWindow *parent, char **user, char **message,
 
         /* Combo to select the recipient of the recommendation */
         userbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
-        userlabel = gtk_label_new("Send recommendation to");
+        userlabel = gtk_label_new(_("Send recommendation to"));
         usermodel = ui_create_options_list(friends);
         usercombo = gtk_combo_box_entry_new_with_model(usermodel, 0);
         gtk_entry_set_activates_default(GTK_ENTRY(GTK_BIN(usercombo)->child),
@@ -898,7 +900,7 @@ recommwin_run(GtkWindow *parent, char **user, char **message,
         gtk_box_pack_start(userbox, usercombo, TRUE, TRUE, 0);
 
         /* Message of the recommendation */
-        textlabel = gtk_label_new("Recommendation message");
+        textlabel = gtk_label_new(_("Recommendation message"));
         textframe = gtk_frame_new(NULL);
         sw = gtk_scrolled_window_new(NULL, NULL);
         textview = GTK_TEXT_VIEW(gtk_text_view_new());

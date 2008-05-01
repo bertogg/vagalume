@@ -6,6 +6,7 @@
  * See the README file for more details.
  */
 
+#include <glib/gi18n.h>
 #include "globaldefs.h"
 #include "dlwin.h"
 #include "http.h"
@@ -96,7 +97,7 @@ dlwin_download_file_thread(gpointer data)
         if (success) {
                 gtk_widget_set_sensitive(w->cancelbutton, FALSE);
                 gtk_progress_bar_set_text(w->progressbar,
-                                          "Download complete!");
+                                          _("Download complete!"));
                 gtk_widget_hide(w->cancelbutton);
                 gtk_widget_show(w->closebutton);
         } else if (w->cancelled) {
@@ -106,7 +107,7 @@ dlwin_download_file_thread(gpointer data)
                 unlink(w->dstpath);
                 gtk_widget_set_sensitive(w->cancelbutton, FALSE);
                 gtk_progress_bar_set_text(w->progressbar,
-                                          "Download error!");
+                                          _("Download error!"));
                 gtk_widget_hide(w->cancelbutton);
                 gtk_widget_show(w->closebutton);
         }
@@ -132,14 +133,14 @@ dlwin_download_file(const char *url, const char *filename,
         w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_container_set_border_width(GTK_CONTAINER(w->window), 10);
         gtk_window_set_icon_from_file(GTK_WINDOW(w->window), APP_ICON, NULL);
-        snprintf(text, textsize, "Downloading %s", filename);
+        snprintf(text, textsize, _("Downloading %s"), filename);
         gtk_window_set_title(GTK_WINDOW(w->window), text);
-        snprintf(text, textsize, "Downloading file\n%s", filename);
+        snprintf(text, textsize, _("Downloading file\n%s"), filename);
         label = gtk_label_new(text);
         gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
         w->progressbar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
-        w->cancelbutton = gtk_button_new_with_mnemonic("_Cancel");
-        w->closebutton = gtk_button_new_with_mnemonic("C_lose");
+        w->cancelbutton = gtk_button_new_with_mnemonic(_("_Cancel"));
+        w->closebutton = gtk_button_new_with_mnemonic(_("C_lose"));
         box = GTK_BOX(gtk_vbox_new(TRUE, 5));
         butbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
 
