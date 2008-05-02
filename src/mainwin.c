@@ -115,6 +115,9 @@ static const char *license =
 "You should have received a copy of the GNU General\n"
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/\n";
+static const char *translators = N_(
+"Italian (it)\nAndrea Grandi <a.grandi@gmail.com>"
+);
 
 void
 mainwin_run_app(void)
@@ -586,7 +589,8 @@ show_about_dialog(GtkWidget *widget, gpointer data)
                               "comments", _(appdescr), "copyright", copyright,
                               "license", license, "version", APP_VERSION,
                               "website", website, "artists", artists,
-                              "logo", logo, NULL);
+                              "logo", logo, "translator-credits",
+                              gettext(translators), NULL);
         g_object_unref(G_OBJECT(logo));
 }
 

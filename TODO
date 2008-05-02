@@ -4,7 +4,6 @@ List of features that need to be implemented (in no particular order):
 * Send recommendations to many users at once
 * A better UI
 * History
-* Support for different languages
 * Add a volume bar to control the volume graphically
 * Support changing the popularity of recommendations
 * Configuration setting to select different decoder/sinks
