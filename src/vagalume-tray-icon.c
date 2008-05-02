@@ -77,8 +77,8 @@ struct _VagalumeTrayIconPrivate
         GtkWidget *next_item;
         GtkWidget *close_vagalume_item;
 
-	gboolean show_notifications;
-	NotifyNotification *notification;
+        gboolean show_notifications;
+        NotifyNotification *notification;
 
         gint tray_icon_clicked_handler_id;
         gint tray_icon_popup_menu_handler_id;
@@ -143,7 +143,7 @@ vagalume_tray_icon_init (VagalumeTrayIcon *vti)
         priv->now_playing = FALSE;
 
         priv->show_app_item = NULL;
-	priv->settings_item = NULL;
+        priv->settings_item = NULL;
         priv->recommend_item = NULL;
         priv->tag_item = NULL;
         priv->add_to_pls_item = NULL;
@@ -154,8 +154,8 @@ vagalume_tray_icon_init (VagalumeTrayIcon *vti)
         priv->next_item = NULL;
         priv->close_vagalume_item = NULL;
 
-	priv->notification = NULL;
-	priv->show_notifications = FALSE;
+        priv->notification = NULL;
+        priv->show_notifications = FALSE;
 
         /* Create main panel */
         ctxt_menu_create (vti);
@@ -174,8 +174,8 @@ vagalume_tray_icon_init (VagalumeTrayIcon *vti)
         gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
         gtk_status_icon_set_visible(priv->tray_icon, TRUE);
 
-	/* Init libnotify */
-	setup_libnotify (vti);
+        /* Init libnotify */
+        setup_libnotify (vti);
 
         /* Update contextual menu */
         ctxt_menu_update (vti);
@@ -187,8 +187,8 @@ vagalume_tray_icon_finalize (GObject* object)
         VagalumeTrayIcon *vti = VAGALUME_TRAY_ICON (object);
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
 
-	/* Cleanup libnotify */
-	cleanup_libnotify (vti);
+        /* Cleanup libnotify */
+        cleanup_libnotify (vti);
 
         /* Destroy local widgets */
         if (priv->ctxt_menu) {
@@ -235,24 +235,24 @@ vagalume_tray_icon_finalize (GObject* object)
 static void
 setup_libnotify  (VagalumeTrayIcon *vti)
 {
-	if (!notify_init (APP_NAME)) {
-		g_debug ("[TRAY ICON] :: Error initializing libnotify");
-	} else {
-		g_debug ("[TRAY ICON] :: Success initializing libnotify");
-	}
+        if (!notify_init (APP_NAME)) {
+                g_debug ("[TRAY ICON] :: Error initializing libnotify");
+        } else {
+                g_debug ("[TRAY ICON] :: Success initializing libnotify");
+        }
 }
 
 static void
 cleanup_libnotify  (VagalumeTrayIcon *vti)
 {
-	VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
 
-	if (notify_is_initted ()) {
-		if (priv->notification) {
-			notify_notification_close (priv->notification, NULL);
-		}
-		notify_uninit ();
-	}
+        if (notify_is_initted ()) {
+                if (priv->notification) {
+                        notify_notification_close (priv->notification, NULL);
+                }
+                notify_uninit ();
+        }
 }
 
 /* Panel update functions */
@@ -480,17 +480,17 @@ vagalume_tray_icon_create (void)
 static GdkPixbuf *
 get_album_cover_icon (const gchar *image_url)
 {
-	g_return_val_if_fail(image_url != NULL, NULL);
-	GdkPixbufLoader *ldr = NULL;
+        g_return_val_if_fail(image_url != NULL, NULL);
+        GdkPixbufLoader *ldr = NULL;
         GdkPixbuf *pixbuf = NULL;
-	gchar *buffer = NULL;
+        gchar *buffer = NULL;
         size_t bufsize = 0;
 
         http_get_buffer(image_url, &buffer, &bufsize);
         if (buffer == NULL) {
-		g_debug("Error getting cover image");
-		return NULL;
-	} else {
+                g_debug("Error getting cover image");
+                return NULL;
+        } else {
                 g_return_val_if_fail(bufsize > 0, NULL);
                 GError *err = NULL;
 
@@ -521,82 +521,80 @@ static void
 show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 {
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
-	gchar *summary_markup_fmt_string = NULL;
-	gchar *body_markup_fmt_string = NULL;
-	gchar *notification_summary = NULL;
-	gchar *notification_body = NULL;
-	gchar *stripped_album = NULL;
-	gchar *not_text_by = NULL;
-	gchar *not_text_by_from = NULL;
+        gchar *summary_markup_fmt_string = NULL;
+        gchar *body_markup_fmt_string = NULL;
+        gchar *notification_summary = NULL;
+        gchar *notification_body = NULL;
+        gchar *stripped_album = NULL;
 
-	/* Set summary text (title) */
-	summary_markup_fmt_string = g_strdup ("<span>%s</span>");
-	notification_summary =
-		g_markup_printf_escaped (summary_markup_fmt_string,
-					 track->title);
+        /* Set summary text (title) */
+        summary_markup_fmt_string = g_strdup ("<span>%s</span>");
+        notification_summary =
+                g_markup_printf_escaped (summary_markup_fmt_string,
+                                         track->title);
 
-	/* Strip the album text to see whether it's set or not */
-	if (track->album != NULL) {
-		stripped_album = g_strstrip (g_strdup (track->album));
-	}
-
-	/* Set body text (artist and, perhaps, the album) */
-	if ((stripped_album == NULL) || g_str_equal (stripped_album, "")) {
-		/* No album */
-		body_markup_fmt_string =
-			g_strconcat (" ", NOTIFICATION_TEXT_BY, " <i>%s</i>", NULL);
-
-		notification_body =
-			g_markup_printf_escaped (body_markup_fmt_string,
-						 track->artist);
-	} else {
-		/* Both artist and album */
-		body_markup_fmt_string =
-			g_strconcat (" ", NOTIFICATION_TEXT_BY, " <i>%s</i>\n ",
-				     NOTIFICATION_TEXT_FROM, " <i>%s</i>", NULL);
-
-		notification_body =
-			g_markup_printf_escaped (body_markup_fmt_string,
-						 track->artist,
-						 track->album);
-	}
-
-	/* Create the notification if not already created */
-	if (priv->notification == NULL) {
-		priv->notification =
-			notify_notification_new_with_status_icon (
-				notification_summary,
-				notification_body,
-				NULL,
-				priv->tray_icon);
-	} else {
-		notify_notification_update (priv->notification,
-					    notification_summary,
-					    notification_body,
-					    NULL);
-	}
-
-	/* Set album image as icon if specified */
-        if (track->image_url != NULL) {
-		GdkPixbuf *icon =
-			get_album_cover_icon (g_strdup (track->image_url));
-
-		if (icon != NULL) {
-			notify_notification_set_icon_from_pixbuf (priv->notification,
-								  icon);
-		}
+        /* Strip the album text to see whether it's set or not */
+        if (track->album != NULL) {
+                stripped_album = g_strstrip (g_strdup (track->album));
         }
 
-	/* Show notification */
-	notify_notification_show (priv->notification, NULL);
+        /* Set body text (artist and, perhaps, the album) */
+        if ((stripped_album == NULL) || g_str_equal (stripped_album, "")) {
+                /* No album */
+                body_markup_fmt_string =
+                        g_strconcat (" ", NOTIFICATION_TEXT_BY, " <i>%s</i>", NULL);
 
-	g_free (summary_markup_fmt_string);
-	g_free (body_markup_fmt_string);
-	g_free (notification_summary);
-	g_free (notification_body);
-	if (stripped_album != NULL) {
-		g_free (stripped_album);
-	}
+                notification_body =
+                        g_markup_printf_escaped (body_markup_fmt_string,
+                                                 track->artist);
+        } else {
+                /* Both artist and album */
+                body_markup_fmt_string =
+                        g_strconcat (" ", NOTIFICATION_TEXT_BY, " <i>%s</i>\n ",
+                                     NOTIFICATION_TEXT_FROM, " <i>%s</i>", NULL);
+
+                notification_body =
+                        g_markup_printf_escaped (body_markup_fmt_string,
+                                                 track->artist,
+                                                 track->album);
+        }
+
+        /* Create the notification if not already created */
+        if (priv->notification == NULL) {
+                priv->notification =
+                        notify_notification_new_with_status_icon (
+                                notification_summary,
+                                notification_body,
+                                NULL,
+                                priv->tray_icon);
+        } else {
+                notify_notification_update (priv->notification,
+                                            notification_summary,
+                                            notification_body,
+                                            NULL);
+        }
+
+        /* Set album image as icon if specified */
+        if (track->image_url != NULL) {
+                GdkPixbuf *icon =
+                        get_album_cover_icon (g_strdup (track->image_url));
+
+                if (icon != NULL) {
+                        notify_notification_set_icon_from_pixbuf (priv->notification,
+                                                                  icon);
+                }
+        }
+
+        /* Show notification */
+        notify_notification_show (priv->notification, NULL);
+
+        g_free (summary_markup_fmt_string);
+        g_free (body_markup_fmt_string);
+        g_free (notification_summary);
+        g_free (notification_body);
+        if (stripped_album != NULL) {
+                g_free (stripped_album);
+        }
 }
 
 void
@@ -609,22 +607,22 @@ vagalume_tray_icon_notify_playback (VagalumeTrayIcon *vti, lastfm_track *track)
         priv->now_playing = (track != NULL);
         ctxt_menu_update (vti);
 
-	/* Update tooltip and show notification, if needed */
+        /* Update tooltip and show notification, if needed */
         if (priv->now_playing) {
                 gchar *tooltip_string = NULL;
 
-		/* Set the tooltip */
-		tooltip_string = g_strdup_printf (TOOLTIP_FORMAT_STRING,
-						  track->title,
-						  track->artist);
+                /* Set the tooltip */
+                tooltip_string = g_strdup_printf (TOOLTIP_FORMAT_STRING,
+                                                  track->title,
+                                                  track->artist);
                 gtk_status_icon_set_tooltip(priv->tray_icon, tooltip_string);
 
                 g_free (tooltip_string);
 
-		/* Show the notification, if required */
-		if (priv->show_notifications) {
-			show_notification (vti, track);
-		}
+                /* Show the notification, if required */
+                if (priv->show_notifications) {
+                        show_notification (vti, track);
+                }
         } else {
                 gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
         }
@@ -634,5 +632,5 @@ void
 vagalume_tray_icon_show_notifications (VagalumeTrayIcon *vti, gboolean show_notifications)
 {
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
-	priv->show_notifications = show_notifications;
+        priv->show_notifications = show_notifications;
 }
