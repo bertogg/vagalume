@@ -55,7 +55,7 @@ AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
    AC_DEFINE([HAVE_CURL_EASY_ESCAPE],[1],[If curl_easy_escape() exists]),
-   have_curl_easy_escape=0
+   have_curl_easy_escape="no"
 )
 
 # Check whether to use libgcrypt
@@ -101,6 +101,13 @@ else
 fi
 AM_CONDITIONAL(SET_IM_STATUS, test "$set_im_status" = "yes")
 
+# Check whether to enable the tray icon and libnotify support
+AC_ARG_ENABLE(tray-icon, [
+  --enable-tray-icon      Enable tray icon and libnotify support
+                          (Gnome only, default if available)
+  --disable-tray-icon     Disable tray icon and libnotify support],
+  enable_tray_icon=$enableval, enable_tray_icon=detect)
+
 # Autodetect platform
 if $PKG_CONFIG --exists libosso && readlink /etc|grep -q ^/targets; then
    DETECTED_PLATFORM=maemo
@@ -124,7 +131,7 @@ if test "$PLATFORM" = "maemo"; then
 
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
 
-   if test "$have_curl_easy_escape" = "0"; then
+   if test "$have_curl_easy_escape" = "no"; then
       MAEMOVERS=2
       echo "Compiling for Maemo 2"
    elif test "$libossovers" = "1"; then
@@ -151,8 +158,8 @@ if test "$PLATFORM" = "maemo"; then
    EXTRA_CFLAGS="$EXTRA_CFLAGS $libosso_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $libosso_LIBS"
 
-   PKG_CHECK_MODULES(libconic, conic, [have_conic=1], [have_conic=0])
-   if test "$have_conic" = "1"; then
+   PKG_CHECK_MODULES(libconic, conic, [have_conic="yes"], [have_conic="no"])
+   if test "$have_conic" = "yes"; then
       EXTRA_CFLAGS="$EXTRA_CFLAGS $libconic_CFLAGS"
       EXTRA_LIBS="$EXTRA_LIBS $libconic_LIBS"
    fi
@@ -168,9 +175,10 @@ if test "$PLATFORM" = "maemo"; then
 
    PKG_CHECK_MODULES(SBPLUGIN, gtk+-2.0 glib-2.0 hildon-1 libhildondesktop
                                gconf-2.0 libhildonwm libosso osso-af-settings
-                               dbus-1, [have_sb_plugin=1], [have_sb_plugin=0])
+                               dbus-1,
+                               [have_sb_plugin="yes"], [have_sb_plugin="no"])
 
-   if test "$have_sb_plugin" = "1"; then
+   if test "$have_sb_plugin" = "yes"; then
       sbplugindesktopentrydir=`$PKG_CONFIG osso-af-settings \
                                --variable=statusbardesktopentrydir`
       sbplugindir=`$PKG_CONFIG osso-af-settings --variable=hildondesktoplibdir`
@@ -207,8 +215,37 @@ elif test "$PLATFORM" = "gnome"; then
    # serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
    desktopentrydir="\${datadir}/applications"
 
-   PKG_CHECK_MODULES(TRAYICON, gtk+-2.0 >= 2.10 libnotify >= 0.4.1,
-                     [have_tray_icon=1], [have_tray_icon=0])
+   echo -n "Checking whether we have Gtk >= 2.10... "
+   if $PKG_CONFIG --atleast-version=2.10 gtk+-2.0; then
+      have_gtk210="yes"
+   else
+      have_gtk210="no"
+   fi
+   echo $have_gtk210
+
+   PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
+                     [have_libnotify="yes"], [have_libnotify="no"])
+
+   if test "$have_gtk210" = "yes" -a "$have_libnotify" = "yes"; then
+      have_tray_icon="yes"
+   else
+      have_tray_icon="no"
+   fi
+
+   if test "$enable_tray_icon" = "yes" -a "$have_tray_icon" = "no"; then
+      AC_MSG_ERROR([Unable to compile with tray icon and libnotify support])
+   elif test "$enable_tray_icon" = "no"; then
+      have_tray_icon="no"
+   fi
+
+   if test "$have_tray_icon" = "yes"; then
+      echo "Compiling with tray icon and notifications"
+      # Add extra required parameters
+      EXTRA_CFLAGS="$EXTRA_CFLAGS $libnotify_CFLAGS"
+      EXTRA_LIBS="$EXTRA_LIBS $libnotify_LIBS"
+   else
+      echo "Compiling without tray icon and notifications"
+   fi
 else
 
    AC_MSG_ERROR([Unknown platform $PLATFORM selected])
@@ -222,13 +259,13 @@ if test -n "$serviceentrydir"; then
    AC_DEFINE([HAVE_DBUS_SUPPORT], [1], [Defined if compiling with D-BUS])
 fi
 
-AM_CONDITIONAL(HAVE_CONIC, test "$have_conic" = "1")
-if test "$have_conic" = "1"; then
+AM_CONDITIONAL(HAVE_CONIC, test "$have_conic" = "yes")
+if test "$have_conic" = "yes"; then
    AC_DEFINE([HAVE_CONIC], [1], [Defined if building with libconic])
 fi
 
-AM_CONDITIONAL(HAVE_MAEMO_SB_PLUGIN, test "$have_sb_plugin" = "1")
-if test "$have_sb_plugin" = "1"; then
+AM_CONDITIONAL(HAVE_MAEMO_SB_PLUGIN, test "$have_sb_plugin" = "yes")
+if test "$have_sb_plugin" = "yes"; then
    AC_DEFINE([HAVE_MAEMO_SB_PLUGIN], [1],
              [Defined if building the Maemo status bar plugin])
    AC_SUBST(SBPLUGIN_LIBS)
@@ -237,13 +274,9 @@ if test "$have_sb_plugin" = "1"; then
    AC_SUBST(sbplugindir)
 fi
 
-AM_CONDITIONAL(HAVE_TRAY_ICON, test "$have_tray_icon" = "1")
-if test "$have_tray_icon" = "1"; then
+AM_CONDITIONAL(HAVE_TRAY_ICON, test "$have_tray_icon" = "yes")
+if test "$have_tray_icon" = "yes"; then
    AC_DEFINE([HAVE_TRAY_ICON], [1], [Defined if building the FD tray icon])
-
-   # Add extra required parameters
-   EXTRA_CFLAGS="$EXTRA_CFLAGS $TRAYICON_CFLAGS"
-   EXTRA_LIBS="$EXTRA_LIBS $TRAYICON_LIBS"
 fi
 
 AC_SUBST(appdatadir, "\${datadir}/vagalume")
