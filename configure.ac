@@ -48,6 +48,20 @@ EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
 PKG_CHECK_MODULES(dbus_glib, dbus-glib-1, [have_dbus_glib="yes"],
                   [have_dbus_glib="no"])
 
+PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
+                  [have_libnotify="yes"], [have_libnotify="no"])
+
+# Tray icon support requires Gtk 2.10 and libnotify
+if test "$have_libnotify" = "yes"; then
+   echo -n "checking for Gtk2 >= 2.10... "
+   if $PKG_CONFIG --atleast-version=2.10 gtk+-2.0; then
+      have_tray_icon="yes"
+   else
+      have_tray_icon="no"
+   fi
+   echo $have_tray_icon
+fi
+
 # Check if libgcrypt is installed
 AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
    have_libgcrypt="yes", have_libgcrypt="no")
@@ -62,15 +76,11 @@ AC_CHECK_LIB(curl, curl_easy_escape,
 AC_ARG_ENABLE(libgcrypt, [
   --enable-libgcrypt      compute MD5 using libgcrypt (default if available)
   --disable-libgcrypt     use internal MD5 algorithm],
-  use_libgcrypt=$enableval, use_libgcrypt=detect)
+  use_libgcrypt=$enableval, use_libgcrypt=$have_libgcrypt)
 
-if test "$use_libgcrypt" = "detect"; then
-   use_libgcrypt="$have_libgcrypt"
-elif test "$use_libgcrypt" = "yes" -a "$have_libgcrypt" = "no"; then
+if test "$use_libgcrypt" = "yes" -a "$have_libgcrypt" = "no"; then
    AC_MSG_ERROR([ligcrypt not found, install it or use --disable-libgcrypt])
-fi
-
-if test "$use_libgcrypt" = "yes"; then
+elif test "$use_libgcrypt" = "yes"; then
    AC_DEFINE([HAVE_LIBGCRYPT],[1],[Defined if compiling with libgcrypt])
    EXTRA_LIBS="$EXTRA_LIBS -lgcrypt"
    echo "Using libgcrypt to compute md5sums"
@@ -83,15 +93,11 @@ AM_CONDITIONAL(USE_INTERNAL_MD5, test "$use_libgcrypt" = "no")
 AC_ARG_ENABLE(im-status, [
   --enable-im-status      Enable "Set IM status" feature (default if available)
   --disable-im-status     Disable "Set IM status" feature],
-  set_im_status=$enableval, set_im_status=detect)
+  set_im_status=$enableval, set_im_status=$have_dbus_glib)
 
-if test "$set_im_status" = "detect"; then
-   set_im_status="$have_dbus_glib"
-elif test "$set_im_status" = "yes" -a "$have_dbus_glib" = "no"; then
+if test "$set_im_status" = "yes" -a "$have_dbus_glib" = "no"; then
    AC_MSG_ERROR([dbus-glib not found, install it or use --disable-im-status])
-fi
-
-if test "$set_im_status" = "yes"; then
+elif test "$set_im_status" = "yes"; then
    AC_DEFINE([SET_IM_STATUS],[1],[Defined if "Set IM Status" is enabled])
    EXTRA_CFLAGS="$EXTRA_CFLAGS $dbus_glib_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $dbus_glib_LIBS"
@@ -106,7 +112,7 @@ AC_ARG_ENABLE(tray-icon, [
   --enable-tray-icon      Enable tray icon and libnotify support
                           (Gnome only, default if available)
   --disable-tray-icon     Disable tray icon and libnotify support],
-  enable_tray_icon=$enableval, enable_tray_icon=detect)
+  enable_tray_icon=$enableval, enable_tray_icon=$have_tray_icon)
 
 # Autodetect platform
 if $PKG_CONFIG --exists libosso && readlink /etc|grep -q ^/targets; then
@@ -215,35 +221,15 @@ elif test "$PLATFORM" = "gnome"; then
    # serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
    desktopentrydir="\${datadir}/applications"
 
-   echo -n "Checking whether we have Gtk >= 2.10... "
-   if $PKG_CONFIG --atleast-version=2.10 gtk+-2.0; then
-      have_gtk210="yes"
-   else
-      have_gtk210="no"
-   fi
-   echo $have_gtk210
-
-   PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
-                     [have_libnotify="yes"], [have_libnotify="no"])
-
-   if test "$have_gtk210" = "yes" -a "$have_libnotify" = "yes"; then
-      have_tray_icon="yes"
-   else
-      have_tray_icon="no"
-   fi
-
    if test "$enable_tray_icon" = "yes" -a "$have_tray_icon" = "no"; then
       AC_MSG_ERROR([Unable to compile with tray icon and libnotify support])
-   elif test "$enable_tray_icon" = "no"; then
-      have_tray_icon="no"
-   fi
-
-   if test "$have_tray_icon" = "yes"; then
+   elif test "$enable_tray_icon" = "yes"; then
       echo "Compiling with tray icon and notifications"
       # Add extra required parameters
       EXTRA_CFLAGS="$EXTRA_CFLAGS $libnotify_CFLAGS"
       EXTRA_LIBS="$EXTRA_LIBS $libnotify_LIBS"
    else
+      have_tray_icon="no"
       echo "Compiling without tray icon and notifications"
    fi
 else
