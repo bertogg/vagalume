@@ -16,6 +16,8 @@ MAINTAINERCLEANFILES = \
 	config.h.in~ \
 	config.sub \
 	configure \
+	data/vagalume.desktop \
+	data/vagalume.service \
 	debian/files \
 	debian/vagalume.postinst.debhelper \
 	debian/vagalume.postrm.debhelper \
@@ -57,3 +59,15 @@ endif
 if HAVE_MAEMO_SB_PLUGIN
 sbplugindesktopentry_DATA = data/vagalume-sb-plugin.desktop
 endif
+
+edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@ICONDIR\@,$(icondir),g'
+
+data/vagalume.service: Makefile data/vagalume.service.in
+	rm -f data/vagalume.service data/vagalume.service.tmp
+	$(edit) data/vagalume.service.in > data/vagalume.service.tmp
+	mv data/vagalume.service.tmp data/vagalume.service
+
+data/vagalume.desktop: Makefile data/vagalume.desktop.in
+	rm -f data/vagalume.desktop data/vagalume.desktop.tmp
+	$(edit) data/vagalume.desktop.in > data/vagalume.desktop.tmp
+	mv data/vagalume.desktop.tmp data/vagalume.desktop
