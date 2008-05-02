@@ -116,6 +116,7 @@ static const char *license =
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/\n";
 static const char *translators = N_(
+"Spanish (es_VE)\nOscar A. Mata T. <omata_mac@yahoo.com>\n\n"
 "Italian (it)\nAndrea Grandi <a.grandi@gmail.com>"
 );
 
