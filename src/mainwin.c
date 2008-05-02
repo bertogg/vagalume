@@ -589,8 +589,8 @@ show_about_dialog(GtkWidget *widget, gpointer data)
                               "comments", _(appdescr), "copyright", copyright,
                               "license", license, "version", APP_VERSION,
                               "website", website, "artists", artists,
-                              "logo", logo, "translator-credits",
-                              gettext(translators), NULL);
+                              "translator-credits", _(translators),
+                              "logo", logo, NULL);
         g_object_unref(G_OBJECT(logo));
 }
 
@@ -643,7 +643,7 @@ image_button_new(const button_data *data)
         if (data->tooltip != NULL) {
                 if (tooltips == NULL) tooltips = gtk_tooltips_new();
                 gtk_tooltips_set_tip(tooltips, button,
-                                     data->tooltip, _(data->tooltip));
+                                     _(data->tooltip), _(data->tooltip));
         }
 
         return button;
