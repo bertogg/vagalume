@@ -37,17 +37,17 @@
 #define MENU_ITEM_ICON_SIZE 18
 #define NOTIFICATION_ICON_SIZE 40
 
-#define SHOW_APP_ITEM_ICON_NAME _("view-restore")
-#define SETTINGS_ITEM_ICON_NAME _("preferences-other")
-#define RECOMMEND_ITEM_ICON_NAME _("mail-message-new")
-#define TAG_ITEM_ICON_NAME _("accessories-text-editor")
-#define ADD_TO_PLS_ITEM_ICON_NAME _("list-add")
-#define LOVE_ITEM_ICON_NAME _("emblem-favorite")
-#define BAN_ITEM_ICON_NAME _("process-stop")
-#define PLAY_ITEM_ICON_NAME _("media-playback-start")
-#define STOP_ITEM_ICON_NAME _("media-playback-stop")
-#define SKIP_ITEM_ICON_NAME _("media-skip-forward")
-#define CLOSE_APP_ITEM_ICON_NAME _("window-close")
+#define SHOW_APP_ITEM_ICON_NAME "view-restore"
+#define SETTINGS_ITEM_ICON_NAME "preferences-other"
+#define RECOMMEND_ITEM_ICON_NAME "mail-message-new"
+#define TAG_ITEM_ICON_NAME "accessories-text-editor"
+#define ADD_TO_PLS_ITEM_ICON_NAME "list-add"
+#define LOVE_ITEM_ICON_NAME "emblem-favorite"
+#define BAN_ITEM_ICON_NAME "process-stop"
+#define PLAY_ITEM_ICON_NAME "media-playback-start"
+#define STOP_ITEM_ICON_NAME "media-playback-stop"
+#define SKIP_ITEM_ICON_NAME "media-skip-forward"
+#define CLOSE_APP_ITEM_ICON_NAME "window-close"
 
 #define VAGALUME_TRAY_ICON_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), \
                                       VAGALUME_TRAY_ICON_TYPE, \
