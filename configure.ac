@@ -207,6 +207,8 @@ elif test "$PLATFORM" = "gnome"; then
    # serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
    desktopentrydir="\${datadir}/applications"
 
+   PKG_CHECK_MODULES(TRAYICON, gtk+-2.0 >= 2.10 libnotify >= 0.4.1,
+                     [have_tray_icon=1], [have_tray_icon=0])
 else
 
    AC_MSG_ERROR([Unknown platform $PLATFORM selected])
@@ -233,6 +235,15 @@ if test "$have_sb_plugin" = "1"; then
    AC_SUBST(SBPLUGIN_CFLAGS)
    AC_SUBST(sbplugindesktopentrydir)
    AC_SUBST(sbplugindir)
+fi
+
+AM_CONDITIONAL(HAVE_TRAY_ICON, test "$have_tray_icon" = "1")
+if test "$have_tray_icon" = "1"; then
+   AC_DEFINE([HAVE_TRAY_ICON], [1], [Defined if building the FD tray icon])
+
+   # Add extra required parameters
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $TRAYICON_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $TRAYICON_LIBS"
 fi
 
 AC_SUBST(appdatadir, "\${datadir}/vagalume")

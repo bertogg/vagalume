@@ -145,6 +145,30 @@ mainwin_show_window(lastfm_mainwin *w, gboolean show)
 }
 
 void
+mainwin_toggle_visibility(lastfm_mainwin *w)
+{
+        g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
+        if (!w->is_hidden) {
+                /* Save position before hidding the window */
+                gtk_window_get_position(w->window, &(w->x_pos), &(w->y_pos));
+
+                gtk_widget_hide (GTK_WIDGET(w->window));
+                g_debug ("Hiding the window...");
+        } else {
+                if (w->is_iconified) {
+                        gtk_window_deiconify(GTK_WINDOW(w->window));
+                }
+#ifndef MAEMO
+                /* Move the window to its right place (not needed for maemo */
+                gtk_window_move (w->window, w->x_pos, w->y_pos);
+#endif
+                gtk_widget_show (GTK_WIDGET(w->window));
+
+                g_debug ("Deiconifying...");
+        }
+}
+
+void
 mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
 {
         g_return_if_fail(w != NULL);
@@ -420,6 +444,8 @@ window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
 {
         GdkWindowState st = event->new_window_state;
         win->is_fullscreen = (st & GDK_WINDOW_STATE_FULLSCREEN);
+        win->is_iconified =
+                st & (GDK_WINDOW_STATE_ICONIFIED);
         win->is_hidden =
                 st & (GDK_WINDOW_STATE_ICONIFIED|GDK_WINDOW_STATE_WITHDRAWN);
         if (!win->is_hidden) {

@@ -4,6 +4,7 @@ Alberto Garcia Gonzalez <agarcia@igalia.com>
 Mario Sanchez Prada <msanchez@igalia.com>
 * Maemo status bar plugin
 * Icons, UI enhancements
+* Freedesktop tray icon and libnotify support
 
 Felipe Erias Morandeira <femorandeira@igalia.com>
 * Icons, UI enhancements

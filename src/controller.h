@@ -40,6 +40,7 @@ void controller_show_info(const char *text);
 void controller_show_banner(const char *text);
 gboolean controller_confirm_dialog(const char *text);
 void controller_show_mainwin(gboolean show);
+void controller_toggle_mainwin_visibility (void);
 int controller_increase_volume(int inc);
 void controller_show_cover(void);
 lastfm_track *controller_get_current_track (void);

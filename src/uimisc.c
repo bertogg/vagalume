@@ -240,6 +240,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         GtkWidget *imtelepathylabel;
         GtkWidget *impidgin, *imgajim, *imgossip, *imtelepathy;
         GtkTable *acctable, *conntable, *dltable, *imtable;
+#ifdef HAVE_TRAY_ICON
+        GtkWidget *shownotificationslabel, *shownotifications;
+        GtkTable *trayicontable;
+#endif
         GtkNotebook *nb;
         gboolean changed = FALSE;
         const lastfm_usercfg *origcfg = *cfg;
@@ -259,6 +263,9 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         imgossiplabel = gtk_label_new(_("Update Gossip status:"));
         imtelepathylabel = gtk_label_new(_("Update Telepathy status:"));
 
+#ifdef HAVE_TRAY_ICON
+        shownotificationslabel = gtk_label_new(_("Show notifications:"));
+#endif
         user = GTK_ENTRY(gtk_entry_new());
         pw = GTK_ENTRY(gtk_entry_new());
         scrobble = gtk_check_button_new();
@@ -277,6 +284,9 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         imgajim = gtk_check_button_new();
         imgossip = gtk_check_button_new();
         imtelepathy = gtk_check_button_new();
+#ifdef HAVE_TRAY_ICON
+        shownotifications = gtk_check_button_new();
+#endif
         gtk_button_set_image(GTK_BUTTON(dlbutton),
                              gtk_image_new_from_stock(GTK_STOCK_DIRECTORY,
                                                       GTK_ICON_SIZE_BUTTON));
@@ -302,6 +312,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                                      (*cfg)->im_gossip);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(imtelepathy),
                                      (*cfg)->im_telepathy);
+#ifdef HAVE_TRAY_ICON
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(shownotifications),
+                                     (*cfg)->show_notifications);
+#endif
 
         acctable = GTK_TABLE(gtk_table_new(4, 2, FALSE));
         gtk_table_attach(acctable, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
@@ -337,6 +351,11 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
         gtk_table_attach(imtable, imgajim, 1, 2, 2, 3, 0, 0, 5, 5);
         gtk_table_attach(imtable, imgossip, 1, 2, 3, 4, 0, 0, 5, 5);
         gtk_table_attach(imtable, imtelepathy, 1, 2, 4, 5, 0, 0, 5, 5);
+#ifdef HAVE_TRAY_ICON
+        trayicontable = GTK_TABLE(gtk_table_new(1, 2, TRUE));
+        gtk_table_attach(trayicontable, shownotificationslabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(trayicontable, shownotifications, 1, 2, 0, 1, 0, 0, 5, 5);
+#endif
 
         nb = GTK_NOTEBOOK(gtk_notebook_new());
         gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
@@ -348,6 +367,11 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
 #ifdef SET_IM_STATUS
         gtk_notebook_append_page(nb, GTK_WIDGET(imtable),
                                  gtk_label_new(_("IM Status")));
+#endif
+
+#ifdef HAVE_TRAY_ICON
+        gtk_notebook_append_page(nb, GTK_WIDGET(trayicontable),
+                                 gtk_label_new(_("Notifications")));
 #endif
 
         gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(nb),
@@ -383,6 +407,10 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                         GTK_TOGGLE_BUTTON(imgossip));
                 (*cfg)->im_telepathy = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(imtelepathy));
+#ifdef HAVE_TRAY_ICON
+                (*cfg)->show_notifications = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(shownotifications));
+#endif
                 changed = TRUE;
         } else if (origcfg == NULL) {
                 /* If settings haven't been modified, restore the

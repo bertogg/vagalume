@@ -27,6 +27,10 @@
 #include "util.h"
 #include "imstatus.h"
 
+#ifdef HAVE_TRAY_ICON
+#include "vagalume-tray-icon.h"
+#endif
+
 static lastfm_session *session = NULL;
 static lastfm_pls *playlist = NULL;
 static rsp_session *rsp_sess = NULL;
@@ -39,6 +43,10 @@ static time_t nowplaying_since = 0;
 static rsp_rating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
 static gboolean stopping_after_track = FALSE;
+
+#ifdef HAVE_TRAY_ICON
+static VagalumeTrayIcon *tray_icon = NULL;
+#endif
 
 typedef struct {
         lastfm_track *track;
@@ -140,12 +148,14 @@ gboolean
 controller_confirm_dialog(const char *text)
 {
         g_return_val_if_fail(mainwin != NULL, FALSE);
+        GtkWindow *parent = NULL;
 
-#ifdef MAEMO
-        return ui_confirm_dialog(NULL, text);
-#else
-        return ui_confirm_dialog(mainwin->window, text);
+#ifndef MAEMO
+        if (!mainwin->is_hidden) {
+	        parent = mainwin->window;
+        }
 #endif
+        return ui_confirm_dialog(parent, text);
 }
 
 /**
@@ -158,6 +168,18 @@ controller_show_mainwin(gboolean show)
 {
         g_return_if_fail(mainwin != NULL);
         mainwin_show_window(mainwin, show);
+}
+
+/**
+ * Iconify/deiconify the program main window
+ *
+ * @param iconify Whether to iconify or not (deiconify)
+ */
+void
+controller_toggle_mainwin_visibility (void)
+{
+        g_return_if_fail(mainwin != NULL);
+        mainwin_toggle_visibility (mainwin);
 }
 
 /**
@@ -379,9 +401,6 @@ controller_set_nowplaying(lastfm_track *track)
                 d->start = 0;
                 g_thread_create(set_nowplaying_thread,d,FALSE,NULL);
         }
-
-        /* Notify the playback status */
-        lastfm_dbus_notify_playback(track);
 }
 
 /**
@@ -475,6 +494,11 @@ apply_usercfg(void)
         if (nowplaying != NULL) {
                 im_set_status(usercfg, nowplaying);
         }
+#ifdef HAVE_TRAY_ICON
+	if (tray_icon) {
+	  vagalume_tray_icon_show_notifications (tray_icon, usercfg->show_notifications);
+	}
+#endif
 }
 
 /**
@@ -486,6 +510,7 @@ void
 controller_open_usercfg(void)
 {
         g_return_if_fail(mainwin != NULL);
+        GtkWindow *parent = NULL;
         gboolean userchanged = FALSE;
         gboolean pwchanged = FALSE;
         gboolean changed;
@@ -493,7 +518,16 @@ controller_open_usercfg(void)
                                           g_strdup("");
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
-        changed = ui_usercfg_dialog(mainwin->window, &usercfg);
+
+#ifdef MAEMO
+        parent = mainwin->window;
+#else
+        if (!mainwin->is_hidden) {
+        	parent = mainwin->window;
+        }
+#endif
+        changed = ui_usercfg_dialog(parent, &usercfg);
+
         if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
                 userchanged = strcmp(olduser, usercfg->username);
@@ -760,6 +794,16 @@ controller_start_playing_cb(gpointer userdata)
         }
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
+
+        /* Notify the playback status */
+        lastfm_dbus_notify_playback(track);
+
+#ifdef HAVE_TRAY_ICON
+	if (tray_icon) {
+	  vagalume_tray_icon_notify_playback (tray_icon, track);
+	}
+#endif
+
         if (track->custom_pls) {
                 lastfm_audio_play(track->stream_url,
                                   (GCallback) controller_audio_started_cb,
@@ -820,6 +864,12 @@ controller_stop_playing(void)
 
         /* Notify the playback status */
         lastfm_dbus_notify_playback(NULL);
+
+#ifdef HAVE_TRAY_ICON
+	if (tray_icon) {
+	  vagalume_tray_icon_notify_playback (tray_icon, NULL);
+	}
+#endif
 }
 
 /**
@@ -987,6 +1037,7 @@ void
 controller_tag_track()
 {
         g_return_if_fail(mainwin && usercfg && nowplaying);
+        GtkWindow *parent = NULL;
         /* Keep this static to remember the previous value */
         static request_type type = REQUEST_ARTIST;
         char *tags = NULL;
@@ -995,7 +1046,14 @@ controller_tag_track()
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
         }
-        accept = tagwin_run(mainwin->window, usercfg->username, &tags,
+#ifdef MAEMO
+        parent = mainwin->window;
+#else
+        if (!mainwin->is_hidden) {
+                parent = mainwin->window;
+        }
+#endif
+        accept = tagwin_run(parent, usercfg->username, &tags,
                             usertags, track, &type);
         if (accept && tags != NULL && tags[0] != '\0') {
                 tag_data *d = g_slice_new0(tag_data);
@@ -1060,6 +1118,7 @@ void
 controller_recomm_track(void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
+        GtkWindow *parent = NULL;
         char *rcpt = NULL;
         char *body = NULL;
         /* Keep this static to remember the previous value */
@@ -1069,7 +1128,15 @@ controller_recomm_track(void)
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
         }
-        accept = recommwin_run(mainwin->window, &rcpt, &body, friends,
+
+#ifdef MAEMO
+        parent = mainwin->window;
+#else
+        if (!mainwin->is_hidden) {
+                parent = mainwin->window;
+	}
+#endif
+        accept = recommwin_run(parent, &rcpt, &body, friends,
                                track, &type);
         if (accept && rcpt && body && rcpt[0] && body[0]) {
                 g_strstrip(rcpt);
@@ -1135,7 +1202,16 @@ void
 controller_add_to_playlist(void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
-        if (ui_confirm_dialog(mainwin->window,
+        GtkWindow *parent = NULL;
+
+#ifdef MAEMO
+        parent = mainwin->window;
+#else
+        if (!mainwin->is_hidden) {
+                parent = mainwin->window;
+        }
+#endif
+        if (ui_confirm_dialog(parent,
                               _("Really add this track to the playlist?"))) {
                 lastfm_track *track = lastfm_track_ref(nowplaying);
                 g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
@@ -1454,6 +1530,13 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         }
 
         lastfm_dbus_notify_started();
+
+#ifdef HAVE_TRAY_ICON
+        /* Init Freedesktop tray icon */
+        tray_icon = vagalume_tray_icon_create ();
+        vagalume_tray_icon_notify_playback (tray_icon, NULL);
+	vagalume_tray_icon_show_notifications (tray_icon, usercfg->show_notifications);
+#endif
 
         mainwin_run_app();
 

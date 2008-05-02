@@ -45,6 +45,10 @@ if USE_INTERNAL_MD5
 vagalume_SOURCES += md5/md5.c md5/md5.h
 endif
 
+if HAVE_TRAY_ICON
+vagalume_SOURCES += vagalume-tray-icon.h vagalume-tray-icon.c
+endif
+
 if HAVE_CONIC
 vagalume_SOURCES += connection.c
 endif
