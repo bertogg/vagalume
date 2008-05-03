@@ -11,13 +11,16 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 AC_HEADER_STDC
 
+# Some variables
+VAGALUME_CONF_FILE=".vagalumerc"
+
 # Defines for config.h
 AC_DEFINE_UNQUOTED([KERNEL_NAME],"`uname -s`",[Name of the kernel])
 AC_DEFINE_UNQUOTED([KERNEL_NAME_LC],"`uname -s|tr A-Z a-z`",
                    [Name of the kernel (lowercase)])
 AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
-VAGALUME_CONF_FILE=".vagalumerc"
-AC_DEFINE_UNQUOTED(VAGALUME_CONF_FILE, "$VAGALUME_CONF_FILE", Vagalume configuration file)
+AC_DEFINE_UNQUOTED(VAGALUME_CONF_FILE, "$VAGALUME_CONF_FILE",
+                   [Vagalume configuration file])
 
 # Extra flags for compiler and linker
 EXTRA_CFLAGS=""
@@ -132,25 +135,26 @@ Target platform:
 if test "$PLATFORM" = "detect"; then
    PLATFORM=$DETECTED_PLATFORM
 fi
+PLATFORMVERS=""
 
 if test "$PLATFORM" = "maemo"; then
 
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
 
    if test "$have_curl_easy_escape" = "no"; then
-      MAEMOVERS=2
+      PLATFORMVERS=2
       echo "Compiling for Maemo 2"
    elif test "$libossovers" = "1"; then
-      MAEMOVERS=3
+      PLATFORMVERS=3
       echo "Compiling for Maemo 3"
    elif test "$libossovers" = "2"; then
-      MAEMOVERS=4
+      PLATFORMVERS=4
       echo "Compiling for Maemo 4"
    else
       AC_MSG_ERROR([Unknown Maemo version])
    fi
 
-   if test "$MAEMOVERS" = "2" -o "$MAEMOVERS" = "3"; then
+   if test "$PLATFORMVERS" = "2" -o "$PLATFORMVERS" = "3"; then
       PKG_CHECK_MODULES(hildon, hildon-libs)
       PKG_CHECK_MODULES(hildonfm, hildon-fm)
    else
@@ -197,9 +201,9 @@ if test "$PLATFORM" = "maemo"; then
    fi
 
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])
-   if test "$MAEMOVERS" = "2"; then
+   if test "$PLATFORMVERS" = "2"; then
       AC_DEFINE([MAEMO2], [], [Defined if building for Maemo 2 (gregale)])
-   elif test "$MAEMOVERS" = "3"; then
+   elif test "$PLATFORMVERS" = "3"; then
       AC_DEFINE([MAEMO3], [], [Defined if building for Maemo 3 (bora)])
    else
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
@@ -297,3 +301,22 @@ AC_OUTPUT(
 if test "$PLATFORM" = "maemo"; then
    AC_OUTPUT(data/vagalume.conf data/vagalume-rfs.sh debian/vagalume.links)
 fi
+
+# Status summary
+echo ""
+echo "****************************************"
+echo "*** Vagalume is ready to be compiled ***"
+echo "****************************************"
+echo ""
+echo "Target platform: $PLATFORM $PLATFORMVERS"
+echo "Using libgcrypt to compute MD5 sums: $use_libgcrypt"
+echo "\"Set IM status\" enabled: $set_im_status"
+if test "$PLATFORM" = "gnome"; then
+   echo "Tray icon and notifications enabled: $have_tray_icon"
+else
+   echo "Maemo status bar plugin enable: $have_sb_plugin"
+   echo "Libconic support: $have_conic"
+fi
+echo ""
+echo "Type 'make' to compile Vagalume"
+echo ""
