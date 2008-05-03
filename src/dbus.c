@@ -167,19 +167,19 @@ dbus_req_handler(const gchar* interface, const gchar* method,
         } else if (!strcasecmp(method, APP_DBUS_METHOD_CLOSEAPP)) {
                 g_idle_add(closeapp_handler_idle, NULL);
         } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEUP)) {
-                guint32 inc = get_uint_parameter (arguments);
+                guint32 inc = get_uint32_parameter (arguments);
                 if (inc == G_MAXUINT32) {
                         inc = 5;
                 }
                 g_idle_add(volumechange_handler_idle, GINT_TO_POINTER((gint)inc));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEDOWN)) {
-                guint32 inc = get_uint_parameter (arguments);
+                guint32 inc = get_uint32_parameter (arguments);
                 if (inc == G_MAXUINT32) {
                         inc = 5;
                 }
                 g_idle_add(volumechange_handler_idle, GINT_TO_POINTER((gint)-inc));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_SETVOLUME)) {
-                guint32 vol = get_uint_parameter (arguments);
+                guint32 vol = get_uint32_parameter (arguments);
                 if (vol != G_MAXUINT32) {
                         g_idle_add(volumeset_handler_idle, GINT_TO_POINTER((gint)vol));
                 } else {
