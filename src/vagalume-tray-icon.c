@@ -400,8 +400,8 @@ ctxt_menu_update (VagalumeTrayIcon *vti)
 
 /* Signals handlers */
 
-static void tray_icon_clicked (GtkStatusIcon *status_icon,
-                               gpointer data)
+static void
+tray_icon_clicked (GtkStatusIcon *status_icon, gpointer data)
 {
         controller_toggle_mainwin_visibility ();
         g_debug ("[TRAY ICON] :: Tray icon clicked (left click)");
@@ -535,7 +535,7 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         }
 
         /* Set body text (artist and, perhaps, the album) */
-        if ((stripped_album == NULL) || g_str_equal (stripped_album, "")) {
+        if ((stripped_album == NULL) || *stripped_album == '\0') {
                 /* No album */
                 notification_body =
                         g_markup_printf_escaped (NOTIFICATION_BODY_NO_ALBUM,
@@ -577,9 +577,7 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 
         g_free (notification_summary);
         g_free (notification_body);
-        if (stripped_album != NULL) {
-                g_free (stripped_album);
-        }
+        g_free (stripped_album);
 }
 
 void
