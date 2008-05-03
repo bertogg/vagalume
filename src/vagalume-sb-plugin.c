@@ -6,6 +6,7 @@
  * See the README file for more details.
  */
 
+#include <glib/gi18n.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include <dbus/dbus.h>
@@ -22,17 +23,17 @@
 
 #define MAIN_PANEL_WIDTH 300
 
-#define NO_ARTIST_STRING "No artist"
-#define NO_TRACK_STRING "No track"
-#define NO_ALBUM_STRING "No album"
+#define NO_ARTIST_STRING _("No artist")
+#define NO_TRACK_STRING _("No track")
+#define NO_ALBUM_STRING _("No album")
 
-#define PLAY_ITEM_STRING "Play"
-#define STOP_ITEM_STRING "Stop"
-#define SKIP_ITEM_STRING "Skip"
-#define LOVE_ITEM_STRING "Love"
-#define BAN_ITEM_STRING "Ban"
-#define SHOW_APP_ITEM_STRING "Show main window"
-#define CLOSE_APP_ITEM_STRING "Close Vagalume"
+#define PLAY_ITEM_STRING _("Play")
+#define STOP_ITEM_STRING _("Stop")
+#define SKIP_ITEM_STRING _("Skip")
+#define LOVE_ITEM_STRING _("Love")
+#define BAN_ITEM_STRING _("Ban")
+#define SHOW_APP_ITEM_STRING _("Show main window")
+#define CLOSE_APP_ITEM_STRING _("Close Vagalume")
 
 #define VAGALUME_SB_PLUGIN_GET_PRIVATE(object) \
                  (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
@@ -92,6 +93,11 @@ static gint dbus_req_handler (const gchar* interface, const gchar* method,
                               GArray* arguments, gpointer data,
                               osso_rpc_t* retval);
 static void dbus_send_request (VagalumeSbPlugin *vsbp, const gchar *request);
+static void dbus_send_request_with_param (VagalumeSbPlugin *vsbp,
+                                          const gchar *request,
+                                          int param_type,
+                                          gpointer param_value);
+
 static void notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments);
 
 /* Setters */
@@ -282,6 +288,16 @@ dbus_req_handler(const gchar* interface, const gchar* method,
 static void
 dbus_send_request (VagalumeSbPlugin *vsbp, const gchar *request)
 {
+        /* Delegate on dbus_send_request_with_param() */
+        dbus_send_request_with_param (vsbp, request, DBUS_TYPE_INVALID, NULL);
+}
+
+static void
+dbus_send_request_with_param (VagalumeSbPlugin *vsbp,
+                              const gchar *request,
+                              int param_type,
+                              gpointer param_value)
+{
         VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
         osso_return_t result;
 
@@ -292,6 +308,8 @@ dbus_send_request (VagalumeSbPlugin *vsbp, const gchar *request)
                                      request,
                                      NULL,
                                      NULL,
+                                     param_type,
+                                     param_value,
                                      DBUS_TYPE_INVALID);
         if (result != OSSO_OK) {
                 g_warning ("Error sending DBus message");
@@ -453,13 +471,22 @@ set_track_info (VagalumeSbPlugin *vsbp,
 
         VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
 
-	/* Call to set_field (), always with valid data */
+        /* Call to set_field (), always with valid data */
         set_field (&priv->artist_string,
-		   (artist?artist:NO_ARTIST_STRING), "<b>%s</b>");
+                   (artist?artist:NO_ARTIST_STRING), "<b>%s</b>");
         set_field (&priv->track_string,
-		   (track?track:NO_TRACK_STRING), "<i>%s</i>");
-        set_field (&priv->album_string,
-		   (album?album:NO_ALBUM_STRING), NULL);
+                   (track?track:NO_TRACK_STRING), "<i>%s</i>");
+
+        if ((album != NULL) && g_str_equal (album, "")) {
+                /* Set album string to NULL if not available yet */
+                if (priv->album_string != NULL) {
+                        g_free (priv->album_string);
+                }
+                priv->album_string = NULL;
+        } else {
+                set_field (&priv->album_string,
+                           (album?album:NO_ALBUM_STRING), NULL);
+        }
 }
 
 
@@ -617,8 +644,14 @@ main_panel_update (VagalumeSbPlugin *vsbp)
         label = gtk_bin_get_child (GTK_BIN (priv->track_item));
         gtk_label_set_markup (GTK_LABEL (label), priv->track_string);
 
-        label = gtk_bin_get_child (GTK_BIN (priv->album_item));
-        gtk_label_set_markup (GTK_LABEL (label), priv->album_string);
+        /* Show / hide the album label depending on its availability */
+        if (priv->album_string != NULL) {
+                label = gtk_bin_get_child (GTK_BIN (priv->album_item));
+                gtk_label_set_markup (GTK_LABEL (label), priv->album_string);
+                gtk_widget_show (priv->album_item);
+        } else {
+                gtk_widget_hide (priv->album_item);
+        }
 }
 
 
@@ -678,10 +711,16 @@ main_panel_item_activated (GtkWidget *item, gpointer data)
                 dbus_send_request (vsbp, APP_DBUS_METHOD_SKIP);
                 g_debug ("DBUS request sent: Skip");
         } else if (item == priv->love_item) {
-                dbus_send_request (vsbp, APP_DBUS_METHOD_LOVETRACK);
+                dbus_send_request_with_param (vsbp,
+                                              APP_DBUS_METHOD_LOVETRACK,
+                                              DBUS_TYPE_BOOLEAN,
+                                              GINT_TO_POINTER(TRUE));
                 g_debug ("DBUS request sent: LoveTrack");
         } else if (item == priv->ban_item) {
-                dbus_send_request (vsbp, APP_DBUS_METHOD_BANTRACK);
+                dbus_send_request_with_param (vsbp,
+                                              APP_DBUS_METHOD_BANTRACK,
+                                              DBUS_TYPE_BOOLEAN,
+                                              GINT_TO_POINTER(TRUE));
                 g_debug ("DBUS request sent: BanTrack");
         } else if (item == priv->open_vagalume_item) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_SHOWWINDOW);

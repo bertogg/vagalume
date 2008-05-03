@@ -61,8 +61,9 @@ skip_handler_idle(gpointer data)
 static gboolean
 lovetrack_handler_idle(gpointer data)
 {
+        gboolean interactive = (gboolean)GPOINTER_TO_INT(data);
         gdk_threads_enter();
-        controller_love_track(FALSE);
+        controller_love_track(interactive);
         gdk_threads_leave();
         return FALSE;
 }
@@ -70,8 +71,9 @@ lovetrack_handler_idle(gpointer data)
 static gboolean
 bantrack_handler_idle(gpointer data)
 {
+        gboolean interactive = (gboolean)GPOINTER_TO_INT(data);
         gdk_threads_enter();
-        controller_ban_track(FALSE);
+        controller_ban_track(interactive);
         gdk_threads_leave();
         return FALSE;
 }
@@ -129,6 +131,17 @@ requeststatus_handler_idle(gpointer data)
         return FALSE;
 }
 
+static gboolean
+get_bool_parameter (GArray* arguments)
+{
+        if (arguments->len > 0) {
+                osso_rpc_t val;
+                val = g_array_index(arguments, osso_rpc_t, 0);
+                return val.value.b;
+        }
+        return FALSE;
+}
+
 static guint32
 get_uint32_parameter (GArray* arguments)
 {
@@ -136,9 +149,8 @@ get_uint32_parameter (GArray* arguments)
                 osso_rpc_t val;
                 val = g_array_index(arguments, osso_rpc_t, 0);
                 return val.value.u;
-        } else {
-                return G_MAXUINT32;
         }
+        return G_MAXUINT32;
 }
 
 static gint
@@ -157,9 +169,11 @@ dbus_req_handler(const gchar* interface, const gchar* method,
         } else if (!strcasecmp(method, APP_DBUS_METHOD_SKIP)) {
                 g_idle_add(skip_handler_idle, NULL);
         } else if (!strcasecmp(method, APP_DBUS_METHOD_LOVETRACK)) {
-                g_idle_add(lovetrack_handler_idle, NULL);
+                gboolean interactive = get_bool_parameter(arguments);
+                g_idle_add(lovetrack_handler_idle, GINT_TO_POINTER(interactive));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_BANTRACK)) {
-                g_idle_add(bantrack_handler_idle, NULL);
+                gboolean interactive = get_bool_parameter(arguments);
+                g_idle_add(bantrack_handler_idle, GINT_TO_POINTER(interactive));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_SHOWWINDOW)) {
                 g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_HIDEWINDOW)) {
