@@ -97,6 +97,16 @@ volumechange_handler_idle(gpointer data)
 }
 
 static gboolean
+volumeset_handler_idle(gpointer data)
+{
+        gint vol = GPOINTER_TO_INT(data);
+        gdk_threads_enter();
+        controller_set_volume(vol);
+        gdk_threads_leave();
+        return FALSE;
+}
+
+static gboolean
 closeapp_handler_idle(gpointer data)
 {
         gdk_threads_enter();
@@ -117,6 +127,18 @@ requeststatus_handler_idle(gpointer data)
         gdk_threads_leave();
 
         return FALSE;
+}
+
+static guint32
+get_uint32_parameter (GArray* arguments)
+{
+        if (arguments->len > 0) {
+                osso_rpc_t val;
+                val = g_array_index(arguments, osso_rpc_t, 0);
+                return val.value.u;
+        } else {
+                return G_MAXUINT32;
+        }
 }
 
 static gint
@@ -145,9 +167,24 @@ dbus_req_handler(const gchar* interface, const gchar* method,
         } else if (!strcasecmp(method, APP_DBUS_METHOD_CLOSEAPP)) {
                 g_idle_add(closeapp_handler_idle, NULL);
         } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEUP)) {
-                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER(5));
+                guint32 inc = get_uint_parameter (arguments);
+                if (inc == G_MAXUINT32) {
+                        inc = 5;
+                }
+                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER((gint)inc));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEDOWN)) {
-                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER(-5));
+                guint32 inc = get_uint_parameter (arguments);
+                if (inc == G_MAXUINT32) {
+                        inc = 5;
+                }
+                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER((gint)-inc));
+        } else if (!strcasecmp(method, APP_DBUS_METHOD_SETVOLUME)) {
+                guint32 vol = get_uint_parameter (arguments);
+                if (vol != G_MAXUINT32) {
+                        g_idle_add(volumeset_handler_idle, GINT_TO_POINTER((gint)vol));
+                } else {
+                        g_debug ("No parameter received for " APP_DBUS_METHOD_SETVOLUME);
+                }
         } else if (!strcasecmp(method, APP_DBUS_METHOD_TOPAPP)) {
                 g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
         } else if (!strcasecmp(method, APP_DBUS_METHOD_REQUEST_STATUS)) {

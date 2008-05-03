@@ -1482,6 +1482,16 @@ controller_increase_volume(int inc)
 }
 
 /**
+ * Set the audio volume level
+ * @param vol New volume level
+ */
+void
+controller_set_volume(int vol)
+{
+        lastfm_audio_set_volume (vol);
+}
+
+/**
  * Close the application
  */
 void

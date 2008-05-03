@@ -37,7 +37,12 @@ DBUS_IFACE=com.igalia.vagalume
 DBUS_METHOD_PLAY="Play"
 DBUS_METHOD_STOP="Stop"
 DBUS_METHOD_SKIP="Skip"
+DBUS_METHOD_LOVETRACK="LoveTrack"
+DBUS_METHOD_BANTRACK="BanTrack"
 DBUS_METHOD_PLAYURL="PlayUrl"
+DBUS_METHOD_VOLUMEUP="VolumeUp"
+DBUS_METHOD_VOLUMEDOWN="VolumeDown"
+DBUS_METHOD_SETVOLUME="SetVolume"
 DBUS_METHOD_CLOSEAPP="CloseApp"
 DBUS_METHOD_TOPAPP="top_application"
 
@@ -52,14 +57,19 @@ print_usage ()
     echo "     play:              start playing the current radio"
     echo "     skip:              skip to the nex song in the current radio"
     echo "     stop:              stop playing the current radio"
+    echo "     love:              mark the current song as 'loved'"
+    echo "     ban:               mark the current song as 'banned'"
     echo "     tag <TAG>:         change to a 'global tag' radio."
     echo "     artist <ARTIST>:   change to a 'similar artists' radio"
     echo "     group <GROUP>:     change to a 'last.fm group' radio"
     echo "     loved <USER>:      change to a 'loved' radio for a specific user"
     echo "     neighbours <USER>: change to a 'neighbours' radio for a specific user"
-    echo "     personal <USER>:    change to a 'personal' radio for a specific user"
+    echo "     personal <USER>:   change to a 'personal' radio for a specific user"
     echo "     playlist <USER>:   change to a 'playlist' radio for a specific user"
     echo "     playurl <URL>:     just play the specified URL on Vagalume"
+    echo "     volumeup [INC]:    increase playback volume"
+    echo "     volumedown [INC]:  decrease playback volume"w
+    echo "     volume <VALUE>:    set the playback volume to a specific value"
     echo "     start:             start Vagalume (if not already running)"
     echo "     close:             close Vagalume (if not already closed)"
     echo "     help:              print this information"
@@ -75,6 +85,12 @@ print_usage ()
 # Invalid parameters: print usage and exit with error code
 invalid_params ()
 {
+    # Print error message, if specified
+    if [ $# -gt 0 ]; then
+	echo "Error: "${1};
+	echo;
+    fi
+
     print_usage;
     exit 1;
 }
@@ -92,6 +108,11 @@ if [ $# -eq 1 ]; then
     "stop") DBUS_METHOD_CALL=${DBUS_METHOD_STOP};;
     "play") DBUS_METHOD_CALL=${DBUS_METHOD_PLAY};;
     "skip") DBUS_METHOD_CALL=${DBUS_METHOD_SKIP};;
+    "love") DBUS_METHOD_CALL=${DBUS_METHOD_LOVETRACK};;
+    "ban") DBUS_METHOD_CALL=${DBUS_METHOD_BANTRACK};;
+    "volumeup") DBUS_METHOD_CALL=${DBUS_METHOD_VOLUMEUP};;
+    "volumedown") DBUS_METHOD_CALL=${DBUS_METHOD_VOLUMEDOWN};;
+    "close") DBUS_METHOD_CALL=${DBUS_METHOD_CLOSEAPP};;
     "start") DBUS_METHOD_CALL=${DBUS_METHOD_TOPAPP};;
     "close") DBUS_METHOD_CALL=${DBUS_METHOD_CLOSEAPP};;
     "help") print_usage; exit 0;;
@@ -109,9 +130,25 @@ elif [ $# -eq 2 ]; then
     "personal") URL="lastfm://user/"${ENCODED_PARAM};;
     "playlist") URL="lastfm://user/"${ENCODED_PARAM}"/playlist";;
     "playurl") URL=${ENCODED_PARAM};;
+    "volumeup") DBUS_METHOD_CALL=${DBUS_METHOD_VOLUMEUP};;
+    "volumedown") DBUS_METHOD_CALL=${DBUS_METHOD_VOLUMEDOWN};;
+    "volume") DBUS_METHOD_CALL=${DBUS_METHOD_SETVOLUME};;
     *) invalid_params;;
   esac;
-  DBUS_METHOD_CALL="playurl string:"${URL}
+
+  # Parse numerical parameters, if needed
+  case ${COMMAND} in
+    "volumeup"|"volumedown"|"volume")
+	  if echo ${2} | grep -q '^[0-9]\+$'; then
+	      DBUS_METHOD_PARAMS="uint32:${2}";
+	  else
+	      invalid_params "The specified parameter must be a positive number";
+	  fi;;
+  esac;
+
+  if [ -n "${URL}" ]; then
+      DBUS_METHOD_CALL="playurl string:"${URL};
+  fi
 else
   invalid_params;
 fi
@@ -134,7 +171,8 @@ elif [ ${COMMAND} == "start" ]; then
 fi
 
 # At last, execute the command
+
 dbus-send --type=method_call \
-          --dest=${DBUS_SERVICE} ${DBUS_OBJECT} ${DBUS_IFACE}.${DBUS_METHOD_CALL}
+          --dest=${DBUS_SERVICE} ${DBUS_OBJECT} ${DBUS_IFACE}.${DBUS_METHOD_CALL} ${DBUS_METHOD_PARAMS}
 
 echo "Command '"$COMMAND"' successfully executed"
