@@ -139,6 +139,9 @@ PLATFORMVERS=""
 
 if test "$PLATFORM" = "maemo"; then
 
+   # Disable tray icon support on Maemo
+   have_tray_icon="no"
+
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
 
    if test "$have_curl_easy_escape" = "no"; then
