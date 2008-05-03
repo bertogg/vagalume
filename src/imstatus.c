@@ -10,7 +10,6 @@
 #include <glib.h>
 #include <dbus/dbus-glib.h>
 #include <string.h>
-#include "util.h"
 #include "imstatus.h"
 
 static char *saved_pidgin_status = NULL;
@@ -18,19 +17,13 @@ static char *saved_telepathy_status = NULL;
 static char *saved_gajim_status = NULL;
 static char *saved_gossip_status = NULL;
 
-typedef enum
-{
-        PURPLE_STATUS_UNSET = 0,
-        PURPLE_STATUS_OFFLINE,
-        PURPLE_STATUS_AVAILABLE,
-        PURPLE_STATUS_UNAVAILABLE,
-        PURPLE_STATUS_INVISIBLE,
-        PURPLE_STATUS_AWAY,
-        PURPLE_STATUS_EXTENDED_AWAY,
-        PURPLE_STATUS_MOBILE,
-        PURPLE_STATUS_TUNE,
-        PURPLE_STATUS_NUM_PRIMITIVES
-} PurpleStatusPrimitive;
+typedef struct {
+        gboolean im_pidgin, im_gajim, im_gossip, im_telepathy;
+        GString *msg;
+        lastfm_track *track;
+} ImStatusData;
+
+static GStaticMutex imstatus_mutex = G_STATIC_MUTEX_INIT;
 
 static gboolean
 error_happened(gboolean code, GError *error)
@@ -311,57 +304,93 @@ telepathy_set_status(const char *message)
         g_object_unref(proxy);
 }
 
-
-void
-im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track)
+static gpointer
+im_set_status_thread(gpointer data)
 {
-        g_return_if_fail(cfg != NULL && track != NULL);
+        g_return_val_if_fail(data != NULL, NULL);
+        ImStatusData *d = (ImStatusData *) data;
         const char *artist_keyword = "{artist}";
         const char *title_keyword = "{title}";
         const char *pos;
-        GString *message = g_string_new(cfg->imstatus_template);
 
-        pos = strstr(message->str, artist_keyword);
+        g_static_mutex_lock(&imstatus_mutex);
+        pos = strstr(d->msg->str, artist_keyword);
         if (pos) {
-                g_string_erase(message, pos - message->str, strlen(artist_keyword));
-                g_string_insert(message, pos - message->str, track->artist);
+                g_string_erase(d->msg, pos - d->msg->str, strlen(artist_keyword));
+                g_string_insert(d->msg, pos - d->msg->str, d->track->artist);
         }
 
-        pos = strstr(message->str, title_keyword);
+        pos = strstr(d->msg->str, title_keyword);
         if (pos) {
-                g_string_erase(message, pos - message->str, strlen(title_keyword));
-                g_string_insert(message, pos - message->str, track->title);
+                g_string_erase(d->msg, pos - d->msg->str, strlen(title_keyword));
+                g_string_insert(d->msg, pos - d->msg->str, d->track->title);
         }
 
-        if (cfg->im_pidgin) pidgin_set_status(message->str);
-        if (cfg->im_gajim) gajim_set_status(message->str);
-        if (cfg->im_gossip) gossip_set_status(message->str);
-        if (cfg->im_telepathy) telepathy_set_status(message->str);
-        g_string_free(message, TRUE);
+        if (d->im_pidgin) pidgin_set_status(d->msg->str);
+        if (d->im_gajim) gajim_set_status(d->msg->str);
+        if (d->im_gossip) gossip_set_status(d->msg->str);
+        if (d->im_telepathy) telepathy_set_status(d->msg->str);
+        g_string_free(d->msg, TRUE);
+        lastfm_track_unref(d->track);
+        g_slice_free(ImStatusData, d);
+        g_static_mutex_unlock(&imstatus_mutex);
+        return NULL;
+}
+
+static gpointer
+im_clear_status_thread(gpointer data)
+{
+        g_return_val_if_fail(data != NULL, NULL);
+        ImStatusData *d = (ImStatusData *) data;
+        g_static_mutex_lock(&imstatus_mutex);
+        if (d->im_pidgin && saved_pidgin_status != NULL) {
+                pidgin_set_status(saved_pidgin_status);
+                g_free(saved_pidgin_status);
+                saved_pidgin_status = NULL;
+        }
+        if (d->im_gajim && saved_gajim_status != NULL) {
+                gajim_set_status(saved_gajim_status);
+                g_free(saved_gajim_status);
+                saved_gajim_status = NULL;
+        }
+        if (d->im_gossip && saved_gossip_status != NULL) {
+                gossip_set_status(saved_gossip_status);
+                g_free(saved_gossip_status);
+                saved_gossip_status = NULL;
+        }
+        if (d->im_telepathy && saved_telepathy_status != NULL) {
+                telepathy_set_status(saved_telepathy_status);
+                g_free(saved_telepathy_status);
+                saved_telepathy_status = NULL;
+        }
+        g_slice_free(ImStatusData, d);
+        g_static_mutex_unlock(&imstatus_mutex);
+        return NULL;
+}
+
+void
+im_set_status(const lastfm_usercfg *cfg, lastfm_track *track)
+{
+        g_return_if_fail(cfg != NULL && track != NULL);
+        ImStatusData *data = g_slice_new(ImStatusData);
+        data->im_pidgin = cfg->im_pidgin;
+        data->im_gossip = cfg->im_gossip;
+        data->im_telepathy = cfg->im_telepathy;
+        data->im_gajim = cfg->im_gajim;
+        data->msg = g_string_new(cfg->imstatus_template);
+        data->track = lastfm_track_ref(track);
+        g_thread_create(im_set_status_thread,data,FALSE,NULL);
+
 }
 
 void
 im_clear_status(const lastfm_usercfg *cfg)
 {
         g_return_if_fail(cfg != NULL);
-        if (cfg->im_pidgin && saved_pidgin_status != NULL) {
-                pidgin_set_status(saved_pidgin_status);
-                g_free(saved_pidgin_status);
-                saved_pidgin_status = NULL;
-        }
-        if (cfg->im_gajim && saved_gajim_status != NULL) {
-                gajim_set_status(saved_gajim_status);
-                g_free(saved_gajim_status);
-                saved_gajim_status = NULL;
-        }
-        if (cfg->im_gossip && saved_gossip_status != NULL) {
-                gossip_set_status(saved_gossip_status);
-                g_free(saved_gossip_status);
-                saved_gossip_status = NULL;
-        }
-        if (cfg->im_telepathy && saved_telepathy_status != NULL) {
-                telepathy_set_status(saved_telepathy_status);
-                g_free(saved_telepathy_status);
-                saved_telepathy_status = NULL;
-        }
+        ImStatusData *data = g_slice_new0(ImStatusData);
+        data->im_pidgin = cfg->im_pidgin;
+        data->im_gossip = cfg->im_gossip;
+        data->im_telepathy = cfg->im_telepathy;
+        data->im_gajim = cfg->im_gajim;
+        g_thread_create(im_clear_status_thread,data,FALSE,NULL);
 }

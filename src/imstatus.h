@@ -15,12 +15,12 @@
 
 #ifdef SET_IM_STATUS
 
-void im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track);
+void im_set_status(const lastfm_usercfg *cfg, lastfm_track *track);
 void im_clear_status(const lastfm_usercfg *cfg);
 
 #else
 
-void im_set_status(const lastfm_usercfg *cfg, const lastfm_track *track) { }
+void im_set_status(const lastfm_usercfg *cfg, lastfm_track *track) { }
 void im_clear_status(const lastfm_usercfg *cfg) { }
 
 #endif /* SET_IM_STATUS */
