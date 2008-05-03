@@ -19,8 +19,8 @@
 #define TOOLTIP_DEFAULT_STRING _(" Stopped ")
 #define TOOLTIP_FORMAT_STRING  _(" Now playing: \n %s \n   by  %s ")
 
-#define NOTIFICATION_TEXT_BY _("by")
-#define NOTIFICATION_TEXT_FROM _("from")
+#define NOTIFICATION_BODY_NO_ALBUM _(" by <i>%s</i>")
+#define NOTIFICATION_BODY_WITH_ALBUM _(" by <i>%s</i>\n from <i>%s</i>")
 
 #define SHOW_APP_ITEM_STRING _("Show main window")
 #define SETTINGS_ITEM_STRING _("Settings...")
@@ -521,17 +521,13 @@ static void
 show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 {
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
-        gchar *summary_markup_fmt_string = NULL;
-        gchar *body_markup_fmt_string = NULL;
         gchar *notification_summary = NULL;
         gchar *notification_body = NULL;
         gchar *stripped_album = NULL;
 
         /* Set summary text (title) */
-        summary_markup_fmt_string = g_strdup ("<span>%s</span>");
         notification_summary =
-                g_markup_printf_escaped (summary_markup_fmt_string,
-                                         track->title);
+                g_markup_printf_escaped ("<span>%s</span>", track->title);
 
         /* Strip the album text to see whether it's set or not */
         if (track->album != NULL) {
@@ -541,20 +537,13 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         /* Set body text (artist and, perhaps, the album) */
         if ((stripped_album == NULL) || g_str_equal (stripped_album, "")) {
                 /* No album */
-                body_markup_fmt_string =
-                        g_strconcat (" ", NOTIFICATION_TEXT_BY, " <i>%s</i>", NULL);
-
                 notification_body =
-                        g_markup_printf_escaped (body_markup_fmt_string,
+                        g_markup_printf_escaped (NOTIFICATION_BODY_NO_ALBUM,
                                                  track->artist);
         } else {
                 /* Both artist and album */
-                body_markup_fmt_string =
-                        g_strconcat (" ", NOTIFICATION_TEXT_BY, " <i>%s</i>\n ",
-                                     NOTIFICATION_TEXT_FROM, " <i>%s</i>", NULL);
-
                 notification_body =
-                        g_markup_printf_escaped (body_markup_fmt_string,
+                        g_markup_printf_escaped (NOTIFICATION_BODY_WITH_ALBUM,
                                                  track->artist,
                                                  track->album);
         }
@@ -586,8 +575,6 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         /* Show notification */
         notify_notification_show (priv->notification, NULL);
 
-        g_free (summary_markup_fmt_string);
-        g_free (body_markup_fmt_string);
         g_free (notification_summary);
         g_free (notification_body);
         if (stripped_album != NULL) {
