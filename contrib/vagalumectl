@@ -23,11 +23,6 @@ set -e
 
 PROGNAME="$(basename $0)"
 
-# Delay to be used in the 'ugly' sleep after starting Vagalume
-# when it's not running yet. It helps (but not ensure) the command
-# to be finally executed after Vagalume has started.
-STARTUP_DELAY=25
-
 # D-Bus basic parameters
 DBUS_SERVICE='com.igalia.vagalume'
 DBUS_OBJECT=/com/igalia/vagalume
@@ -155,24 +150,18 @@ fi
 
 # Check whether vagalume is or not already running
 if ! pidof vagalume > /dev/null; then
-  if [ ${COMMAND} != "close" ] && [ ${COMMAND} != "start" ]; then
-      echo "Vagalume not running: starting..."
-      dbus-send --type=method_call \
-          --dest=${DBUS_SERVICE} ${DBUS_OBJECT} ${DBUS_IFACE}.${DBUS_METHOD_TOPAPP}
-      sleep ${STARTUP_DELAY}
-  elif [ ${COMMAND} == "close" ]; then
-      # Exit cleanly without executing the 'close' command when Vagalume is not running
-      echo "Vagalume not running: no need to close it";
-      exit 0;
-  fi
+    if [ ${COMMAND} == "close" ]; then
+        # Exit cleanly without executing the 'close' command when Vagalume is not running
+	echo "Vagalume not running: no need to close it";
+	exit 0;
+    fi
 elif [ ${COMMAND} == "start" ]; then
     echo "Vagalume already running.";
     exit 0;
 fi
 
 # At last, execute the command
-
-dbus-send --type=method_call \
-          --dest=${DBUS_SERVICE} ${DBUS_OBJECT} ${DBUS_IFACE}.${DBUS_METHOD_CALL} ${DBUS_METHOD_PARAMS}
+dbus-send --print-reply --type=method_call \
+          --dest=${DBUS_SERVICE} ${DBUS_OBJECT} ${DBUS_IFACE}.${DBUS_METHOD_CALL} ${DBUS_METHOD_PARAMS} > /dev/null
 
 echo "Command '"$COMMAND"' successfully executed"
