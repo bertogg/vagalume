@@ -576,12 +576,10 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 
         /* Set album image as icon if specified */
         if (track->image_url != NULL) {
-                GdkPixbuf *icon =
-                        get_album_cover_icon (g_strdup (track->image_url));
-
+                GdkPixbuf *icon = get_album_cover_icon (track->image_url);
                 if (icon != NULL) {
-                        notify_notification_set_icon_from_pixbuf (priv->notification,
-                                                                  icon);
+                        notify_notification_set_icon_from_pixbuf (
+                                priv->notification, icon);
                 }
         }
 
