@@ -155,14 +155,12 @@ mainwin_toggle_visibility(lastfm_mainwin *w)
                 gtk_widget_hide (GTK_WIDGET(w->window));
                 g_debug ("Hiding the window...");
         } else {
-                if (w->is_iconified) {
-                        /* In some buggy window managers we have to
-                         * call iconify() first for this to work */
-                        gtk_window_iconify(w->window);
-                        gtk_window_deiconify(w->window);
-                }
+                /* Call iconify() and deiconify() to move the window
+                 * between desktops. Needed in some window managers */
+                gtk_window_iconify(w->window);
+                gtk_window_deiconify(w->window);
 #ifndef MAEMO
-                /* Move the window to its right place (not needed for maemo */
+                /* Move the window to its right place (not needed for maemo) */
                 gtk_window_move (w->window, w->x_pos, w->y_pos);
 #endif
                 gtk_widget_show (GTK_WIDGET(w->window));
@@ -447,8 +445,6 @@ window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
 {
         GdkWindowState st = event->new_window_state;
         win->is_fullscreen = (st & GDK_WINDOW_STATE_FULLSCREEN);
-        win->is_iconified =
-                st & (GDK_WINDOW_STATE_ICONIFIED);
         win->is_hidden =
                 st & (GDK_WINDOW_STATE_ICONIFIED|GDK_WINDOW_STATE_WITHDRAWN);
         if (!win->is_hidden) {

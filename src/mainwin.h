@@ -25,7 +25,6 @@ typedef struct {
         GtkProgressBar *progressbar;
         GString *progressbar_text;
         gboolean is_fullscreen;
-        gboolean is_iconified;
         gboolean is_hidden;
         gboolean showing_msg;
         guint lastmsg_id;
