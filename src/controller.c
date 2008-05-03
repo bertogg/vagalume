@@ -1539,3 +1539,13 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         lastfm_audio_clear();
         lastfm_dbus_close();
 }
+
+void
+controller_close_mainwin(void)
+{
+        if (usercfg->close_to_systray) {
+                controller_toggle_mainwin_visibility();
+        } else {
+                controller_quit_app();
+        }
+}

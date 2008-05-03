@@ -532,7 +532,7 @@ close_app(GtkWidget *widget, gpointer data)
 static gboolean
 delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-        controller_quit_app();
+        controller_close_mainwin();
         return TRUE;
 }
 

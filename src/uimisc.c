@@ -63,6 +63,7 @@ typedef struct {
 #endif
 #ifdef HAVE_TRAY_ICON
         GtkWidget *shownotifications;
+        GtkWidget *closetosystray;
 #endif
 } usercfgwin;
 
@@ -401,28 +402,36 @@ usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
 }
 
 static void
-usercfg_add_notifications_settings(usercfgwin *win, lastfm_usercfg *cfg)
+usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
 {
 #ifdef HAVE_TRAY_ICON
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
         GtkWidget *shownotificationslabel;
+        GtkWidget *closetosystraylabel;
 
         /* Create widgets */
-        table = GTK_TABLE(gtk_table_new(1, 2, TRUE));
+        table = GTK_TABLE(gtk_table_new(2, 2, TRUE));
         shownotificationslabel =
-                gtk_label_new(_("Show notifications on systray:"));
+                gtk_label_new(_("Show playback notifications:"));
+        closetosystraylabel =
+                gtk_label_new(_("Close to systray:"));
         win->shownotifications = gtk_check_button_new();
+        win->closetosystray = gtk_check_button_new();
 
         /* Set initial values */
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->shownotifications),
                                      cfg->show_notifications);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->closetosystray),
+                                     cfg->close_to_systray);
 
         /* Pack widgets */
         gtk_table_attach(table, shownotificationslabel, 0, 1, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, win->shownotifications, 1, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, closetosystraylabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, win->closetosystray, 1, 2, 1, 2, 0, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
-                                 gtk_label_new(_("Notifications")));
+                                 gtk_label_new(_("Misc")));
 #endif
 }
 
@@ -444,7 +453,7 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
         usercfg_add_connection_settings(&win, *cfg);
         usercfg_add_download_settings(&win, *cfg);
         usercfg_add_imstatus_settings(&win, *cfg);
-        usercfg_add_notifications_settings(&win, *cfg);
+        usercfg_add_misc_settings(&win, *cfg);
 
         gtk_box_pack_start(GTK_BOX((win.dialog)->vbox), GTK_WIDGET(win.nb),
                            FALSE, FALSE, 10);
@@ -484,6 +493,8 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
 #ifdef HAVE_TRAY_ICON
                 (*cfg)->show_notifications = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.shownotifications));
+                (*cfg)->close_to_systray = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(win.closetosystray));
 #endif
                 changed = TRUE;
         } else if (origcfg == NULL) {

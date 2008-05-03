@@ -128,6 +128,7 @@ lastfm_usercfg_new(void)
         cfg->im_gossip = FALSE;
         cfg->im_telepathy = FALSE;
         cfg->show_notifications = FALSE;
+        cfg->close_to_systray = FALSE;
         return cfg;
 }
 
@@ -198,6 +199,8 @@ read_usercfg(void)
                         cfg->im_telepathy = !strcmp(val, "1");
                 } else if ((val = cfg_get_val(buf, "show_notifications")) != NULL) {
                         cfg->show_notifications = !strcmp(val, "1");
+                } else if ((val = cfg_get_val(buf, "close_to_systray")) != NULL) {
+                        cfg->close_to_systray = !strcmp(val, "1");
                 }
                 g_free(val);
         }
@@ -234,7 +237,8 @@ write_usercfg(lastfm_usercfg *cfg)
                     "im_gajim=\"%d\"\n"
                     "im_gossip=\"%d\"\n"
                     "im_telepathy=\"%d\"\n"
-                    "show_notifications=\"%d\"\n",
+                    "show_notifications=\"%d\"\n"
+                    "close_to_systray=\"%d\"\n",
                     cfg->username, base64pw, cfg->http_proxy,
                     !!cfg->use_proxy, !!cfg->enable_scrobbling,
                     !!cfg->discovery_mode,
@@ -244,7 +248,8 @@ write_usercfg(lastfm_usercfg *cfg)
                     !!cfg->im_gajim,
                     !!cfg->im_gossip,
                     !!cfg->im_telepathy,
-                    !!cfg->show_notifications) <= 0) {
+                    !!cfg->show_notifications,
+                    !!cfg->close_to_systray) <= 0) {
                 g_warning("Error writing to config file");
                 retval = FALSE;
         }

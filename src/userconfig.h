@@ -26,6 +26,7 @@ typedef struct {
         gboolean im_gossip;
         gboolean im_telepathy;
         gboolean show_notifications;
+        gboolean close_to_systray;
 } lastfm_usercfg;
 
 lastfm_usercfg *lastfm_usercfg_new(void);

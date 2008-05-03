@@ -45,5 +45,6 @@ int controller_increase_volume(int inc);
 void controller_set_volume(int vol);
 void controller_show_cover(void);
 lastfm_track *controller_get_current_track (void);
+void controller_close_mainwin(void);
 
 #endif
