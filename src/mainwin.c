@@ -149,7 +149,7 @@ mainwin_toggle_visibility(lastfm_mainwin *w)
 {
         g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
         if (!w->is_hidden) {
-                /* Save position before hidding the window */
+                /* Save position before hiding the window */
                 gtk_window_get_position(w->window, &(w->x_pos), &(w->y_pos));
 
                 gtk_widget_hide (GTK_WIDGET(w->window));

@@ -152,7 +152,7 @@ controller_confirm_dialog(const char *text)
 
 #ifndef MAEMO
         if (!mainwin->is_hidden) {
-	        parent = mainwin->window;
+                parent = mainwin->window;
         }
 #endif
         return ui_confirm_dialog(parent, text);
@@ -495,9 +495,10 @@ apply_usercfg(void)
                 im_set_status(usercfg, nowplaying);
         }
 #ifdef HAVE_TRAY_ICON
-	if (tray_icon) {
-	  vagalume_tray_icon_show_notifications (tray_icon, usercfg->show_notifications);
-	}
+        if (tray_icon != NULL) {
+                vagalume_tray_icon_show_notifications (
+                        tray_icon, usercfg->show_notifications);
+        }
 #endif
 }
 
@@ -523,7 +524,7 @@ controller_open_usercfg(void)
         parent = mainwin->window;
 #else
         if (!mainwin->is_hidden) {
-        	parent = mainwin->window;
+                parent = mainwin->window;
         }
 #endif
         changed = ui_usercfg_dialog(parent, &usercfg);
@@ -799,9 +800,9 @@ controller_start_playing_cb(gpointer userdata)
         lastfm_dbus_notify_playback(track);
 
 #ifdef HAVE_TRAY_ICON
-	if (tray_icon) {
-	  vagalume_tray_icon_notify_playback (tray_icon, track);
-	}
+        if (tray_icon) {
+                vagalume_tray_icon_notify_playback (tray_icon, track);
+        }
 #endif
 
         if (track->custom_pls) {
@@ -866,9 +867,9 @@ controller_stop_playing(void)
         lastfm_dbus_notify_playback(NULL);
 
 #ifdef HAVE_TRAY_ICON
-	if (tray_icon) {
-	  vagalume_tray_icon_notify_playback (tray_icon, NULL);
-	}
+        if (tray_icon) {
+                vagalume_tray_icon_notify_playback (tray_icon, NULL);
+        }
 #endif
 }
 
@@ -941,7 +942,7 @@ controller_download_track(void)
 void
 controller_set_stop_after(gboolean stop)
 {
-	stopping_after_track = stop;
+        stopping_after_track = stop;
 }
 
 /**
@@ -1134,7 +1135,7 @@ controller_recomm_track(void)
 #else
         if (!mainwin->is_hidden) {
                 parent = mainwin->window;
-	}
+        }
 #endif
         accept = recommwin_run(parent, &rcpt, &body, friends,
                                track, &type);
@@ -1545,7 +1546,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         /* Init Freedesktop tray icon */
         tray_icon = vagalume_tray_icon_create ();
         vagalume_tray_icon_notify_playback (tray_icon, NULL);
-	vagalume_tray_icon_show_notifications (tray_icon, usercfg->show_notifications);
+        vagalume_tray_icon_show_notifications (tray_icon, usercfg->show_notifications);
 #endif
 
         mainwin_run_app();
