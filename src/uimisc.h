@@ -30,7 +30,7 @@ char *ui_input_dialog(GtkWindow *parent, const char *title,
 char *ui_input_dialog_with_list(GtkWindow *parent, const char *title,
                                 const char *text, const GList *elems,
                                 const char *value);
-gboolean ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg);
+gboolean ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg);
 gboolean ui_confirm_dialog(GtkWindow *parent, const char *text);
 void flush_ui_events(void);
 

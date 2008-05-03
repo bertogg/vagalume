@@ -512,7 +512,7 @@ controller_open_usercfg(void)
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
 
-        changed = ui_usercfg_dialog(mainwin_get_window(mainwin, FALSE),
+        changed = ui_usercfg_window(mainwin_get_window(mainwin, FALSE),
                                     &usercfg);
 
         if (changed && usercfg != NULL) {

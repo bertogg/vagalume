@@ -53,6 +53,20 @@ typedef struct {
 } tagwin;
 
 typedef struct {
+        GtkDialog *dialog;
+        GtkNotebook *nb;
+        GtkEntry *user, *pw, *proxy, *dlentry;
+        GtkWidget *dlbutton, *scrobble, *discovery, *useproxy;
+#ifdef SET_IM_STATUS
+        GtkEntry *imtemplateentry;
+        GtkWidget *impidgin, *imgajim, *imgossip, *imtelepathy;
+#endif
+#ifdef HAVE_TRAY_ICON
+        GtkWidget *shownotifications;
+#endif
+} usercfgwin;
+
+typedef struct {
         tagwin *w;
         request_type type;
 } get_track_tags_data;
@@ -224,192 +238,252 @@ change_dir_selected(GtkWidget *widget, gpointer data)
         }
 }
 
-gboolean
-ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
+static void
+usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
 {
-        g_return_val_if_fail(cfg != NULL, FALSE);
-        change_dir_selected_data *windata;
-        GtkDialog *dialog;
+        g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
+        GtkTable *table;
         GtkWidget *userlabel, *pwlabel, *scroblabel, *discovlabel;
-        GtkWidget *useproxylabel, *proxylabel;
-        GtkWidget *dllabel, *dlbutton;
-        GtkEntry *user, *pw, *proxy, *dlentry, *imtemplateentry;
-        GtkWidget *scrobble, *discovery, *useproxy;
-        GtkWidget *imtemplatelabel;
-        GtkWidget *impidginlabel, *imgajimlabel, *imgossiplabel;
-        GtkWidget *imtelepathylabel;
-        GtkWidget *impidgin, *imgajim, *imgossip, *imtelepathy;
-        GtkTable *acctable, *conntable, *dltable, *imtable;
-#ifdef HAVE_TRAY_ICON
-        GtkWidget *shownotificationslabel, *shownotifications;
-        GtkTable *trayicontable;
-#endif
-        GtkNotebook *nb;
-        gboolean changed = FALSE;
-        const lastfm_usercfg *origcfg = *cfg;
-        if (*cfg == NULL) *cfg = lastfm_usercfg_new();
 
-        dialog = ui_base_dialog(parent, _("User settings"));
+        /* Create widgets */
+        table = GTK_TABLE(gtk_table_new(4, 2, TRUE));
         userlabel = gtk_label_new(_("Username:"));
         pwlabel = gtk_label_new(_("Password:"));
         scroblabel = gtk_label_new(_("Enable scrobbling:"));
         discovlabel = gtk_label_new(_("Discovery mode:"));
+        win->user = GTK_ENTRY(gtk_entry_new());
+        win->pw = GTK_ENTRY(gtk_entry_new());
+        win->scrobble = gtk_check_button_new();
+        win->discovery = gtk_check_button_new();
+
+        /* Set widget properties */
+#ifdef MAEMO
+        /* This disables the automatic capitalization */
+        hildon_gtk_entry_set_input_mode(win->pw, HILDON_GTK_INPUT_MODE_FULL);
+#endif
+        gtk_entry_set_visibility(win->pw, FALSE);
+        gtk_entry_set_activates_default(win->user, TRUE);
+        gtk_entry_set_activates_default(win->pw, TRUE);
+
+        /* Set initial values */
+        gtk_entry_set_text(win->user, cfg->username);
+        gtk_entry_set_text(win->pw, cfg->password);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->scrobble),
+                                     cfg->enable_scrobbling);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->discovery),
+                                     cfg->discovery_mode);
+
+        /* Pack widgets */
+        gtk_table_attach(table, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, pwlabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, scroblabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, discovlabel, 0, 1, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(table, GTK_WIDGET(win->user), 1, 2, 0, 1,
+                         GTK_EXPAND | GTK_FILL, 0, 5, 5);
+        gtk_table_attach(table, GTK_WIDGET(win->pw), 1, 2, 1, 2,
+                         GTK_EXPAND | GTK_FILL, 0, 5, 5);
+        gtk_table_attach(table, win->scrobble, 1, 2, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, win->discovery, 1, 2, 3, 4, 0, 0, 5, 5);
+        gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
+                                 gtk_label_new(_("Account")));
+}
+
+static void
+usercfg_add_connection_settings(usercfgwin *win, lastfm_usercfg *cfg)
+{
+        g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
+        GtkTable *table;
+        GtkWidget *useproxylabel, *proxylabel;
+
+        /* Create widgets */
+        table = GTK_TABLE(gtk_table_new(2, 2, FALSE));
         useproxylabel = gtk_label_new(_("Use HTTP proxy"));
         proxylabel = gtk_label_new(_("Proxy address:"));
+        win->proxy = GTK_ENTRY(gtk_entry_new());
+        win->useproxy = gtk_check_button_new();
+
+        /* Set widget properties */
+        gtk_entry_set_activates_default(win->proxy, TRUE);
+
+        /* Set initial values */
+        gtk_entry_set_text(win->proxy, cfg->http_proxy);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->useproxy),
+                                     cfg->use_proxy);
+
+        /* Pack widgets */
+        gtk_table_attach(table, useproxylabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, proxylabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, win->useproxy, 1, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, GTK_WIDGET(win->proxy), 1, 2, 1, 2,
+                         GTK_EXPAND | GTK_FILL, 0, 5, 5);
+        gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
+                                 gtk_label_new(_("Connection")));
+}
+
+static void
+usercfg_add_download_settings(usercfgwin *win, lastfm_usercfg *cfg)
+{
+        g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
+        GtkTable *table;
+        GtkWidget *dllabel;
+
+        /* Create widgets */
+        table = GTK_TABLE(gtk_table_new(2, 2, FALSE));
         dllabel = gtk_label_new(_("Select download directory"));
-        imtemplatelabel = gtk_label_new(_("Status message template:"));
+        win->dlbutton = compat_gtk_button_new();
+        win->dlentry = GTK_ENTRY(gtk_entry_new());
+
+        /* Set widget properties */
+        gtk_button_set_image(GTK_BUTTON(win->dlbutton),
+                             gtk_image_new_from_stock(GTK_STOCK_DIRECTORY,
+                                                      GTK_ICON_SIZE_BUTTON));
+
+        /* Set initial values */
+        gtk_entry_set_text(win->dlentry, cfg->download_dir);
+
+        /* Pack widgets */
+        gtk_table_attach(table, dllabel, 0, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, GTK_WIDGET(win->dlentry), 0, 1, 1, 2,
+                         GTK_EXPAND | GTK_FILL, 0, 5, 5);
+        gtk_table_attach(table, win->dlbutton, 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
+                                 gtk_label_new(_("Download")));
+}
+
+static void
+usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
+{
+#ifdef SET_IM_STATUS
+        g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
+        GtkTable *table;
+        GtkWidget *impidginlabel, *imgajimlabel, *imgossiplabel;
+        GtkWidget *imtemplatelabel, *imtelepathylabel;
+
+        /* Create widgets */
+        table = GTK_TABLE(gtk_table_new(5, 2, TRUE));
+        imtemplatelabel = gtk_label_new(_("IM message template:"));
         impidginlabel = gtk_label_new(_("Update Pidgin status:"));
         imgajimlabel = gtk_label_new(_("Update Gajim status:"));
         imgossiplabel = gtk_label_new(_("Update Gossip status:"));
         imtelepathylabel = gtk_label_new(_("Update Telepathy status:"));
+        win->imtemplateentry = GTK_ENTRY(gtk_entry_new());
+        win->impidgin = gtk_check_button_new();
+        win->imgajim = gtk_check_button_new();
+        win->imgossip = gtk_check_button_new();
+        win->imtelepathy = gtk_check_button_new();
 
-#ifdef HAVE_TRAY_ICON
-        shownotificationslabel = gtk_label_new(_("Show notifications:"));
-#endif
-        user = GTK_ENTRY(gtk_entry_new());
-        pw = GTK_ENTRY(gtk_entry_new());
-        scrobble = gtk_check_button_new();
-        discovery = gtk_check_button_new();
-#ifdef MAEMO
-        /* This disables the automatic capitalization */
-        hildon_gtk_entry_set_input_mode(pw, HILDON_GTK_INPUT_MODE_FULL);
-#endif
-        gtk_entry_set_visibility(pw, FALSE);
-        proxy = GTK_ENTRY(gtk_entry_new());
-        useproxy = gtk_check_button_new();
-        dlentry = GTK_ENTRY(gtk_entry_new());
-        dlbutton = compat_gtk_button_new();
-        imtemplateentry = GTK_ENTRY(gtk_entry_new());
-        impidgin = gtk_check_button_new();
-        imgajim = gtk_check_button_new();
-        imgossip = gtk_check_button_new();
-        imtelepathy = gtk_check_button_new();
-#ifdef HAVE_TRAY_ICON
-        shownotifications = gtk_check_button_new();
-#endif
-        gtk_button_set_image(GTK_BUTTON(dlbutton),
-                             gtk_image_new_from_stock(GTK_STOCK_DIRECTORY,
-                                                      GTK_ICON_SIZE_BUTTON));
-        gtk_entry_set_activates_default(user, TRUE);
-        gtk_entry_set_activates_default(pw, TRUE);
-        gtk_entry_set_activates_default(proxy, TRUE);
-        gtk_entry_set_text(user, (*cfg)->username);
-        gtk_entry_set_text(pw, (*cfg)->password);
-        gtk_entry_set_text(proxy, (*cfg)->http_proxy);
-        gtk_entry_set_text(dlentry, (*cfg)->download_dir);
-        gtk_entry_set_text(imtemplateentry, (*cfg)->imstatus_template);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scrobble),
-                                     (*cfg)->enable_scrobbling);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(discovery),
-                                     (*cfg)->discovery_mode);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(useproxy),
-                                     (*cfg)->use_proxy);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(impidgin),
-                                     (*cfg)->im_pidgin);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(imgajim),
-                                     (*cfg)->im_gajim);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(imgossip),
-                                     (*cfg)->im_gossip);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(imtelepathy),
-                                     (*cfg)->im_telepathy);
-#ifdef HAVE_TRAY_ICON
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(shownotifications),
-                                     (*cfg)->show_notifications);
-#endif
+        /* Set initial values */
+        gtk_entry_set_text(win->imtemplateentry, cfg->imstatus_template);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->impidgin),
+                                     cfg->im_pidgin);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->imgajim),
+                                     cfg->im_gajim);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->imgossip),
+                                     cfg->im_gossip);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->imtelepathy),
+                                     cfg->im_telepathy);
 
-        acctable = GTK_TABLE(gtk_table_new(4, 2, FALSE));
-        gtk_table_attach(acctable, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(acctable, pwlabel, 0, 1, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(acctable, scroblabel, 0, 1, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(acctable, discovlabel, 0, 1, 3, 4, 0, 0, 5, 5);
-        gtk_table_attach(acctable, GTK_WIDGET(user), 1, 2, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(acctable, GTK_WIDGET(pw), 1, 2, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(acctable, scrobble, 1, 2, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(acctable, discovery, 1, 2, 3, 4, 0, 0, 5, 5);
-
-        conntable = GTK_TABLE(gtk_table_new(2, 2, FALSE));
-        gtk_table_attach(conntable, useproxylabel, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(conntable, proxylabel, 0, 1, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(conntable, useproxy, 1, 2, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(conntable, GTK_WIDGET(proxy), 1, 2, 1, 2, 0, 0, 5, 5);
-
-        dltable = GTK_TABLE(gtk_table_new(2, 2, FALSE));
-        gtk_table_attach(dltable, dllabel, 0, 2, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(dltable, GTK_WIDGET(dlentry), 0, 1, 1, 2,
+        /* Pack widgets */
+        gtk_table_attach(table, imtemplatelabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, impidginlabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, imgajimlabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, imgossiplabel, 0, 1, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(table, imtelepathylabel, 0, 1, 4, 5, 0, 0, 5, 5);
+        gtk_table_attach(table, GTK_WIDGET(win->imtemplateentry), 1, 2, 0, 1,
                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
-        gtk_table_attach(dltable, dlbutton, 1, 2, 1, 2, 0, 0, 5, 5);
-
-        imtable = GTK_TABLE(gtk_table_new(5, 2, FALSE));
-        gtk_table_attach(imtable, imtemplatelabel, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(imtable, impidginlabel, 0, 1, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgajimlabel, 0, 1, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgossiplabel, 0, 1, 3, 4, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imtelepathylabel, 0, 1, 4, 5, 0, 0, 5, 5);
-        gtk_table_attach(imtable, GTK_WIDGET(imtemplateentry), 1, 2, 0, 1,
-                         0, 0, 5, 5);
-        gtk_table_attach(imtable, impidgin, 1, 2, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgajim, 1, 2, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imgossip, 1, 2, 3, 4, 0, 0, 5, 5);
-        gtk_table_attach(imtable, imtelepathy, 1, 2, 4, 5, 0, 0, 5, 5);
-#ifdef HAVE_TRAY_ICON
-        trayicontable = GTK_TABLE(gtk_table_new(1, 2, TRUE));
-        gtk_table_attach(trayicontable, shownotificationslabel, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(trayicontable, shownotifications, 1, 2, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, win->impidgin, 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, win->imgajim, 1, 2, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, win->imgossip, 1, 2, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(table, win->imtelepathy, 1, 2, 4, 5, 0, 0, 5, 5);
+        gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
+                                 gtk_label_new(_("Update IM status")));
 #endif
+}
 
-        nb = GTK_NOTEBOOK(gtk_notebook_new());
-        gtk_notebook_append_page(nb, GTK_WIDGET(acctable),
-                                 gtk_label_new(_("Account")));
-        gtk_notebook_append_page(nb, GTK_WIDGET(conntable),
-                                 gtk_label_new(_("Connection")));
-        gtk_notebook_append_page(nb, GTK_WIDGET(dltable),
-                                 gtk_label_new(_("Download")));
-#ifdef SET_IM_STATUS
-        gtk_notebook_append_page(nb, GTK_WIDGET(imtable),
-                                 gtk_label_new(_("IM Status")));
-#endif
-
+static void
+usercfg_add_notifications_settings(usercfgwin *win, lastfm_usercfg *cfg)
+{
 #ifdef HAVE_TRAY_ICON
-        gtk_notebook_append_page(nb, GTK_WIDGET(trayicontable),
+        g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
+        GtkTable *table;
+        GtkWidget *shownotificationslabel;
+
+        /* Create widgets */
+        table = GTK_TABLE(gtk_table_new(1, 2, TRUE));
+        shownotificationslabel =
+                gtk_label_new(_("Show notifications on systray:"));
+        win->shownotifications = gtk_check_button_new();
+
+        /* Set initial values */
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->shownotifications),
+                                     cfg->show_notifications);
+
+        /* Pack widgets */
+        gtk_table_attach(table, shownotificationslabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, win->shownotifications, 1, 2, 0, 1, 0, 0, 5, 5);
+        gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Notifications")));
 #endif
+}
 
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(nb),
+gboolean
+ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
+{
+        g_return_val_if_fail(cfg != NULL, FALSE);
+        change_dir_selected_data *windata;
+        gboolean changed = FALSE;
+        usercfgwin win;
+        const lastfm_usercfg *origcfg = *cfg;
+
+        if (*cfg == NULL) *cfg = lastfm_usercfg_new();
+        memset (&win, 0, sizeof(win));
+        win.dialog = ui_base_dialog(parent, _("User settings"));
+        win.nb = GTK_NOTEBOOK(gtk_notebook_new());
+
+        usercfg_add_account_settings(&win, *cfg);
+        usercfg_add_connection_settings(&win, *cfg);
+        usercfg_add_download_settings(&win, *cfg);
+        usercfg_add_imstatus_settings(&win, *cfg);
+        usercfg_add_notifications_settings(&win, *cfg);
+
+        gtk_box_pack_start(GTK_BOX((win.dialog)->vbox), GTK_WIDGET(win.nb),
                            FALSE, FALSE, 10);
 
         windata = g_slice_new(change_dir_selected_data);
-        windata->win = GTK_WINDOW(dialog);
-        windata->entry = GTK_ENTRY(dlentry);
+        windata->win = GTK_WINDOW(win.dialog);
+        windata->entry = GTK_ENTRY(win.dlentry);
 
-        g_signal_connect(G_OBJECT(dlbutton), "clicked",
+        g_signal_connect(G_OBJECT(win.dlbutton), "clicked",
                          G_CALLBACK(change_dir_selected), windata);
 
-        gtk_widget_show_all(GTK_WIDGET(dialog));
-        if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
-                lastfm_usercfg_set_username(*cfg, gtk_entry_get_text(user));
-                lastfm_usercfg_set_password(*cfg, gtk_entry_get_text(pw));
-                lastfm_usercfg_set_http_proxy(*cfg, gtk_entry_get_text(proxy));
+        gtk_widget_show_all(GTK_WIDGET(win.dialog));
+        if (gtk_dialog_run(win.dialog) == GTK_RESPONSE_ACCEPT) {
+                lastfm_usercfg_set_username(*cfg, gtk_entry_get_text(win.user));
+                lastfm_usercfg_set_password(*cfg, gtk_entry_get_text(win.pw));
+                lastfm_usercfg_set_http_proxy(*cfg, gtk_entry_get_text(win.proxy));
                 lastfm_usercfg_set_download_dir(*cfg,
-                                                gtk_entry_get_text(dlentry));
-                lastfm_usercfg_set_imstatus_template(*cfg,
-                                                     gtk_entry_get_text(imtemplateentry));
+                                                gtk_entry_get_text(win.dlentry));
                 (*cfg)->enable_scrobbling = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(scrobble));
+                        GTK_TOGGLE_BUTTON(win.scrobble));
                 (*cfg)->discovery_mode = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(discovery));
+                        GTK_TOGGLE_BUTTON(win.discovery));
                 (*cfg)->use_proxy = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(useproxy));
+                        GTK_TOGGLE_BUTTON(win.useproxy));
+#ifdef SET_IM_STATUS
+                lastfm_usercfg_set_imstatus_template(*cfg,
+                                                     gtk_entry_get_text(win.imtemplateentry));
                 (*cfg)->im_pidgin = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(impidgin));
+                        GTK_TOGGLE_BUTTON(win.impidgin));
                 (*cfg)->im_gajim = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(imgajim));
+                        GTK_TOGGLE_BUTTON(win.imgajim));
                 (*cfg)->im_gossip = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(imgossip));
+                        GTK_TOGGLE_BUTTON(win.imgossip));
                 (*cfg)->im_telepathy = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(imtelepathy));
+                        GTK_TOGGLE_BUTTON(win.imtelepathy));
+#endif
 #ifdef HAVE_TRAY_ICON
                 (*cfg)->show_notifications = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(shownotifications));
+                        GTK_TOGGLE_BUTTON(win.shownotifications));
 #endif
                 changed = TRUE;
         } else if (origcfg == NULL) {
@@ -418,7 +492,7 @@ ui_usercfg_dialog(GtkWindow *parent, lastfm_usercfg **cfg)
                 lastfm_usercfg_destroy(*cfg);
                 *cfg = NULL;
         }
-        gtk_widget_destroy(GTK_WIDGET(dialog));
+        gtk_widget_destroy(GTK_WIDGET(win.dialog));
         g_slice_free(change_dir_selected_data, windata);
         return changed;
 }
