@@ -156,7 +156,10 @@ mainwin_toggle_visibility(lastfm_mainwin *w)
                 g_debug ("Hiding the window...");
         } else {
                 if (w->is_iconified) {
-                        gtk_window_deiconify(GTK_WINDOW(w->window));
+                        /* In some buggy window managers we have to
+                         * call iconify() first for this to work */
+                        gtk_window_iconify(w->window);
+                        gtk_window_deiconify(w->window);
                 }
 #ifndef MAEMO
                 /* Move the window to its right place (not needed for maemo */
