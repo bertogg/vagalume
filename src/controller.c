@@ -96,7 +96,7 @@ void
 controller_show_error(const char *text)
 {
         g_return_if_fail(mainwin != NULL);
-        ui_error_dialog(mainwin->window, text);
+        ui_error_dialog(mainwin_get_window(mainwin, TRUE), text);
 }
 
 /**
@@ -108,7 +108,7 @@ void
 controller_show_warning(const char *text)
 {
         g_return_if_fail(mainwin != NULL);
-        ui_warning_dialog(mainwin->window, text);
+        ui_warning_dialog(mainwin_get_window(mainwin, TRUE), text);
 }
 
 /**
@@ -120,7 +120,7 @@ void
 controller_show_info(const char *text)
 {
         g_return_if_fail(mainwin != NULL);
-        ui_info_dialog(mainwin->window, text);
+        ui_info_dialog(mainwin_get_window(mainwin, TRUE), text);
 }
 
 /**
@@ -132,7 +132,7 @@ void
 controller_show_banner(const char *text)
 {
 #ifdef MAEMO
-        ui_info_banner(mainwin->window, text);
+        ui_info_banner(mainwin_get_window(mainwin, FALSE), text);
 #else
         mainwin_show_status_msg(mainwin, text);
 #endif
@@ -148,14 +148,7 @@ gboolean
 controller_confirm_dialog(const char *text)
 {
         g_return_val_if_fail(mainwin != NULL, FALSE);
-        GtkWindow *parent = NULL;
-
-#ifndef MAEMO
-        if (!mainwin->is_hidden) {
-                parent = mainwin->window;
-        }
-#endif
-        return ui_confirm_dialog(parent, text);
+        return ui_confirm_dialog(mainwin_get_window(mainwin, FALSE), text);
 }
 
 /**
@@ -511,7 +504,6 @@ void
 controller_open_usercfg(void)
 {
         g_return_if_fail(mainwin != NULL);
-        GtkWindow *parent = NULL;
         gboolean userchanged = FALSE;
         gboolean pwchanged = FALSE;
         gboolean changed;
@@ -520,14 +512,8 @@ controller_open_usercfg(void)
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
 
-#ifdef MAEMO
-        parent = mainwin->window;
-#else
-        if (!mainwin->is_hidden) {
-                parent = mainwin->window;
-        }
-#endif
-        changed = ui_usercfg_dialog(parent, &usercfg);
+        changed = ui_usercfg_dialog(mainwin_get_window(mainwin, FALSE),
+                                    &usercfg);
 
         if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
@@ -1020,7 +1006,7 @@ tag_track_thread(gpointer data)
         g_free(d->taglist);
         g_slice_free(tag_data, d);
         gdk_threads_enter();
-        if (mainwin && mainwin->window) {
+        if (mainwin) {
                 controller_show_banner(tagged ? _("Tags set correctly") :
                                        _("Error tagging"));
         }
@@ -1038,7 +1024,6 @@ void
 controller_tag_track()
 {
         g_return_if_fail(mainwin && usercfg && nowplaying);
-        GtkWindow *parent = NULL;
         /* Keep this static to remember the previous value */
         static request_type type = REQUEST_ARTIST;
         char *tags = NULL;
@@ -1047,14 +1032,8 @@ controller_tag_track()
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
         }
-#ifdef MAEMO
-        parent = mainwin->window;
-#else
-        if (!mainwin->is_hidden) {
-                parent = mainwin->window;
-        }
-#endif
-        accept = tagwin_run(parent, usercfg->username, &tags,
+        accept = tagwin_run(mainwin_get_window(mainwin, FALSE),
+                            usercfg->username, &tags,
                             usertags, track, &type);
         if (accept && tags != NULL && tags[0] != '\0') {
                 tag_data *d = g_slice_new0(tag_data);
@@ -1098,7 +1077,7 @@ recomm_track_thread(gpointer data)
                 g_free(pass);
         }
         gdk_threads_enter();
-        if (mainwin && mainwin->window) {
+        if (mainwin) {
                 controller_show_banner(retval ?
                                        _("Recommendation sent") :
                                        _("Error sending recommendation"));
@@ -1119,7 +1098,6 @@ void
 controller_recomm_track(void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
-        GtkWindow *parent = NULL;
         char *rcpt = NULL;
         char *body = NULL;
         /* Keep this static to remember the previous value */
@@ -1130,15 +1108,8 @@ controller_recomm_track(void)
                 type = REQUEST_ARTIST;
         }
 
-#ifdef MAEMO
-        parent = mainwin->window;
-#else
-        if (!mainwin->is_hidden) {
-                parent = mainwin->window;
-        }
-#endif
-        accept = recommwin_run(parent, &rcpt, &body, friends,
-                               track, &type);
+        accept = recommwin_run(mainwin_get_window(mainwin, FALSE),
+                               &rcpt, &body, friends, track, &type);
         if (accept && rcpt && body && rcpt[0] && body[0]) {
                 g_strstrip(rcpt);
                 recomm_data *d = g_slice_new0(recomm_data);
@@ -1185,7 +1156,7 @@ add_to_playlist_thread(gpointer data)
                 g_free(pass);
         }
         gdk_threads_enter();
-        if (mainwin && mainwin->window) {
+        if (mainwin) {
                 controller_show_banner(retval ?
                                        _("Track added to playlist") :
                                        _("Error adding track to playlist"));
@@ -1203,16 +1174,7 @@ void
 controller_add_to_playlist(void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
-        GtkWindow *parent = NULL;
-
-#ifdef MAEMO
-        parent = mainwin->window;
-#else
-        if (!mainwin->is_hidden) {
-                parent = mainwin->window;
-        }
-#endif
-        if (ui_confirm_dialog(parent,
+        if (ui_confirm_dialog(mainwin_get_window(mainwin, FALSE),
                               _("Really add this track to the playlist?"))) {
                 lastfm_track *track = lastfm_track_ref(nowplaying);
                 g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
@@ -1291,7 +1253,9 @@ controller_play_radio_cb(gpointer userdata)
         } else if (type == LASTFM_USERTAG_RADIO) {
                 static char *previous = NULL;
                 char *tag;
-                tag = ui_input_dialog_with_list(mainwin->window, _("Enter tag"),
+                tag = ui_input_dialog_with_list(mainwin_get_window(mainwin,
+                                                                   TRUE),
+                                                _("Enter tag"),
                                                 _("Enter one of your tags"),
                                                 usertags, previous);
                 if (tag != NULL) {
@@ -1340,7 +1304,8 @@ controller_play_others_radio_cb(gpointer userdata)
         lastfm_radio type = GPOINTER_TO_INT(userdata);
         static char *previous = NULL;
         char *url = NULL;
-        char *user = ui_input_dialog_with_list(mainwin->window,
+        char *user = ui_input_dialog_with_list(mainwin_get_window(mainwin,
+                                                                  TRUE),
                                                _("Enter user name"),
                                                _("Play this user's radio"),
                                                friends,
@@ -1381,7 +1346,8 @@ controller_play_group_radio(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        char *group = ui_input_dialog(mainwin->window, _("Enter group"),
+        char *group = ui_input_dialog(mainwin_get_window(mainwin, TRUE),
+                                      _("Enter group"),
                                       _("Enter group name"), previous);
         if (group != NULL) {
                 url = lastfm_radio_url(LASTFM_GROUP_RADIO, group);
@@ -1403,7 +1369,8 @@ controller_play_globaltag_radio(void)
         static char *previous = NULL;
         char *url = NULL;
         char *tag;
-        tag = ui_input_dialog_with_list(mainwin->window, _("Enter tag"),
+        tag = ui_input_dialog_with_list(mainwin_get_window(mainwin, TRUE),
+                                        _("Enter tag"),
                                         _("Enter a global tag"),
                                         usertags, previous);
         if (tag != NULL) {
@@ -1427,7 +1394,8 @@ controller_play_similarartist_radio(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        char *artist = ui_input_dialog(mainwin->window, _("Enter artist"),
+        char *artist = ui_input_dialog(mainwin_get_window(mainwin, TRUE),
+                                       _("Enter artist"),
                                        _("Enter an artist's name"), previous);
         if (artist != NULL) {
                 url = lastfm_radio_url(LASTFM_SIMILAR_ARTIST_RADIO, artist);
@@ -1448,7 +1416,8 @@ controller_play_radio_ask_url(void)
         g_return_if_fail(mainwin != NULL);
         static char *previous = NULL;
         char *url = NULL;
-        url = ui_input_dialog(mainwin->window, _("Enter radio URL"),
+        url = ui_input_dialog(mainwin_get_window(mainwin, TRUE),
+                              _("Enter radio URL"),
                               _("Enter the URL of the Last.fm radio"),
                               previous ? previous : "lastfm://");
         if (url != NULL) {

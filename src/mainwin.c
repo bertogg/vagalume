@@ -133,6 +133,17 @@ mainwin_quit_app(void)
         gtk_main_quit();
 }
 
+GtkWindow *
+mainwin_get_window(lastfm_mainwin *w, gboolean get_if_hidden)
+{
+        g_return_val_if_fail(w != NULL && GTK_IS_WINDOW(w->window), NULL);
+        if (!w->is_hidden || get_if_hidden) {
+                return w->window;
+        } else {
+                return NULL;
+        }
+}
+
 void
 mainwin_show_window(lastfm_mainwin *w, gboolean show)
 {

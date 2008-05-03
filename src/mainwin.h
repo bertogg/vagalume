@@ -50,5 +50,6 @@ void mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size);
 void mainwin_set_track_as_loved(lastfm_mainwin *w);
 void mainwin_run_app(void);
 void mainwin_quit_app(void);
+GtkWindow *mainwin_get_window(lastfm_mainwin *w, gboolean get_if_hidden);
 
 #endif
