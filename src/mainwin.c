@@ -148,10 +148,14 @@ void
 mainwin_show_window(lastfm_mainwin *w, gboolean show)
 {
         g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
-        if ((show && w->is_hidden) || (!show && !w->is_hidden)) {
-                mainwin_toggle_visibility(w);
-        } else if (show) {
-                gtk_window_present(w->window);
+        if (show) {
+                /* Move window to its right place (not needed in Maemo) */
+                gtk_window_move (w->window, w->x_pos, w->y_pos);
+                gtk_window_present (w->window);
+        } else {
+                /* Save position before hiding window (not needed in Maemo) */
+                gtk_window_get_position(w->window, &(w->x_pos), &(w->y_pos));
+                gtk_widget_hide (GTK_WIDGET(w->window));
         }
 }
 
@@ -159,21 +163,7 @@ void
 mainwin_toggle_visibility(lastfm_mainwin *w)
 {
         g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
-        if (!w->is_hidden) {
-                /* Save position before hiding the window */
-                gtk_window_get_position(w->window, &(w->x_pos), &(w->y_pos));
-
-                gtk_widget_hide (GTK_WIDGET(w->window));
-                g_debug ("Hiding the window...");
-        } else {
-#ifndef MAEMO
-                /* Move the window to its right place (not needed for maemo) */
-                gtk_window_move (w->window, w->x_pos, w->y_pos);
-#endif
-                gtk_window_present (w->window);
-
-                g_debug ("Deiconifying...");
-        }
+        mainwin_show_window(w, w->is_hidden);
 }
 
 void
@@ -451,6 +441,11 @@ window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
                 lastfm_mainwin *win)
 {
         GdkWindowState st = event->new_window_state;
+        /* Save the old position if the window has been minimized */
+        if (st == GDK_WINDOW_STATE_ICONIFIED && event->changed_mask == st) {
+                gtk_window_get_position(
+                        win->window, &(win->x_pos), &(win->y_pos));
+        }
         win->is_fullscreen = (st & GDK_WINDOW_STATE_FULLSCREEN);
         win->is_hidden =
                 st & (GDK_WINDOW_STATE_ICONIFIED|GDK_WINDOW_STATE_WITHDRAWN);
