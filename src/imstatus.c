@@ -79,8 +79,6 @@ gajim_set_status(const char *message)
         char *status;
         gboolean change_status_result;
 
-        g_debug("gajim_set_status");
-
         proxy = get_dbus_proxy("org.gajim.dbus",
                                "/org/gajim/dbus/RemoteObject",
                                "org.gajim.dbus.RemoteInterface");
@@ -96,8 +94,6 @@ gajim_set_status(const char *message)
 
         /* todo: abort if not online or chat? or dnd? */
 
-        g_debug("status: %s", status);
-
         if (saved_gajim_status == NULL) {
                 dbus_g_proxy_call(proxy, "get_status_message",
                                   &error,
@@ -106,6 +102,8 @@ gajim_set_status(const char *message)
                                   G_TYPE_STRING, &saved_gajim_status,
                                   G_TYPE_INVALID);
         }
+
+        g_debug("Gajim: setting status %s", message);
 
         /* gajim-remote help says: status, message, account */
         /* gajim/src/common/connection.py says: show, msg, auto=False */
@@ -117,8 +115,6 @@ gajim_set_status(const char *message)
                                    G_TYPE_BOOLEAN, &change_status_result,
                                    G_TYPE_INVALID);
         if (error_happened(result, error)) return;
-
-        g_debug("change_status_result: %d", result);
 
         g_free(status);
         g_object_unref(proxy);
@@ -136,15 +132,11 @@ gossip_set_status(const char *message)
         char *state_str;
         char *status;
 
-        g_debug("gossip_set_status");
-
         proxy = get_dbus_proxy("org.gnome.Gossip",
                                "/org/gnome/Gossip",
                                "org.gnome.Gossip");
 
         if (proxy == NULL) return;
-
-        g_debug("GetOpenChats");
 
         result = dbus_g_proxy_call(proxy, "GetOpenChats", &error,
                                    G_TYPE_INVALID,
@@ -154,9 +146,6 @@ gossip_set_status(const char *message)
 
         id = *chats;
 
-        g_debug("id: %s", id);
-        g_debug("GetPresence");
-
         result = dbus_g_proxy_call(proxy, "GetPresence",
                                    &error,
                                    G_TYPE_STRING, id,
@@ -165,9 +154,6 @@ gossip_set_status(const char *message)
                                    G_TYPE_STRING, &status,
                                    G_TYPE_INVALID);
         if (error_happened(result, error)) return;
-
-        g_debug("state_str: %s", state_str);
-        g_debug("status: %s", status);
 
         g_strfreev(chats);
 
@@ -179,8 +165,7 @@ gossip_set_status(const char *message)
 
         /* todo: abort if not online or chat? or dnd? */
 
-        g_debug("message: %s", message);
-        g_debug("SetPresence");
+        g_debug("Gossip: setting status %s", message);
 
         result = dbus_g_proxy_call(proxy, "SetPresence",
                                    &error,
@@ -217,8 +202,6 @@ pidgin_set_status(const char *message)
                                    G_TYPE_INVALID);
         if (error_happened(result, error)) return;
 
-        g_debug("Current: %d", current);
-
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusGetType",
                                    &error,
                                    G_TYPE_INT, current,
@@ -229,9 +212,6 @@ pidgin_set_status(const char *message)
 
         /* todo: abort if not online */
 
-        g_debug("Type: %d", status);
-        g_debug("message: %s", message);
-
         if (saved_pidgin_status == NULL) {
                 dbus_g_proxy_call(proxy, "PurpleSavedstatusGetMessage",
                                   &error,
@@ -240,6 +220,8 @@ pidgin_set_status(const char *message)
                                   G_TYPE_STRING, &saved_pidgin_status,
                                   G_TYPE_INVALID);
         }
+
+        g_debug("Pidgin: setting status %s", message);
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusSetMessage",
                                    &error,
@@ -269,8 +251,6 @@ telepathy_set_status(const char *message)
         gboolean result;
         unsigned int presence;
 
-        g_debug("telepathy_set_status");
-
         proxy = get_dbus_proxy("org.freedesktop.Telepathy.MissionControl",
                                "/org/freedesktop/Telepathy/MissionControl",
                                "org.freedesktop.Telepathy.MissionControl");
@@ -292,7 +272,7 @@ telepathy_set_status(const char *message)
 
         /* todo: abort if not online or chat? or dnd? */
 
-        g_debug("presence: %d", presence);
+        g_debug("Telepathy: setting status %s", message);
 
         result = dbus_g_proxy_call(proxy, "SetPresence", &error,
                                    G_TYPE_UINT, presence,

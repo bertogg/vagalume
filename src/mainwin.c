@@ -130,6 +130,7 @@ mainwin_run_app(void)
 void
 mainwin_quit_app(void)
 {
+        while (gtk_events_pending()) gtk_main_iteration();
         gtk_main_quit();
 }
 

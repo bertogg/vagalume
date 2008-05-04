@@ -590,6 +590,7 @@ notify_playback_idle (VagalumeTrayIconNotifyPlaybackData *d)
 {
         g_return_val_if_fail(d != NULL, FALSE);
 
+        gdk_threads_enter();
         /* Set the now_playing private attribute and update panel */
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (d->vti);
         priv->now_playing = (d->track != NULL);
@@ -614,9 +615,13 @@ notify_playback_idle (VagalumeTrayIconNotifyPlaybackData *d)
         } else {
                 gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
         }
+        gdk_threads_leave();
+
+        /* Cleanup */
         g_object_unref(d->vti);
         if (d->track != NULL) lastfm_track_unref(d->track);
         g_slice_free(VagalumeTrayIconNotifyPlaybackData, d);
+
         return FALSE;
 }
 
