@@ -65,6 +65,12 @@ if test "$have_libnotify" = "yes"; then
    echo $have_tray_icon
 fi
 
+# Check if we have getopt
+AC_CHECK_LIB(c, getopt,
+   AC_DEFINE([HAVE_GETOPT],[1],[If getopt() exists]),
+   have_getopt="no"
+)
+
 # Check if libgcrypt is installed
 AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
    have_libgcrypt="yes", have_libgcrypt="no")

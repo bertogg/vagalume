@@ -17,11 +17,10 @@
 #include "controller.h"
 #include "http.h"
 
-static const char *gst_decoder_envvar = "VAGALUME_GST_DECODER";
-static const char *gst_sink_envvar = "VAGALUME_GST_SINK";
-static const char *gst_convert_envvar = "VAGALUME_GST_CONVERT";
 #ifdef MAEMO
+static const char *default_decoders[] = { NULL };
 static const char *default_sinks[] = { "dspmp3sink", NULL };
+static const char *default_converters[] = { NULL };
 #else
 static const char *default_decoders[] = { "mad", "flump3dec", NULL };
 static const char *default_sinks[] = { "autoaudiosink", "alsasink", NULL };
@@ -172,20 +171,38 @@ audio_element_create(const char **elem_names, const char *envvar)
 static GstElement *
 audio_decoder_create(void)
 {
-        return audio_element_create(default_decoders, gst_decoder_envvar);
+        return audio_element_create(default_decoders, GST_DECODER_ENVVAR);
 }
 
 static GstElement *
 audio_convert_create(void)
 {
-        return audio_element_create(default_converters, gst_convert_envvar);
+        return audio_element_create(default_converters, GST_CONVERT_ENVVAR);
 }
 #endif
+
+const char *
+lastfm_audio_default_decoder_name(void)
+{
+        return default_decoders[0] ? default_decoders[0] : "none";
+}
+
+const char *
+lastfm_audio_default_sink_name(void)
+{
+        return default_sinks[0] ? default_sinks[0] : "none";
+}
+
+const char *
+lastfm_audio_default_convert_name(void)
+{
+        return default_converters[0] ? default_converters[0] : "none";
+}
 
 static GstElement *
 audio_sink_create(void)
 {
-        return audio_element_create(default_sinks, gst_sink_envvar);
+        return audio_element_create(default_sinks, GST_SINK_ENVVAR);
 }
 
 gboolean
