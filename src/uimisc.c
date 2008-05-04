@@ -57,6 +57,7 @@ typedef struct {
         GtkNotebook *nb;
         GtkEntry *user, *pw, *proxy, *dlentry;
         GtkWidget *dlbutton, *scrobble, *discovery, *useproxy;
+        GtkWidget *disableconfdiags;
 #ifdef SET_IM_STATUS
         GtkEntry *imtemplateentry;
         GtkWidget *impidgin, *imgajim, *imgossip, *imtelepathy;
@@ -404,35 +405,56 @@ usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
 static void
 usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
 {
-#ifdef HAVE_TRAY_ICON
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
+        GtkWidget *disableconfdiagslabel;
+#ifdef HAVE_TRAY_ICON
         GtkWidget *shownotificationslabel;
         GtkWidget *closetosystraylabel;
 
-        /* Create widgets */
-        table = GTK_TABLE(gtk_table_new(2, 2, TRUE));
+        table = GTK_TABLE(gtk_table_new(3, 2, TRUE));
+#else
+        table = GTK_TABLE(gtk_table_new(1, 2, TRUE));
+#endif
+
+        /* Disable confirm dialogs */
+        disableconfdiagslabel =
+                gtk_label_new(_("Disable confirmation dialogs:"));
+
+        win->disableconfdiags = gtk_check_button_new();
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->disableconfdiags),
+                                     cfg->disable_confirm_dialogs);
+
+        gtk_table_attach(table, disableconfdiagslabel, 0, 1, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach(table, win->disableconfdiags, 1, 2, 0, 1, 0, 0, 5, 5);
+
+#ifdef HAVE_TRAY_ICON
+        /* Show playback notifications */
         shownotificationslabel =
                 gtk_label_new(_("Show playback notifications:"));
-        closetosystraylabel =
-                gtk_label_new(_("Close to systray:"));
-        win->shownotifications = gtk_check_button_new();
-        win->closetosystray = gtk_check_button_new();
 
-        /* Set initial values */
+        win->shownotifications = gtk_check_button_new();
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->shownotifications),
                                      cfg->show_notifications);
+
+        gtk_table_attach(table, shownotificationslabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, win->shownotifications, 1, 2, 1, 2, 0, 0, 5, 5);
+
+        /* Close window to systray */
+        closetosystraylabel =
+                gtk_label_new(_("Close to systray:"));
+
+        win->closetosystray = gtk_check_button_new();
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->closetosystray),
                                      cfg->close_to_systray);
 
-        /* Pack widgets */
-        gtk_table_attach(table, shownotificationslabel, 0, 1, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(table, win->shownotifications, 1, 2, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(table, closetosystraylabel, 0, 1, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(table, win->closetosystray, 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, closetosystraylabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, win->closetosystray, 1, 2, 2, 3, 0, 0, 5, 5);
+#endif
+
+        /* Add page to notebook */
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Misc")));
-#endif
 }
 
 gboolean
@@ -490,6 +512,8 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
                 (*cfg)->im_telepathy = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.imtelepathy));
 #endif
+                (*cfg)->disable_confirm_dialogs = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(win.disableconfdiags));
 #ifdef HAVE_TRAY_ICON
                 (*cfg)->show_notifications = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.shownotifications));

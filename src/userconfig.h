@@ -25,6 +25,7 @@ typedef struct {
         gboolean im_gajim;
         gboolean im_gossip;
         gboolean im_telepathy;
+        gboolean disable_confirm_dialogs;
         gboolean show_notifications;
         gboolean close_to_systray;
 } lastfm_usercfg;

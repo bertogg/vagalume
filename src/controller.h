@@ -38,7 +38,7 @@ void controller_show_error(const char *text);
 void controller_show_warning(const char *text);
 void controller_show_info(const char *text);
 void controller_show_banner(const char *text);
-gboolean controller_confirm_dialog(const char *text);
+gboolean controller_confirm_dialog(const char *text, gboolean show_always);
 void controller_show_mainwin(gboolean show);
 void controller_toggle_mainwin_visibility (void);
 int controller_increase_volume(int inc);

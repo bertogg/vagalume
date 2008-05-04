@@ -323,7 +323,7 @@ echo "\"Set IM status\" enabled: $set_im_status"
 if test "$PLATFORM" = "gnome"; then
    echo "Tray icon and notifications enabled: $have_tray_icon"
 else
-   echo "Maemo status bar plugin enable: $have_sb_plugin"
+   echo "Maemo status bar plugin enabled: $have_sb_plugin"
    echo "Libconic support: $have_conic"
 fi
 echo ""

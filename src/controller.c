@@ -145,9 +145,13 @@ controller_show_banner(const char *text)
  * @return TRUE if the user selects OK, cancel otherwise
  */
 gboolean
-controller_confirm_dialog(const char *text)
+controller_confirm_dialog(const char *text, gboolean show_always)
 {
         g_return_val_if_fail(mainwin != NULL, FALSE);
+
+        if (!show_always && usercfg->disable_confirm_dialogs)
+                return TRUE;
+
         return ui_confirm_dialog(mainwin_get_window(mainwin, FALSE), text);
 }
 
@@ -899,7 +903,7 @@ controller_download_track(void)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
         lastfm_track *t = lastfm_track_ref(nowplaying);
-        if (controller_confirm_dialog(_("Download this track?"))) {
+        if (controller_confirm_dialog(_("Download this track?"), FALSE)) {
                 char *filename, *dstpath;
                 gboolean download = TRUE;
                 filename = g_strconcat(t->artist, " - ", t->title, ".mp3",
@@ -908,7 +912,8 @@ controller_download_track(void)
                                        NULL);
                 if (file_exists(dstpath)) {
                         download = controller_confirm_dialog(_("File exists. "
-                                                               "Overwrite?"));
+                                                               "Overwrite?"),
+                                                             TRUE);
                 }
                 if (download) {
                         dlwin_download_file(t->free_track_url, filename,
@@ -941,7 +946,7 @@ controller_love_track(gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL && mainwin != NULL);
         if (!interactive ||
-            controller_confirm_dialog(_("Really mark track as loved?"))) {
+            controller_confirm_dialog(_("Really mark track as loved?"),FALSE)) {
                 nowplaying_rating = RSP_RATING_LOVE;
                 mainwin_set_track_as_loved(mainwin);
                 if (interactive) {
@@ -959,7 +964,7 @@ controller_ban_track(gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL);
         if (!interactive ||
-            controller_confirm_dialog(_("Really ban this track?"))) {
+            controller_confirm_dialog(_("Really ban this track?"), FALSE)) {
                 nowplaying_rating = RSP_RATING_BAN;
                 controller_skip_track();
                 if (interactive) {
