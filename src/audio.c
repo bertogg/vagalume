@@ -11,6 +11,7 @@
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "audio.h"
 #include "controller.h"
@@ -18,12 +19,13 @@
 
 static const char *gst_decoder_envvar = "VAGALUME_GST_DECODER";
 static const char *gst_sink_envvar = "VAGALUME_GST_SINK";
+static const char *gst_convert_envvar = "VAGALUME_GST_CONVERT";
 #ifdef MAEMO
-static const char *default_decoders[] = { NULL };
 static const char *default_sinks[] = { "dspmp3sink", NULL };
 #else
 static const char *default_decoders[] = { "mad", "flump3dec", NULL };
 static const char *default_sinks[] = { "autoaudiosink", "alsasink", NULL };
+static const char *default_converters[] = { "audioconvert", NULL };
 #endif
 
 static GstElement *pipeline = NULL;
@@ -145,6 +147,9 @@ audio_element_create(const char **elem_names, const char *envvar)
         const char *user_elem_name = NULL;
 
         if (envvar != NULL) user_elem_name = g_getenv(envvar);
+        if (user_elem_name != NULL && !strcmp(user_elem_name, "none")) {
+                return NULL;
+        }
 
         /* Try to create the element given in the environment variable */
         if (user_elem_name != NULL && *user_elem_name != '\0') {
@@ -163,11 +168,19 @@ audio_element_create(const char **elem_names, const char *envvar)
         return retval;
 }
 
+#ifndef MAEMO
 static GstElement *
 audio_decoder_create(void)
 {
         return audio_element_create(default_decoders, gst_decoder_envvar);
 }
+
+static GstElement *
+audio_convert_create(void)
+{
+        return audio_element_create(default_converters, gst_convert_envvar);
+}
+#endif
 
 static GstElement *
 audio_sink_create(void)
@@ -189,13 +202,12 @@ lastfm_audio_init(void)
         source = gst_element_factory_make ("fdsrc", NULL);
 #ifdef MAEMO
         decoder = source; /* Unused, this is only for the assertions */
-        convert = source;
 #else
         decoder = audio_decoder_create();
-        convert = gst_element_factory_make ("audioconvert", NULL);
+        convert = audio_convert_create(); /* This is optional */
 #endif
         sink = audio_sink_create();
-        if (!pipeline || !source || !decoder || !convert || !sink) {
+        if (!pipeline || !source || !decoder || !sink) {
                 g_critical ("Error creating GStreamer elements");
                 return FALSE;
         }
@@ -207,9 +219,15 @@ lastfm_audio_init(void)
         gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
         gst_element_link_many (source, sink, NULL);
 #else
-        gst_bin_add_many (GST_BIN (pipeline), source, decoder,
-                          convert, sink, NULL);
-        gst_element_link_many (source, decoder, convert, sink, NULL);
+        if (convert != NULL) {
+                gst_bin_add_many (GST_BIN (pipeline), source, decoder,
+                                  convert, sink, NULL);
+                gst_element_link_many (source, decoder, convert, sink, NULL);
+        } else {
+                gst_bin_add_many (GST_BIN (pipeline), source, decoder,
+                                  sink, NULL);
+                gst_element_link_many (source, decoder, sink, NULL);
+        }
 #endif
 
         lastfm_audio_set_volume(80);
