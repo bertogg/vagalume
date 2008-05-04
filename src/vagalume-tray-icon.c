@@ -580,15 +580,20 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         g_free (stripped_album);
 }
 
-void
-vagalume_tray_icon_notify_playback (VagalumeTrayIcon *vti, lastfm_track *track)
+typedef struct {
+        lastfm_track *track;
+        VagalumeTrayIcon *vti;
+} VagalumeTrayIconNotifyPlaybackData;
+
+static gboolean
+notify_playback_idle (VagalumeTrayIconNotifyPlaybackData *d)
 {
-        g_return_if_fail(VAGALUME_IS_TRAY_ICON(vti));
+        g_return_val_if_fail(d != NULL, FALSE);
 
         /* Set the now_playing private attribute and update panel */
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
-        priv->now_playing = (track != NULL);
-        ctxt_menu_update (vti);
+        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (d->vti);
+        priv->now_playing = (d->track != NULL);
+        ctxt_menu_update (d->vti);
 
         /* Update tooltip and show notification, if needed */
         if (priv->now_playing) {
@@ -596,19 +601,34 @@ vagalume_tray_icon_notify_playback (VagalumeTrayIcon *vti, lastfm_track *track)
 
                 /* Set the tooltip */
                 tooltip_string = g_strdup_printf (TOOLTIP_FORMAT_STRING,
-                                                  track->title,
-                                                  track->artist);
+                                                  d->track->title,
+                                                  d->track->artist);
                 gtk_status_icon_set_tooltip(priv->tray_icon, tooltip_string);
 
                 g_free (tooltip_string);
 
                 /* Show the notification, if required */
                 if (priv->show_notifications) {
-                        show_notification (vti, track);
+                        show_notification (d->vti, d->track);
                 }
         } else {
                 gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
         }
+        g_object_unref(d->vti);
+        if (d->track != NULL) lastfm_track_unref(d->track);
+        g_slice_free(VagalumeTrayIconNotifyPlaybackData, d);
+        return FALSE;
+}
+
+void
+vagalume_tray_icon_notify_playback (VagalumeTrayIcon *vti, lastfm_track *track)
+{
+        g_return_if_fail(VAGALUME_IS_TRAY_ICON(vti));
+        VagalumeTrayIconNotifyPlaybackData *data;
+        data = g_slice_new(VagalumeTrayIconNotifyPlaybackData);
+        data->vti = g_object_ref(vti);
+        data->track = track ? lastfm_track_ref(track) : NULL;
+        g_idle_add((GSourceFunc)notify_playback_idle, data);
 }
 
 void
