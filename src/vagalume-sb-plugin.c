@@ -21,6 +21,11 @@
 #include "globaldefs.h"
 #include "dbus.h"
 
+/* This is run by hildon-desktop, so we need to redefine
+   the _(String) macro to use the Vagalume domain */
+#undef _
+#define _(String) dgettext (GETTEXT_PACKAGE, String)
+
 #define MAIN_PANEL_WIDTH 300
 
 #define NO_ARTIST_STRING _("No artist")
@@ -127,6 +132,9 @@ vagalume_sb_plugin_class_init (VagalumeSbPluginClass *klass)
 
         g_type_class_add_private (object_class,
                                   sizeof (VagalumeSbPluginPrivate));
+
+        bindtextdomain (GETTEXT_PACKAGE, VAGALUME_LOCALE_DIR);
+        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 }
 
 static void
