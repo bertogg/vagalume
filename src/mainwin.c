@@ -167,14 +167,10 @@ mainwin_toggle_visibility(lastfm_mainwin *w)
                 g_debug ("Hiding the window...");
         } else {
 #ifndef MAEMO
-                /* Call iconify() and deiconify() to move the window
-                 * between desktops. Needed in some window managers */
-                gtk_window_iconify(w->window);
-                gtk_window_deiconify(w->window);
                 /* Move the window to its right place (not needed for maemo) */
                 gtk_window_move (w->window, w->x_pos, w->y_pos);
 #endif
-                gtk_widget_show (GTK_WIDGET(w->window));
+                gtk_window_present (w->window);
 
                 g_debug ("Deiconifying...");
         }
