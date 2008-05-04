@@ -5,6 +5,8 @@ Mario Sanchez Prada <msanchez@igalia.com>
 * Maemo status bar plugin
 * Icons, UI enhancements
 * Freedesktop tray icon and libnotify support
+* vagalumectl and D-BUS enhancements
+* Other minor changes
 
 Felipe Erias Morandeira <femorandeira@igalia.com>
 * Icons, UI enhancements

@@ -2,9 +2,7 @@
 AC_INIT(Makefile.am)
 AM_INIT_AUTOMAKE(vagalume, 0.5.1)
 AM_CONFIG_HEADER(config.h)
-
 AC_CANONICAL_HOST
-
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
@@ -67,9 +65,8 @@ fi
 
 # Check if we have getopt
 AC_CHECK_LIB(c, getopt,
-   AC_DEFINE([HAVE_GETOPT],[1],[If getopt() exists]),
-   have_getopt="no"
-)
+   AC_DEFINE([HAVE_GETOPT],[1],[Defined if getopt() exists]),
+   have_getopt="no")
 
 # Check if libgcrypt is installed
 AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
@@ -78,8 +75,7 @@ AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
    AC_DEFINE([HAVE_CURL_EASY_ESCAPE],[1],[If curl_easy_escape() exists]),
-   have_curl_easy_escape="no"
-)
+   have_curl_easy_escape="no")
 
 # Check whether to use libgcrypt
 AC_ARG_ENABLE(libgcrypt, [
@@ -148,6 +144,7 @@ if test "$PLATFORM" = "maemo"; then
    # Disable tray icon support on Maemo
    have_tray_icon="no"
 
+   # Detect the version of the Maemo SDK
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
 
    if test "$have_curl_easy_escape" = "no"; then
@@ -163,6 +160,7 @@ if test "$PLATFORM" = "maemo"; then
       AC_MSG_ERROR([Unknown Maemo version])
    fi
 
+   # These are required but their names vary between Maemo versions
    if test "$PLATFORMVERS" = "2" -o "$PLATFORMVERS" = "3"; then
       PKG_CHECK_MODULES(hildon, hildon-libs)
       PKG_CHECK_MODULES(hildonfm, hildon-fm)
@@ -173,10 +171,12 @@ if test "$PLATFORM" = "maemo"; then
    EXTRA_CFLAGS="$EXTRA_CFLAGS $hildon_CFLAGS $hildonfm_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $hildon_LIBS $hildonfm_LIBS"
 
+   # Libosso is required
    PKG_CHECK_MODULES(libosso, libosso osso-af-settings)
    EXTRA_CFLAGS="$EXTRA_CFLAGS $libosso_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $libosso_LIBS"
 
+   # Libconic is not present in all Maemo versions
    PKG_CHECK_MODULES(libconic, conic, [have_conic="yes"], [have_conic="no"])
    if test "$have_conic" = "yes"; then
       EXTRA_CFLAGS="$EXTRA_CFLAGS $libconic_CFLAGS"
@@ -192,12 +192,21 @@ if test "$PLATFORM" = "maemo"; then
       AC_MSG_ERROR([Unable to find dbus service directory])
    fi
 
-   PKG_CHECK_MODULES(SBPLUGIN, gtk+-2.0 glib-2.0 hildon-1 libhildondesktop
-                               gconf-2.0 libhildonwm libosso osso-af-settings
-                               dbus-1,
-                               [have_sb_plugin="yes"], [have_sb_plugin="no"])
+   # These are optional and only required for the Maemo status bar plugin
+   echo "Checking dependencies to compile the Maemo status bar plugin"
+   have_sb_plugin="yes"
+   PKG_CHECK_MODULES(hildondesktop, libhildondesktop, [], [have_sb_plugin="no"])
+   PKG_CHECK_MODULES(hildonwm, libhildonwm, [], [have_sb_plugin="no"])
+   PKG_CHECK_MODULES(gconf2, gconf-2.0, [], [have_sb_plugin="no"])
+   PKG_CHECK_MODULES(dbus, dbus-1, [], [have_sb_plugin="no"])
 
    if test "$have_sb_plugin" = "yes"; then
+      SBPLUGIN_CFLAGS="$Gtk2_CFLAGS $hildon_CFLAGS $libosso_CFLAGS \
+                       $hildondesktop_CFLAGS $hildonwm_CFLAGS \
+                       $gconf2_CFLAGS $dbus_CFLAGS"
+      SBPLUGIN_LIBS="$Gtk2_LIBS $hildon_LIBS $libosso_LIBS \
+                     $hildondesktop_LIBS $hildonwm_LIBS \
+                     $gconf2_LIBS $dbus_LIBS"
       sbplugindesktopentrydir=`$PKG_CONFIG osso-af-settings \
                                --variable=statusbardesktopentrydir`
       sbplugindir=`$PKG_CONFIG osso-af-settings --variable=hildondesktoplibdir`
@@ -207,6 +216,9 @@ if test "$PLATFORM" = "maemo"; then
       elif test "x$sbplugindir" = "x"; then
          AC_MSG_ERROR([Unable to find hildon desktop libs directory])
       fi
+      echo "All required libs found: compiling Maemo status bar plugin"
+   else
+      echo "Some libs are missing: Unable to compile Maemo status bar plugin"
    fi
 
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])

@@ -1545,6 +1545,9 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         lastfm_dbus_close();
 }
 
+/**
+ * Close the application (either to systray or shut it down)
+ */
 void
 controller_close_mainwin(void)
 {
