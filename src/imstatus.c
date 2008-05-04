@@ -304,10 +304,10 @@ telepathy_set_status(const char *message)
         g_object_unref(proxy);
 }
 
-static gpointer
-im_set_status_thread(gpointer data)
+static gboolean
+im_set_status_idle(gpointer data)
 {
-        g_return_val_if_fail(data != NULL, NULL);
+        g_return_val_if_fail(data != NULL, FALSE);
         ImStatusData *d = (ImStatusData *) data;
         const char *artist_keyword = "{artist}";
         const char *title_keyword = "{title}";
@@ -334,13 +334,13 @@ im_set_status_thread(gpointer data)
         lastfm_track_unref(d->track);
         g_slice_free(ImStatusData, d);
         g_static_mutex_unlock(&imstatus_mutex);
-        return NULL;
+        return FALSE;
 }
 
-static gpointer
-im_clear_status_thread(gpointer data)
+static gboolean
+im_clear_status_idle(gpointer data)
 {
-        g_return_val_if_fail(data != NULL, NULL);
+        g_return_val_if_fail(data != NULL, FALSE);
         ImStatusData *d = (ImStatusData *) data;
         g_static_mutex_lock(&imstatus_mutex);
         if (d->im_pidgin && saved_pidgin_status != NULL) {
@@ -365,7 +365,7 @@ im_clear_status_thread(gpointer data)
         }
         g_slice_free(ImStatusData, d);
         g_static_mutex_unlock(&imstatus_mutex);
-        return NULL;
+        return FALSE;
 }
 
 void
@@ -379,7 +379,7 @@ im_set_status(const lastfm_usercfg *cfg, lastfm_track *track)
         data->im_gajim = cfg->im_gajim;
         data->msg = g_string_new(cfg->imstatus_template);
         data->track = lastfm_track_ref(track);
-        g_thread_create(im_set_status_thread,data,FALSE,NULL);
+        g_idle_add(im_set_status_idle,data);
 
 }
 
@@ -392,5 +392,5 @@ im_clear_status(const lastfm_usercfg *cfg)
         data->im_gossip = cfg->im_gossip;
         data->im_telepathy = cfg->im_telepathy;
         data->im_gajim = cfg->im_gajim;
-        g_thread_create(im_clear_status_thread,data,FALSE,NULL);
+        g_idle_add(im_clear_status_idle,data);
 }
