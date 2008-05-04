@@ -1548,7 +1548,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 void
 controller_close_mainwin(void)
 {
-#ifndef MAEMO
+#ifdef HAVE_TRAY_ICON
         if (usercfg->close_to_systray)
                 controller_show_mainwin(FALSE);
         else
