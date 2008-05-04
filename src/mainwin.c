@@ -148,10 +148,10 @@ void
 mainwin_show_window(lastfm_mainwin *w, gboolean show)
 {
         g_return_if_fail(w != NULL && GTK_IS_WINDOW(w->window));
-        if (show) {
+        if ((show && w->is_hidden) || (!show && !w->is_hidden)) {
+                mainwin_toggle_visibility(w);
+        } else if (show) {
                 gtk_window_present(w->window);
-        } else {
-                gtk_widget_hide(GTK_WIDGET(w->window));
         }
 }
 
