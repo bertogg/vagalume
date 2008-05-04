@@ -1548,9 +1548,10 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 void
 controller_close_mainwin(void)
 {
-        if (usercfg->close_to_systray) {
-                controller_toggle_mainwin_visibility();
-        } else {
+#ifndef MAEMO
+        if (usercfg->close_to_systray)
+                controller_show_mainwin(FALSE);
+        else
+#endif
                 controller_quit_app();
-        }
 }
