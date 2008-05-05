@@ -302,7 +302,7 @@ AC_SUBST(PLATFORM)
 ################
 # Translations #
 ################
-ALL_LINGUAS="de es_VE gl it"
+ALL_LINGUAS="de es_MX es_VE gl it"
 
 VAGALUME_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
 AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
