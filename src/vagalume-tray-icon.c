@@ -26,9 +26,9 @@
 #define SETTINGS_ITEM_STRING _("Settings...")
 #define RECOMMEND_ITEM_STRING _("Recommend...")
 #define TAG_ITEM_STRING _("Tags...")
-#define ADD_TO_PLS_ITEM_STRING _("Add to playlist...")
-#define LOVE_ITEM_STRING _("Love")
-#define BAN_ITEM_STRING _("Ban")
+#define ADD_TO_PLS_ITEM_STRING _("Add to playlist")
+#define LOVE_ITEM_STRING _("Love this track")
+#define BAN_ITEM_STRING _("Ban this track")
 #define PLAY_ITEM_STRING _("Play")
 #define STOP_ITEM_STRING _("Stop")
 #define SKIP_ITEM_STRING _("Skip")
@@ -404,7 +404,6 @@ static void
 tray_icon_clicked (GtkStatusIcon *status_icon, gpointer data)
 {
         controller_toggle_mainwin_visibility ();
-        g_debug ("[TRAY ICON] :: Tray icon clicked (left click)");
 }
 
 static void
@@ -413,8 +412,6 @@ tray_icon_popup_menu (GtkStatusIcon *status_icon, guint button,
 {
         VagalumeTrayIcon *vti = VAGALUME_TRAY_ICON (data);
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
-
-        g_debug ("[TRAY ICON] :: Popup menu");
 
         gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
                         NULL, NULL,
@@ -432,39 +429,28 @@ ctxt_menu_item_activated (GtkWidget *item, gpointer data)
 
         if (item == priv->show_app_item) {
                 controller_show_mainwin(TRUE);
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Show app");
         } else if (item == priv->settings_item) {
                 controller_open_usercfg();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Settings");
         } else if (item == priv->recommend_item) {
                 controller_recomm_track();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Recommend");
         } else if (item == priv->tag_item) {
                 controller_tag_track();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Tag");
         } else if (item == priv->add_to_pls_item) {
                 controller_add_to_playlist();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Add to playlist");
         } else if (item == priv->love_item) {
                 controller_love_track (TRUE);
-                g_debug ("[TRAY ICON] :: Vagalume command executed: LoveTrack");
         } else if (item == priv->ban_item) {
                 controller_ban_track (TRUE);
-                g_debug ("[TRAY ICON] :: Vagalume command executed: BanTrack");
         } else if (item == priv->play_item) {
                 controller_start_playing ();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Play");
         } else if (item == priv->stop_item) {
                 controller_stop_playing ();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Stop");
         } else if (item == priv->next_item) {
                 controller_skip_track ();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Skip");
         } else if (item == priv->close_vagalume_item) {
                 controller_quit_app ();
-                g_debug ("[TRAY ICON] :: Vagalume command executed: Close application");
         } else {
-                g_debug ("[TRAY ICON] :: Unknown action");
+                g_warning ("[TRAY ICON] :: Unknown action");
         }
 }
 

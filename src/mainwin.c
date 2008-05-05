@@ -321,6 +321,14 @@ mainwin_set_track_as_loved(lastfm_mainwin *w)
         gtk_widget_set_sensitive (w->love, FALSE);
 }
 
+void
+mainwin_set_track_as_added_to_playlist(lastfm_mainwin *w, gboolean added)
+{
+        g_return_if_fail(w != NULL);
+        gtk_widget_set_sensitive (w->addplbutton, !added);
+        gtk_widget_set_sensitive (w->addtopls, !added);
+}
+
 static void
 menu_enable_all_items(GtkWidget *menu, gboolean enable)
 {
@@ -892,6 +900,7 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
         w->settings = settings;
         w->dload = dload;
         w->love = love;
+        w->addtopls = addtopls;
         w->stopafter = stopafter;
         return GTK_WIDGET(bar);
 }

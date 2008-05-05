@@ -1165,6 +1165,7 @@ add_to_playlist_thread(gpointer data)
                 controller_show_banner(retval ?
                                        _("Track added to playlist") :
                                        _("Error adding track to playlist"));
+                mainwin_set_track_as_added_to_playlist(mainwin, retval);
         }
         gdk_threads_leave();
         lastfm_track_unref(t);
@@ -1179,9 +1180,10 @@ void
 controller_add_to_playlist(void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
-        if (ui_confirm_dialog(mainwin_get_window(mainwin, FALSE),
-                              _("Really add this track to the playlist?"))) {
+        if (controller_confirm_dialog(
+                    _("Really add this track to the playlist?"), FALSE)) {
                 lastfm_track *track = lastfm_track_ref(nowplaying);
+                mainwin_set_track_as_added_to_playlist(mainwin, TRUE);
                 g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
         }
 }

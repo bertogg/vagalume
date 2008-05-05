@@ -20,7 +20,7 @@ typedef struct {
         GtkWidget *dloadbutton, *tagbutton, *addplbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
-        GtkWidget *stopafter;
+        GtkWidget *addtopls, *stopafter;
         GtkWidget *album_cover;
         GtkProgressBar *progressbar;
         GString *progressbar_text;
@@ -48,6 +48,7 @@ void mainwin_show_progress(lastfm_mainwin *w, guint length, guint played);
 void mainwin_show_status_msg(lastfm_mainwin *w, const char *text);
 void mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size);
 void mainwin_set_track_as_loved(lastfm_mainwin *w);
+void mainwin_set_track_as_added_to_playlist(lastfm_mainwin *w, gboolean added);
 void mainwin_run_app(void);
 void mainwin_quit_app(void);
 GtkWindow *mainwin_get_window(lastfm_mainwin *w, gboolean get_if_hidden);
