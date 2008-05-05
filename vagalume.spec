@@ -1,5 +1,5 @@
 
-Summary: A small Last.fm client for Gnome and Maemo
+Summary: GTK+-based client for the Last.fm online radio service
 Name: vagalume
 Version: 0.5.1
 Release: 1
@@ -12,11 +12,11 @@ BuildRequires: gcc, gtk2-devel, gstreamer-devel >= 0.10, curl-devel, libxml2-dev
 Requires: gtk2, gstreamer >= 0.10, curl, libxml2 >= 2.0
 
 %description
-Vagalume is a Last.fm client designed for the Gnome desktop
+Vagalume is a Last.fm client designed for the GNOME desktop
 environment. It's small and provides the basic Last.fm features, such
-as scrobbling, tags, recommendations, etc. Vagalume is specially
-designed to work in the Maemo platform, used by some Nokia devices
-such as the Nokia 770, N800 and N810
+as scrobbling, tags, recommendations, etc. Vagalume is also designed
+to work in the Maemo platform, used by some Nokia devices such as the
+Nokia 770, N800 and N810
 
 %prep
 %setup -q
