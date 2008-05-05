@@ -118,6 +118,7 @@ static const char *license =
 static const char *translators = N_(
 "German (de)\nStephan Reichholf <stephan@reichholf.net>\n\n"
 "Spanish (es_VE)\nOscar A. Mata T. <omata_mac@yahoo.com>\n\n"
+"Galician (gl)\nIgnacio Casal Quinteiro <nacho.resa@gmail.com>\n\n"
 "Italian (it)\nAndrea Grandi <a.grandi@gmail.com>"
 );
 
