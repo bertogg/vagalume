@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-02 01:44+0200\n"
-"PO-Revision-Date: 2008-05-05 13:28+0200\n"
+"PO-Revision-Date: 2008-05-05 15:46+0200\n"
 "Last-Translator: Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
 "Language-Team: Galego <proxecto@trasno.net>\n"
 "MIME-Version: 1.0\n"
@@ -55,11 +55,11 @@ msgstr "O ficheiro xa existe. Quere substituílo?"
 
 #: src/controller.c:907
 msgid "Really mark track as loved?"
-msgstr ""
+msgstr "Marcar como favorita?"
 
 #: src/controller.c:911
 msgid "Marking track as loved"
-msgstr ""
+msgstr "Marcando como favorita"
 
 #: src/controller.c:925
 msgid "Really ban this track?"
@@ -234,7 +234,7 @@ msgstr "Saltar esta pista"
 
 #: src/mainwin.c:65
 msgid "Mark as loved"
-msgstr ""
+msgstr "Marcar como favorita"
 
 #: src/mainwin.c:69 src/mainwin.c:780
 msgid "Ban this track"
@@ -274,7 +274,7 @@ msgstr "<b>Álbum:</b>\n"
 
 #: src/mainwin.c:201
 msgid "<b>Listening to <i>"
-msgstr "<b>Escoitando </b>"
+msgstr "<b>Escoitando <i>"
 
 #: src/mainwin.c:323 src/mainwin.c:324
 msgid "Stopped"
@@ -342,7 +342,7 @@ msgstr "Os meus veciños"
 
 #: src/mainwin.c:716
 msgid "My loved tracks"
-msgstr ""
+msgstr "As miñas favoritas"
 
 #: src/mainwin.c:717
 msgid "My playlist"
@@ -366,7 +366,7 @@ msgstr "Veciños..."
 
 #: src/mainwin.c:750
 msgid "Loved tracks..."
-msgstr ""
+msgstr "Favoritas..."
 
 #: src/mainwin.c:751
 msgid "Playlist..."
@@ -394,7 +394,7 @@ msgstr "Deter despois desta pista"
 
 #: src/mainwin.c:779
 msgid "Love this track"
-msgstr ""
+msgstr "Marcar como favorita"
 
 #: src/mainwin.c:781
 msgid "Add to playlist"
