@@ -245,8 +245,13 @@ lastfm_parse_playlist(const char *buffer, size_t bufsize)
                         char *title = (char *) xmlNodeListGetString(doc,
                                                node->xmlChildrenNode, 1);
                         if (title != NULL && pls_title == NULL) {
-                                pls_title = escape_url(title, FALSE);
                                 int i;
+                                /* The playlist contains ampersands
+                                 * encoded as '%26amp%3B', so we must
+                                 * decode them in two steps */
+                                char *tmp = escape_url(title, FALSE);
+                                pls_title = string_replace(tmp, "&amp;", "&");
+                                g_free(tmp);
                                 for (i = 0; pls_title[i] != 0; i++) {
                                         if (pls_title[i] == '+')
                                                 pls_title[i] = ' ';

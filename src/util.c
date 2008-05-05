@@ -99,3 +99,37 @@ file_exists(const char *filename)
         g_return_val_if_fail(filename, FALSE);
         return !access(filename, F_OK);
 }
+
+/**
+ * Replaces all occurrences of a text within a string (GString)
+ * @param str The string to be modified
+ * @param old The original text
+ * @param new The new text
+ */
+void
+string_replace_gstr(GString *str, const char *old, const char *new)
+{
+        g_return_if_fail(str && old && new);
+        const char *pos = str->str;
+        while ((pos = strstr(pos, old)) != NULL) {
+                g_string_erase(str, pos - str->str, strlen(old));
+                g_string_insert(str, pos - str->str, new);
+                pos += strlen(new);
+        }
+}
+
+/**
+ * Replaces all occurrences of a text within a string (char *)
+ * @param str The string to be modified
+ * @param old The original text
+ * @param new The new text
+ * @return A newly-created string
+ */
+char *
+string_replace(const char *str, const char *old, const char *new)
+{
+        g_return_val_if_fail(str && old && new, NULL);
+        GString *gstr = g_string_new(str);
+        string_replace_gstr(gstr, old, new);
+        return g_string_free(gstr, FALSE);
+}

@@ -11,6 +11,7 @@
 #include <dbus/dbus-glib.h>
 #include <string.h>
 #include "imstatus.h"
+#include "util.h"
 
 static char *saved_pidgin_status = NULL;
 static char *saved_telepathy_status = NULL;
@@ -289,31 +290,26 @@ im_set_status_idle(gpointer data)
 {
         g_return_val_if_fail(data != NULL, FALSE);
         ImStatusData *d = (ImStatusData *) data;
-        const char *artist_keyword = "{artist}";
-        const char *title_keyword = "{title}";
-        const char *pos;
 
         g_static_mutex_lock(&imstatus_mutex);
-        pos = strstr(d->msg->str, artist_keyword);
-        if (pos) {
-                g_string_erase(d->msg, pos - d->msg->str, strlen(artist_keyword));
-                g_string_insert(d->msg, pos - d->msg->str, d->track->artist);
-        }
 
-        pos = strstr(d->msg->str, title_keyword);
-        if (pos) {
-                g_string_erase(d->msg, pos - d->msg->str, strlen(title_keyword));
-                g_string_insert(d->msg, pos - d->msg->str, d->track->title);
-        }
+        /* Modify the template */
+        string_replace_gstr(d->msg, "{artist}", d->track->artist);
+        string_replace_gstr(d->msg, "{title}", d->track->title);
 
+        /* Set the status */
         if (d->im_pidgin) pidgin_set_status(d->msg->str);
         if (d->im_gajim) gajim_set_status(d->msg->str);
         if (d->im_gossip) gossip_set_status(d->msg->str);
         if (d->im_telepathy) telepathy_set_status(d->msg->str);
+
+        /* Cleanup */
         g_string_free(d->msg, TRUE);
         lastfm_track_unref(d->track);
         g_slice_free(ImStatusData, d);
+
         g_static_mutex_unlock(&imstatus_mutex);
+
         return FALSE;
 }
 
