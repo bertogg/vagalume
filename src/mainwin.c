@@ -116,11 +116,12 @@ static const char *license =
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/\n";
 static const char *translators = N_(
-"German (de)\nStephan Reichholf <stephan@reichholf.net>\n\n"
-"Spanish (es_MX)\nEduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n\n"
-"Spanish (es_VE)\nOscar A. Mata T. <omata_mac@yahoo.com>\n\n"
-"Galician (gl)\nIgnacio Casal Quinteiro <nacho.resa@gmail.com>\n\n"
-"Italian (it)\nAndrea Grandi <a.grandi@gmail.com>"
+"German (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
+             "* Oskar Welzl <oskar@welzl.info>\n\n"
+"Spanish (es_MX)\n* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n\n"
+"Spanish (es_VE)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
+"Galician (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n\n"
+"Italian (it)\n* Andrea Grandi <a.grandi@gmail.com>"
 );
 
 void
