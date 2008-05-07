@@ -63,6 +63,15 @@ if test "$have_libnotify" = "yes"; then
    echo $have_tray_icon
 fi
 
+# GChecksum requires glib 2.16
+echo -n "checking for glib >= 2.16... "
+if $PKG_CONFIG --atleast-version=2.16 glib-2.0; then
+   have_gchecksum="yes"
+else
+   have_gchecksum="no"
+fi
+echo $have_gchecksum
+
 # Check if we have getopt
 AC_CHECK_LIB(c, getopt,
    AC_DEFINE([HAVE_GETOPT],[1],[Defined if getopt() exists]),
@@ -79,20 +88,29 @@ AC_CHECK_LIB(curl, curl_easy_escape,
 
 # Check whether to use libgcrypt
 AC_ARG_ENABLE(libgcrypt, [
-  --enable-libgcrypt      compute MD5 using libgcrypt (default if available)
-  --disable-libgcrypt     use internal MD5 algorithm],
+  --enable-libgcrypt      use libgcrypt if glib doesn't support MD5
+                          checksums (default if libgcrypt is available)
+  --disable-libgcrypt     prefer internal MD5 implementation over libgcrypt],
   use_libgcrypt=$enableval, use_libgcrypt=$have_libgcrypt)
 
-if test "$use_libgcrypt" = "yes" -a "$have_libgcrypt" = "no"; then
+# Decide the actual MD5 implementation to be used
+if test "$have_gchecksum" = "yes"; then
+   AC_DEFINE([HAVE_GCHECKSUM],[1],[Defined if GChecksum exists])
+   use_libgcrypt="no"
+   md5_method="glib"
+elif test "$use_libgcrypt" = "yes" -a "$have_libgcrypt" = "no"; then
    AC_MSG_ERROR([ligcrypt not found, install it or use --disable-libgcrypt])
 elif test "$use_libgcrypt" = "yes"; then
    AC_DEFINE([HAVE_LIBGCRYPT],[1],[Defined if compiling with libgcrypt])
    EXTRA_LIBS="$EXTRA_LIBS -lgcrypt"
-   echo "Using libgcrypt to compute md5sums"
+   md5_method="libgcrypt"
 else
-   echo "Using internal implementation to compute md5sums"
+   use_internalmd5="yes"
+   md5_method="internal implementation"
 fi
-AM_CONDITIONAL(USE_INTERNAL_MD5, test "$use_libgcrypt" = "no")
+echo "Using $md5_method to compute md5sums"
+AM_CONDITIONAL(USE_INTERNAL_MD5, test "x$use_internalmd5" = "xyes")
+AM_CONDITIONAL(USE_LIBGCRYPT, test "x$use_libgcrypt" = "xyes")
 
 # Check whether to use the "Set IM status" feature
 AC_ARG_ENABLE(im-status, [
@@ -330,7 +348,7 @@ echo "*** Vagalume is ready to be compiled ***"
 echo "****************************************"
 echo ""
 echo "Target platform: $PLATFORM $PLATFORMVERS"
-echo "Using libgcrypt to compute MD5 sums: $use_libgcrypt"
+echo "Method to compute MD5 sums: $md5_method"
 echo "\"Set IM status\" enabled: $set_im_status"
 if test "$PLATFORM" = "gnome"; then
    echo "Tray icon and notifications enabled: $have_tray_icon"

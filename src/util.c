@@ -9,10 +9,12 @@
 #include "config.h"
 #include "util.h"
 
-#ifdef HAVE_LIBGCRYPT
-#include <gcrypt.h>
-#else
-#include "md5/md5.h"
+#ifndef HAVE_GCHECKSUM
+#   ifdef HAVE_LIBGCRYPT
+#      include <gcrypt.h>
+#   else
+#      include "md5/md5.h"
+#   endif
 #endif
 
 #include <string.h>
@@ -30,9 +32,15 @@ get_md5_hash(const char *str)
         g_return_val_if_fail(str != NULL, NULL);
         const int digestlen = 16;
         unsigned char digest[digestlen];
-        int i;
+        guint i;
 
-#ifdef HAVE_LIBGCRYPT
+#ifdef HAVE_GCHECKSUM
+        GChecksum *ck = g_checksum_new(G_CHECKSUM_MD5);
+        g_checksum_update(ck, (const guchar *) str, -1);
+        i = digestlen;
+        g_checksum_get_digest(ck, digest, &i);
+        g_checksum_free(ck);
+#elif defined(HAVE_LIBGCRYPT)
         gcry_md_hash_buffer(GCRY_MD_MD5, digest, str, strlen(str));
 #else
         md5_state_t state;
