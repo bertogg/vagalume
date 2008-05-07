@@ -58,6 +58,7 @@ typedef struct {
         GtkEntry *user, *pw, *proxy, *dlentry;
         GtkWidget *dlbutton, *scrobble, *discovery, *useproxy;
         GtkWidget *disableconfdiags;
+        GtkWidget *helpbtn;
 #ifdef SET_IM_STATUS
         GtkEntry *imtemplateentry;
         GtkWidget *impidgin, *imgajim, *imgossip, *imtelepathy;
@@ -241,11 +242,23 @@ change_dir_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+usercfg_help_button_clicked (GtkButton *button, usercfgwin *win)
+{
+        g_return_if_fail(win != NULL);
+        int page = gtk_notebook_get_current_page(win->nb);
+        GtkWidget *w = gtk_notebook_get_nth_page(win->nb, page);
+        const char *help = g_object_get_data(G_OBJECT(w), "help-message");
+        ui_info_dialog(GTK_WINDOW(win->dialog),
+                       help ? help : _("No help available"));
+}
+
+static void
 usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
         GtkWidget *userlabel, *pwlabel, *scroblabel, *discovlabel;
+        const char *help;
 
         /* Create widgets */
         table = GTK_TABLE(gtk_table_new(4, 2, TRUE));
@@ -288,6 +301,16 @@ usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
         gtk_table_attach(table, win->discovery, 1, 2, 3, 4, 0, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Account")));
+
+        /* Set help */
+        help = _("* Username:\nYour Last.fm account name.\n\n"
+                 "* Password:\nYour Last.fm password.\n\n"
+                 "* Scrobbling:\nEnable this and the music that you listen "
+                 "to\nwill appear on your profile on the Last.fm\n"
+                 "website.\n\n"
+                 "* Discovery mode:\nDon't play music you've already listened "
+                 "to.\nRequires a Last.fm subscription.");
+        g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 }
 
 static void
@@ -296,6 +319,7 @@ usercfg_add_connection_settings(usercfgwin *win, lastfm_usercfg *cfg)
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
         GtkWidget *useproxylabel, *proxylabel;
+        const char *help;
 
         /* Create widgets */
         table = GTK_TABLE(gtk_table_new(2, 2, FALSE));
@@ -320,6 +344,12 @@ usercfg_add_connection_settings(usercfgwin *win, lastfm_usercfg *cfg)
                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Connection")));
+
+        /* Set help */
+        help = _("* Use HTTP proxy:\nEnable this to use an HTTP proxy.\n\n"
+                 "* Proxy address:\nuser:password@hostname:port\n"
+                 "Only the hostname (can be an IP address) is required.");
+        g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 }
 
 static void
@@ -328,6 +358,7 @@ usercfg_add_download_settings(usercfgwin *win, lastfm_usercfg *cfg)
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
         GtkWidget *dllabel;
+        const char *help;
 
         /* Create widgets */
         table = GTK_TABLE(gtk_table_new(2, 2, FALSE));
@@ -350,6 +381,12 @@ usercfg_add_download_settings(usercfgwin *win, lastfm_usercfg *cfg)
         gtk_table_attach(table, win->dlbutton, 1, 2, 1, 2, 0, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Download")));
+
+        /* Set help */
+        help = _("* Download directory:\nWhere to download mp3 files.\n"
+                 "Note that you can only download those songs\n"
+                 "marked as freely downloadable in Last.fm.");
+        g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 }
 
 static void
@@ -360,6 +397,7 @@ usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
         GtkTable *table;
         GtkWidget *impidginlabel, *imgajimlabel, *imgossiplabel;
         GtkWidget *imtemplatelabel, *imtelepathylabel;
+        const char *help;
 
         /* Create widgets */
         table = GTK_TABLE(gtk_table_new(5, 2, TRUE));
@@ -399,6 +437,15 @@ usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
         gtk_table_attach(table, win->imtelepathy, 1, 2, 4, 5, 0, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Update IM status")));
+
+        /* Set help */
+        help = _("If enabled, Vagalume will update the status message\n"
+                 "of several IM clients each time a new song starts.\n"
+                 "The template can contain the following keywords:\n\n"
+                 "{artist}: Name of the artist\n"
+                 "{title}: Song title\n"
+                 "{version}: Vagalume version");
+        g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 #endif
 }
 
@@ -408,6 +455,7 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
         GtkWidget *disableconfdiagslabel;
+        GString *help = g_string_sized_new(100);
 #ifdef HAVE_TRAY_ICON
         GtkWidget *shownotificationslabel;
         GtkWidget *closetosystraylabel;
@@ -428,6 +476,11 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
         gtk_table_attach(table, disableconfdiagslabel, 0, 1, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, win->disableconfdiags, 1, 2, 0, 1, 0, 0, 5, 5);
 
+        g_string_append(help,
+                        _("* Disable confirmation dialogs:\n"
+                          "Don't ask for confirmation when\n"
+                          "loving/banning tracks."));
+
 #ifdef HAVE_TRAY_ICON
         /* Show playback notifications */
         shownotificationslabel =
@@ -440,6 +493,11 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
         gtk_table_attach(table, shownotificationslabel, 0, 1, 1, 2, 0, 0, 5, 5);
         gtk_table_attach(table, win->shownotifications, 1, 2, 1, 2, 0, 0, 5, 5);
 
+        g_string_append(help,
+                        _("\n\n* Show playback notifications:\n"
+                          "Pop up a notification box each time\n"
+                          "a new song starts.\n\n"));
+
         /* Close window to systray */
         closetosystraylabel =
                 gtk_label_new(_("Close to systray:"));
@@ -450,11 +508,20 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
 
         gtk_table_attach(table, closetosystraylabel, 0, 1, 2, 3, 0, 0, 5, 5);
         gtk_table_attach(table, win->closetosystray, 1, 2, 2, 3, 0, 0, 5, 5);
+
+        g_string_append(help,
+                        _("* Close to systray:\n"
+                          "Hide the Vagalume window when\n"
+                          "the close button is pressed."));
 #endif
 
         /* Add page to notebook */
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Misc")));
+
+        /* Set help */
+        g_object_set_data_full(G_OBJECT(table), "help-message",
+                               g_string_free(help, FALSE), g_free);
 }
 
 gboolean
@@ -470,6 +537,9 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
         memset (&win, 0, sizeof(win));
         win.dialog = ui_base_dialog(parent, _("User settings"));
         win.nb = GTK_NOTEBOOK(gtk_notebook_new());
+        win.helpbtn = gtk_button_new_from_stock(GTK_STOCK_HELP);
+        gtk_box_pack_start(GTK_BOX(win.dialog->action_area), win.helpbtn,
+                           FALSE, FALSE, 0);
 
         usercfg_add_account_settings(&win, *cfg);
         usercfg_add_connection_settings(&win, *cfg);
@@ -486,6 +556,8 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
 
         g_signal_connect(G_OBJECT(win.dlbutton), "clicked",
                          G_CALLBACK(change_dir_selected), windata);
+        g_signal_connect(G_OBJECT(win.helpbtn), "clicked",
+                         G_CALLBACK(usercfg_help_button_clicked), &win);
 
         gtk_widget_show_all(GTK_WIDGET(win.dialog));
         if (gtk_dialog_run(win.dialog) == GTK_RESPONSE_ACCEPT) {

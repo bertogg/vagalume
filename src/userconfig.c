@@ -16,7 +16,8 @@
 #include "config.h"
 #include "userconfig.h"
 
-#define DEFAULT_IMSTATUS_TEMPLATE "\342\231\253 {artist} - {title} \342\231\253"
+#define DEFAULT_IMSTATUS_TEMPLATE \
+        "\342\231\253 {artist} - {title} \342\231\253 (Vagalume {version})"
 
 static char *
 cfg_get_val(const char *line, const char *key)
