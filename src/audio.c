@@ -128,7 +128,7 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
         case GST_MESSAGE_TAG:
         case GST_MESSAGE_CLOCK_PROVIDE:
         case GST_MESSAGE_NEW_CLOCK:
-#ifdef GST_MESSAGE_ASYNC_DONE
+#if GST_VERSION_MICRO >= 13
         case GST_MESSAGE_ASYNC_DONE:
 #endif
                 break;
