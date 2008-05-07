@@ -303,13 +303,11 @@ usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
                                  gtk_label_new(_("Account")));
 
         /* Set help */
-        help = _("* Username:\nYour Last.fm account name.\n\n"
-                 "* Password:\nYour Last.fm password.\n\n"
-                 "* Scrobbling:\nEnable this and the music that you listen "
-                 "to\nwill appear on your profile on the Last.fm\n"
-                 "website.\n\n"
+        help = _("* Username and password:\nFrom your Last.fm account.\n\n"
+                 "* Scrobbling:\nDisplay the music that you listen to on "
+                 "your Last.fm profile.\n\n"
                  "* Discovery mode:\nDon't play music you've already listened "
-                 "to.\nRequires a Last.fm subscription.");
+                 "to. Requires a Last.fm subscription.");
         g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 }
 
@@ -383,9 +381,9 @@ usercfg_add_download_settings(usercfgwin *win, lastfm_usercfg *cfg)
                                  gtk_label_new(_("Download")));
 
         /* Set help */
-        help = _("* Download directory:\nWhere to download mp3 files.\n"
-                 "Note that you can only download those songs\n"
-                 "marked as freely downloadable in Last.fm.");
+        help = _("* Download directory:\nWhere to download mp3 files. "
+                 "Note that you can only download those songs "
+                 "marked as freely downloadable by Last.fm.");
         g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 }
 
@@ -439,9 +437,9 @@ usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
                                  gtk_label_new(_("Update IM status")));
 
         /* Set help */
-        help = _("If enabled, Vagalume will update the status message\n"
-                 "of several IM clients each time a new song starts.\n"
-                 "The template can contain the following keywords:\n\n"
+        help = _("Vagalume can update the status message of your IM client "
+                 "each time a new song starts. The template can contain the "
+                 "following keywords:\n\n"
                  "{artist}: Name of the artist\n"
                  "{title}: Song title\n"
                  "{version}: Vagalume version");
@@ -478,7 +476,7 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
 
         g_string_append(help,
                         _("* Disable confirmation dialogs:\n"
-                          "Don't ask for confirmation when\n"
+                          "Don't ask for confirmation when "
                           "loving/banning tracks."));
 
 #ifdef HAVE_TRAY_ICON
@@ -495,7 +493,7 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
 
         g_string_append(help,
                         _("\n\n* Show playback notifications:\n"
-                          "Pop up a notification box each time\n"
+                          "Pop up a notification box each time "
                           "a new song starts.\n\n"));
 
         /* Close window to systray */
@@ -511,7 +509,7 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
 
         g_string_append(help,
                         _("* Close to systray:\n"
-                          "Hide the Vagalume window when\n"
+                          "Hide the Vagalume window when "
                           "the close button is pressed."));
 #endif
 
