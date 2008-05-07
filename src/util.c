@@ -30,29 +30,27 @@ char *
 get_md5_hash(const char *str)
 {
         g_return_val_if_fail(str != NULL, NULL);
+#ifdef HAVE_GCHECKSUM
+        return g_compute_checksum_for_string(G_CHECKSUM_MD5, str, -1);
+#else
         const int digestlen = 16;
         unsigned char digest[digestlen];
         guint i;
 
-#ifdef HAVE_GCHECKSUM
-        GChecksum *ck = g_checksum_new(G_CHECKSUM_MD5);
-        g_checksum_update(ck, (const guchar *) str, -1);
-        i = digestlen;
-        g_checksum_get_digest(ck, digest, &i);
-        g_checksum_free(ck);
-#elif defined(HAVE_LIBGCRYPT)
+#   ifdef HAVE_LIBGCRYPT
         gcry_md_hash_buffer(GCRY_MD_MD5, digest, str, strlen(str));
-#else
+#   else
         md5_state_t state;
         md5_init(&state);
         md5_append(&state, (const md5_byte_t *)str, strlen(str));
         md5_finish(&state, digest);
-#endif
+#   endif /* HAVE_LIBGCRYPT */
         char *hexdigest = g_malloc(digestlen*2 + 1);
         for (i = 0; i < digestlen; i++) {
                 sprintf(hexdigest + 2*i, "%02x", digest[i]);
         }
         return hexdigest;
+#endif /* HAVE_GCHECKSUM */
 }
 
 /**
