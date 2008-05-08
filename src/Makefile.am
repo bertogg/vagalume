@@ -71,5 +71,5 @@ libvagalumesbplugin_la_LIBADD = $(SBPLUGIN_LIBS)
 
 libvagalumesbplugin_la_CFLAGS = $(SBPLUGIN_CFLAGS) \
 	-DAPP_DATA_DIR=\"$(appdatadir)\" \
-	-DICON_DIR=\"$(icondir)\"
+	-DPIXMAP_DIR=\"$(pixmapdir)\"
 endif
