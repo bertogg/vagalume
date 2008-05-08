@@ -35,7 +35,7 @@
 #define CLOSE_APP_ITEM_STRING _("Close Vagalume")
 
 #define MENU_ITEM_ICON_SIZE 18
-#define NOTIFICATION_ICON_SIZE 40
+#define NOTIFICATION_ICON_SIZE 48
 
 #define SHOW_APP_ITEM_ICON_NAME "view-restore"
 #define SETTINGS_ITEM_ICON_NAME "preferences-other"
@@ -464,6 +464,19 @@ vagalume_tray_icon_create (void)
 }
 
 static GdkPixbuf *
+get_default_album_cover_icon (void)
+{
+        static GdkPixbuf *pixbuf = NULL;
+
+        /* Create "empty" GdkPixbuf if not created yet */
+        if (pixbuf == NULL) {
+                pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);
+        }
+
+        return pixbuf;
+}
+
+static GdkPixbuf *
 get_album_cover_icon (const gchar *image_url)
 {
         g_return_val_if_fail(image_url != NULL, NULL);
@@ -507,6 +520,8 @@ static void
 show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 {
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+
+        GdkPixbuf *icon = NULL;
         gchar *notification_summary = NULL;
         gchar *notification_body = NULL;
         gchar *stripped_album = NULL;
@@ -549,14 +564,19 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
                                             NULL);
         }
 
-        /* Set album image as icon if specified */
         if (track->image_url != NULL) {
-                GdkPixbuf *icon = get_album_cover_icon (track->image_url);
-                if (icon != NULL) {
-                        notify_notification_set_icon_from_pixbuf (
-                                priv->notification, icon);
-                }
+                /* Set album image as icon if specified */
+                icon = get_album_cover_icon (track->image_url);
         }
+
+        /* Try loading the default cover icon if an error occurred or
+         * not image_url was set for the current track */
+        if (icon == NULL) {
+                icon = get_default_album_cover_icon ();
+        }
+
+        /* Set cover image */
+        notify_notification_set_icon_from_pixbuf (priv->notification, icon);
 
         /* Show notification */
         notify_notification_show (priv->notification, NULL);
