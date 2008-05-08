@@ -310,7 +310,9 @@ fi
 
 AC_SUBST(appdatadir, "\${datadir}/vagalume")
 AC_SUBST(icondir, "\${datadir}/pixmaps")
+AC_SUBST(icon26dir, "\${datadir}/icons/hicolor/26x26/apps")
 AC_SUBST(icon48dir, "\${datadir}/icons/hicolor/48x48/apps")
+AC_SUBST(iconscalabledir, "\${datadir}/icons/hicolor/scalable/apps")
 AC_SUBST(serviceentrydir)
 AC_SUBST(desktopentrydir)
 AC_SUBST(EXTRA_CFLAGS)

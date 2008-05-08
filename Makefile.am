@@ -37,6 +37,8 @@ appdata_DATA = data/$(PLATFORM)/*
 desktopentry_DATA = data/vagalume.desktop
 
 if MAEMO_PLATFORM
+icon26_DATA = data/icons/26x26/*
+iconscalable_DATA = data/icons/scalable/*
 themebigicondir = $(appdatadir)/icons/hicolor/scalable/apps
 themebigicon_DATA = data/buttons/big/*.png
 themesmallicondir = $(appdatadir)/icons/hicolor/50x50/apps
