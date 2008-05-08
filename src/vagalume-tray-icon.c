@@ -516,15 +516,35 @@ get_album_cover_icon (const gchar *image_url)
         return pixbuf;
 }
 
-static void
-show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
+typedef struct {
+        lastfm_track *track;
+        VagalumeTrayIcon *vti;
+} VagalumeTrayIconPlaybackData;
+
+static gpointer
+show_notification (gpointer data)
 {
+        g_return_val_if_fail(data != NULL, NULL);
+        VagalumeTrayIconPlaybackData *d = (VagalumeTrayIconPlaybackData *)data;
+        VagalumeTrayIcon *vti = d->vti;
+        lastfm_track *track = d->track;
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
 
         GdkPixbuf *icon = NULL;
         gchar *notification_summary = NULL;
         gchar *notification_body = NULL;
         gchar *stripped_album = NULL;
+
+        if (track->image_url != NULL) {
+                /* Set album image as icon if specified */
+                icon = get_album_cover_icon (track->image_url);
+        }
+
+        /* Try loading the default cover icon if an error occurred or
+         * not image_url was set for the current track */
+        if (icon == NULL) {
+                icon = get_default_album_cover_icon ();
+        }
 
         /* Set summary text (title) */
         notification_summary =
@@ -549,6 +569,9 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
                                                  track->album);
         }
 
+        /* This is a thread and here begins the GTK code */
+        gdk_threads_enter();
+
         /* Create the notification if not already created */
         if (priv->notification == NULL) {
                 priv->notification =
@@ -564,41 +587,37 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
                                             NULL);
         }
 
-        if (track->image_url != NULL) {
-                /* Set album image as icon if specified */
-                icon = get_album_cover_icon (track->image_url);
-        }
-
-        /* Try loading the default cover icon if an error occurred or
-         * not image_url was set for the current track */
-        if (icon == NULL) {
-                icon = get_default_album_cover_icon ();
-        }
-
         /* Set cover image */
         notify_notification_set_icon_from_pixbuf (priv->notification, icon);
 
         /* Show notification */
         notify_notification_show (priv->notification, NULL);
 
+        /* Leaving GTK code behind ... */
+        gdk_threads_leave();
+
+        /* Cleanup */
         g_free (notification_summary);
         g_free (notification_body);
         g_free (stripped_album);
+
+        g_object_unref(d->vti);
+        lastfm_track_unref(d->track);
+        g_slice_free(VagalumeTrayIconPlaybackData, d);
+
+        return NULL;
 }
 
-typedef struct {
-        lastfm_track *track;
-        VagalumeTrayIcon *vti;
-} VagalumeTrayIconNotifyPlaybackData;
-
 static gboolean
-notify_playback_idle (VagalumeTrayIconNotifyPlaybackData *d)
+notify_playback_idle (VagalumeTrayIconPlaybackData *d)
 {
         g_return_val_if_fail(d != NULL, FALSE);
+        VagalumeTrayIconPrivate *priv;
+        gboolean do_cleanup = TRUE;
 
         gdk_threads_enter();
         /* Set the now_playing private attribute and update panel */
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (d->vti);
+        priv = VAGALUME_TRAY_ICON_GET_PRIVATE (d->vti);
         priv->now_playing = (d->track != NULL);
         ctxt_menu_update (d->vti);
 
@@ -616,7 +635,11 @@ notify_playback_idle (VagalumeTrayIconNotifyPlaybackData *d)
 
                 /* Show the notification, if required */
                 if (priv->show_notifications) {
-                        show_notification (d->vti, d->track);
+                        /* We might need to download the album cover,
+                         * so we use a thread */
+                        g_thread_create(show_notification, d, FALSE, NULL);
+                        /* show_notification() will do the cleanup */
+                        do_cleanup = FALSE;
                 }
         } else {
                 gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
@@ -624,9 +647,11 @@ notify_playback_idle (VagalumeTrayIconNotifyPlaybackData *d)
         gdk_threads_leave();
 
         /* Cleanup */
-        g_object_unref(d->vti);
-        if (d->track != NULL) lastfm_track_unref(d->track);
-        g_slice_free(VagalumeTrayIconNotifyPlaybackData, d);
+        if (do_cleanup) {
+                g_object_unref(d->vti);
+                if (d->track != NULL) lastfm_track_unref(d->track);
+                g_slice_free(VagalumeTrayIconPlaybackData, d);
+        }
 
         return FALSE;
 }
@@ -635,8 +660,8 @@ void
 vagalume_tray_icon_notify_playback (VagalumeTrayIcon *vti, lastfm_track *track)
 {
         g_return_if_fail(VAGALUME_IS_TRAY_ICON(vti));
-        VagalumeTrayIconNotifyPlaybackData *data;
-        data = g_slice_new(VagalumeTrayIconNotifyPlaybackData);
+        VagalumeTrayIconPlaybackData *data;
+        data = g_slice_new(VagalumeTrayIconPlaybackData);
         data->vti = g_object_ref(vti);
         data->track = track ? lastfm_track_ref(track) : NULL;
         g_idle_add((GSourceFunc)notify_playback_idle, data);
