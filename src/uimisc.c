@@ -855,7 +855,7 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
                 gtk_combo_box_set_model(w->globalcombo, w->retrmodel);
                 gtk_combo_box_set_active(w->globalcombo, 0);
                 gtk_widget_set_sensitive(GTK_WIDGET(w->entry), FALSE);
-                gtk_entry_set_text(w->entry, "retrieving ...");
+                gtk_entry_set_text(w->entry, _("retrieving ..."));
         }
         if (oldstate == TAGCOMBO_STATE_NULL) {
                 get_track_tags_data *data = g_slice_new(get_track_tags_data);
@@ -909,7 +909,7 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
         GtkWidget *alig;
 
         /* A treemodel for combos with no elements */
-        nonelist = g_list_append(NULL, "(none)");
+        nonelist = g_list_append(NULL, _("(none)"));
         nonemodel = ui_create_options_list(nonelist);
         g_list_free(nonelist);
         nonelist = g_list_append(NULL, _("retrieving..."));

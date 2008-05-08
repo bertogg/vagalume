@@ -500,7 +500,7 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, lastfm_mainwin *win)
         }
         if (volchange != 0) {
                 int newvol = controller_increase_volume(volchange);
-                char *text = g_strdup_printf("Volume: %d/100", newvol);
+                char *text = g_strdup_printf(_("Volume: %d/100"), newvol);
                 controller_show_banner(text);
                 g_free(text);
         }
