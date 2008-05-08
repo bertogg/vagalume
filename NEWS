@@ -1,3 +1,30 @@
+0.6 (?? May 2008)
+  * Freedesktop tray icon (Gnome only, thanks Mario Sanchez)
+  * Notifications support via libnotify (Gnome only, thanks Mario Sanchez)
+  * New feature to update the status of several IM clients: Pidgin,
+    Telepathy, Gossip and Gajim (thanks, Tim Wegener)
+  * Gettext support (thanks, Alejandro Piñeiro)
+  * de, it, gl, es_MX and es_VE translations (see TRANSLATORS file for
+    details)
+  * New setting to disable confirmation dialogs
+  * Help messages for all configuration settings
+  * New D-BUS methods to change the volume level
+  * Support for changing/disabling the audioconvert GStreamer element
+  * vagalumectl script to control Vagalume from the command line
+    (thanks Mario Sanchez)
+  * Commandline switches to change GStreamer elements
+  * Support for osso-backup, cud and rfs (Maemo, thanks Xabier R. Calvar)
+  * Disconnect Vagalume when the Nokia N8x0 is being shut down (thanks
+    Xabier R. Calvar)
+  * New play/stop/skip entries in the Actions menu, with shortcuts
+  * Big 64x64 icon for the menu in IT OS2008
+  * The password entry no longer has autocap mode (Maemo only)
+  * Dim the "Add to playlist" button after using it
+  * Don't download the album cover when the window is not the topmost
+    (Maemo only)
+  * Increased HTTP timeout. Set a timeout in all HTTP calls
+  * Support for computing MD5 sums using GChecksum from glib
+
 0.5.1 (15 Feb 1008)
   * Use GTK+ themeable buttons instead of the custom buttons introduced
     in Vagalume 0.5
