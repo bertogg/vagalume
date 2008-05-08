@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/vagalume
 %{_datadir}/applications/vagalume.desktop
 %{_datadir}/icons/hicolor/48x48/apps/vagalume.png
-%{_datadir}/pixmaps/vagalume.png
+%{_datadir}/pixmaps/vagalume.xpm
 %{_datadir}/vagalume/cover.png
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/accessories-text-editor.svg
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/document-save.svg

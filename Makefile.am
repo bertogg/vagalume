@@ -31,7 +31,7 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src po
 
-icon_DATA = data/icons/vagalume.png data/icons/vagalume.xpm
+icon_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
 appdata_DATA = data/$(PLATFORM)/*
 desktopentry_DATA = data/vagalume.desktop
