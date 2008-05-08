@@ -31,13 +31,15 @@ MAINTAINERCLEANFILES = \
 
 SUBDIRS = src po
 
-icon_DATA = data/icons/vagalume.xpm
+pixmap_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
 appdata_DATA = data/$(PLATFORM)/*
 desktopentry_DATA = data/vagalume.desktop
 
 if MAEMO_PLATFORM
+icon26dir = $(datadir)/icons/hicolor/26x26/apps
 icon26_DATA = data/icons/26x26/*
+iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
 iconscalable_DATA = data/icons/scalable/*
 themebigicondir = $(appdatadir)/icons/hicolor/scalable/apps
 themebigicon_DATA = data/buttons/big/*.png

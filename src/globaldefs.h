@@ -26,7 +26,7 @@
 #define LASTFM_APP_ID "vag"
 #define LASTFM_APP_VERSION "0.1"
 
-#define APP_ICON ICON_DIR "/vagalume.xpm"
+#define APP_ICON PIXMAP_DIR "/vagalume.xpm"
 #define APP_ICON_BIG ICON48_DIR "/vagalume.png"
 
 #define THEME_ICONS_DIR APP_DATA_DIR "/icons"
