@@ -224,8 +224,12 @@ write_usercfg(lastfm_usercfg *cfg)
 #ifdef MAEMO
         base64pw = g_strdup(cfg->password);
 #else
-        base64pw = g_base64_encode((guchar *)cfg->password,
-                                   strlen(cfg->password));
+        if (cfg->password[0] != '\0') {
+                base64pw = g_base64_encode((guchar *)cfg->password,
+                                           strlen(cfg->password));
+        } else {
+                base64pw = g_base64_encode((guchar *)" ", 1);
+        }
 #endif
         if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n"
                     "http_proxy=\"%s\"\nuse_proxy=\"%d\"\n"
