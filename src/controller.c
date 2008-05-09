@@ -888,10 +888,7 @@ controller_disconnect(void)
         if (usercfg != NULL) {
                 set_rsp_session(usercfg->username, NULL);
         }
-        if (playlist != NULL) {
-                lastfm_pls_destroy(playlist);
-                playlist = NULL;
-        }
+        lastfm_pls_clear(playlist);
         controller_stop_playing();
 }
 
