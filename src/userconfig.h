@@ -17,7 +17,7 @@ typedef struct {
         char *password; /* Never NULL, even if not defined */
         char *http_proxy; /* Never NULL, even if not defined */
         char *download_dir; /* Never NULL */
-        char *imstatus_template;
+        char *imstatus_template; /* Never NULL */
         gboolean use_proxy;
         gboolean discovery_mode;
         gboolean enable_scrobbling;

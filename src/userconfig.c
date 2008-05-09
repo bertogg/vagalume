@@ -70,46 +70,41 @@ default_download_dir(void)
 void
 lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username)
 {
-        g_return_if_fail(cfg != NULL);
+        g_return_if_fail(cfg != NULL && username != NULL);
         g_free(cfg->username);
-        cfg->username = g_strdup(username);
-        if (cfg->username) g_strstrip(cfg->username);
+        cfg->username = g_strstrip(g_strdup(username));
 }
 
 void
 lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password)
 {
-        g_return_if_fail(cfg != NULL);
+        g_return_if_fail(cfg != NULL && password != NULL);
         g_free(cfg->password);
-        cfg->password = g_strdup(password);
-        if (cfg->password) g_strstrip(cfg->password);
+        cfg->password = g_strstrip(g_strdup(password));
 }
 
 void
 lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy)
 {
-        g_return_if_fail(cfg != NULL);
+        g_return_if_fail(cfg != NULL && proxy != NULL);
         g_free(cfg->http_proxy);
-        cfg->http_proxy = g_strdup(proxy);
-        if (cfg->http_proxy) g_strstrip(cfg->http_proxy);
+        cfg->http_proxy = g_strstrip(g_strdup(proxy));
 }
 
 void
 lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir)
 {
-        g_return_if_fail(cfg != NULL);
+        g_return_if_fail(cfg != NULL && dir != NULL);
         g_free(cfg->download_dir);
-        cfg->download_dir = g_strdup(dir);
-        if (cfg->download_dir) g_strstrip(cfg->download_dir);
+        cfg->download_dir = g_strstrip(g_strdup(dir));
 }
 
 void
 lastfm_usercfg_set_imstatus_template(lastfm_usercfg *cfg, const char *str)
 {
-        g_return_if_fail(cfg != NULL);
+        g_return_if_fail(cfg != NULL && str != NULL);
         g_free(cfg->imstatus_template);
-        cfg->imstatus_template = g_strdup(str);
-        if (cfg->imstatus_template) g_strstrip(cfg->imstatus_template);
+        cfg->imstatus_template = g_strstrip(g_strdup(str));
 }
 
 lastfm_usercfg *
@@ -215,7 +210,7 @@ read_usercfg(void)
 gboolean
 write_usercfg(lastfm_usercfg *cfg)
 {
-        g_return_val_if_fail(cfg && cfg->username && cfg->password, FALSE);
+        g_return_val_if_fail(cfg, FALSE);
         gboolean retval = TRUE;
         char *cfgfile, *base64pw;
         FILE *fd = NULL;
