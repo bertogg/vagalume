@@ -473,7 +473,7 @@ get_default_album_cover_icon (void)
                 pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);
         }
 
-        return pixbuf;
+        return g_object_ref (pixbuf);
 }
 
 static GdkPixbuf *
@@ -542,12 +542,6 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
                 icon = get_album_cover_icon (track->image_url);
         }
 
-        /* Try loading the default cover icon if an error occurred or
-         * not image_url was set for the current track */
-        if (icon == NULL) {
-                icon = get_default_album_cover_icon ();
-        }
-
         /* Set summary text (title) */
         notification_summary =
                 g_markup_printf_escaped ("<span>%s</span>", track->title);
@@ -573,6 +567,12 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 
         /* Here begins the GTK code, so get the GDK lock again */
         gdk_threads_enter();
+
+        /* Try loading the default cover icon if an error occurred or
+         * not image_url was set for the current track */
+        if (icon == NULL) {
+                icon = get_default_album_cover_icon ();
+        }
 
         /* Create the notification if not already created */
         if (priv->notification == NULL) {
