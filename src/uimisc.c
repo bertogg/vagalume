@@ -253,6 +253,16 @@ usercfg_help_button_clicked (GtkButton *button, usercfgwin *win)
 }
 
 static void
+usercfg_user_pw_modified(GObject *obj, GParamSpec *arg, usercfgwin *win)
+{
+        const char *user = gtk_entry_get_text(win->user);
+        const char *pw = gtk_entry_get_text(win->pw);
+        gboolean userpw = (user && pw && strlen(user) > 0 && strlen(pw) > 0);
+        gtk_dialog_set_response_sensitive(win->dialog,
+                                          GTK_RESPONSE_ACCEPT, userpw);
+}
+
+static void
 usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
@@ -279,6 +289,11 @@ usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
         gtk_entry_set_visibility(win->pw, FALSE);
         gtk_entry_set_activates_default(win->user, TRUE);
         gtk_entry_set_activates_default(win->pw, TRUE);
+
+        g_signal_connect(G_OBJECT(win->user), "notify::text",
+                         G_CALLBACK(usercfg_user_pw_modified), win);
+        g_signal_connect(G_OBJECT(win->pw), "notify::text",
+                         G_CALLBACK(usercfg_user_pw_modified), win);
 
         /* Set initial values */
         gtk_entry_set_text(win->user, cfg->username);
