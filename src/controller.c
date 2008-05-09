@@ -1522,7 +1522,10 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         /* Init Freedesktop tray icon */
         tray_icon = vagalume_tray_icon_create ();
         vagalume_tray_icon_notify_playback (tray_icon, NULL);
-        vagalume_tray_icon_show_notifications (tray_icon, usercfg->show_notifications);
+        if (usercfg != NULL) {
+                vagalume_tray_icon_show_notifications (
+                        tray_icon, usercfg->show_notifications);
+        }
 #endif
 
         mainwin_run_app();
