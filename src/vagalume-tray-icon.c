@@ -521,19 +521,20 @@ typedef struct {
         VagalumeTrayIcon *vti;
 } VagalumeTrayIconPlaybackData;
 
-static gpointer
-show_notification (gpointer data)
+static void
+show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 {
-        g_return_val_if_fail(data != NULL, NULL);
-        VagalumeTrayIconPlaybackData *d = (VagalumeTrayIconPlaybackData *)data;
-        VagalumeTrayIcon *vti = d->vti;
-        lastfm_track *track = d->track;
+        g_return_if_fail(VAGALUME_IS_TRAY_ICON(vti) && track != NULL);
         VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
 
         GdkPixbuf *icon = NULL;
         gchar *notification_summary = NULL;
         gchar *notification_body = NULL;
         gchar *stripped_album = NULL;
+
+        /* This is a thread and downloading the cover can take some
+         * time, so we release the GDK lock */
+        gdk_threads_leave();
 
         if (track->image_url != NULL) {
                 /* Set album image as icon if specified */
@@ -569,7 +570,7 @@ show_notification (gpointer data)
                                                  track->album);
         }
 
-        /* This is a thread and here begins the GTK code */
+        /* Here begins the GTK code, so get the GDK lock again */
         gdk_threads_enter();
 
         /* Create the notification if not already created */
@@ -593,27 +594,17 @@ show_notification (gpointer data)
         /* Show notification */
         notify_notification_show (priv->notification, NULL);
 
-        /* Leaving GTK code behind ... */
-        gdk_threads_leave();
-
         /* Cleanup */
         g_free (notification_summary);
         g_free (notification_body);
         g_free (stripped_album);
-
-        g_object_unref(d->vti);
-        lastfm_track_unref(d->track);
-        g_slice_free(VagalumeTrayIconPlaybackData, d);
-
-        return NULL;
 }
 
-static gboolean
-notify_playback_idle (VagalumeTrayIconPlaybackData *d)
+static gpointer
+notify_playback_thread (VagalumeTrayIconPlaybackData *d)
 {
-        g_return_val_if_fail(d != NULL, FALSE);
+        g_return_val_if_fail(d != NULL, NULL);
         VagalumeTrayIconPrivate *priv;
-        gboolean do_cleanup = TRUE;
 
         gdk_threads_enter();
         /* Set the now_playing private attribute and update panel */
@@ -635,11 +626,7 @@ notify_playback_idle (VagalumeTrayIconPlaybackData *d)
 
                 /* Show the notification, if required */
                 if (priv->show_notifications) {
-                        /* We might need to download the album cover,
-                         * so we use a thread */
-                        g_thread_create(show_notification, d, FALSE, NULL);
-                        /* show_notification() will do the cleanup */
-                        do_cleanup = FALSE;
+                        show_notification (d->vti, d->track);
                 }
         } else {
                 gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
@@ -647,13 +634,11 @@ notify_playback_idle (VagalumeTrayIconPlaybackData *d)
         gdk_threads_leave();
 
         /* Cleanup */
-        if (do_cleanup) {
-                g_object_unref(d->vti);
-                if (d->track != NULL) lastfm_track_unref(d->track);
-                g_slice_free(VagalumeTrayIconPlaybackData, d);
-        }
+        g_object_unref(d->vti);
+        if (d->track != NULL) lastfm_track_unref(d->track);
+        g_slice_free(VagalumeTrayIconPlaybackData, d);
 
-        return FALSE;
+        return NULL;
 }
 
 void
@@ -664,7 +649,7 @@ vagalume_tray_icon_notify_playback (VagalumeTrayIcon *vti, lastfm_track *track)
         data = g_slice_new(VagalumeTrayIconPlaybackData);
         data->vti = g_object_ref(vti);
         data->track = track ? lastfm_track_ref(track) : NULL;
-        g_idle_add((GSourceFunc)notify_playback_idle, data);
+        g_thread_create((GThreadFunc)notify_playback_thread,data,FALSE,NULL);
 }
 
 void
