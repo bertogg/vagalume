@@ -385,11 +385,6 @@ controller_set_nowplaying(lastfm_track *track)
                 lastfm_track_unref(nowplaying);
         }
         nowplaying = track;
-        if (track == NULL) {
-                im_clear_status(usercfg);
-        } else {
-                im_set_status(usercfg, track);
-        }
         nowplaying_since = 0;
         nowplaying_rating = RSP_RATING_NONE;
         if (track != NULL && usercfg->enable_scrobbling) {
@@ -578,8 +573,7 @@ check_session_thread(gpointer userdata)
         s = lastfm_session_new(data->user, data->pass, &err);
         if (s == NULL || s->id == NULL) {
                 gdk_threads_enter();
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED,
-                                     NULL);
+                controller_disconnect();
                 if (err == LASTFM_ERR_LOGIN) {
                         controller_show_warning(_("Unable to login to Last.fm\n"
                                                   "Check username and password"));
@@ -655,9 +649,7 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
                                              LASTFM_UI_STATE_CONNECTING,
                                              NULL);
                 } else {
-                        mainwin_set_ui_state(mainwin,
-                                             LASTFM_UI_STATE_DISCONNECTED,
-                                             NULL);
+                        controller_disconnect();
                         controller_show_warning(_("You need to enter your "
                                                   "Last.fm\nusername and "
                                                   "password to be able\n"
@@ -759,6 +751,7 @@ controller_audio_started_cb(void)
         mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING, nowplaying);
         track = lastfm_track_ref(nowplaying);
         controller_show_progress(track);
+        im_set_status(usercfg, track);
         showing_cover = FALSE;
         controller_show_cover();
         g_timeout_add(1000, controller_show_progress, track);
@@ -852,6 +845,7 @@ controller_stop_playing(void)
         mainwin_set_ui_state(mainwin, new_state, NULL);
         finish_playing_track();
         stopping_after_track = FALSE;
+        im_clear_status(usercfg);
 
         /* Notify the playback status */
         lastfm_dbus_notify_playback(NULL);
