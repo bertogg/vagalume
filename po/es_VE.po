@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-08 22:43+0200\n"
-"PO-Revision-Date: 2008-05-02 17:31+0200\n"
+"PO-Revision-Date: 2008-05-08 20:40-0400\n"
 "Last-Translator: Oscar A. Mata T. <omata_mac@yahoo.com>\n"
 "Language-Team: es_VE\n"
 "MIME-Version: 1.0\n"
@@ -125,7 +125,8 @@ msgstr ""
 "disponible para suscriptores\n"
 "de Last.fm"
 
-#: src/controller.c:1265 src/controller.c:1380
+#: src/controller.c:1265
+#: src/controller.c:1380
 msgid "Enter tag"
 msgstr "Introducir Etiqueta"
 
@@ -228,11 +229,16 @@ msgid ""
 "  decoder:   GStreamer decoder (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
+"Uso: %s [-c converter] [-d decoder] [-s sink] [lastfm radio url]\n"
+"\n"
+"  converter: Convertidor GStreamer (predeterminados: '%s', 'none' para desactivarlo)\n"
+"  decoder:   Decodificador GStreamer (predeterminados: '%s')\n"
+"  sink:      GStreamer sink (default: '%s')\n"
 
 #: src/main.c:78
 #, c-format
 msgid "Too many unrecognized options\n"
-msgstr ""
+msgstr "Muchas opciones irreconocibles\n"
 
 #: src/main.c:87
 #, c-format
@@ -255,7 +261,9 @@ msgstr "Omitir esta pista"
 msgid "Mark as loved"
 msgstr "Marcar como preferida"
 
-#: src/mainwin.c:69 src/mainwin.c:825 src/vagalume-tray-icon.c:31
+#: src/mainwin.c:69
+#: src/mainwin.c:825
+#: src/vagalume-tray-icon.c:31
 msgid "Ban this track"
 msgstr "Prohibir esta pista"
 
@@ -263,7 +271,8 @@ msgstr "Prohibir esta pista"
 msgid "Recommend this track"
 msgstr "Recomendar esta pista"
 
-#: src/mainwin.c:77 src/mainwin.c:827
+#: src/mainwin.c:77
+#: src/mainwin.c:827
 msgid "Download this track"
 msgstr "Descargar esta pista"
 
@@ -297,6 +306,21 @@ msgid ""
 "Italian (it)\n"
 "* Andrea Grandi <a.grandi@gmail.com>"
 msgstr ""
+"Alemán (de)\n"
+"* Stephan Reichholf <stephan@reichholf.net>\n"
+"* Oskar Welzl <oskar@welzl.info>\n"
+"\n"
+"Español (es_MX)\n"
+"* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
+"\n"
+"Español (es_VE)\n"
+"* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
+"\n"
+"Gallego (gl)\n"
+"* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
+"\n"
+"Italiano (it)\n"
+"* Andrea Grandi <a.grandi@gmail.com>"
 
 #: src/mainwin.c:210
 msgid "<b>Artist:</b>\n"
@@ -314,7 +338,8 @@ msgstr "<b>&Aacute;lbum:</b>\n"
 msgid "<b>Listening to <i>"
 msgstr "<b>Escuchando a <i>"
 
-#: src/mainwin.c:362 src/mainwin.c:363
+#: src/mainwin.c:362
+#: src/mainwin.c:363
 msgid "Stopped"
 msgstr "Detenido"
 
@@ -322,7 +347,8 @@ msgstr "Detenido"
 msgid "Playing..."
 msgstr "Reproduciendo..."
 
-#: src/mainwin.c:416 src/mainwin.c:417
+#: src/mainwin.c:416
+#: src/mainwin.c:417
 msgid "Connecting..."
 msgstr "Conectando..."
 
@@ -333,14 +359,15 @@ msgstr "Desconectado"
 #: src/mainwin.c:503
 #, c-format
 msgid "Volume: %d/100"
-msgstr ""
+msgstr "Volumen: %d/100"
 
 #. Last.fm
 #: src/mainwin.c:714
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/mainwin.c:716 src/vagalume-tray-icon.c:26
+#: src/mainwin.c:716
+#: src/vagalume-tray-icon.c:26
 msgid "Settings..."
 msgstr "Configuraciones..."
 
@@ -422,15 +449,21 @@ msgstr "Lista de reproducción..."
 msgid "_Actions"
 msgstr "_Acciones"
 
-#: src/mainwin.c:817 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:32
+#: src/mainwin.c:817
+#: src/vagalume-sb-plugin.c:35
+#: src/vagalume-tray-icon.c:32
 msgid "Play"
 msgstr "Reproducir"
 
-#: src/mainwin.c:818 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:33
+#: src/mainwin.c:818
+#: src/vagalume-sb-plugin.c:36
+#: src/vagalume-tray-icon.c:33
 msgid "Stop"
 msgstr "Detener"
 
-#: src/mainwin.c:819 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:34
+#: src/mainwin.c:819
+#: src/vagalume-sb-plugin.c:37
+#: src/vagalume-tray-icon.c:34
 msgid "Skip"
 msgstr "Omitir"
 
@@ -438,11 +471,13 @@ msgstr "Omitir"
 msgid "Stop after this track"
 msgstr "Detener después de esta pista"
 
-#: src/mainwin.c:824 src/vagalume-tray-icon.c:30
+#: src/mainwin.c:824
+#: src/vagalume-tray-icon.c:30
 msgid "Love this track"
 msgstr "Preferir esta pista"
 
-#: src/mainwin.c:826 src/vagalume-tray-icon.c:29
+#: src/mainwin.c:826
+#: src/vagalume-tray-icon.c:29
 msgid "Add to playlist"
 msgstr "Agregar a lista de reproducción"
 
@@ -450,7 +485,8 @@ msgstr "Agregar a lista de reproducción"
 msgid "Tag..."
 msgstr "Etiqueta..."
 
-#: src/mainwin.c:829 src/vagalume-tray-icon.c:27
+#: src/mainwin.c:829
+#: src/vagalume-tray-icon.c:27
 msgid "Recommend..."
 msgstr "Recomendar..."
 
@@ -467,13 +503,14 @@ msgstr "Acerca de..."
 msgid "Confirmation"
 msgstr "Confirmación"
 
-#: src/uimisc.c:208 src/uimisc.c:363
+#: src/uimisc.c:208
+#: src/uimisc.c:363
 msgid "Select download directory"
 msgstr "Seleccionar directorio de descargas"
 
 #: src/uimisc.c:252
 msgid "No help available"
-msgstr ""
+msgstr "No hay ayuda disponible"
 
 #: src/uimisc.c:265
 msgid "Username:"
@@ -507,6 +544,14 @@ msgid ""
 "* Discovery mode:\n"
 "Don't play music you've already listened to. Requires a Last.fm subscription."
 msgstr ""
+"* Usuario y contraseña:\n"
+"De su cuenta de Last.fm.\n"
+"\n"
+"* Scrobbling:\n"
+"Muestra la música que escuchas en tu perfil de Last.fm.\n"
+"\n"
+"* Modo de descubrimiento:\n"
+"No reproducir la música que ya escuchaste. Requiere una suscripción a Last.fm."
 
 #: src/uimisc.c:324
 msgid "Use HTTP proxy"
@@ -530,6 +575,12 @@ msgid ""
 "user:password@hostname:port\n"
 "Only the hostname (can be an IP address) is required."
 msgstr ""
+"* Usar roxy HTTP:\n"
+"Activar esto para usar un proxy HTTP.\n"
+"\n"
+"* Dirección del Proxy:\n"
+"usuario:contraseña@servidor:puerto\n"
+"Sólo el servidor (puede ser una dirección IP) es requerido."
 
 #: src/uimisc.c:381
 msgid "Download"
@@ -539,14 +590,14 @@ msgstr "Descargar"
 #: src/uimisc.c:384
 msgid ""
 "* Download directory:\n"
-"Where to download mp3 files. Note that you can only download those songs "
-"marked as freely downloadable by Last.fm."
+"Where to download mp3 files. Note that you can only download those songs marked as freely downloadable by Last.fm."
 msgstr ""
+"* Directorio de descarga:\n"
+"Ruta donde se descargarán los archivos mp3. Nótese que sólo se podrán descargar aquellas canciones marcadas como descargas gratuitas por Last.fm."
 
 #: src/uimisc.c:402
-#, fuzzy
 msgid "IM message template:"
-msgstr "Plantilla de mensaje de estado:"
+msgstr "Plantilla de MI:"
 
 #: src/uimisc.c:403
 msgid "Update Pidgin status:"
@@ -565,34 +616,39 @@ msgid "Update Telepathy status:"
 msgstr "Actualizar estado de Telepathy:"
 
 #: src/uimisc.c:437
-#, fuzzy
 msgid "Update IM status"
-msgstr "Actualizar estado de Gajim:"
+msgstr "Actualizar estado de MI:"
 
 #. Set help
 #: src/uimisc.c:440
 msgid ""
-"Vagalume can update the status message of your IM client each time a new "
-"song starts. The template can contain the following keywords:\n"
+"Vagalume can update the status message of your IM client each time a new song starts. The template can contain the following keywords:\n"
 "\n"
 "{artist}: Name of the artist\n"
 "{title}: Song title\n"
 "{version}: Vagalume version"
 msgstr ""
+"Vagalume puede actualizar el mensaje de estado de su cliente de MI cada vez que comience una nueva canción. La plantilla puede contener las siguientes palabras clave:\n"
+"\n"
+"{artist}: Nombre del artista\n"
+"{title}: Título de la canción\n"
+"{version}: Versión de Vagalume"
 
 #: src/uimisc.c:468
 msgid "Disable confirmation dialogs:"
-msgstr ""
+msgstr "Desactivar diálogos de confirmación:"
 
 #: src/uimisc.c:478
 msgid ""
 "* Disable confirmation dialogs:\n"
 "Don't ask for confirmation when loving/banning tracks."
 msgstr ""
+"* Desactivar diálogos de confirmación:\n"
+"No preguntar por confirmación cuando se prefieran/prohiban pistas."
 
 #: src/uimisc.c:485
 msgid "Show playback notifications:"
-msgstr ""
+msgstr "Mostrar notificaciones de reproducción:"
 
 #: src/uimisc.c:495
 msgid ""
@@ -602,20 +658,27 @@ msgid ""
 "Pop up a notification box each time a new song starts.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"* Mostrar notificaciones de reproducción:\n"
+"Mostrar una caja de notificación cada vez que comience una nueva canción.\n"
+"\n"
 
 #: src/uimisc.c:501
 msgid "Close to systray:"
-msgstr ""
+msgstr "Cerrar a bandeja del sistema:"
 
 #: src/uimisc.c:511
 msgid ""
 "* Close to systray:\n"
 "Hide the Vagalume window when the close button is pressed."
 msgstr ""
+"* Cerrar a bandeja del sistema:\n"
+"Ocultar la ventana de Vagalume cuando se presione el botón de cerrar."
 
 #: src/uimisc.c:518
 msgid "Misc"
-msgstr ""
+msgstr "Misceláneos"
 
 #: src/uimisc.c:536
 msgid "User settings"
@@ -634,14 +697,13 @@ msgid "Album: "
 msgstr "Álbum:"
 
 #: src/uimisc.c:858
-#, fuzzy
 msgid "retrieving ..."
-msgstr "obteniendo..."
+msgstr "obteniendo ..."
 
 #. A treemodel for combos with no elements
 #: src/uimisc.c:912
 msgid "(none)"
-msgstr ""
+msgstr "(ninguno)"
 
 #: src/uimisc.c:915
 msgid "retrieving..."
@@ -691,40 +753,39 @@ msgstr "Enviar recomendación a"
 #. Message of the recommendation
 #: src/uimisc.c:1110
 msgid "Recommendation message"
-msgstr ""
+msgstr "Mensaje de recomendación"
 
 #: src/vagalume-sb-plugin.c:31
-#, fuzzy
 msgid "No artist"
-msgstr "Introducir artista"
+msgstr "Sin artista"
 
 #: src/vagalume-sb-plugin.c:32
-#, fuzzy
 msgid "No track"
-msgstr "Mis pistas preferidas"
+msgstr "Sin pista"
 
 #: src/vagalume-sb-plugin.c:33
 msgid "No album"
-msgstr ""
+msgstr "Sin álbum"
 
 #: src/vagalume-sb-plugin.c:38
 msgid "Love"
-msgstr ""
+msgstr "Preferir"
 
 #: src/vagalume-sb-plugin.c:39
 msgid "Ban"
-msgstr ""
+msgstr "Prohibir"
 
-#: src/vagalume-sb-plugin.c:40 src/vagalume-tray-icon.c:25
+#: src/vagalume-sb-plugin.c:40
+#: src/vagalume-tray-icon.c:25
 msgid "Show main window"
-msgstr ""
+msgstr "Mostrar ventana principal"
 
-#: src/vagalume-sb-plugin.c:41 src/vagalume-tray-icon.c:35
+#: src/vagalume-sb-plugin.c:41
+#: src/vagalume-tray-icon.c:35
 msgid "Close Vagalume"
-msgstr ""
+msgstr "Cerrar Vagalume"
 
 #: src/vagalume-tray-icon.c:19
-#, fuzzy
 msgid " Stopped "
 msgstr "Detenido"
 
@@ -735,11 +796,14 @@ msgid ""
 " %s \n"
 "   by  %s "
 msgstr ""
+" Reproduciendo ahora: \n"
+" %s \n"
+"   por  %s "
 
 #: src/vagalume-tray-icon.c:22
 #, c-format
 msgid " by <i>%s</i>"
-msgstr ""
+msgstr " por <i>%s</i>"
 
 #: src/vagalume-tray-icon.c:23
 #, c-format
@@ -747,11 +811,13 @@ msgid ""
 " by <i>%s</i>\n"
 " from <i>%s</i>"
 msgstr ""
+"por <i>%s</i>\n"
+" de <i>%s</i>"
 
 #: src/vagalume-tray-icon.c:28
-#, fuzzy
 msgid "Tags..."
-msgstr "Etiqueta..."
+msgstr "Etiquetas..."
 
 #~ msgid "IM Status"
 #~ msgstr "Estado de MI"
+
