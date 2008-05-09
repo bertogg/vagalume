@@ -506,7 +506,8 @@ get_album_cover_icon (const gchar *image_url)
                         g_object_unref(G_OBJECT(ldr));
                         ldr = NULL;
                 } else {
-                        pixbuf = gdk_pixbuf_loader_get_pixbuf(ldr);;
+                        pixbuf = g_object_ref(
+                                gdk_pixbuf_loader_get_pixbuf(ldr));;
                 }
         }
         if (ldr != NULL) g_object_unref(G_OBJECT(ldr));
