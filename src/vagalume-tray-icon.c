@@ -596,6 +596,7 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         notify_notification_show (priv->notification, NULL);
 
         /* Cleanup */
+        g_object_unref(icon);
         g_free (notification_summary);
         g_free (notification_body);
         g_free (stripped_album);
