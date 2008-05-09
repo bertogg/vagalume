@@ -29,6 +29,7 @@ endif
 
 config.status: configure
 	dh_testdir
+	[ -x ./configure ] || ./autogen.sh
 	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr --mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" \
