@@ -303,6 +303,9 @@ usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->discovery),
                                      cfg->discovery_mode);
 
+        /* Set the initial state of the OK button */
+        usercfg_user_pw_modified(NULL, NULL, win);
+
         /* Pack widgets */
         gtk_table_attach(table, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, pwlabel, 0, 1, 1, 2, 0, 0, 5, 5);
