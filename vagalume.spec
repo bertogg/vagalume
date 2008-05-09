@@ -1,15 +1,15 @@
 
 Summary: GTK+-based client for the Last.fm online radio service
 Name: vagalume
-Version: 0.5.1
+Version: 0.6
 Release: 1
 License: GPL3
 Group: Applications/Multimedia
 URL: http://vagalume.igalia.com/
 Source0: %{name}_%{version}-1.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc, gtk2-devel, gstreamer-devel >= 0.10, curl-devel, libxml2-devel >= 2.0
-Requires: gtk2, gstreamer >= 0.10, curl, libxml2 >= 2.0
+BuildRequires: gcc, gtk2-devel >= 2.10, gstreamer-devel >= 0.10, curl-devel, libxml2-devel >= 2.0, libnotify-devel
+Requires: gtk2 >= 2.10, gstreamer >= 0.10, curl, libxml2 >= 2.0, libnotify
 
 %description
 Vagalume is a Last.fm client designed for the GNOME desktop
@@ -52,9 +52,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/media-skip-forward.svg
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/process-stop.svg
 %{_mandir}/man1/vagalume.1.gz
+%{_datadir}/locale/de/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/es_MX/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/es_VE/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/gl/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/it/LC_MESSAGES/vagalume.mo
 
 
 %changelog
+* Fri May 09 2008 Tim Wegener <twegener@madabar.com> - 0.6-1
+- Updated for 0.6.
+
 * Fri Feb 15 2008 Alberto Garcia <agarcia@igalia.com> - 0.5.1-1
 - Updated for 0.5.1.
 
