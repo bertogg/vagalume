@@ -139,3 +139,31 @@ string_replace(const char *str, const char *old, const char *new)
         string_replace_gstr(gstr, old, new);
         return g_string_free(gstr, FALSE);
 }
+
+GdkPixbuf *
+get_pixbuf_from_image(const char *data, size_t size, int imgsize)
+{
+        g_return_val_if_fail(imgsize > 0, NULL);
+        GdkPixbufLoader *ldr = NULL;
+        GdkPixbuf *pixbuf = NULL;
+        if (data != NULL) {
+                g_return_val_if_fail(size > 0, NULL);
+                GError *err = NULL;
+                ldr = gdk_pixbuf_loader_new();
+                gdk_pixbuf_loader_set_size(ldr, imgsize, imgsize);
+                gdk_pixbuf_loader_write(ldr, (guchar *) data, size, NULL);
+                gdk_pixbuf_loader_close(ldr, &err);
+                if (err != NULL) {
+                        g_warning("Error loading image: %s",
+                                  err->message ? err->message : "unknown");
+                        g_error_free(err);
+                        g_object_unref(G_OBJECT(ldr));
+                        ldr = NULL;
+                } else {
+                        pixbuf = gdk_pixbuf_loader_get_pixbuf(ldr);
+                        g_object_ref(pixbuf);
+                }
+        }
+        if (ldr != NULL) g_object_unref(G_OBJECT(ldr));
+        return pixbuf;
+}

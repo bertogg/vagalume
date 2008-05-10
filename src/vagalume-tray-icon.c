@@ -15,6 +15,7 @@
 #include "controller.h"
 #include "playlist.h"
 #include "http.h"
+#include "util.h"
 
 #define TOOLTIP_DEFAULT_STRING _(" Stopped ")
 #define TOOLTIP_FORMAT_STRING  _(" Now playing: \n %s \n   by  %s ")
@@ -480,39 +481,18 @@ static GdkPixbuf *
 get_album_cover_icon (const gchar *image_url)
 {
         g_return_val_if_fail(image_url != NULL, NULL);
-        GdkPixbufLoader *ldr = NULL;
         GdkPixbuf *pixbuf = NULL;
         gchar *buffer = NULL;
-        size_t bufsize = 0;
+        size_t bufsize;
 
         http_get_buffer(image_url, &buffer, &bufsize);
-        if (buffer == NULL) {
-                g_debug("Error getting cover image");
-                return NULL;
+        if (buffer != NULL) {
+                pixbuf = get_pixbuf_from_image(buffer, bufsize,
+                                               NOTIFICATION_ICON_SIZE);
+                g_free(buffer);
         } else {
-                g_return_val_if_fail(bufsize > 0, NULL);
-                GError *err = NULL;
-
-                ldr = gdk_pixbuf_loader_new();
-                gdk_pixbuf_loader_set_size(ldr, NOTIFICATION_ICON_SIZE,
-                                           NOTIFICATION_ICON_SIZE);
-                gdk_pixbuf_loader_write(ldr, (guchar *)buffer, bufsize, NULL);
-                gdk_pixbuf_loader_close(ldr, &err);
-
-                if (err != NULL) {
-                        g_warning("Error loading image: %s",
-                                  err->message ? err->message : "unknown");
-                        g_error_free(err);
-                        g_object_unref(G_OBJECT(ldr));
-                        ldr = NULL;
-                } else {
-                        pixbuf = g_object_ref(
-                                gdk_pixbuf_loader_get_pixbuf(ldr));;
-                }
+                g_debug("Error getting cover image");
         }
-        if (ldr != NULL) g_object_unref(G_OBJECT(ldr));
-
-        g_free(buffer);
 
         return pixbuf;
 }

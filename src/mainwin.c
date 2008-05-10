@@ -25,6 +25,7 @@
 #include "uimisc.h"
 #include "globaldefs.h"
 #include "xmlrpc.h"
+#include "util.h"
 
 #ifdef MAEMO
 #        define ALBUM_COVER_SIZE 200
@@ -171,32 +172,13 @@ mainwin_toggle_visibility(lastfm_mainwin *w)
 }
 
 void
-mainwin_set_album_cover(lastfm_mainwin *w, const guchar *data, int size)
+mainwin_set_album_cover(lastfm_mainwin *w, const char *data, int size)
 {
         g_return_if_fail(w != NULL);
-        GdkPixbufLoader *ldr = NULL;
-        GdkPixbuf *pixbuf = NULL;
-        if (data != NULL) {
-                g_return_if_fail(size > 0);
-                GError *err = NULL;
-                ldr = gdk_pixbuf_loader_new();
-                gdk_pixbuf_loader_set_size(ldr, ALBUM_COVER_SIZE,
-                                           ALBUM_COVER_SIZE);
-                gdk_pixbuf_loader_write(ldr, data, size, NULL);
-                gdk_pixbuf_loader_close(ldr, &err);
-                if (err != NULL) {
-                        g_warning("Error loading image: %s",
-                                  err->message ? err->message : "unknown");
-                        g_error_free(err);
-                        g_object_unref(G_OBJECT(ldr));
-                        ldr = NULL;
-                } else {
-                        pixbuf = gdk_pixbuf_loader_get_pixbuf(ldr);;
-                }
-        }
+        GdkPixbuf *pixbuf = get_pixbuf_from_image(data, size, ALBUM_COVER_SIZE);
         gtk_image_set_from_pixbuf(GTK_IMAGE(w->album_cover), pixbuf);
         gtk_widget_set_sensitive(w->album_cover, TRUE);
-        if (ldr != NULL) g_object_unref(G_OBJECT(ldr));
+        if (pixbuf != NULL) g_object_unref(pixbuf);
 }
 
 static void
