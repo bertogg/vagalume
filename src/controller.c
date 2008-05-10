@@ -67,11 +67,6 @@ typedef struct {
         request_type type;
 } recomm_data;
 
-typedef struct {
-        guint track_id;              /* Id of the track */
-        char *image_url;             /* URL of the album cover */
-} getcover_data;
-
 /*
  * Callback called after check_session() in all cases.
  * data is user-provided data, and must be freed by the caller
@@ -662,26 +657,25 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
 /**
  * Set the album cover image. This must be done in a thread to avoid
  * freezing the UI.
- * @param data A pointer to getcover_data
+ * @param data A pointer to the lastfm_track
  * @return NULL (not used)
  */
 static gpointer
 set_album_cover_thread(gpointer data)
 {
-        getcover_data *d = (getcover_data *) data;
-        g_return_val_if_fail(d != NULL && d->image_url != NULL, NULL);
+        lastfm_track *t = (lastfm_track *) data;
+        g_return_val_if_fail(t != NULL && t->image_url != NULL, NULL);
         char *buffer = NULL;
         size_t bufsize = 0;
-        http_get_buffer(d->image_url, &buffer, &bufsize);
+        http_get_buffer(t->image_url, &buffer, &bufsize);
         if (buffer == NULL) g_warning("Error getting cover image");
         gdk_threads_enter();
-        if (mainwin && nowplaying && nowplaying->id == d->track_id) {
+        if (mainwin && nowplaying == t) {
                 mainwin_set_album_cover(mainwin, buffer, bufsize);
         }
         gdk_threads_leave();
         g_free(buffer);
-        g_free(d->image_url);
-        g_slice_free(getcover_data, d);
+        lastfm_track_unref(t);
         return NULL;
 }
 
@@ -729,10 +723,8 @@ controller_show_cover(void)
         if (showing_cover || nowplaying == NULL || mainwin->is_hidden) return;
         showing_cover = TRUE;
         if (nowplaying->image_url != NULL) {
-                getcover_data *d = g_slice_new(getcover_data);
-                d->track_id = nowplaying->id;
-                d->image_url = g_strdup(nowplaying->image_url);
-                g_thread_create(set_album_cover_thread, d, FALSE, NULL);
+                g_thread_create(set_album_cover_thread,
+                                lastfm_track_ref(nowplaying), FALSE, NULL);
         } else {
                 mainwin_set_album_cover(mainwin, NULL, 0);
         }
