@@ -140,6 +140,13 @@ string_replace(const char *str, const char *old, const char *new)
         return g_string_free(gstr, FALSE);
 }
 
+/**
+ * Creates a GdkPixbuf from a image in any supported format
+ * @param data The original image in memory, or NULL
+ * @param size The size of the buffer containing the original image
+ * @param imgsize The resulting pixbuf will be imgsize x imgsize pixels
+ * @return The GdkPixbuf, or NULL
+ */
 GdkPixbuf *
 get_pixbuf_from_image(const char *data, size_t size, int imgsize)
 {
