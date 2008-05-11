@@ -1,0 +1,808 @@
+# pt_BR.po - Brazilian Portuguese translation file
+# Copyright (C) 2007,2008 Alberto Garcia Gonzalez
+# This file is part of Vagalume and is published under the GNU GPLv3
+# See the README file for more details.
+# Rodrigo Flores <rodrigomarquesflores@gmail.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Vagalume 0.5.1-1\n"
+"Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
+"POT-Creation-Date: 2008-05-08 22:43+0200\n"
+"PO-Revision-Date: 2008-05-11 16:05+0200\n"
+"Last-Translator: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
+"Language-Team: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/connection.c:55
+msgid "Error initializing internet connection manager"
+msgstr "Erro ao iniciar o gerenciador de conexões da internet"
+
+#: src/controller.c:584
+msgid ""
+"Unable to login to Last.fm\n"
+"Check username and password"
+msgstr ""
+"Não foi possível fazer login no Last.fm\n"
+"Verifique o nome de usuário e senha"
+
+#: src/controller.c:587
+msgid "Network connection error"
+msgstr "Erro de conexão da rede"
+
+#: src/controller.c:661
+msgid ""
+"You need to enter your Last.fm\n"
+"username and password to be able\n"
+"to use this program."
+msgstr ""
+"Você deve digitar seu nome de usuário\n"
+"e senha do Last.fm para poder utilizar\n"
+"este programa."
+
+#: src/controller.c:715
+msgid "No more content to play"
+msgstr "Sem mais conteúdo para reproduzir"
+
+#: src/controller.c:906
+msgid "Download this track?"
+msgstr "Fazer o download desta faixa?"
+
+#: src/controller.c:914
+msgid "File exists. Overwrite?"
+msgstr "O arquivo existe. Sobrescrevê-lo?"
+
+#: src/controller.c:949
+msgid "Really mark track as loved?"
+msgstr "Marcar a faixa como preferida?"
+
+#: src/controller.c:953
+msgid "Marking track as loved"
+msgstr "Marcando faixa como preferida"
+
+#: src/controller.c:967
+msgid "Really ban this track?"
+msgstr "Banir essa faixa?"
+
+#: src/controller.c:971
+msgid "Banning track"
+msgstr "Banindo faixa"
+
+#: src/controller.c:1015
+msgid "Tags set correctly"
+msgstr "Etiquetas definidas corretamente"
+
+#: src/controller.c:1016
+msgid "Error tagging"
+msgstr "Erro ao etiquetar"
+
+#: src/controller.c:1051
+msgid "You must type a list of tags"
+msgstr "Você deve digitar uma lista de etiquetas"
+
+#: src/controller.c:1087
+msgid "Recommendation sent"
+msgstr "Recomendação enviada"
+
+#: src/controller.c:1088
+msgid "Error sending recommendation"
+msgstr "Erro ao enviar recomendação"
+
+#: src/controller.c:1128
+msgid ""
+"You must type a user name\n"
+"and a recommendation message."
+msgstr ""
+"Você deve digitar um nome de usuário\n"
+"e uma mensagem de recomendação."
+
+#: src/controller.c:1166
+msgid "Track added to playlist"
+msgstr "Faixa adicionada à lista de reprodução"
+
+#: src/controller.c:1167
+msgid "Error adding track to playlist"
+msgstr "Erro ao adicionar faixa à lista de reprodução"
+
+#: src/controller.c:1184
+msgid "Really add this track to the playlist?"
+msgstr "Adicionar esta faixa à lista de reprodução?"
+
+#: src/controller.c:1213
+msgid "Invalid radio URL"
+msgstr "URL de rádio inválido"
+
+#: src/controller.c:1220
+msgid ""
+"Invalid radio URL. Either\n"
+"this radio doesn't exist\n"
+"or it is only available\n"
+"for Last.fm subscribers"
+msgstr ""
+"URL de rádio inválido. Ou esta\n"
+"rádio não existe ou é somente disponível\n"
+"para quem tem conta no Last.fm"
+
+#: src/controller.c:1265 src/controller.c:1380
+msgid "Enter tag"
+msgstr "Digite a etiqueta"
+
+#: src/controller.c:1266
+msgid "Enter one of your tags"
+msgstr "Digite uma de suas etiquetas"
+
+#: src/controller.c:1316
+msgid "Enter user name"
+msgstr "Digite o nome de usuário"
+
+#: src/controller.c:1317
+msgid "Play this user's radio"
+msgstr "Reproduzir a rádio deste usuário"
+
+#: src/controller.c:1357
+msgid "Enter group"
+msgstr "Digite o grupo"
+
+#: src/controller.c:1358
+msgid "Enter group name"
+msgstr "Digite o nome do grupo"
+
+#: src/controller.c:1381
+msgid "Enter a global tag"
+msgstr "Digite uma etiqueta global"
+
+#: src/controller.c:1405
+msgid "Enter artist"
+msgstr "Digite o artista"
+
+#: src/controller.c:1406
+msgid "Enter an artist's name"
+msgstr "Digite o nome de um artista"
+
+#: src/controller.c:1427
+msgid "Enter radio URL"
+msgstr "Digite o URL de uma rádio"
+
+#: src/controller.c:1428
+msgid "Enter the URL of the Last.fm radio"
+msgstr "Digite o URL de uma rádio do Last.fm"
+
+#: src/controller.c:1437
+msgid "Last.fm radio URLs must start with lastfm://"
+msgstr "Um URL de uma rádio do Last.fm deve começar com lastfm://"
+
+#: src/controller.c:1504
+msgid "Error initializing audio system"
+msgstr "Erro ao iniciar sistema de aúdio"
+
+#: src/dbus.c:224
+msgid "Unable to initialize OSSO context"
+msgstr "Não foi possível iniciar contexto OSSO"
+
+#: src/dbus.c:229
+msgid "Unable to set D-BUS callback"
+msgstr "Impossível definir um retorno de chamada do D-BUS"
+
+#: src/dbus.c:234
+msgid "Unable to set hw callback"
+msgstr "Impossível definir um retorno de chamada do hw"
+
+#: src/dlwin.c:100
+msgid "Download complete!"
+msgstr "Download completo!"
+
+#: src/dlwin.c:110
+msgid "Download error!"
+msgstr "Erro no download!"
+
+#: src/dlwin.c:136
+#, c-format
+msgid "Downloading %s"
+msgstr "Fazendo o download de %s"
+
+#: src/dlwin.c:138
+#, c-format
+msgid ""
+"Downloading file\n"
+"%s"
+msgstr ""
+"Fazendo o download do arquivo\n"
+"%s"
+
+#: src/dlwin.c:142
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/dlwin.c:143
+msgid "C_lose"
+msgstr "_Fechar"
+
+#: src/main.c:62
+#, c-format
+msgid ""
+"Usage: %s [-c converter] [-d decoder] [-s sink] [lastfm radio url]\n"
+"\n"
+"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
+"  decoder:   GStreamer decoder (default: '%s')\n"
+"  sink:      GStreamer sink (default: '%s')\n"
+msgstr ""
+"Uso: %s [-c conversor] [-d decodificador] [-s sink] [lastfm rádio url]\n"
+"\n"
+"  conversor:     conversor do GStreamer (padrão: '%s', 'none' para desabilitar)\n"
+"  decodificador: decodificador do GStreamer (padrão: '%s')\n"
+"  sink:          sink do GStreamer (padrão: '%s')\n"
+
+#: src/main.c:78
+#, c-format
+msgid "Too many unrecognized options\n"
+msgstr "Muitas opções não reconhecidas\n"
+
+#: src/main.c:87
+#, c-format
+msgid "Usage: %s [lastfm radio url]\n"
+msgstr "Uso: %s [lastfm rádio endereço]\n"
+
+#: src/mainwin.c:53
+msgid "Start playing"
+msgstr "Começar a reprodução"
+
+#: src/mainwin.c:57
+msgid "Stop playing"
+msgstr "Parar a reprodução"
+
+#: src/mainwin.c:61
+msgid "Skip this track"
+msgstr "Pular esta faixa"
+
+#: src/mainwin.c:65
+msgid "Mark as loved"
+msgstr "Marcar como preferida"
+
+#: src/mainwin.c:69 src/mainwin.c:825 src/vagalume-tray-icon.c:31
+msgid "Ban this track"
+msgstr "Banir esta faixa"
+
+#: src/mainwin.c:73
+msgid "Recommend this track"
+msgstr "Recomendar esta faixa"
+
+#: src/mainwin.c:77 src/mainwin.c:827
+msgid "Download this track"
+msgstr "Fazer o download desta faixa"
+
+#: src/mainwin.c:81
+msgid "Edit tags for this track"
+msgstr "Editar etiquetas para esta faixa"
+
+#: src/mainwin.c:85
+msgid "Add this track to playlist"
+msgstr "Adicionar esta faixa à lista de reprodução"
+
+#: src/mainwin.c:100
+msgid "A Last.fm client for Gnome and Maemo"
+msgstr "Um cliente do Last.fm para o Gnome e o Maemo"
+
+#: src/mainwin.c:119
+msgid ""
+"German (de)\n"
+"* Stephan Reichholf <stephan@reichholf.net>\n"
+"* Oskar Welzl <oskar@welzl.info>\n"
+"\n"
+"Spanish (es_MX)\n"
+"* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
+"\n"
+"Spanish (es_VE)\n"
+"* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
+"\n"
+"Galician (gl)\n"
+"* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
+"\n"
+"Italian (it)\n"
+"* Andrea Grandi <a.grandi@gmail.com>"
+msgstr ""
+"Alemão (de)\n"
+"* Stephan Reichholf <stephan@reichholf.net>\n"
+"* Oskar Welzl <oskar@welzl.info>\n"
+"\n"
+"Espanhol (es_MX)\n"
+"* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
+"\n"
+"Espanhol (es_VE)\n"
+"* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
+"\n"
+"Galego (gl)\n"
+"* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
+"\n"
+"Italiano (it)\n"
+"* Andrea Grandi <a.grandi@gmail.com>"
+
+#: src/mainwin.c:210
+msgid "<b>Artist:</b>\n"
+msgstr "<b>Artista:</b>\n"
+
+#: src/mainwin.c:216
+msgid "<b>Title:</b>\n"
+msgstr "<b>Título:</b>\n"
+
+#: src/mainwin.c:223
+msgid "<b>Album:</b>\n"
+msgstr "<b>Álbum</b>\n"
+
+#: src/mainwin.c:232
+msgid "<b>Listening to <i>"
+msgstr "<b>Ouvindo: <i>"
+
+#: src/mainwin.c:362 src/mainwin.c:363
+msgid "Stopped"
+msgstr "Parado"
+
+#: src/mainwin.c:393
+msgid "Playing..."
+msgstr "Reproduzindo..."
+
+#: src/mainwin.c:416 src/mainwin.c:417
+msgid "Connecting..."
+msgstr "Conectando..."
+
+#: src/mainwin.c:443
+msgid "Disconnected"
+msgstr "Desconectado"
+
+#: src/mainwin.c:503
+#, c-format
+msgid "Volume: %d/100"
+msgstr "Volume: %d/100"
+
+#. Last.fm
+#: src/mainwin.c:714
+msgid "_Last.fm"
+msgstr "_Last.fm"
+
+#: src/mainwin.c:716 src/vagalume-tray-icon.c:26
+msgid "Settings..."
+msgstr "Configurações..."
+
+#: src/mainwin.c:717
+msgid "Quit"
+msgstr "Sair"
+
+#. Radio
+#: src/mainwin.c:730
+msgid "Play _Radio"
+msgstr "Reproduzir _Rádio"
+
+#: src/mainwin.c:732
+msgid "My radios"
+msgstr "Minhas rádios"
+
+#: src/mainwin.c:734
+msgid "Others' radios"
+msgstr "Rádios de outros"
+
+#: src/mainwin.c:735
+msgid "Group radio..."
+msgstr "Rádio de grupo..."
+
+#: src/mainwin.c:736
+msgid "Music tagged..."
+msgstr "Música etiquetada..."
+
+#: src/mainwin.c:737
+msgid "Artists similar to..."
+msgstr "Artistas semalhantes a..."
+
+#: src/mainwin.c:738
+msgid "Enter URL..."
+msgstr "Digite o URL..."
+
+#: src/mainwin.c:759
+msgid "My personal radio"
+msgstr "Minha rádio pessoal"
+
+#: src/mainwin.c:760
+msgid "My neighbours"
+msgstr "Meus vizinhos"
+
+#: src/mainwin.c:761
+msgid "My loved tracks"
+msgstr "Minhas faixas preferidas"
+
+#: src/mainwin.c:762
+msgid "My playlist"
+msgstr "Minha lista de reprodução"
+
+#: src/mainwin.c:763
+msgid "My recommendations"
+msgstr "Minhas recomendações"
+
+#: src/mainwin.c:764
+msgid "My music tagged..."
+msgstr "Minhas músicas etiquetadas..."
+
+#: src/mainwin.c:793
+msgid "Personal..."
+msgstr "Pessoal..."
+
+#: src/mainwin.c:794
+msgid "Neighbours..."
+msgstr "Vizinhos..."
+
+#: src/mainwin.c:795
+msgid "Loved tracks..."
+msgstr "Faixas preferidas..."
+
+#: src/mainwin.c:796
+msgid "Playlist..."
+msgstr "Lista de Reprodução..."
+
+#. Actions
+#: src/mainwin.c:815
+msgid "_Actions"
+msgstr "_Ações"
+
+#: src/mainwin.c:817 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:32
+msgid "Play"
+msgstr "Reproduzir"
+
+#: src/mainwin.c:818 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:33
+msgid "Stop"
+msgstr "Parar"
+
+#: src/mainwin.c:819 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:34
+msgid "Skip"
+msgstr "Pular"
+
+#: src/mainwin.c:823
+msgid "Stop after this track"
+msgstr "Parar depois desta faixa"
+
+#: src/mainwin.c:824 src/vagalume-tray-icon.c:30
+msgid "Love this track"
+msgstr "Marcar esta faixa como preferida"
+
+#: src/mainwin.c:826 src/vagalume-tray-icon.c:29
+msgid "Add to playlist"
+msgstr "Adicionar à lista de reprodução"
+
+#: src/mainwin.c:828
+msgid "Tag..."
+msgstr "Etiqueta..."
+
+#: src/mainwin.c:829 src/vagalume-tray-icon.c:27
+msgid "Recommend..."
+msgstr "Recomendar..."
+
+#. Help
+#: src/mainwin.c:866
+msgid "_Help"
+msgstr "A_juda"
+
+#: src/mainwin.c:868
+msgid "About..."
+msgstr "Sobre..."
+
+#: src/uimisc.c:165
+msgid "Confirmation"
+msgstr "Confirmação"
+
+#: src/uimisc.c:208 src/uimisc.c:363
+msgid "Select download directory"
+msgstr "Escolher o diretório de download"
+
+#: src/uimisc.c:252
+msgid "No help available"
+msgstr "Sem ajuda disponível"
+
+#: src/uimisc.c:265
+msgid "Username:"
+msgstr "Nome de usuário:"
+
+#: src/uimisc.c:266
+msgid "Password:"
+msgstr "Senha:"
+
+#: src/uimisc.c:267
+msgid "Enable scrobbling:"
+msgstr "Habilitar scrobbling:"
+
+#: src/uimisc.c:268
+msgid "Discovery mode:"
+msgstr "Modo de descoberta:"
+
+#: src/uimisc.c:303
+msgid "Account"
+msgstr "Conta"
+
+#. Set help
+#: src/uimisc.c:306
+msgid ""
+"* Username and password:\n"
+"From your Last.fm account.\n"
+"\n"
+"* Scrobbling:\n"
+"Display the music that you listen to on your Last.fm profile.\n"
+"\n"
+"* Discovery mode:\n"
+"Don't play music you've already listened to. Requires a Last.fm subscription."
+msgstr ""
+"* Nome de usuário e senha:\n"
+"Da sua conta do Last.fm.\n"
+"\n"
+"* Scrobbling:\n"
+"Mostra a música que você ouve no seu perfil do Last.fm.\n"
+"\n"
+"* Discovery mode:\n"
+"Não reproduz a música que você já ouviu. Requer uma conta do Last.fm."
+
+#: src/uimisc.c:324
+msgid "Use HTTP proxy"
+msgstr "Utilizar proxy HTTP"
+
+#: src/uimisc.c:325
+msgid "Proxy address:"
+msgstr "Endereço do Proxy:"
+
+#: src/uimisc.c:344
+msgid "Connection"
+msgstr "Conexão"
+
+#. Set help
+#: src/uimisc.c:347
+msgid ""
+"* Use HTTP proxy:\n"
+"Enable this to use an HTTP proxy.\n"
+"\n"
+"* Proxy address:\n"
+"user:password@hostname:port\n"
+"Only the hostname (can be an IP address) is required."
+msgstr ""
+"* Utilizar proxy HTTP:\n"
+"Permite este a utilizar um proxy HTTP.\n"
+"\n"
+"* Endereço do proxy:\n"
+"usuário:senha@nome da máquina:porta\n"
+"Somente o nome da máquina (pode ser um endereço IP) é necessário."
+
+#: src/uimisc.c:381
+msgid "Download"
+msgstr "Download"
+
+#. Set help
+#: src/uimisc.c:384
+msgid ""
+"* Download directory:\n"
+"Where to download mp3 files. Note that you can only download those songs "
+"marked as freely downloadable by Last.fm."
+msgstr ""
+"* Diretório de Download:\n"
+"Onde fazer o download de arquivos mp3. Perceba que você só poderá fazer o"
+"download de músicas marcadas como Download Gratuito pelo Last.fm."
+
+#: src/uimisc.c:402
+msgid "IM message template:"
+msgstr "Modelo de mensagem do MI:"
+
+#: src/uimisc.c:403
+msgid "Update Pidgin status:"
+msgstr "Atualizar o status do Pidgin:"
+
+#: src/uimisc.c:404
+msgid "Update Gajim status:"
+msgstr "Atualizar o status do gajim:"
+
+#: src/uimisc.c:405
+msgid "Update Gossip status:"
+msgstr "Atualizar o status do Gossip:"
+
+#: src/uimisc.c:406
+msgid "Update Telepathy status:"
+msgstr "Atualizar o status do Telepathy"
+
+#: src/uimisc.c:437
+msgid "Update IM status"
+msgstr "Atualizar o status do MI:"
+
+#. Set help
+#: src/uimisc.c:440
+msgid ""
+"Vagalume can update the status message of your IM client each time a new "
+"song starts. The template can contain the following keywords:\n"
+"\n"
+"{artist}: Name of the artist\n"
+"{title}: Song title\n"
+"{version}: Vagalume version"
+msgstr ""
+"O Vagalume pode atualizar a mensagem de status do seu cliente de "
+"MI toda vez que uma música começa. O modelo pode conter as seguintes"
+"palavras chave:\n"
+"\n"
+"{artist}: Nome do artista\n"
+"{title}: Nome da música\n"
+"{version}: versão do Vagalume"
+
+#: src/uimisc.c:468
+msgid "Disable confirmation dialogs:"
+msgstr "Desabilitar diálogos de confirmação:"
+
+#: src/uimisc.c:478
+msgid ""
+"* Disable confirmation dialogs:\n"
+"Don't ask for confirmation when loving/banning tracks."
+msgstr ""
+"* Desabilitar diálogos de confirmação:\n"
+"Não peça uma confirmação ao marcar como preferida/banir faixa."
+
+#: src/uimisc.c:485
+msgid "Show playback notifications:"
+msgstr "Mostrar notificações de reprodução:"
+
+#: src/uimisc.c:495
+msgid ""
+"\n"
+"\n"
+"* Show playback notifications:\n"
+"Pop up a notification box each time a new song starts.\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"* Mostrar notificações de reprodução:\n"
+"Fazer uma notificação de pop-up acada vez que uma música nova iniciar.\n"
+"\n"
+
+#: src/uimisc.c:501
+msgid "Close to systray:"
+msgstr "Fechar para a barra de notificação:"
+
+#: src/uimisc.c:511
+msgid ""
+"* Close to systray:\n"
+"Hide the Vagalume window when the close button is pressed."
+msgstr ""
+"* Fechar para a barra de notificação:\n"
+"Esconde a janela do Vagalume quando o botão fechar é pressionado."
+
+#: src/uimisc.c:518
+msgid "Misc"
+msgstr "Misc"
+
+#: src/uimisc.c:536
+msgid "User settings"
+msgstr "Configurações do usuário"
+
+#: src/uimisc.c:662
+msgid "Artist: "
+msgstr "Artista: "
+
+#: src/uimisc.c:669
+msgid "Track: "
+msgstr "Faixa: "
+
+#: src/uimisc.c:677
+msgid "Album: "
+msgstr "Álbum: "
+
+#: src/uimisc.c:858
+msgid "retrieving ..."
+msgstr "recuperando..."
+
+#. A treemodel for combos with no elements
+#: src/uimisc.c:912
+msgid "(none)"
+msgstr "(nenhum)"
+
+#: src/uimisc.c:915
+msgid "retrieving..."
+msgstr "recuperando..."
+
+#. Dialog and basic settings
+#: src/uimisc.c:920
+msgid "Tagging"
+msgstr "Etiquetando"
+
+#. Combo to select what to tag
+#: src/uimisc.c:925
+msgid "Tag this"
+msgstr "Etiquetar esta"
+
+#. Text entry
+#: src/uimisc.c:945
+msgid ""
+"Enter a comma-separated\n"
+"list of tags"
+msgstr ""
+"Digite uma lista de etiquetas\n"
+"separadas por vírgula"
+
+#. Combo boxes
+#: src/uimisc.c:951
+msgid "Your favourite tags"
+msgstr "Suas etiquetas favoritas"
+
+#: src/uimisc.c:952
+msgid "Popular tags for this"
+msgstr "Etiquetas populares para esta"
+
+#. Dialog and basic settings
+#: src/uimisc.c:1071
+msgid "Send a recommendation"
+msgstr "Enviar uma recomendação"
+
+#: src/uimisc.c:1077
+msgid "Recommend this"
+msgstr "Recomendar esta"
+
+#: src/uimisc.c:1100
+msgid "Send recommendation to"
+msgstr "Enviar recommendation a"
+
+#. Message of the recommendation
+#: src/uimisc.c:1110
+msgid "Recommendation message"
+msgstr "Mensagem de recomendação"
+
+#: src/vagalume-sb-plugin.c:31
+msgid "No artist"
+msgstr "Nenhum artista"
+
+#: src/vagalume-sb-plugin.c:32
+msgid "No track"
+msgstr "Nenhuma faixa"
+
+#: src/vagalume-sb-plugin.c:33
+msgid "No album"
+msgstr "Nenhum álbum"
+
+#: src/vagalume-sb-plugin.c:38
+msgid "Love"
+msgstr "Preferir"
+
+#: src/vagalume-sb-plugin.c:39
+msgid "Ban"
+msgstr "Banir"
+
+#: src/vagalume-sb-plugin.c:40 src/vagalume-tray-icon.c:25
+msgid "Show main window"
+msgstr "Mostrar janela principal"
+
+#: src/vagalume-sb-plugin.c:41 src/vagalume-tray-icon.c:35
+msgid "Close Vagalume"
+msgstr "Fechar o Vagalume"
+
+#: src/vagalume-tray-icon.c:19
+msgid " Stopped "
+msgstr " Parado "
+
+#: src/vagalume-tray-icon.c:20
+#, c-format
+msgid ""
+" Now playing: \n"
+" %s \n"
+"   by  %s "
+msgstr ""
+" Reproduzindo agora: \n"
+" %s \n"
+"   por %s "
+
+#: src/vagalume-tray-icon.c:22
+#, c-format
+msgid " by <i>%s</i>"
+msgstr " por <i>%s</i>"
+
+#: src/vagalume-tray-icon.c:23
+#, c-format
+msgid ""
+" by <i>%s</i>\n"
+" from <i>%s</i>"
+msgstr ""
+" por <i>%s</i>\n"
+" de <i>%s</i>"
+
+#: src/vagalume-tray-icon.c:28
+msgid "Tags..."
+msgstr "Etiquetas..."
+
+#~ msgid "IM Status"
+#~ msgstr "Status do MI"

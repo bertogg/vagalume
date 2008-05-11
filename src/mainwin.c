@@ -122,7 +122,8 @@ static const char *translators = N_(
 "Spanish (es_MX)\n* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n\n"
 "Spanish (es_VE)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
 "Galician (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n\n"
-"Italian (it)\n* Andrea Grandi <a.grandi@gmail.com>"
+"Italian (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
+"Portuguese (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>"
 );
 
 void
