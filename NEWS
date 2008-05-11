@@ -4,8 +4,8 @@
   * New feature to update the status of several IM clients: Pidgin,
     Telepathy, Gossip and Gajim (thanks, Tim Wegener)
   * Gettext support (thanks, Alejandro Piñeiro)
-  * de, it, gl, es_MX and es_VE translations (see TRANSLATORS file for
-    details)
+  * de, it, gl, es_MX, es_VE, pt and pt_BR translations (see
+    TRANSLATORS file for details)
   * New setting to disable confirmation dialogs
   * Help messages for all configuration settings
   * New D-BUS methods to change the volume level
