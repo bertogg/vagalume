@@ -27,8 +27,8 @@ else
 	CFLAGS += -O2
 endif
 
-configure:
-	[ -x ./configure ] || ./autogen.sh
+configure: configure.ac Makefile.am src/Makefile.am
+	./autogen.sh
 
 config.status: configure
 	dh_testdir
