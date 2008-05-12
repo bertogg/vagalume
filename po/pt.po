@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-08 22:43+0200\n"
-"PO-Revision-Date: 2008-05-11 20:59+0200\n"
+"PO-Revision-Date: 2008-05-12 17:12+0200\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -434,7 +434,7 @@ msgstr "Lista de reprodução..."
 #. Actions
 #: src/mainwin.c:815
 msgid "_Actions"
-msgstr "_Acções"
+msgstr "A_cções"
 
 #: src/mainwin.c:817 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:32
 msgid "Play"
