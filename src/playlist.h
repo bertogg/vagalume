@@ -26,6 +26,9 @@ typedef struct {
         char *pls_title;
         guint duration;
         char *image_url;
+        char *image_data;
+        size_t image_data_size;
+        gboolean image_data_available;
         char *trackauth;
         char *free_track_url;
         gboolean custom_pls;
@@ -41,6 +44,7 @@ typedef struct {
 lastfm_track *lastfm_track_new(void);
 lastfm_track *lastfm_track_ref(lastfm_track *track);
 void lastfm_track_unref(lastfm_track *track);
+void lastfm_track_set_cover_image(lastfm_track *track,char *data,size_t size);
 lastfm_track *lastfm_pls_get_track(lastfm_pls *pls);
 void lastfm_pls_add_track(lastfm_pls *pls, lastfm_track *track);
 guint lastfm_pls_size(lastfm_pls *pls);

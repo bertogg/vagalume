@@ -19,5 +19,6 @@ gboolean lastfm_get_user_track_tags(const char *username,
                                     request_type req, GList **taglist);
 gboolean lastfm_get_track_tags(const lastfm_track *track,
                                request_type req, GList **taglist);
+void lastfm_get_track_cover_image(lastfm_track *track);
 
 #endif

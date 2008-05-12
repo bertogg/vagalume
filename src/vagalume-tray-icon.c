@@ -14,7 +14,7 @@
 
 #include "controller.h"
 #include "playlist.h"
-#include "http.h"
+#include "metadata.h"
 #include "util.h"
 
 #define TOOLTIP_DEFAULT_STRING _(" Stopped ")
@@ -478,18 +478,16 @@ get_default_album_cover_icon (void)
 }
 
 static GdkPixbuf *
-get_album_cover_icon (const gchar *image_url)
+get_album_cover_icon (lastfm_track *track)
 {
-        g_return_val_if_fail(image_url != NULL, NULL);
+        g_return_val_if_fail(track != NULL && track->image_url != NULL, NULL);
         GdkPixbuf *pixbuf = NULL;
-        gchar *buffer = NULL;
-        size_t bufsize;
 
-        http_get_buffer(image_url, &buffer, &bufsize);
-        if (buffer != NULL) {
-                pixbuf = get_pixbuf_from_image(buffer, bufsize,
+        lastfm_get_track_cover_image(track);
+        if (track->image_data != NULL) {
+                pixbuf = get_pixbuf_from_image(track->image_data,
+                                               track->image_data_size,
                                                NOTIFICATION_ICON_SIZE);
-                g_free(buffer);
         } else {
                 g_debug("Error getting cover image");
         }
@@ -519,7 +517,7 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 
         if (track->image_url != NULL) {
                 /* Set album image as icon if specified */
-                icon = get_album_cover_icon (track->image_url);
+                icon = get_album_cover_icon (track);
         }
 
         /* Set summary text (title) */

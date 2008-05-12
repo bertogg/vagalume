@@ -665,16 +665,14 @@ set_album_cover_thread(gpointer data)
 {
         lastfm_track *t = (lastfm_track *) data;
         g_return_val_if_fail(t != NULL && t->image_url != NULL, NULL);
-        char *buffer = NULL;
-        size_t bufsize = 0;
-        http_get_buffer(t->image_url, &buffer, &bufsize);
-        if (buffer == NULL) g_warning("Error getting cover image");
+        lastfm_get_track_cover_image(t);
+        if (t->image_data == NULL) g_warning("Error getting cover image");
         gdk_threads_enter();
         if (mainwin && nowplaying == t) {
-                mainwin_set_album_cover(mainwin, buffer, bufsize);
+                mainwin_set_album_cover(mainwin, t->image_data,
+                                        t->image_data_size);
         }
         gdk_threads_leave();
-        g_free(buffer);
         lastfm_track_unref(t);
         return NULL;
 }

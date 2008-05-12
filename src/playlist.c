@@ -36,6 +36,7 @@ lastfm_track_destroy(lastfm_track *track)
         g_free(track->album);
         g_free(track->pls_title);
         g_free(track->image_url);
+        g_free(track->image_data);
         g_free(track->trackauth);
         g_free(track->free_track_url);
         g_slice_free(lastfm_track, track);
@@ -70,6 +71,26 @@ lastfm_track_unref(lastfm_track *track)
         destroy = (--(track->refcount) == 0);
         g_mutex_unlock(track->mutex);
         if (destroy) lastfm_track_destroy(track);
+}
+
+/**
+ * Set the cover image of a track object, erasing the previous one (if
+ * any). After this, the new image data will be owned by this object
+ * and will be destroyed automatically when the track is destroyed.
+ * @param track The track
+ * @param data The image data
+ * @param size Size of the data buffer
+ */
+void
+lastfm_track_set_cover_image(lastfm_track *track, char *data, size_t size)
+{
+        g_return_if_fail(track != NULL);
+        g_mutex_lock(track->mutex);
+        g_free(track->image_data);
+        track->image_data = data;
+        track->image_data_size = size;
+        track->image_data_available = TRUE;
+        g_mutex_unlock(track->mutex);
 }
 
 /**
