@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-08 22:43+0200\n"
-"PO-Revision-Date: 2008-05-12 18:39+0200\n"
+"PO-Revision-Date: 2008-05-12 18:52+0200\n"
 "Last-Translator: Janne Mäkinen <janne.makinen@surffi.fi>\n"
 "Language-Team: Finnish\n"
 "MIME-Version: 1.0\n"
@@ -584,7 +584,7 @@ msgstr ""
 
 #: src/uimisc.c:381
 msgid "Download"
-msgstr "Lataa"
+msgstr "Lataus"
 
 #. Set help
 #: src/uimisc.c:384
