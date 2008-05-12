@@ -32,6 +32,7 @@ static gboolean
 error_happened(gboolean code, GError *error)
 {
         g_return_val_if_fail(code || error != NULL, TRUE);
+        gboolean retval = FALSE;
         if (!code) {
                 if (error->domain == DBUS_GERROR &&
                     error->code == DBUS_GERROR_REMOTE_EXCEPTION) {
@@ -42,10 +43,10 @@ error_happened(gboolean code, GError *error)
                         g_warning("Error: (%d) %s",
                                   error->code, error->message);
                 }
-                g_error_free(error);
-                return TRUE;
+                retval = TRUE;
         }
-        return FALSE;
+        if (error != NULL) g_error_free(error);
+        return retval;
 }
 
 static DBusGProxy *
@@ -72,10 +73,10 @@ get_dbus_proxy(const char *dest, const char *objpath, const char *iface)
         return proxy;
 }
 
-static void
+static gboolean
 gajim_set_status(const char *message)
 {
-        g_return_if_fail(message != NULL);
+        g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
@@ -86,14 +87,14 @@ gajim_set_status(const char *message)
                                "/org/gajim/dbus/RemoteObject",
                                "org.gajim.dbus.RemoteInterface");
 
-        if (proxy == NULL) return;
+        if (proxy == NULL) return FALSE;
 
         result = dbus_g_proxy_call (proxy, "get_status", &error,
                                     G_TYPE_STRING, "",
                                     G_TYPE_INVALID,
                                     G_TYPE_STRING, &status,
                                     G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         /* todo: abort if not online or chat? or dnd? */
 
@@ -117,16 +118,17 @@ gajim_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_BOOLEAN, &change_status_result,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         g_free(status);
         g_object_unref(proxy);
+        return TRUE;
 }
 
-static void
+static gboolean
 gossip_set_status(const char *message)
 {
-        g_return_if_fail(message != NULL);
+        g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
@@ -139,13 +141,13 @@ gossip_set_status(const char *message)
                                "/org/gnome/Gossip",
                                "org.gnome.Gossip");
 
-        if (proxy == NULL) return;
+        if (proxy == NULL) return FALSE;
 
         result = dbus_g_proxy_call(proxy, "GetOpenChats", &error,
                                    G_TYPE_INVALID,
                                    G_TYPE_STRV, &chats,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         id = *chats;
 
@@ -156,7 +158,7 @@ gossip_set_status(const char *message)
                                    G_TYPE_STRING, &state_str,
                                    G_TYPE_STRING, &status,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         g_strfreev(chats);
 
@@ -177,15 +179,16 @@ gossip_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
         g_free(state_str);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         g_object_unref(proxy);
+        return TRUE;
 }
 
-static void
+static gboolean
 pidgin_set_status(const char *message)
 {
-        g_return_if_fail(message != NULL);
+        g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
@@ -196,14 +199,14 @@ pidgin_set_status(const char *message)
                                "/im/pidgin/purple/PurpleObject",
                                "im.pidgin.purple.PurpleInterface");
 
-        if (proxy == NULL) return;
+        if (proxy == NULL) return FALSE;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusGetCurrent",
                                    &error,
                                    G_TYPE_INVALID,
                                    G_TYPE_INT, &current,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusGetType",
                                    &error,
@@ -211,7 +214,7 @@ pidgin_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_INT, &status,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         /* todo: abort if not online */
 
@@ -232,23 +235,24 @@ pidgin_set_status(const char *message)
                                    G_TYPE_STRING, message,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusActivate",
                                    &error,
                                    G_TYPE_INT, current,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         g_object_unref(proxy);
+        return TRUE;
 }
 
 
-static void
+static gboolean
 telepathy_set_status(const char *message)
 {
-        g_return_if_fail(message != NULL);
+        g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
@@ -258,13 +262,13 @@ telepathy_set_status(const char *message)
                                "/org/freedesktop/Telepathy/MissionControl",
                                "org.freedesktop.Telepathy.MissionControl");
 
-        if (proxy == NULL) return;
+        if (proxy == NULL) return FALSE;
 
         result = dbus_g_proxy_call(proxy, "GetPresence", &error,
                                    G_TYPE_INVALID,
                                    G_TYPE_UINT, &presence,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         if (saved_telepathy_status == NULL) {
                 dbus_g_proxy_call(proxy, "GetPresenceMessage", &error,
@@ -282,9 +286,10 @@ telepathy_set_status(const char *message)
                                    G_TYPE_STRING, message,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return;
+        if (error_happened(result, error)) return FALSE;
 
         g_object_unref(proxy);
+        return TRUE;
 }
 
 static gboolean
@@ -319,30 +324,31 @@ im_set_status_idle(gpointer data)
 static gboolean
 im_clear_status_idle(gpointer data)
 {
-        g_return_val_if_fail(data != NULL, FALSE);
-        ImStatusData *d = (ImStatusData *) data;
         g_static_mutex_lock(&imstatus_mutex);
-        if (d->im_pidgin && saved_pidgin_status != NULL) {
-                pidgin_set_status(saved_pidgin_status);
-                g_free(saved_pidgin_status);
-                saved_pidgin_status = NULL;
+        if (saved_pidgin_status != NULL) {
+                if (pidgin_set_status(saved_pidgin_status)) {
+                        g_free(saved_pidgin_status);
+                        saved_pidgin_status = NULL;
+                }
         }
-        if (d->im_gajim && saved_gajim_status != NULL) {
-                gajim_set_status(saved_gajim_status);
-                g_free(saved_gajim_status);
-                saved_gajim_status = NULL;
+        if (saved_gajim_status != NULL) {
+                if (gajim_set_status(saved_gajim_status)) {
+                        g_free(saved_gajim_status);
+                        saved_gajim_status = NULL;
+                }
         }
-        if (d->im_gossip && saved_gossip_status != NULL) {
-                gossip_set_status(saved_gossip_status);
-                g_free(saved_gossip_status);
-                saved_gossip_status = NULL;
+        if (saved_gossip_status != NULL) {
+                if (gossip_set_status(saved_gossip_status)) {
+                        g_free(saved_gossip_status);
+                        saved_gossip_status = NULL;
+                }
         }
-        if (d->im_telepathy && saved_telepathy_status != NULL) {
-                telepathy_set_status(saved_telepathy_status);
-                g_free(saved_telepathy_status);
-                saved_telepathy_status = NULL;
+        if (saved_telepathy_status != NULL) {
+                if (telepathy_set_status(saved_telepathy_status)) {
+                        g_free(saved_telepathy_status);
+                        saved_telepathy_status = NULL;
+                }
         }
-        g_slice_free(ImStatusData, d);
         g_static_mutex_unlock(&imstatus_mutex);
         return FALSE;
 }
@@ -363,13 +369,7 @@ im_set_status(const lastfm_usercfg *cfg, lastfm_track *track)
 }
 
 void
-im_clear_status(const lastfm_usercfg *cfg)
+im_clear_status(void)
 {
-        g_return_if_fail(cfg != NULL);
-        ImStatusData *data = g_slice_new0(ImStatusData);
-        data->im_pidgin = cfg->im_pidgin;
-        data->im_gossip = cfg->im_gossip;
-        data->im_telepathy = cfg->im_telepathy;
-        data->im_gajim = cfg->im_gajim;
-        g_idle_add(im_clear_status_idle,data);
+        g_idle_add(im_clear_status_idle, NULL);
 }

@@ -477,7 +477,7 @@ apply_usercfg(void)
         } else {
                 http_set_proxy(NULL);
         }
-        im_clear_status(usercfg);
+        im_clear_status();
         if (nowplaying != NULL) {
                 im_set_status(usercfg, nowplaying);
         }
@@ -835,7 +835,7 @@ controller_stop_playing(void)
         mainwin_set_ui_state(mainwin, new_state, NULL);
         finish_playing_track();
         stopping_after_track = FALSE;
-        im_clear_status(usercfg);
+        im_clear_status();
 
         /* Notify the playback status */
         lastfm_dbus_notify_playback(NULL);
