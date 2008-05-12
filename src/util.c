@@ -164,8 +164,6 @@ get_pixbuf_from_image(const char *data, size_t size, int imgsize)
                         g_warning("Error loading image: %s",
                                   err->message ? err->message : "unknown");
                         g_error_free(err);
-                        g_object_unref(G_OBJECT(ldr));
-                        ldr = NULL;
                 } else {
                         pixbuf = gdk_pixbuf_loader_get_pixbuf(ldr);
                         g_object_ref(pixbuf);
