@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-08 22:43+0200\n"
-"PO-Revision-Date: 2008-05-06 22:51+0200\n"
+"PO-Revision-Date: 2008-05-12 15:45+0200\n"
 "Last-Translator: Oskar Welzl <oskar@welzl.info>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -313,7 +313,7 @@ msgstr "<b>Album:</b>\n"
 
 #: src/mainwin.c:232
 msgid "<b>Listening to <i>"
-msgstr "<br>Es läuft <i>"
+msgstr "<b>Es läuft <i>"
 
 #: src/mainwin.c:362 src/mainwin.c:363
 msgid "Stopped"
