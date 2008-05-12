@@ -116,17 +116,16 @@ static const char *license =
 "You should have received a copy of the GNU General\n"
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/\n";
-static const char *translators = N_(
-"German (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
+static const char *translators_tpl =
+"%s (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
              "* Oskar Welzl <oskar@welzl.info>\n\n"
-"Spanish (es_MX)\n* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n\n"
-"Spanish (es_VE)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
-"Finnish (fi)\n* Janne Mäkinen <janne.makinen@surffi.fi>\n\n"
-"Galician (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n\n"
-"Italian (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
-"Portuguese (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
-"Portuguese (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>"
-);
+"%s (es_MX)\n* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n\n"
+"%s (es_VE)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
+"%s (fi)\n* Janne Mäkinen <janne.makinen@surffi.fi>\n\n"
+"%s (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n\n"
+"%s (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
+"%s (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
+"%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
 
 void
 mainwin_run_app(void)
@@ -611,13 +610,19 @@ show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
         GdkPixbuf *logo = gdk_pixbuf_new_from_file(APP_ICON_BIG, NULL);
+        char *translators = g_strdup_printf(translators_tpl, _("German"),
+                                            _("Spanish"), _("Spanish"),
+                                            _("Finnish"), _("Galician"),
+                                            _("Italian"), _("Portuguese"),
+                                            _("Portuguese"));
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", _(appdescr), "copyright", copyright,
                               "license", license, "version", APP_VERSION,
                               "website", website, "artists", artists,
-                              "translator-credits", _(translators),
+                              "translator-credits", translators,
                               "logo", logo, NULL);
         g_object_unref(G_OBJECT(logo));
+        g_free(translators);
 }
 
 static void

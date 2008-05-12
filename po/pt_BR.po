@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.5.1-1\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
-"POT-Creation-Date: 2008-05-12 19:17+0200\n"
+"POT-Creation-Date: 2008-05-12 20:06+0200\n"
 "PO-Revision-Date: 2008-05-11 16:05+0200\n"
 "Last-Translator: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
 "Language-Team: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
@@ -261,7 +261,7 @@ msgstr "Pular esta faixa"
 msgid "Mark as loved"
 msgstr "Marcar como preferida"
 
-#: src/mainwin.c:70 src/mainwin.c:810 src/vagalume-tray-icon.c:32
+#: src/mainwin.c:70 src/mainwin.c:815 src/vagalume-tray-icon.c:32
 msgid "Ban this track"
 msgstr "Banir esta faixa"
 
@@ -269,7 +269,7 @@ msgstr "Banir esta faixa"
 msgid "Recommend this track"
 msgstr "Recomendar esta faixa"
 
-#: src/mainwin.c:78 src/mainwin.c:812
+#: src/mainwin.c:78 src/mainwin.c:817
 msgid "Download this track"
 msgstr "Fazer o download desta faixa"
 
@@ -285,212 +285,192 @@ msgstr "Adicionar esta faixa à lista de reprodução"
 msgid "A Last.fm client for Gnome and Maemo"
 msgstr "Um cliente do Last.fm para o Gnome e o Maemo"
 
-#: src/mainwin.c:120
-#, fuzzy
-msgid ""
-"German (de)\n"
-"* Stephan Reichholf <stephan@reichholf.net>\n"
-"* Oskar Welzl <oskar@welzl.info>\n"
-"\n"
-"Spanish (es_MX)\n"
-"* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
-"\n"
-"Spanish (es_VE)\n"
-"* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
-"\n"
-"Finnish (fi)\n"
-"* Janne Mäkinen <janne.makinen@surffi.fi>\n"
-"\n"
-"Galician (gl)\n"
-"* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
-"\n"
-"Italian (it)\n"
-"* Andrea Grandi <a.grandi@gmail.com>\n"
-"\n"
-"Portuguese (pt)\n"
-"* Marcos Garcia <marcosgg@gmail.com>\n"
-"\n"
-"Portuguese (pt_BR)\n"
-"* Rodrigo Flores <rodrigomarquesflores@gmail.com>"
-msgstr ""
-"Alemão (de)\n"
-"* Stephan Reichholf <stephan@reichholf.net>\n"
-"* Oskar Welzl <oskar@welzl.info>\n"
-"\n"
-"Espanhol (es_MX)\n"
-"* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
-"\n"
-"Espanhol (es_VE)\n"
-"* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
-"\n"
-"Galego (gl)\n"
-"* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
-"\n"
-"Italiano (it)\n"
-"* Andrea Grandi <a.grandi@gmail.com>"
-
-#: src/mainwin.c:195
+#: src/mainwin.c:194
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Artista:</b>\n"
 
-#: src/mainwin.c:201
+#: src/mainwin.c:200
 msgid "<b>Title:</b>\n"
 msgstr "<b>Título:</b>\n"
 
-#: src/mainwin.c:208
+#: src/mainwin.c:207
 msgid "<b>Album:</b>\n"
 msgstr "<b>Álbum</b>\n"
 
-#: src/mainwin.c:217
+#: src/mainwin.c:216
 msgid "<b>Listening to <i>"
 msgstr "<b>Ouvindo: <i>"
 
-#: src/mainwin.c:347 src/mainwin.c:348
+#: src/mainwin.c:346 src/mainwin.c:347
 msgid "Stopped"
 msgstr "Parado"
 
-#: src/mainwin.c:378
+#: src/mainwin.c:377
 msgid "Playing..."
 msgstr "Reproduzindo..."
 
-#: src/mainwin.c:401 src/mainwin.c:402
+#: src/mainwin.c:400 src/mainwin.c:401
 msgid "Connecting..."
 msgstr "Conectando..."
 
-#: src/mainwin.c:428
+#: src/mainwin.c:427
 msgid "Disconnected"
 msgstr "Desconectado"
 
-#: src/mainwin.c:488
+#: src/mainwin.c:487
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Volume: %d/100"
 
+#: src/mainwin.c:613
+msgid "German"
+msgstr ""
+
+#: src/mainwin.c:614
+msgid "Spanish"
+msgstr ""
+
+#: src/mainwin.c:615
+msgid "Finnish"
+msgstr ""
+
+#: src/mainwin.c:615
+msgid "Galician"
+msgstr ""
+
+#: src/mainwin.c:616
+msgid "Italian"
+msgstr ""
+
+#: src/mainwin.c:616 src/mainwin.c:617
+msgid "Portuguese"
+msgstr ""
+
 #. Last.fm
-#: src/mainwin.c:699
+#: src/mainwin.c:704
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/mainwin.c:701 src/vagalume-tray-icon.c:27
+#: src/mainwin.c:706 src/vagalume-tray-icon.c:27
 msgid "Settings..."
 msgstr "Configurações..."
 
-#: src/mainwin.c:702
+#: src/mainwin.c:707
 msgid "Quit"
 msgstr "Sair"
 
 #. Radio
-#: src/mainwin.c:715
+#: src/mainwin.c:720
 msgid "Play _Radio"
 msgstr "Reproduzir _Rádio"
 
-#: src/mainwin.c:717
+#: src/mainwin.c:722
 msgid "My radios"
 msgstr "Minhas rádios"
 
-#: src/mainwin.c:719
+#: src/mainwin.c:724
 msgid "Others' radios"
 msgstr "Rádios de outros"
 
-#: src/mainwin.c:720
+#: src/mainwin.c:725
 msgid "Group radio..."
 msgstr "Rádio de grupo..."
 
-#: src/mainwin.c:721
+#: src/mainwin.c:726
 msgid "Music tagged..."
 msgstr "Música etiquetada..."
 
-#: src/mainwin.c:722
+#: src/mainwin.c:727
 msgid "Artists similar to..."
 msgstr "Artistas semalhantes a..."
 
-#: src/mainwin.c:723
+#: src/mainwin.c:728
 msgid "Enter URL..."
 msgstr "Digite o URL..."
 
-#: src/mainwin.c:744
+#: src/mainwin.c:749
 msgid "My personal radio"
 msgstr "Minha rádio pessoal"
 
-#: src/mainwin.c:745
+#: src/mainwin.c:750
 msgid "My neighbours"
 msgstr "Meus vizinhos"
 
-#: src/mainwin.c:746
+#: src/mainwin.c:751
 msgid "My loved tracks"
 msgstr "Minhas faixas preferidas"
 
-#: src/mainwin.c:747
+#: src/mainwin.c:752
 msgid "My playlist"
 msgstr "Minha lista de reprodução"
 
-#: src/mainwin.c:748
+#: src/mainwin.c:753
 msgid "My recommendations"
 msgstr "Minhas recomendações"
 
-#: src/mainwin.c:749
+#: src/mainwin.c:754
 msgid "My music tagged..."
 msgstr "Minhas músicas etiquetadas..."
 
-#: src/mainwin.c:778
+#: src/mainwin.c:783
 msgid "Personal..."
 msgstr "Pessoal..."
 
-#: src/mainwin.c:779
+#: src/mainwin.c:784
 msgid "Neighbours..."
 msgstr "Vizinhos..."
 
-#: src/mainwin.c:780
+#: src/mainwin.c:785
 msgid "Loved tracks..."
 msgstr "Faixas preferidas..."
 
-#: src/mainwin.c:781
+#: src/mainwin.c:786
 msgid "Playlist..."
 msgstr "Lista de Reprodução..."
 
 #. Actions
-#: src/mainwin.c:800
+#: src/mainwin.c:805
 msgid "_Actions"
 msgstr "_Ações"
 
-#: src/mainwin.c:802 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
+#: src/mainwin.c:807 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
 msgid "Play"
 msgstr "Reproduzir"
 
-#: src/mainwin.c:803 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
+#: src/mainwin.c:808 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
 msgid "Stop"
 msgstr "Parar"
 
-#: src/mainwin.c:804 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
+#: src/mainwin.c:809 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
 msgid "Skip"
 msgstr "Pular"
 
-#: src/mainwin.c:808
+#: src/mainwin.c:813
 msgid "Stop after this track"
 msgstr "Parar depois desta faixa"
 
-#: src/mainwin.c:809 src/vagalume-tray-icon.c:31
+#: src/mainwin.c:814 src/vagalume-tray-icon.c:31
 msgid "Love this track"
 msgstr "Marcar esta faixa como preferida"
 
-#: src/mainwin.c:811 src/vagalume-tray-icon.c:30
+#: src/mainwin.c:816 src/vagalume-tray-icon.c:30
 msgid "Add to playlist"
 msgstr "Adicionar à lista de reprodução"
 
-#: src/mainwin.c:813
+#: src/mainwin.c:818
 msgid "Tag..."
 msgstr "Etiqueta..."
 
-#: src/mainwin.c:814 src/vagalume-tray-icon.c:28
+#: src/mainwin.c:819 src/vagalume-tray-icon.c:28
 msgid "Recommend..."
 msgstr "Recomendar..."
 
 #. Help
-#: src/mainwin.c:851
+#: src/mainwin.c:856
 msgid "_Help"
 msgstr "A_juda"
 
-#: src/mainwin.c:853
+#: src/mainwin.c:858
 msgid "About..."
 msgstr "Sobre..."
 
@@ -813,6 +793,49 @@ msgstr ""
 #: src/vagalume-tray-icon.c:29
 msgid "Tags..."
 msgstr "Etiquetas..."
+
+#, fuzzy
+#~ msgid ""
+#~ "German (de)\n"
+#~ "* Stephan Reichholf <stephan@reichholf.net>\n"
+#~ "* Oskar Welzl <oskar@welzl.info>\n"
+#~ "\n"
+#~ "Spanish (es_MX)\n"
+#~ "* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
+#~ "\n"
+#~ "Spanish (es_VE)\n"
+#~ "* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
+#~ "\n"
+#~ "Finnish (fi)\n"
+#~ "* Janne Mäkinen <janne.makinen@surffi.fi>\n"
+#~ "\n"
+#~ "Galician (gl)\n"
+#~ "* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
+#~ "\n"
+#~ "Italian (it)\n"
+#~ "* Andrea Grandi <a.grandi@gmail.com>\n"
+#~ "\n"
+#~ "Portuguese (pt)\n"
+#~ "* Marcos Garcia <marcosgg@gmail.com>\n"
+#~ "\n"
+#~ "Portuguese (pt_BR)\n"
+#~ "* Rodrigo Flores <rodrigomarquesflores@gmail.com>"
+#~ msgstr ""
+#~ "Alemão (de)\n"
+#~ "* Stephan Reichholf <stephan@reichholf.net>\n"
+#~ "* Oskar Welzl <oskar@welzl.info>\n"
+#~ "\n"
+#~ "Espanhol (es_MX)\n"
+#~ "* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
+#~ "\n"
+#~ "Espanhol (es_VE)\n"
+#~ "* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
+#~ "\n"
+#~ "Galego (gl)\n"
+#~ "* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
+#~ "\n"
+#~ "Italiano (it)\n"
+#~ "* Andrea Grandi <a.grandi@gmail.com>"
 
 #~ msgid "IM Status"
 #~ msgstr "Status do MI"
