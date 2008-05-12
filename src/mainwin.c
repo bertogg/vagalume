@@ -331,6 +331,7 @@ menu_enable_all_items(GtkWidget *menu, gboolean enable)
                         gtk_widget_set_sensitive(item, enable);
                 }
         }
+        if (items != NULL) g_list_free(items);
 }
 
 void
