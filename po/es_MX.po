@@ -8,28 +8,28 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-12 20:06+0200\n"
-"PO-Revision-Date: 2008-05-05 20:20+0200\n"
+"PO-Revision-Date: 2008-05-12 22:52+0200\n"
 "Last-Translator: Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
 "Language-Team: Spanish (Mexico)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/connection.c:55
 msgid "Error initializing internet connection manager"
-msgstr "Error al iniciar el controlador de conexi贸n a internet"
+msgstr "Error al iniciar el controlador de conexi髇 a internet"
 
 #: src/controller.c:573
 msgid ""
 "Unable to login to Last.fm\n"
 "Check username and password"
 msgstr ""
-"Imposible iniciar seci贸n a Last.fm\n"
-"Verifica el nombre de usuario y contrase帽a"
+"Imposible iniciar seci髇 a Last.fm\n"
+"Verifica el nombre de usuario y contrase馻"
 
 #: src/controller.c:576
 msgid "Network connection error"
-msgstr "Error el la conexi贸n de red"
+msgstr "Error el la conexi髇 de red"
 
 #: src/controller.c:648
 msgid ""
@@ -38,7 +38,7 @@ msgid ""
 "to use this program."
 msgstr ""
 "Se requiere que ingrese su\n"
-"usuario y contrase帽a de Last.fm\n"
+"usuario y contrase馻 de Last.fm\n"
 "para usar este programa"
 
 #: src/controller.c:699
@@ -47,7 +47,7 @@ msgstr "No hay mas contenido para reproducir"
 
 #: src/controller.c:887
 msgid "Download this track?"
-msgstr "Descargar esta canci贸n?"
+msgstr "Descargar esta canci髇?"
 
 #: src/controller.c:895
 msgid "File exists. Overwrite?"
@@ -55,19 +55,19 @@ msgstr "El archivo ya existe. Sobreescribir?"
 
 #: src/controller.c:930
 msgid "Really mark track as loved?"
-msgstr "Marcar esta canci贸n como favorita?"
+msgstr "Marcar esta canci髇 como favorita?"
 
 #: src/controller.c:934
 msgid "Marking track as loved"
-msgstr "Marcando la canci贸n como favorita"
+msgstr "Marcando la canci髇 como favorita"
 
 #: src/controller.c:948
 msgid "Really ban this track?"
-msgstr "Excluir esta canci贸n?"
+msgstr "Excluir esta canci髇?"
 
 #: src/controller.c:952
 msgid "Banning track"
-msgstr "Excluyendo la canci贸n"
+msgstr "Excluyendo la canci髇"
 
 #: src/controller.c:996
 msgid "Tags set correctly"
@@ -83,11 +83,11 @@ msgstr "Debes escribir una lista de etiquetas"
 
 #: src/controller.c:1068
 msgid "Recommendation sent"
-msgstr "Recomendaci贸n enviada"
+msgstr "Recomendaci髇 enviada"
 
 #: src/controller.c:1069
 msgid "Error sending recommendation"
-msgstr "Error al enviar la recomendaci贸n"
+msgstr "Error al enviar la recomendaci髇"
 
 #: src/controller.c:1109
 msgid ""
@@ -95,23 +95,23 @@ msgid ""
 "and a recommendation message."
 msgstr ""
 "Debes escribir un nombre de usuario\n"
-"y un mensaje de recomendaci贸n."
+"y un mensaje de recomendaci髇."
 
 #: src/controller.c:1147
 msgid "Track added to playlist"
-msgstr "Canci贸n agregada a la lista de reproducci贸n"
+msgstr "Canci髇 agregada a la lista de reproducci髇"
 
 #: src/controller.c:1148
 msgid "Error adding track to playlist"
-msgstr "Error al agregar canci贸n a la lista de reproducci贸n"
+msgstr "Error al agregar canci髇 a la lista de reproducci髇"
 
 #: src/controller.c:1165
 msgid "Really add this track to the playlist?"
-msgstr "Deseas agregar esta canci贸n a tu lista de reproducci贸n?"
+msgstr "Deseas agregar esta canci髇 a tu lista de reproducci髇?"
 
 #: src/controller.c:1194
 msgid "Invalid radio URL"
-msgstr "Direcci贸n URL de radio invalida"
+msgstr "Direcci髇 URL de radio invalida"
 
 #: src/controller.c:1201
 msgid ""
@@ -120,8 +120,8 @@ msgid ""
 "or it is only available\n"
 "for Last.fm subscribers"
 msgstr ""
-"Direcci贸n URL de radio invalida.\n"
-"Esta estaci贸n no existe o solo\n"
+"Direcci髇 URL de radio invalida.\n"
+"Esta estaci髇 no existe o solo\n"
 "esta disponible para subscriptoresregistrados a Last.fm"
 
 #: src/controller.c:1246 src/controller.c:1361
@@ -162,11 +162,11 @@ msgstr "Ingresa el nombre de un artista"
 
 #: src/controller.c:1408
 msgid "Enter radio URL"
-msgstr "Ingresa la direcci贸n URL del radio"
+msgstr "Ingresa la direcci髇 URL del radio"
 
 #: src/controller.c:1409
 msgid "Enter the URL of the Last.fm radio"
-msgstr "Ingrese la direcci贸n URL del radio Last.fm"
+msgstr "Ingrese la direcci髇 URL del radio Last.fm"
 
 #: src/controller.c:1418
 msgid "Last.fm radio URLs must start with lastfm://"
@@ -240,15 +240,15 @@ msgstr "Uso: %s [url de radio lastfm]\n"
 
 #: src/mainwin.c:54
 msgid "Start playing"
-msgstr "Empezar reproducci贸n"
+msgstr "Empezar reproducci髇"
 
 #: src/mainwin.c:58
 msgid "Stop playing"
-msgstr "Detener reproducci贸n"
+msgstr "Detener reproducci髇"
 
 #: src/mainwin.c:62
 msgid "Skip this track"
-msgstr "Saltar esta canci贸n"
+msgstr "Saltar esta canci髇"
 
 #: src/mainwin.c:66
 msgid "Mark as loved"
@@ -256,23 +256,23 @@ msgstr "Marcar como favorita"
 
 #: src/mainwin.c:70 src/mainwin.c:815 src/vagalume-tray-icon.c:32
 msgid "Ban this track"
-msgstr "Prohibir esta canci贸n"
+msgstr "Prohibir esta canci髇"
 
 #: src/mainwin.c:74
 msgid "Recommend this track"
-msgstr "Recomendar esta canci贸n"
+msgstr "Recomendar esta canci髇"
 
 #: src/mainwin.c:78 src/mainwin.c:817
 msgid "Download this track"
-msgstr "Descargar esta canci贸n"
+msgstr "Descargar esta canci髇"
 
 #: src/mainwin.c:82
 msgid "Edit tags for this track"
-msgstr "Editar las etiquetas de esta canci贸n"
+msgstr "Editar las etiquetas de esta canci髇"
 
 #: src/mainwin.c:86
 msgid "Add this track to playlist"
-msgstr "Agregar esta canci贸n a la lista de reproducci贸n"
+msgstr "Agregar esta canci髇 a la lista de reproducci髇"
 
 #: src/mainwin.c:101
 msgid "A Last.fm client for Gnome and Maemo"
@@ -284,7 +284,7 @@ msgstr "<b>Artista:</b>\n"
 
 #: src/mainwin.c:200
 msgid "<b>Title:</b>\n"
-msgstr "<b>T铆tulo:</b>\n"
+msgstr "<b>T韙ulo:</b>\n"
 
 #: src/mainwin.c:207
 msgid "<b>Album:</b>\n"
@@ -379,7 +379,7 @@ msgstr "Artistas similares a..."
 
 #: src/mainwin.c:728
 msgid "Enter URL..."
-msgstr "Ingresa la direcci贸n URL..."
+msgstr "Ingresa la direcci髇 URL..."
 
 #: src/mainwin.c:749
 msgid "My personal radio"
@@ -395,7 +395,7 @@ msgstr "Mis canciones favoritas"
 
 #: src/mainwin.c:752
 msgid "My playlist"
-msgstr "Mi lista de reproducci贸n"
+msgstr "Mi lista de reproducci髇"
 
 #: src/mainwin.c:753
 msgid "My recommendations"
@@ -419,7 +419,7 @@ msgstr "Canciones favoritas..."
 
 #: src/mainwin.c:786
 msgid "Playlist..."
-msgstr "Listas de reproducci贸n..."
+msgstr "Listas de reproducci髇..."
 
 #. Actions
 #: src/mainwin.c:805
@@ -440,7 +440,7 @@ msgstr "Saltar"
 
 #: src/mainwin.c:813
 msgid "Stop after this track"
-msgstr "Detener despues de esta canci贸n"
+msgstr "Detener despues de esta canci髇"
 
 #: src/mainwin.c:814 src/vagalume-tray-icon.c:31
 msgid "Love this track"
@@ -448,7 +448,7 @@ msgstr "Agregar a canciones favoritas"
 
 #: src/mainwin.c:816 src/vagalume-tray-icon.c:30
 msgid "Add to playlist"
-msgstr "Agregar a la lista reproducci贸n"
+msgstr "Agregar a la lista reproducci髇"
 
 #: src/mainwin.c:818
 msgid "Tag..."
@@ -469,7 +469,7 @@ msgstr "Acerca de..."
 
 #: src/uimisc.c:165
 msgid "Confirmation"
-msgstr "Confirmaci贸n"
+msgstr "Confirmaci髇"
 
 #: src/uimisc.c:208 src/uimisc.c:381
 msgid "Select download directory"
@@ -485,7 +485,7 @@ msgstr "Usuario:"
 
 #: src/uimisc.c:276
 msgid "Password:"
-msgstr "Contrase帽a:"
+msgstr "Contrase馻:"
 
 #: src/uimisc.c:277
 msgid "Enable scrobbling:"
@@ -518,11 +518,11 @@ msgstr "Usar proxy HTTP"
 
 #: src/uimisc.c:343
 msgid "Proxy address:"
-msgstr "Direcci贸n proxy:"
+msgstr "Direcci髇 proxy:"
 
 #: src/uimisc.c:362
 msgid "Connection"
-msgstr "Conexi贸n"
+msgstr "Conexi髇"
 
 #. Set help
 #: src/uimisc.c:365
@@ -548,9 +548,8 @@ msgid ""
 msgstr ""
 
 #: src/uimisc.c:420
-#, fuzzy
 msgid "IM message template:"
-msgstr "Platilla de mensaje de estado"
+msgstr "Platilla de mensaje de estado:"
 
 #: src/uimisc.c:421
 msgid "Update Pidgin status:"
@@ -569,9 +568,8 @@ msgid "Update Telepathy status:"
 msgstr "Actualizar el estado en Telepathy:"
 
 #: src/uimisc.c:455
-#, fuzzy
 msgid "Update IM status"
-msgstr "Actualizar el estado en Gajim:"
+msgstr ""
 
 #. Set help
 #: src/uimisc.c:458
@@ -631,7 +629,7 @@ msgstr "Artista: "
 
 #: src/uimisc.c:687
 msgid "Track: "
-msgstr "Canci贸n: "
+msgstr "Canci髇: "
 
 #: src/uimisc.c:695
 msgid "Album: "
@@ -682,7 +680,7 @@ msgstr "Etiquetas populares para esto"
 #. Dialog and basic settings
 #: src/uimisc.c:1089
 msgid "Send a recommendation"
-msgstr "Mandar una recomendaci贸n"
+msgstr "Mandar una recomendaci髇"
 
 #: src/uimisc.c:1095
 msgid "Recommend this"
@@ -690,22 +688,20 @@ msgstr "Recomendar este/a"
 
 #: src/uimisc.c:1118
 msgid "Send recommendation to"
-msgstr "Mandar la recomendaci贸n a"
+msgstr "Mandar la recomendaci髇 a"
 
 #. Message of the recommendation
 #: src/uimisc.c:1128
 msgid "Recommendation message"
-msgstr "Mensaje de recomendaci贸n"
+msgstr "Mensaje de recomendaci髇"
 
 #: src/vagalume-sb-plugin.c:31
-#, fuzzy
 msgid "No artist"
-msgstr "Ingresa un artista"
+msgstr ""
 
 #: src/vagalume-sb-plugin.c:32
-#, fuzzy
 msgid "No track"
-msgstr "Mis canciones favoritas"
+msgstr ""
 
 #: src/vagalume-sb-plugin.c:33
 msgid "No album"
@@ -728,9 +724,8 @@ msgid "Close Vagalume"
 msgstr ""
 
 #: src/vagalume-tray-icon.c:20
-#, fuzzy
 msgid " Stopped "
-msgstr "Detenido"
+msgstr " Detenido "
 
 #: src/vagalume-tray-icon.c:21
 #, c-format
@@ -753,9 +748,5 @@ msgid ""
 msgstr ""
 
 #: src/vagalume-tray-icon.c:29
-#, fuzzy
 msgid "Tags..."
-msgstr "Etiqueta..."
-
-#~ msgid "IM Status"
-#~ msgstr "Estdo IM"
+msgstr "Etiquetas..."
