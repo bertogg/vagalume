@@ -483,7 +483,11 @@ get_album_cover_icon (lastfm_track *track)
         g_return_val_if_fail(track != NULL && track->image_url != NULL, NULL);
         GdkPixbuf *pixbuf = NULL;
 
+        /* This can take some time, so release the GDK lock */
+        gdk_threads_leave();
         lastfm_get_track_cover_image(track);
+        gdk_threads_enter();
+
         if (track->image_data != NULL) {
                 pixbuf = get_pixbuf_from_image(track->image_data,
                                                track->image_data_size,
@@ -510,10 +514,6 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         gchar *notification_summary = NULL;
         gchar *notification_body = NULL;
         gchar *stripped_album = NULL;
-
-        /* This is a thread and downloading the cover can take some
-         * time, so we release the GDK lock */
-        gdk_threads_leave();
 
         if (track->image_url != NULL) {
                 /* Set album image as icon if specified */
@@ -542,9 +542,6 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
                                                  track->artist,
                                                  track->album);
         }
-
-        /* Here begins the GTK code, so get the GDK lock again */
-        gdk_threads_enter();
 
         /* Try loading the default cover icon if an error occurred or
          * not image_url was set for the current track */
