@@ -191,15 +191,6 @@ vagalume_tray_icon_finalize (GObject* object)
         /* Cleanup libnotify */
         cleanup_libnotify (vti);
 
-        /* Destroy local widgets */
-        if (priv->ctxt_menu) {
-                gtk_widget_destroy (priv->ctxt_menu);
-        }
-
-        if (priv->tray_icon) {
-                g_object_unref (priv->tray_icon);
-        }
-
         /* Disconnect handlers */
         g_signal_handler_disconnect (priv->show_app_item,
                                      priv->show_app_item_handler_id);
@@ -228,6 +219,15 @@ vagalume_tray_icon_finalize (GObject* object)
         g_signal_handler_disconnect (priv->tray_icon,
                                      priv->tray_icon_popup_menu_handler_id);
 
+        /* Destroy local widgets */
+        if (priv->ctxt_menu) {
+                gtk_widget_destroy (priv->ctxt_menu);
+        }
+
+        if (priv->tray_icon) {
+                g_object_unref (priv->tray_icon);
+        }
+
         /* call super class */
         G_OBJECT_CLASS (vagalume_tray_icon_parent_class) -> finalize(object);
 }
@@ -251,6 +251,7 @@ cleanup_libnotify  (VagalumeTrayIcon *vti)
         if (notify_is_initted ()) {
                 if (priv->notification) {
                         notify_notification_close (priv->notification, NULL);
+                        g_object_unref (priv->notification);
                 }
                 notify_uninit ();
         }

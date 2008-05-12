@@ -1513,6 +1513,10 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
 
         lastfm_dbus_notify_closing();
 
+#ifdef HAVE_TRAY_ICON
+        g_object_unref(tray_icon);
+        tray_icon = NULL;
+#endif
         lastfm_session_destroy(session);
         session = NULL;
         rsp_session_destroy(rsp_sess);
