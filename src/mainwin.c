@@ -118,11 +118,12 @@ static const char *license =
 "http://www.gnu.org/licenses/\n";
 static const char *translators_tpl =
 "%s (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
-             "* Oskar Welzl <mail@welzl.info>\n\n"
+         "* Oskar Welzl <mail@welzl.info>\n\n"
 "%s (es_MX)\n* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n\n"
 "%s (es_VE)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
 "%s (fi)\n* Janne Mäkinen <janne.makinen@surffi.fi>\n\n"
-"%s (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n\n"
+"%s (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
+         "* Amador Loureiro Blanco <dorfun@adorfunteca.org>\n\n"
 "%s (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
 "%s (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
 "%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
