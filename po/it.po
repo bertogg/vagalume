@@ -1,4 +1,4 @@
-# translation of vagalume.po to Italian
+# translation of it.po to Italian
 # Copyright (C) 2007,2008 Alberto Garcia Gonzalez
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
@@ -6,10 +6,10 @@
 # Andrea Grandi <a.grandi@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: vagalume\n"
+"Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-12 20:06+0200\n"
-"PO-Revision-Date: 2008-05-13 17:58+0200\n"
+"PO-Revision-Date: 2008-05-13 18:04+0200\n"
 "Last-Translator: Andrea Grandi <a.grandi@gmail.com>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -328,27 +328,27 @@ msgstr "Volume: %d/100"
 
 #: src/mainwin.c:613
 msgid "German"
-msgstr ""
+msgstr "Tedesco"
 
 #: src/mainwin.c:614
 msgid "Spanish"
-msgstr ""
+msgstr "Spagnolo"
 
 #: src/mainwin.c:615
 msgid "Finnish"
-msgstr ""
+msgstr "Finlandese"
 
 #: src/mainwin.c:615
 msgid "Galician"
-msgstr ""
+msgstr "Galiziano"
 
 #: src/mainwin.c:616
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: src/mainwin.c:616 src/mainwin.c:617
 msgid "Portuguese"
-msgstr ""
+msgstr "Portoghese"
 
 #. Last.fm
 #: src/mainwin.c:704
@@ -799,3 +799,4 @@ msgstr ""
 #: src/vagalume-tray-icon.c:29
 msgid "Tags..."
 msgstr "Etichette..."
+
