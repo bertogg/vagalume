@@ -22,7 +22,7 @@ typedef struct {
         char *title;
         guint id;
         char *artist;
-        char *album;
+        char *album; /* "" if empty, never NULL */
         char *pls_title;
         guint duration;
         char *image_url;

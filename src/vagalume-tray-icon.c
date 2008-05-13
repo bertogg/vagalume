@@ -514,7 +514,7 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         GdkPixbuf *icon = NULL;
         gchar *notification_summary = NULL;
         gchar *notification_body = NULL;
-        gchar *stripped_album = NULL;
+        int i;
 
         if (track->image_url != NULL) {
                 /* Set album image as icon if specified */
@@ -522,16 +522,21 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         }
 
         /* Set summary text (title) */
+        /* We need to replace "&" with "and" since it fails on some
+           environments due to a strange bug (probably in libnotify) */
         notification_summary =
-                g_markup_printf_escaped ("<span>%s</span>", track->title);
+                string_replace(track->title, "&", "and");
 
-        /* Strip the album text to see whether it's set or not */
-        if (track->album != NULL) {
-                stripped_album = g_strstrip (g_strdup (track->album));
+        /* Remove also '<' and '>', which are conflicting chars */
+        for (i = 0; notification_summary[i] != '\0'; i++) {
+                if (notification_summary[i] == '<' ||
+                    notification_summary[i] == '>') {
+                        notification_summary[i] = ' ';
+                }
         }
 
         /* Set body text (artist and, perhaps, the album) */
-        if ((stripped_album == NULL) || *stripped_album == '\0') {
+        if (track->album[0] == '\0') {
                 /* No album */
                 notification_body =
                         g_markup_printf_escaped (NOTIFICATION_BODY_NO_ALBUM,
@@ -575,7 +580,6 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
         g_object_unref(icon);
         g_free (notification_summary);
         g_free (notification_body);
-        g_free (stripped_album);
 }
 
 static gpointer
