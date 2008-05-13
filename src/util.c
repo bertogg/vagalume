@@ -116,11 +116,14 @@ void
 string_replace_gstr(GString *str, const char *old, const char *new)
 {
         g_return_if_fail(str && old && new);
-        const char *pos = str->str;
-        while ((pos = strstr(pos, old)) != NULL) {
-                g_string_erase(str, pos - str->str, strlen(old));
-                g_string_insert(str, pos - str->str, new);
-                pos += strlen(new);
+        int oldlen = strlen(old);
+        int newlen = strlen(new);
+        const char *cur = str->str;
+        while ((cur = strstr(cur, old)) != NULL) {
+                int position = cur - str->str;
+                g_string_erase(str, position, oldlen);
+                g_string_insert(str, position, new);
+                cur = str->str + position + newlen;
         }
 }
 
