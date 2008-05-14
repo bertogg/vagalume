@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
-"Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
-"POT-Creation-Date: 2008-05-12 20:06+0200\n"
-"PO-Revision-Date: 2008-05-12 20:20+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-05-14 14:25+0200\n"
+"PO-Revision-Date: 2008-05-14 14:33+0200\n"
 "Last-Translator: Janne Mäkinen <janne.makinen@surffi.fi>\n"
 "Language-Team: Finnish\n"
 "MIME-Version: 1.0\n"
@@ -125,8 +125,7 @@ msgstr ""
 "tai se on saatavilla vain\n"
 "Last.fm-palvelun tilaajille"
 
-#: src/controller.c:1246
-#: src/controller.c:1361
+#: src/controller.c:1246 src/controller.c:1361
 msgid "Enter tag"
 msgstr "Anna luokittelu"
 
@@ -261,9 +260,7 @@ msgstr "Jätä tämä kappale väliin"
 msgid "Mark as loved"
 msgstr "Merkkaa tykätyksi"
 
-#: src/mainwin.c:70
-#: src/mainwin.c:815
-#: src/vagalume-tray-icon.c:32
+#: src/mainwin.c:70 src/mainwin.c:817 src/vagalume-tray-icon.c:32
 msgid "Ban this track"
 msgstr "Estä tämä kappale"
 
@@ -271,8 +268,7 @@ msgstr "Estä tämä kappale"
 msgid "Recommend this track"
 msgstr "Suosittele tätä kappaletta"
 
-#: src/mainwin.c:78
-#: src/mainwin.c:817
+#: src/mainwin.c:78 src/mainwin.c:819
 msgid "Download this track"
 msgstr "Lataa tämä kappale"
 
@@ -288,205 +284,192 @@ msgstr "Lisää tämä kappale soittolistalle"
 msgid "A Last.fm client for Gnome and Maemo"
 msgstr "Last.fm-asiakasohjelma Gnomelle ja Maemolle"
 
-#: src/mainwin.c:194
+#: src/mainwin.c:195
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Artisti:</b>\n"
 
-#: src/mainwin.c:200
+#: src/mainwin.c:201
 msgid "<b>Title:</b>\n"
 msgstr "<b>Kappale:</b>\n"
 
-#: src/mainwin.c:207
+#: src/mainwin.c:208
 msgid "<b>Album:</b>\n"
 msgstr "<b>Albumi:</b>\n"
 
-#: src/mainwin.c:216
+#: src/mainwin.c:217
 msgid "<b>Listening to <i>"
 msgstr "<b>Kuunnellaan <i>"
 
-#: src/mainwin.c:346
-#: src/mainwin.c:347
+#: src/mainwin.c:348 src/mainwin.c:349
 msgid "Stopped"
 msgstr "Pysäytetty"
 
-#: src/mainwin.c:377
+#: src/mainwin.c:379
 msgid "Playing..."
 msgstr "Soitetaan..."
 
-#: src/mainwin.c:400
-#: src/mainwin.c:401
+#: src/mainwin.c:402 src/mainwin.c:403
 msgid "Connecting..."
 msgstr "Yhdistetään..."
 
-#: src/mainwin.c:427
+#: src/mainwin.c:429
 msgid "Disconnected"
 msgstr "Ei yhteyttä"
 
-#: src/mainwin.c:487
+#: src/mainwin.c:489
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Äänenvoimakkuus: %d/100"
 
-#: src/mainwin.c:613
+#: src/mainwin.c:615
 msgid "German"
 msgstr "Saksan kieli"
 
-#: src/mainwin.c:614
+#: src/mainwin.c:616
 msgid "Spanish"
 msgstr "Espanjan kieli"
 
-#: src/mainwin.c:615
+#: src/mainwin.c:617
 msgid "Finnish"
 msgstr "Suomen kieli"
 
-#: src/mainwin.c:615
+#: src/mainwin.c:617
 msgid "Galician"
 msgstr "Galician kieli"
 
-#: src/mainwin.c:616
+#: src/mainwin.c:618
 msgid "Italian"
 msgstr "Italian kieli"
 
-#: src/mainwin.c:616
-#: src/mainwin.c:617
+#: src/mainwin.c:618 src/mainwin.c:619
 msgid "Portuguese"
 msgstr "Portugalin kieli"
 
 #. Last.fm
-#: src/mainwin.c:704
+#: src/mainwin.c:706
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/mainwin.c:706
-#: src/vagalume-tray-icon.c:27
+#: src/mainwin.c:708 src/vagalume-tray-icon.c:27
 msgid "Settings..."
 msgstr "Asetukset..."
 
-#: src/mainwin.c:707
+#: src/mainwin.c:709
 msgid "Quit"
 msgstr "Lopeta"
 
 #. Radio
-#: src/mainwin.c:720
+#: src/mainwin.c:722
 msgid "Play _Radio"
 msgstr "Soita _Radiota"
 
-#: src/mainwin.c:722
+#: src/mainwin.c:724
 msgid "My radios"
 msgstr "Minun radioni"
 
-#: src/mainwin.c:724
+#: src/mainwin.c:726
 msgid "Others' radios"
 msgstr "Muiden radiot"
 
-#: src/mainwin.c:725
+#: src/mainwin.c:727
 msgid "Group radio..."
 msgstr "Ryhmäradio..."
 
-#: src/mainwin.c:726
+#: src/mainwin.c:728
 msgid "Music tagged..."
 msgstr "Luokiteltu musiikki..."
 
-#: src/mainwin.c:727
+#: src/mainwin.c:729
 msgid "Artists similar to..."
 msgstr "Samanlaiset artistit kuin..."
 
-#: src/mainwin.c:728
+#: src/mainwin.c:730
 msgid "Enter URL..."
 msgstr "Kirjoita osoite..."
 
-#: src/mainwin.c:749
+#: src/mainwin.c:751
 msgid "My personal radio"
 msgstr "Henkilökohtainen radioni"
 
-#: src/mainwin.c:750
+#: src/mainwin.c:752
 msgid "My neighbours"
 msgstr "Naapurini"
 
-#: src/mainwin.c:751
+#: src/mainwin.c:753
 msgid "My loved tracks"
 msgstr "Tykkäämäni kappaleet"
 
-#: src/mainwin.c:752
+#: src/mainwin.c:754
 msgid "My playlist"
 msgstr "Soittolistani"
 
-#: src/mainwin.c:753
+#: src/mainwin.c:755
 msgid "My recommendations"
 msgstr "Suositukseni"
 
-#: src/mainwin.c:754
+#: src/mainwin.c:756
 msgid "My music tagged..."
 msgstr "Luokittelemani musiikki..."
 
-#: src/mainwin.c:783
+#: src/mainwin.c:785
 msgid "Personal..."
 msgstr "Henkilökohtainen..."
 
-#: src/mainwin.c:784
+#: src/mainwin.c:786
 msgid "Neighbours..."
 msgstr "Naapurit..."
 
-#: src/mainwin.c:785
+#: src/mainwin.c:787
 msgid "Loved tracks..."
 msgstr "Tykätyt kappaleet..."
 
-#: src/mainwin.c:786
+#: src/mainwin.c:788
 msgid "Playlist..."
 msgstr "Soittolista..."
 
 #. Actions
-#: src/mainwin.c:805
+#: src/mainwin.c:807
 msgid "_Actions"
 msgstr "_Toiminnot"
 
-#: src/mainwin.c:807
-#: src/vagalume-sb-plugin.c:35
-#: src/vagalume-tray-icon.c:33
+#: src/mainwin.c:809 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
 msgid "Play"
 msgstr "Toista"
 
-#: src/mainwin.c:808
-#: src/vagalume-sb-plugin.c:36
-#: src/vagalume-tray-icon.c:34
+#: src/mainwin.c:810 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
 msgid "Stop"
 msgstr "Pysäytä"
 
-#: src/mainwin.c:809
-#: src/vagalume-sb-plugin.c:37
-#: src/vagalume-tray-icon.c:35
+#: src/mainwin.c:811 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
 msgid "Skip"
 msgstr "Hyppää yli"
 
-#: src/mainwin.c:813
+#: src/mainwin.c:815
 msgid "Stop after this track"
 msgstr "Pysäytä toisto tämän kappaleen jälkeen"
 
-#: src/mainwin.c:814
-#: src/vagalume-tray-icon.c:31
+#: src/mainwin.c:816 src/vagalume-tray-icon.c:31
 msgid "Love this track"
 msgstr "Tykkää tästä kappaleesta"
 
-#: src/mainwin.c:816
-#: src/vagalume-tray-icon.c:30
+#: src/mainwin.c:818 src/vagalume-tray-icon.c:30
 msgid "Add to playlist"
 msgstr "Lisää soittolistalle"
 
-#: src/mainwin.c:818
+#: src/mainwin.c:820
 msgid "Tag..."
 msgstr "Luokittele..."
 
-#: src/mainwin.c:819
-#: src/vagalume-tray-icon.c:28
+#: src/mainwin.c:821 src/vagalume-tray-icon.c:28
 msgid "Recommend..."
 msgstr "Suosittele..."
 
 #. Help
-#: src/mainwin.c:856
+#: src/mainwin.c:858
 msgid "_Help"
 msgstr "_Apua"
 
-#: src/mainwin.c:858
+#: src/mainwin.c:860
 msgid "About..."
 msgstr "Tietoja ohjelmasta..."
 
@@ -494,8 +477,7 @@ msgstr "Tietoja ohjelmasta..."
 msgid "Confirmation"
 msgstr "Varmistus"
 
-#: src/uimisc.c:208
-#: src/uimisc.c:381
+#: src/uimisc.c:208 src/uimisc.c:381
 msgid "Select download directory"
 msgstr "Valitse hakemisto latauksille"
 
@@ -581,10 +563,12 @@ msgstr "Lataus"
 #: src/uimisc.c:402
 msgid ""
 "* Download directory:\n"
-"Where to download mp3 files. Note that you can only download those songs marked as freely downloadable by Last.fm."
+"Where to download mp3 files. Note that you can only download those songs "
+"marked as freely downloadable by Last.fm."
 msgstr ""
 "* Lataushakemisto:\n"
-"Hakemisto lataamillesi mp3-tiedostoille. Voit ladata vain Last.fm-palvelun ladattavaksi merkitsemiä kappaleita."
+"Hakemisto lataamillesi mp3-tiedostoille. Voit ladata vain Last.fm-palvelun "
+"ladattavaksi merkitsemiä kappaleita."
 
 #: src/uimisc.c:420
 msgid "IM message template:"
@@ -613,13 +597,15 @@ msgstr "Päivitä pikaviestiohjelman tila"
 #. Set help
 #: src/uimisc.c:458
 msgid ""
-"Vagalume can update the status message of your IM client each time a new song starts. The template can contain the following keywords:\n"
+"Vagalume can update the status message of your IM client each time a new "
+"song starts. The template can contain the following keywords:\n"
 "\n"
 "{artist}: Name of the artist\n"
 "{title}: Song title\n"
 "{version}: Vagalume version"
 msgstr ""
-"Vagalume voi päivittää pikaviestiohjelmasi tilan aina kun uusi kappale alkaa. Viestipohjassa voi olla seuraavat avainsanat:\n"
+"Vagalume voi päivittää pikaviestiohjelmasi tilan aina kun uusi kappale "
+"alkaa. Viestipohjassa voi olla seuraavat avainsanat:\n"
 "\n"
 "{artist}: Artistin nimi\n"
 "{title}: Kappaleen nimi\n"
@@ -687,18 +673,14 @@ msgstr "Kappale:"
 msgid "Album: "
 msgstr "Albumi:"
 
-#: src/uimisc.c:876
-msgid "retrieving ..."
-msgstr "noudetaan ..."
+#: src/uimisc.c:876 src/uimisc.c:933
+msgid "retrieving..."
+msgstr "noudetaan..."
 
 #. A treemodel for combos with no elements
 #: src/uimisc.c:930
 msgid "(none)"
 msgstr "(ei mitään)"
-
-#: src/uimisc.c:933
-msgid "retrieving..."
-msgstr "noudetaan..."
 
 #. Dialog and basic settings
 #: src/uimisc.c:938
@@ -766,13 +748,11 @@ msgstr "Tykkää"
 msgid "Ban"
 msgstr "Estä"
 
-#: src/vagalume-sb-plugin.c:40
-#: src/vagalume-tray-icon.c:26
+#: src/vagalume-sb-plugin.c:40 src/vagalume-tray-icon.c:26
 msgid "Show main window"
 msgstr "Näytä pääikkuna"
 
-#: src/vagalume-sb-plugin.c:41
-#: src/vagalume-tray-icon.c:36
+#: src/vagalume-sb-plugin.c:41 src/vagalume-tray-icon.c:36
 msgid "Close Vagalume"
 msgstr "Sulje Vagalume"
 
@@ -808,4 +788,3 @@ msgstr ""
 #: src/vagalume-tray-icon.c:29
 msgid "Tags..."
 msgstr "Luokittelusanat..."
-

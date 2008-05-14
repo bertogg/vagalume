@@ -7,9 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
-"POT-Creation-Date: 2008-05-12 20:06+0200\n"
-"PO-Revision-Date: 2008-05-13 18:04+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-05-14 14:25+0200\n"
+"PO-Revision-Date: 2008-05-14 14:33+0200\n"
 "Last-Translator: Andrea Grandi <a.grandi@gmail.com>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -265,7 +265,7 @@ msgstr "Salta questa traccia"
 msgid "Mark as loved"
 msgstr "Contrassegna come preferita"
 
-#: src/mainwin.c:70 src/mainwin.c:815 src/vagalume-tray-icon.c:32
+#: src/mainwin.c:70 src/mainwin.c:817 src/vagalume-tray-icon.c:32
 msgid "Ban this track"
 msgstr "Banna questa traccia"
 
@@ -273,7 +273,7 @@ msgstr "Banna questa traccia"
 msgid "Recommend this track"
 msgstr "Raccomanda questa traccia"
 
-#: src/mainwin.c:78 src/mainwin.c:817
+#: src/mainwin.c:78 src/mainwin.c:819
 msgid "Download this track"
 msgstr "Scarica questa traccia"
 
@@ -289,192 +289,192 @@ msgstr "Aggiungi questa traccia alla playlist"
 msgid "A Last.fm client for Gnome and Maemo"
 msgstr "Un client Last.fm per Gnome e Maemo"
 
-#: src/mainwin.c:194
+#: src/mainwin.c:195
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Artista:</b>\n"
 
-#: src/mainwin.c:200
+#: src/mainwin.c:201
 msgid "<b>Title:</b>\n"
 msgstr "<b>Titolo:</b>\n"
 
-#: src/mainwin.c:207
+#: src/mainwin.c:208
 msgid "<b>Album:</b>\n"
 msgstr "<b>Album:</b>\n"
 
-#: src/mainwin.c:216
+#: src/mainwin.c:217
 msgid "<b>Listening to <i>"
 msgstr "<b>In ascolto <i>"
 
-#: src/mainwin.c:346 src/mainwin.c:347
+#: src/mainwin.c:348 src/mainwin.c:349
 msgid "Stopped"
 msgstr "Fermato"
 
-#: src/mainwin.c:377
+#: src/mainwin.c:379
 msgid "Playing..."
 msgstr "In riproduzione..."
 
-#: src/mainwin.c:400 src/mainwin.c:401
+#: src/mainwin.c:402 src/mainwin.c:403
 msgid "Connecting..."
 msgstr "Connessione in corso..."
 
-#: src/mainwin.c:427
+#: src/mainwin.c:429
 msgid "Disconnected"
 msgstr "Disconnesso"
 
-#: src/mainwin.c:487
+#: src/mainwin.c:489
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Volume: %d/100"
 
-#: src/mainwin.c:613
+#: src/mainwin.c:615
 msgid "German"
 msgstr "Tedesco"
 
-#: src/mainwin.c:614
+#: src/mainwin.c:616
 msgid "Spanish"
 msgstr "Spagnolo"
 
-#: src/mainwin.c:615
+#: src/mainwin.c:617
 msgid "Finnish"
 msgstr "Finlandese"
 
-#: src/mainwin.c:615
+#: src/mainwin.c:617
 msgid "Galician"
 msgstr "Galiziano"
 
-#: src/mainwin.c:616
+#: src/mainwin.c:618
 msgid "Italian"
 msgstr "Italiano"
 
-#: src/mainwin.c:616 src/mainwin.c:617
+#: src/mainwin.c:618 src/mainwin.c:619
 msgid "Portuguese"
 msgstr "Portoghese"
 
 #. Last.fm
-#: src/mainwin.c:704
+#: src/mainwin.c:706
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/mainwin.c:706 src/vagalume-tray-icon.c:27
+#: src/mainwin.c:708 src/vagalume-tray-icon.c:27
 msgid "Settings..."
 msgstr "Impostazioni..."
 
-#: src/mainwin.c:707
+#: src/mainwin.c:709
 msgid "Quit"
 msgstr "Esci"
 
 #. Radio
-#: src/mainwin.c:720
+#: src/mainwin.c:722
 msgid "Play _Radio"
 msgstr "Riproduci _Radio"
 
-#: src/mainwin.c:722
+#: src/mainwin.c:724
 msgid "My radios"
 msgstr "Le mie radio"
 
-#: src/mainwin.c:724
+#: src/mainwin.c:726
 msgid "Others' radios"
 msgstr "Le radio degli altri"
 
-#: src/mainwin.c:725
+#: src/mainwin.c:727
 msgid "Group radio..."
 msgstr "Radio del gruppo..."
 
-#: src/mainwin.c:726
+#: src/mainwin.c:728
 msgid "Music tagged..."
 msgstr "Musica etichettata..."
 
-#: src/mainwin.c:727
+#: src/mainwin.c:729
 msgid "Artists similar to..."
 msgstr "Artisti simili a..."
 
-#: src/mainwin.c:728
+#: src/mainwin.c:730
 msgid "Enter URL..."
 msgstr "Inserire l'URL..."
 
-#: src/mainwin.c:749
+#: src/mainwin.c:751
 msgid "My personal radio"
 msgstr "La mia radio personale"
 
-#: src/mainwin.c:750
+#: src/mainwin.c:752
 msgid "My neighbours"
 msgstr "I miei vicini"
 
-#: src/mainwin.c:751
+#: src/mainwin.c:753
 msgid "My loved tracks"
 msgstr "Le mie tracce preferite"
 
-#: src/mainwin.c:752
+#: src/mainwin.c:754
 msgid "My playlist"
 msgstr "La mia playlist"
 
-#: src/mainwin.c:753
+#: src/mainwin.c:755
 msgid "My recommendations"
 msgstr "Le mie raccomandazioni"
 
-#: src/mainwin.c:754
+#: src/mainwin.c:756
 msgid "My music tagged..."
 msgstr "La musica che ho etichettato"
 
-#: src/mainwin.c:783
+#: src/mainwin.c:785
 msgid "Personal..."
 msgstr "Personale..."
 
-#: src/mainwin.c:784
+#: src/mainwin.c:786
 msgid "Neighbours..."
 msgstr "Vicini..."
 
-#: src/mainwin.c:785
+#: src/mainwin.c:787
 msgid "Loved tracks..."
 msgstr "Tracce preferite..."
 
-#: src/mainwin.c:786
+#: src/mainwin.c:788
 msgid "Playlist..."
 msgstr "Playlist..."
 
 #. Actions
-#: src/mainwin.c:805
+#: src/mainwin.c:807
 msgid "_Actions"
 msgstr "_Azioni"
 
-#: src/mainwin.c:807 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
+#: src/mainwin.c:809 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
 msgid "Play"
 msgstr "Avvia"
 
-#: src/mainwin.c:808 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
+#: src/mainwin.c:810 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
 msgid "Stop"
 msgstr "Ferma"
 
-#: src/mainwin.c:809 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
+#: src/mainwin.c:811 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
 msgid "Skip"
 msgstr "Salta"
 
-#: src/mainwin.c:813
+#: src/mainwin.c:815
 msgid "Stop after this track"
 msgstr "Ferma dopo questa traccia"
 
-#: src/mainwin.c:814 src/vagalume-tray-icon.c:31
+#: src/mainwin.c:816 src/vagalume-tray-icon.c:31
 msgid "Love this track"
 msgstr "Segna come preferita"
 
-#: src/mainwin.c:816 src/vagalume-tray-icon.c:30
+#: src/mainwin.c:818 src/vagalume-tray-icon.c:30
 msgid "Add to playlist"
 msgstr "Aggiungi alla playlist"
 
-#: src/mainwin.c:818
+#: src/mainwin.c:820
 msgid "Tag..."
 msgstr "Etichetta..."
 
-#: src/mainwin.c:819 src/vagalume-tray-icon.c:28
+#: src/mainwin.c:821 src/vagalume-tray-icon.c:28
 msgid "Recommend..."
 msgstr "Raccomanda..."
 
 #. Help
-#: src/mainwin.c:856
+#: src/mainwin.c:858
 msgid "_Help"
 msgstr "A_iuto"
 
-#: src/mainwin.c:858
+#: src/mainwin.c:860
 msgid "About..."
 msgstr "Info..."
 
@@ -680,18 +680,14 @@ msgstr "Traccia:"
 msgid "Album: "
 msgstr "Album:"
 
-#: src/uimisc.c:876
-msgid "retrieving ..."
+#: src/uimisc.c:876 src/uimisc.c:933
+msgid "retrieving..."
 msgstr "recupero..."
 
 #. A treemodel for combos with no elements
 #: src/uimisc.c:930
 msgid "(none)"
 msgstr "(nessuno)"
-
-#: src/uimisc.c:933
-msgid "retrieving..."
-msgstr "recupero..."
 
 #. Dialog and basic settings
 #: src/uimisc.c:938
@@ -799,4 +795,3 @@ msgstr ""
 #: src/vagalume-tray-icon.c:29
 msgid "Tags..."
 msgstr "Etichette..."
-

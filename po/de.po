@@ -7,9 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: vagalume\n"
-"Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
-"POT-Creation-Date: 2008-05-12 20:06+0200\n"
-"PO-Revision-Date: 2008-05-13 21:28+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-05-14 14:25+0200\n"
+"PO-Revision-Date: 2008-05-14 14:33+0200\n"
 "Last-Translator: Oskar Welzl <mail@welzl.info>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -261,7 +261,7 @@ msgstr "Diesen Titel überspringen"
 msgid "Mark as loved"
 msgstr "Zu Lieblingstracks hinzufügen"
 
-#: src/mainwin.c:70 src/mainwin.c:815 src/vagalume-tray-icon.c:32
+#: src/mainwin.c:70 src/mainwin.c:817 src/vagalume-tray-icon.c:32
 msgid "Ban this track"
 msgstr "Nie mehr spielen"
 
@@ -269,7 +269,7 @@ msgstr "Nie mehr spielen"
 msgid "Recommend this track"
 msgstr "Titel empfehlen"
 
-#: src/mainwin.c:78 src/mainwin.c:817
+#: src/mainwin.c:78 src/mainwin.c:819
 msgid "Download this track"
 msgstr "Titel herunterladen"
 
@@ -285,192 +285,192 @@ msgstr "Titel zur Wiedergabeliste hinzufügen"
 msgid "A Last.fm client for Gnome and Maemo"
 msgstr "Ein Last.fm Client für Gnome und Maemo"
 
-#: src/mainwin.c:194
+#: src/mainwin.c:195
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Interpret:</b>\n"
 
-#: src/mainwin.c:200
+#: src/mainwin.c:201
 msgid "<b>Title:</b>\n"
 msgstr "<b>Titel:</b>\n"
 
-#: src/mainwin.c:207
+#: src/mainwin.c:208
 msgid "<b>Album:</b>\n"
 msgstr "<b>Album:</b>\n"
 
-#: src/mainwin.c:216
+#: src/mainwin.c:217
 msgid "<b>Listening to <i>"
 msgstr "<b>Es läuft <i>"
 
-#: src/mainwin.c:346 src/mainwin.c:347
+#: src/mainwin.c:348 src/mainwin.c:349
 msgid "Stopped"
 msgstr "Gestoppt"
 
-#: src/mainwin.c:377
+#: src/mainwin.c:379
 msgid "Playing..."
 msgstr "Spiele..."
 
-#: src/mainwin.c:400 src/mainwin.c:401
+#: src/mainwin.c:402 src/mainwin.c:403
 msgid "Connecting..."
 msgstr "Verbinde..."
 
-#: src/mainwin.c:427
+#: src/mainwin.c:429
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: src/mainwin.c:487
+#: src/mainwin.c:489
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Lautstärke: %d/100"
 
-#: src/mainwin.c:613
+#: src/mainwin.c:615
 msgid "German"
 msgstr "Deutsch"
 
-#: src/mainwin.c:614
+#: src/mainwin.c:616
 msgid "Spanish"
 msgstr "Spanisch"
 
-#: src/mainwin.c:615
+#: src/mainwin.c:617
 msgid "Finnish"
 msgstr "Finnisch"
 
-#: src/mainwin.c:615
+#: src/mainwin.c:617
 msgid "Galician"
 msgstr "Galicisch"
 
-#: src/mainwin.c:616
+#: src/mainwin.c:618
 msgid "Italian"
 msgstr "Italienisch"
 
-#: src/mainwin.c:616 src/mainwin.c:617
+#: src/mainwin.c:618 src/mainwin.c:619
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
 #. Last.fm
-#: src/mainwin.c:704
+#: src/mainwin.c:706
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/mainwin.c:706 src/vagalume-tray-icon.c:27
+#: src/mainwin.c:708 src/vagalume-tray-icon.c:27
 msgid "Settings..."
 msgstr "Einstellungen..."
 
-#: src/mainwin.c:707
+#: src/mainwin.c:709
 msgid "Quit"
 msgstr "Beenden"
 
 #. Radio
-#: src/mainwin.c:720
+#: src/mainwin.c:722
 msgid "Play _Radio"
 msgstr "_Kanal abspielen"
 
-#: src/mainwin.c:722
+#: src/mainwin.c:724
 msgid "My radios"
 msgstr "Meine Kanäle"
 
-#: src/mainwin.c:724
+#: src/mainwin.c:726
 msgid "Others' radios"
 msgstr "Kanäle anderer"
 
-#: src/mainwin.c:725
+#: src/mainwin.c:727
 msgid "Group radio..."
 msgstr "Gruppenradio..."
 
-#: src/mainwin.c:726
+#: src/mainwin.c:728
 msgid "Music tagged..."
 msgstr "Musik mit dem Tag..."
 
-#: src/mainwin.c:727
+#: src/mainwin.c:729
 msgid "Artists similar to..."
 msgstr "Künstler ähnlich wie..."
 
-#: src/mainwin.c:728
+#: src/mainwin.c:730
 msgid "Enter URL..."
 msgstr "URL eingeben..."
 
-#: src/mainwin.c:749
+#: src/mainwin.c:751
 msgid "My personal radio"
 msgstr "Mein persönliches Radio"
 
-#: src/mainwin.c:750
+#: src/mainwin.c:752
 msgid "My neighbours"
 msgstr "Meine Nachbarn"
 
-#: src/mainwin.c:751
+#: src/mainwin.c:753
 msgid "My loved tracks"
 msgstr "Meine Lieblingstitel"
 
-#: src/mainwin.c:752
+#: src/mainwin.c:754
 msgid "My playlist"
 msgstr "Meine Wiedergabeliste"
 
-#: src/mainwin.c:753
+#: src/mainwin.c:755
 msgid "My recommendations"
 msgstr "Meine Empfehlungen"
 
-#: src/mainwin.c:754
+#: src/mainwin.c:756
 msgid "My music tagged..."
 msgstr "Meine Musik mit Tags..."
 
-#: src/mainwin.c:783
+#: src/mainwin.c:785
 msgid "Personal..."
 msgstr "Persönliches..."
 
-#: src/mainwin.c:784
+#: src/mainwin.c:786
 msgid "Neighbours..."
 msgstr "Nachbarn..."
 
-#: src/mainwin.c:785
+#: src/mainwin.c:787
 msgid "Loved tracks..."
 msgstr "Lieblingstitel..."
 
-#: src/mainwin.c:786
+#: src/mainwin.c:788
 msgid "Playlist..."
 msgstr "Wiedergabeliste..."
 
 #. Actions
-#: src/mainwin.c:805
+#: src/mainwin.c:807
 msgid "_Actions"
 msgstr "_Aktionen"
 
-#: src/mainwin.c:807 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
+#: src/mainwin.c:809 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
 msgid "Play"
 msgstr "Wiedergabe"
 
-#: src/mainwin.c:808 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
+#: src/mainwin.c:810 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
 msgid "Stop"
 msgstr "Stop"
 
-#: src/mainwin.c:809 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
+#: src/mainwin.c:811 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
 msgid "Skip"
 msgstr "Überspringen"
 
-#: src/mainwin.c:813
+#: src/mainwin.c:815
 msgid "Stop after this track"
 msgstr "Nach diesem Titel stoppen"
 
-#: src/mainwin.c:814 src/vagalume-tray-icon.c:31
+#: src/mainwin.c:816 src/vagalume-tray-icon.c:31
 msgid "Love this track"
 msgstr "Zu Lieblingstiteln hinzufügen"
 
-#: src/mainwin.c:816 src/vagalume-tray-icon.c:30
+#: src/mainwin.c:818 src/vagalume-tray-icon.c:30
 msgid "Add to playlist"
 msgstr "Zur Wiedergabeliste hinzufügen"
 
-#: src/mainwin.c:818
+#: src/mainwin.c:820
 msgid "Tag..."
 msgstr "Taggen..."
 
-#: src/mainwin.c:819 src/vagalume-tray-icon.c:28
+#: src/mainwin.c:821 src/vagalume-tray-icon.c:28
 msgid "Recommend..."
 msgstr "Empfehlen..."
 
 #. Help
-#: src/mainwin.c:856
+#: src/mainwin.c:858
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: src/mainwin.c:858
+#: src/mainwin.c:860
 msgid "About..."
 msgstr "Über..."
 
@@ -548,7 +548,8 @@ msgid ""
 "* Proxy address:\n"
 "user:password@hostname:port\n"
 "Only the hostname (can be an IP address) is required."
-msgstr "* HTTP Proxy benutzen:\n"
+msgstr ""
+"* HTTP Proxy benutzen:\n"
 "Ermöglicht die Benutzung eines HTTP Proxys.\n"
 "\n"
 "* Proxy Adresse:\n"
@@ -565,7 +566,8 @@ msgid ""
 "* Download directory:\n"
 "Where to download mp3 files. Note that you can only download those songs "
 "marked as freely downloadable by Last.fm."
-msgstr "* Download-Verzeichnis:\n"
+msgstr ""
+"* Download-Verzeichnis:\n"
 "Heruntergeladene MP3-Dateien werden dorthin abgelegt. Sie können nur Songs  "
 "herunterladen, die von Last.fm als freie Downloads angeboten werden."
 
@@ -602,8 +604,9 @@ msgid ""
 "{artist}: Name of the artist\n"
 "{title}: Song title\n"
 "{version}: Vagalume version"
-msgstr "Vagalume kann den Status Ihres IM-Clients jedes Mal aktualisieren, "
-"wenn ein neuer Song beginnt. Die Vorlage dazu kann folgende Variablen enthalten:\n"
+msgstr ""
+"Vagalume kann den Status Ihres IM-Clients jedes Mal aktualisieren, wenn ein "
+"neuer Song beginnt. Die Vorlage dazu kann folgende Variablen enthalten:\n"
 "\n"
 "{artist}: Name des Interpreten\n"
 "{title}: Titel des Songs\n"
@@ -617,7 +620,8 @@ msgstr "Keine Bestätigungsmeldungen:"
 msgid ""
 "* Disable confirmation dialogs:\n"
 "Don't ask for confirmation when loving/banning tracks."
-msgstr "* Keine Bestätigungsmeldungen:\n"
+msgstr ""
+"* Keine Bestätigungsmeldungen:\n"
 "Nicht nachfragen, wenn Tracks als Lieblingstracks markiert/gebannt werden."
 
 #: src/uimisc.c:503
@@ -631,7 +635,8 @@ msgid ""
 "* Show playback notifications:\n"
 "Pop up a notification box each time a new song starts.\n"
 "\n"
-msgstr "\n"
+msgstr ""
+"\n"
 "\n"
 "* Wiedergabeinfo anzeigen:\n"
 "Ein Hinweisfenster anzeigen, wenn ein neuer Song beginnt.\n"
@@ -645,7 +650,8 @@ msgstr "Beim Schließen nur minimieren:"
 msgid ""
 "* Close to systray:\n"
 "Hide the Vagalume window when the close button is pressed."
-msgstr "* Beim Schließen nur minimieren:\n"
+msgstr ""
+"* Beim Schließen nur minimieren:\n"
 "Vagalume-Fenster nur verstecken, wenn Schließen-Button angeklickt wird."
 
 #: src/uimisc.c:536
@@ -668,18 +674,14 @@ msgstr "Titel: "
 msgid "Album: "
 msgstr "Album: "
 
-#: src/uimisc.c:876
-msgid "retrieving ..."
-msgstr "empfange ..."
+#: src/uimisc.c:876 src/uimisc.c:933
+msgid "retrieving..."
+msgstr "empfange..."
 
 #. A treemodel for combos with no elements
 #: src/uimisc.c:930
 msgid "(none)"
 msgstr "(kein)"
-
-#: src/uimisc.c:933
-msgid "retrieving..."
-msgstr "empfange..."
 
 #. Dialog and basic settings
 #: src/uimisc.c:938
@@ -787,4 +789,3 @@ msgstr ""
 #: src/vagalume-tray-icon.c:29
 msgid "Tags..."
 msgstr "Tags..."
-
