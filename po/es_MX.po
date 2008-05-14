@@ -8,11 +8,11 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-14 14:25+0200\n"
-"PO-Revision-Date: 2008-05-14 14:33+0200\n"
-"Last-Translator: Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n"
+"PO-Revision-Date: 2008-05-14 15:40+0200\n"
+"Last-Translator: Eduardo Rubio <eduardo.rubio.garcia@gmail.com>\n"
 "Language-Team: Spanish (Mexico)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/connection.c:55
@@ -51,7 +51,7 @@ msgstr "Descargar esta canción?"
 
 #: src/controller.c:895
 msgid "File exists. Overwrite?"
-msgstr "El archivo ya existe. Sobreescribir?"
+msgstr "El archivo ya existe. Sobrescribir?"
 
 #: src/controller.c:930
 msgid "Really mark track as loved?"
@@ -122,7 +122,7 @@ msgid ""
 msgstr ""
 "Dirección URL de radio invalida.\n"
 "Esta estación no existe o solo\n"
-"esta disponible para subscriptoresregistrados a Last.fm"
+"esta disponible para subscriptores registrados a Last.fm"
 
 #: src/controller.c:1246 src/controller.c:1361
 msgid "Enter tag"
@@ -227,11 +227,18 @@ msgid ""
 "  decoder:   GStreamer decoder (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
+"Modo de uso: %s [-c convertidor] [-d decodificador] [-s sink] [url de "
+"radio]\n"
+"\n"
+"  convertidor: Convertidor GStreamer (por defecto: '%s', 'ninguno' para "
+"desactivar)\n"
+"  decodificador:   Decodificador GStreamer (por defecto: '%s')\n"
+"  sink:      Sink GStreamer (por defecto: '%s')\n"
 
 #: src/main.c:78
 #, c-format
 msgid "Too many unrecognized options\n"
-msgstr ""
+msgstr "Muchas opciones no validas\n"
 
 #: src/main.c:87
 #, c-format
@@ -288,7 +295,7 @@ msgstr "<b>Título:</b>\n"
 
 #: src/mainwin.c:208
 msgid "<b>Album:</b>\n"
-msgstr "<b>Album:</b>\n"
+msgstr "<b>Álbum:</b>\n"
 
 #: src/mainwin.c:217
 msgid "<b>Listening to <i>"
@@ -313,31 +320,31 @@ msgstr "No conectado"
 #: src/mainwin.c:489
 #, c-format
 msgid "Volume: %d/100"
-msgstr ""
+msgstr "Volumen: %d/100"
 
 #: src/mainwin.c:615
 msgid "German"
-msgstr ""
+msgstr "Alemán"
 
 #: src/mainwin.c:616
 msgid "Spanish"
-msgstr ""
+msgstr "Español"
 
 #: src/mainwin.c:617
 msgid "Finnish"
-msgstr ""
+msgstr "Finlandés"
 
 #: src/mainwin.c:617
 msgid "Galician"
-msgstr ""
+msgstr "Gallego"
 
 #: src/mainwin.c:618
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: src/mainwin.c:618 src/mainwin.c:619
 msgid "Portuguese"
-msgstr ""
+msgstr "Portugués"
 
 #. Last.fm
 #: src/mainwin.c:706
@@ -371,7 +378,7 @@ msgstr "Radio de grupo..."
 
 #: src/mainwin.c:728
 msgid "Music tagged..."
-msgstr "Musica etiquetada..."
+msgstr "Música etiquetada..."
 
 #: src/mainwin.c:729
 msgid "Artists similar to..."
@@ -383,7 +390,7 @@ msgstr "Ingresa la dirección URL..."
 
 #: src/mainwin.c:751
 msgid "My personal radio"
-msgstr "Mi radio presonal"
+msgstr "Mi radio personal"
 
 #: src/mainwin.c:752
 msgid "My neighbours"
@@ -403,7 +410,7 @@ msgstr "Mis recomendaciones"
 
 #: src/mainwin.c:756
 msgid "My music tagged..."
-msgstr "Mi musica etiquetada..."
+msgstr "Mi música etiquetada..."
 
 #: src/mainwin.c:785
 msgid "Personal..."
@@ -440,7 +447,7 @@ msgstr "Saltar"
 
 #: src/mainwin.c:815
 msgid "Stop after this track"
-msgstr "Detener despues de esta canción"
+msgstr "Detener después de esta canción"
 
 #: src/mainwin.c:816 src/vagalume-tray-icon.c:31
 msgid "Love this track"
@@ -477,7 +484,7 @@ msgstr "Selecciona el directorio para descargar"
 
 #: src/uimisc.c:252
 msgid "No help available"
-msgstr ""
+msgstr "No hay ayuda disponible"
 
 #: src/uimisc.c:275
 msgid "Username:"
@@ -493,7 +500,7 @@ msgstr "Activar scrobbling:"
 
 #: src/uimisc.c:278
 msgid "Discovery mode:"
-msgstr "Modo busqueda"
+msgstr "Modo búsqueda"
 
 #: src/uimisc.c:321
 msgid "Account"
@@ -501,6 +508,7 @@ msgstr "Cuenta"
 
 #. Set help
 #: src/uimisc.c:324
+#, fuzzy
 msgid ""
 "* Username and password:\n"
 "From your Last.fm account.\n"
@@ -511,14 +519,21 @@ msgid ""
 "* Discovery mode:\n"
 "Don't play music you've already listened to. Requires a Last.fm subscription."
 msgstr ""
+"* Usuario y contraseña:\n"
+"de tu cuenta de Last.fm.\n"
+"\n"
+"* Scrobbling:\n"
+"Muestra la música que escuchas en tu perfil Last.fm.\n"
+"\n"
+"* Modo busqueda:\n"
 
 #: src/uimisc.c:342
 msgid "Use HTTP proxy"
-msgstr "Usar proxy HTTP"
+msgstr "Usar Proxy HTTP"
 
 #: src/uimisc.c:343
 msgid "Proxy address:"
-msgstr "Dirección proxy:"
+msgstr "Dirección Proxy:"
 
 #: src/uimisc.c:362
 msgid "Connection"
@@ -534,6 +549,12 @@ msgid ""
 "user:password@hostname:port\n"
 "Only the hostname (can be an IP address) is required."
 msgstr ""
+"* Usar proxy HTTP:\n"
+"Activa esto para usar un Proxy HTTP.\n"
+"\n"
+"* Direccion proxy:\n"
+"usuario:contraseña@host:puerto\n"
+"Solo se requiere el nombre del Host (puede ser una dirección IP)."
 
 #: src/uimisc.c:399
 msgid "Download"
@@ -569,7 +590,7 @@ msgstr "Actualizar el estado en Telepathy:"
 
 #: src/uimisc.c:455
 msgid "Update IM status"
-msgstr ""
+msgstr "Actualizar es esta de IM"
 
 #. Set help
 #: src/uimisc.c:458
@@ -584,17 +605,19 @@ msgstr ""
 
 #: src/uimisc.c:486
 msgid "Disable confirmation dialogs:"
-msgstr ""
+msgstr "Desactivar los diálogos de confirmación:"
 
 #: src/uimisc.c:496
 msgid ""
 "* Disable confirmation dialogs:\n"
 "Don't ask for confirmation when loving/banning tracks."
 msgstr ""
+"* Desactivar los diálogos de confirmación:\n"
+"No confirmar cuando se marcan como preferidas o prohibidas las canciones."
 
 #: src/uimisc.c:503
 msgid "Show playback notifications:"
-msgstr ""
+msgstr "Mostrar las notificaciones de reproducción:"
 
 #: src/uimisc.c:513
 msgid ""
@@ -604,20 +627,27 @@ msgid ""
 "Pop up a notification box each time a new song starts.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"* Mostrar notificaciones de reproducción:\n"
+"Muestra cuadro de dialogo cada vez que empiece una canción nueva.\n"
+"\n"
 
 #: src/uimisc.c:519
 msgid "Close to systray:"
-msgstr ""
+msgstr "Cerrar a systray"
 
 #: src/uimisc.c:529
 msgid ""
 "* Close to systray:\n"
 "Hide the Vagalume window when the close button is pressed."
 msgstr ""
+"* Cierra a systray:\n"
+"Econde la ventana de Vagalume cuando el boton de cerrar es presionado."
 
 #: src/uimisc.c:536
 msgid "Misc"
-msgstr ""
+msgstr "Misceláneo"
 
 #: src/uimisc.c:554
 msgid "User settings"
@@ -633,7 +663,7 @@ msgstr "Canción: "
 
 #: src/uimisc.c:695
 msgid "Album: "
-msgstr "Album: "
+msgstr "Álbum: "
 
 #: src/uimisc.c:876 src/uimisc.c:933
 msgid "retrieving..."
@@ -642,7 +672,7 @@ msgstr "adquiriendo..."
 #. A treemodel for combos with no elements
 #: src/uimisc.c:930
 msgid "(none)"
-msgstr ""
+msgstr "(ninguno)"
 
 #. Dialog and basic settings
 #: src/uimisc.c:938
@@ -661,7 +691,7 @@ msgid ""
 "list of tags"
 msgstr ""
 "Agrega una lista de etiquetas\n"
-"separada por commas"
+"separada por comas"
 
 #. Combo boxes
 #: src/uimisc.c:969
@@ -692,31 +722,31 @@ msgstr "Mensaje de recomendación"
 
 #: src/vagalume-sb-plugin.c:31
 msgid "No artist"
-msgstr ""
+msgstr "No hay artista"
 
 #: src/vagalume-sb-plugin.c:32
 msgid "No track"
-msgstr ""
+msgstr "No hay canción"
 
 #: src/vagalume-sb-plugin.c:33
 msgid "No album"
-msgstr ""
+msgstr "No hay album"
 
 #: src/vagalume-sb-plugin.c:38
 msgid "Love"
-msgstr ""
+msgstr "Preferida"
 
 #: src/vagalume-sb-plugin.c:39
 msgid "Ban"
-msgstr ""
+msgstr "Prohibir"
 
 #: src/vagalume-sb-plugin.c:40 src/vagalume-tray-icon.c:26
 msgid "Show main window"
-msgstr ""
+msgstr "Mostrar ventana principal"
 
 #: src/vagalume-sb-plugin.c:41 src/vagalume-tray-icon.c:36
 msgid "Close Vagalume"
-msgstr ""
+msgstr "Cerrar Vagalume"
 
 #: src/vagalume-tray-icon.c:20
 msgid " Stopped "
@@ -729,11 +759,14 @@ msgid ""
 " %s \n"
 "   by  %s "
 msgstr ""
+"Ahora reproduciendo: \n"
+" %s \n"
+"   por  %s "
 
 #: src/vagalume-tray-icon.c:23
 #, c-format
 msgid " by <i>%s</i>"
-msgstr ""
+msgstr " por <i>%s</i>"
 
 #: src/vagalume-tray-icon.c:24
 #, c-format
@@ -741,6 +774,8 @@ msgid ""
 " by <i>%s</i>\n"
 " from <i>%s</i>"
 msgstr ""
+" por <i>%s</i>\n"
+" de <i>%s</i>"
 
 #: src/vagalume-tray-icon.c:29
 msgid "Tags..."
