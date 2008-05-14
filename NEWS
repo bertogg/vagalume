@@ -1,4 +1,4 @@
-0.6 (14 May 2008)
+0.6 (15 May 2008)
   * Freedesktop tray icon (Gnome only, thanks Mario Sanchez)
   * Notifications support via libnotify (Gnome only, thanks Mario Sanchez)
   * New feature to update the status of several IM clients: Pidgin,
