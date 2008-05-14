@@ -11,6 +11,7 @@
 
 #include <glib.h>
 #include <dbus/dbus-glib.h>
+#include <gdk/gdk.h>
 #include <string.h>
 #include "imstatus.h"
 #include "util.h"
@@ -25,8 +26,6 @@ typedef struct {
         GString *msg;
         lastfm_track *track;
 } ImStatusData;
-
-static GStaticMutex imstatus_mutex = G_STATIC_MUTEX_INIT;
 
 static gboolean
 error_happened(gboolean code, GError *error)
@@ -309,25 +308,23 @@ im_set_status_idle(gpointer data)
         g_return_val_if_fail(data != NULL, FALSE);
         ImStatusData *d = (ImStatusData *) data;
 
-        g_static_mutex_lock(&imstatus_mutex);
-
         /* Modify the template */
         string_replace_gstr(d->msg, "{artist}", d->track->artist);
         string_replace_gstr(d->msg, "{title}", d->track->title);
         string_replace_gstr(d->msg, "{version}", APP_VERSION);
 
         /* Set the status */
+        gdk_threads_enter();
         if (d->im_pidgin) pidgin_set_status(d->msg->str);
         if (d->im_gajim) gajim_set_status(d->msg->str);
         if (d->im_gossip) gossip_set_status(d->msg->str);
         if (d->im_telepathy) telepathy_set_status(d->msg->str);
+        gdk_threads_leave();
 
         /* Cleanup */
         g_string_free(d->msg, TRUE);
         lastfm_track_unref(d->track);
         g_slice_free(ImStatusData, d);
-
-        g_static_mutex_unlock(&imstatus_mutex);
 
         return FALSE;
 }
@@ -335,7 +332,7 @@ im_set_status_idle(gpointer data)
 static gboolean
 im_clear_status_idle(gpointer data)
 {
-        g_static_mutex_lock(&imstatus_mutex);
+        gdk_threads_enter();
         if (saved_pidgin_status != NULL) {
                 if (pidgin_set_status(saved_pidgin_status)) {
                         g_free(saved_pidgin_status);
@@ -360,7 +357,7 @@ im_clear_status_idle(gpointer data)
                         saved_telepathy_status = NULL;
                 }
         }
-        g_static_mutex_unlock(&imstatus_mutex);
+        gdk_threads_leave();
         return FALSE;
 }
 
