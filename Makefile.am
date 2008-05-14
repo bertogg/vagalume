@@ -75,3 +75,10 @@ data/vagalume.desktop: Makefile data/vagalume.desktop.in
 	rm -f data/vagalume.desktop data/vagalume.desktop.tmp
 	$(edit) data/vagalume.desktop.in > data/vagalume.desktop.tmp
 	mv data/vagalume.desktop.tmp data/vagalume.desktop
+
+install-exec-hook:
+	if test "$(PLATFORM)" = "maemo"; then \
+	   $(mkinstalldirs) "$(DESTDIR)/@CLEAR_DEVICE_SCRIPTS_DIR@" ; \
+	   $(LN_S) "@RESTORE_SETTINGS_SCRIPTS_DIR@/vagalume-rfs.sh" \
+	      "$(DESTDIR)/@CLEAR_DEVICE_SCRIPTS_DIR@/vagalume-cud.sh" ; \
+	fi

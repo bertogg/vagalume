@@ -7,6 +7,7 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+AC_PROG_LN_S
 AC_HEADER_STDC
 
 # Some variables
@@ -257,6 +258,9 @@ if test "$PLATFORM" = "maemo"; then
    RESTORE_SETTINGS_SCRIPTS_DIR="/etc/osso-rfs-scripts"
    AC_SUBST(RESTORE_SETTINGS_SCRIPTS_DIR)
 
+   CLEAR_DEVICE_SCRIPTS_DIR="/etc/osso-cud-scripts"
+   AC_SUBST(CLEAR_DEVICE_SCRIPTS_DIR)
+
 elif test "$PLATFORM" = "gnome"; then
 
    echo "Compiling for Gnome"
@@ -338,7 +342,7 @@ AC_OUTPUT(
 )
 
 if test "$PLATFORM" = "maemo"; then
-   AC_OUTPUT(data/vagalume.conf data/vagalume-rfs.sh debian/vagalume.links)
+   AC_OUTPUT(data/vagalume.conf data/vagalume-rfs.sh)
 fi
 
 # Status summary
