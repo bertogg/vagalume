@@ -4,7 +4,7 @@
   * New feature to update the status of several IM clients: Pidgin,
     Telepathy, Gossip and Gajim (thanks, Tim Wegener)
   * Gettext support (thanks, Alejandro Piñeiro)
-  * de, it, fi, gl, es_MX, es_VE, pt and pt_BR translations (see
+  * de, it, fi, gl, es, es_MX, pt and pt_BR translations (see
     TRANSLATORS file for details)
   * Set the current language when selecting a Last.fm radio, so the
     name of the radio appears translated.

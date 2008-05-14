@@ -54,9 +54,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/vagalume.1.gz
 %{_datadir}/locale/de/LC_MESSAGES/vagalume.mo
 %{_datadir}/locale/es_MX/LC_MESSAGES/vagalume.mo
-%{_datadir}/locale/es_VE/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/es/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/fi/LC_MESSAGES/vagalume.mo
 %{_datadir}/locale/gl/LC_MESSAGES/vagalume.mo
 %{_datadir}/locale/it/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/pt/LC_MESSAGES/vagalume.mo
+%{_datadir}/locale/pt_BR/LC_MESSAGES/vagalume.mo
 
 
 %changelog
