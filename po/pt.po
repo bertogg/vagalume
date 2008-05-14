@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-12 20:06+0200\n"
-"PO-Revision-Date: 2008-05-12 20:08+0200\n"
+"PO-Revision-Date: 2008-05-14 11:51+0200\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -557,7 +557,7 @@ msgstr ""
 
 #: src/uimisc.c:399
 msgid "Download"
-msgstr "Fazer download"
+msgstr "Download"
 
 #. Set help
 #: src/uimisc.c:402

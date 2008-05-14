@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: vagalume-devel@garage.maemo.org\n"
 "POT-Creation-Date: 2008-05-12 20:06+0200\n"
-"PO-Revision-Date: 2008-05-13 17:54+0200\n"
+"PO-Revision-Date: 2008-05-14 11:52+0200\n"
 "Last-Translator: Oscar A. Mata T. <omata_mac@yahoo.com>\n"
 "Language-Team: es_VE\n"
 "MIME-Version: 1.0\n"
@@ -692,12 +692,12 @@ msgstr "obteniendo..."
 #. Dialog and basic settings
 #: src/uimisc.c:938
 msgid "Tagging"
-msgstr "Marcando"
+msgstr "Etiquetas"
 
 #. Combo to select what to tag
 #: src/uimisc.c:943
 msgid "Tag this"
-msgstr "Marcar esto"
+msgstr "Etiquetar"
 
 #. Text entry
 #: src/uimisc.c:963
