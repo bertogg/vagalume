@@ -80,21 +80,22 @@ gajim_set_status(const char *message)
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
-        char *status;
+        char *status = NULL;
         gboolean change_status_result;
+        gboolean retval = FALSE;
 
         proxy = get_dbus_proxy("org.gajim.dbus",
                                "/org/gajim/dbus/RemoteObject",
                                "org.gajim.dbus.RemoteInterface");
 
-        if (proxy == NULL) return FALSE;
+        if (proxy == NULL) goto cleanup;
 
         result = dbus_g_proxy_call (proxy, "get_status", &error,
                                     G_TYPE_STRING, "",
                                     G_TYPE_INVALID,
                                     G_TYPE_STRING, &status,
                                     G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
         /* todo: abort if not online or chat? or dnd? */
 
@@ -118,11 +119,13 @@ gajim_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_BOOLEAN, &change_status_result,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
+        retval = TRUE;
+cleanup:
         g_free(status);
-        g_object_unref(proxy);
-        return TRUE;
+        if (proxy != NULL) g_object_unref(proxy);
+        return retval;
 }
 
 static gboolean
@@ -132,22 +135,23 @@ gossip_set_status(const char *message)
         DBusGProxy *proxy;
         GError *error = NULL;
         gboolean result;
-        char **chats;
-        char *id;
-        char *state_str;
-        char *status;
+        char **chats = NULL;
+        char *state_str = NULL;
+        char *status = NULL;
+        const char *id;
+        gboolean retval = FALSE;
 
         proxy = get_dbus_proxy("org.gnome.Gossip",
                                "/org/gnome/Gossip",
                                "org.gnome.Gossip");
 
-        if (proxy == NULL) return FALSE;
+        if (proxy == NULL) goto cleanup;
 
         result = dbus_g_proxy_call(proxy, "GetOpenChats", &error,
                                    G_TYPE_INVALID,
                                    G_TYPE_STRV, &chats,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
         id = *chats;
 
@@ -158,14 +162,11 @@ gossip_set_status(const char *message)
                                    G_TYPE_STRING, &state_str,
                                    G_TYPE_STRING, &status,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
-
-        g_strfreev(chats);
+        if (error_happened(result, error)) goto cleanup;
 
         if (saved_gossip_status == NULL) {
                 saved_gossip_status = status;
-        } else {
-                g_free(status);
+                status = NULL;
         }
 
         /* todo: abort if not online or chat? or dnd? */
@@ -178,11 +179,15 @@ gossip_set_status(const char *message)
                                    G_TYPE_STRING, message,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        g_free(state_str);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
-        g_object_unref(proxy);
-        return TRUE;
+        retval = TRUE;
+cleanup:
+        g_free(state_str);
+        g_free(status);
+        g_strfreev(chats);
+        if (proxy != NULL) g_object_unref(proxy);
+        return retval;
 }
 
 static gboolean
@@ -194,19 +199,20 @@ pidgin_set_status(const char *message)
         gboolean result;
         unsigned int current;
         int status;
+        gboolean retval = FALSE;
 
         proxy = get_dbus_proxy("im.pidgin.purple.PurpleService",
                                "/im/pidgin/purple/PurpleObject",
                                "im.pidgin.purple.PurpleInterface");
 
-        if (proxy == NULL) return FALSE;
+        if (proxy == NULL) goto cleanup;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusGetCurrent",
                                    &error,
                                    G_TYPE_INVALID,
                                    G_TYPE_INT, &current,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusGetType",
                                    &error,
@@ -214,7 +220,7 @@ pidgin_set_status(const char *message)
                                    G_TYPE_INVALID,
                                    G_TYPE_INT, &status,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
         /* todo: abort if not online */
 
@@ -235,17 +241,19 @@ pidgin_set_status(const char *message)
                                    G_TYPE_STRING, message,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
         result = dbus_g_proxy_call(proxy, "PurpleSavedstatusActivate",
                                    &error,
                                    G_TYPE_INT, current,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
-        g_object_unref(proxy);
-        return TRUE;
+        retval = TRUE;
+cleanup:
+        if (proxy != NULL) g_object_unref(proxy);
+        return retval;
 }
 
 
@@ -257,18 +265,19 @@ telepathy_set_status(const char *message)
         GError *error = NULL;
         gboolean result;
         unsigned int presence;
+        gboolean retval = FALSE;
 
         proxy = get_dbus_proxy("org.freedesktop.Telepathy.MissionControl",
                                "/org/freedesktop/Telepathy/MissionControl",
                                "org.freedesktop.Telepathy.MissionControl");
 
-        if (proxy == NULL) return FALSE;
+        if (proxy == NULL) goto cleanup;
 
         result = dbus_g_proxy_call(proxy, "GetPresence", &error,
                                    G_TYPE_INVALID,
                                    G_TYPE_UINT, &presence,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
         if (saved_telepathy_status == NULL) {
                 dbus_g_proxy_call(proxy, "GetPresenceMessage", &error,
@@ -286,10 +295,12 @@ telepathy_set_status(const char *message)
                                    G_TYPE_STRING, message,
                                    G_TYPE_INVALID,
                                    G_TYPE_INVALID);
-        if (error_happened(result, error)) return FALSE;
+        if (error_happened(result, error)) goto cleanup;
 
-        g_object_unref(proxy);
-        return TRUE;
+        retval = TRUE;
+cleanup:
+        if (proxy != NULL) g_object_unref(proxy);
+        return retval;
 }
 
 static gboolean
