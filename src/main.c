@@ -28,6 +28,10 @@
 #include "globaldefs.h"
 #include "audio.h"
 
+#ifdef SET_IM_STATUS
+#   include <dbus/dbus-glib.h>
+#endif
+
 int
 main (int argc, char **argv)
 {
@@ -37,6 +41,9 @@ main (int argc, char **argv)
         signal(SIGPIPE, SIG_IGN);
         g_thread_init (NULL);
         gdk_threads_init ();
+#ifdef SET_IM_STATUS
+        dbus_g_thread_init ();
+#endif
         gdk_threads_enter ();
         gtk_init (&argc, &argv);
         g_set_application_name(APP_NAME);
