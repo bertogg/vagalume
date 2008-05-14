@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-14 14:25+0200\n"
-"PO-Revision-Date: 2008-05-14 15:40+0200\n"
+"PO-Revision-Date: 2008-05-14 16:15+0200\n"
 "Last-Translator: Eduardo Rubio <eduardo.rubio.garcia@gmail.com>\n"
 "Language-Team: Spanish (Mexico)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgid ""
 "Unable to login to Last.fm\n"
 "Check username and password"
 msgstr ""
-"Imposible iniciar seción a Last.fm\n"
+"Imposible iniciar sesión a Last.fm\n"
 "Verifica el nombre de usuario y contraseña"
 
 #: src/controller.c:576
@@ -43,7 +43,7 @@ msgstr ""
 
 #: src/controller.c:699
 msgid "No more content to play"
-msgstr "No hay mas contenido para reproducir"
+msgstr "No hay más contenido para reproducir"
 
 #: src/controller.c:887
 msgid "Download this track?"
@@ -111,7 +111,7 @@ msgstr "Deseas agregar esta canción a tu lista de reproducción?"
 
 #: src/controller.c:1194
 msgid "Invalid radio URL"
-msgstr "Dirección URL de radio invalida"
+msgstr "Dirección URL de radio inválida"
 
 #: src/controller.c:1201
 msgid ""
@@ -120,17 +120,18 @@ msgid ""
 "or it is only available\n"
 "for Last.fm subscribers"
 msgstr ""
-"Dirección URL de radio invalida.\n"
-"Esta estación no existe o solo\n"
-"esta disponible para subscriptores registrados a Last.fm"
+"Dirección URL de radio inválida.\n"
+"Esta estación no existe o sólo\n"
+"está disponible para subscriptores registrados a Last.fm"
 
-#: src/controller.c:1246 src/controller.c:1361
+#: src/controller.c:1246
+#: src/controller.c:1361
 msgid "Enter tag"
 msgstr "Agregar etiqueta"
 
 #: src/controller.c:1247
 msgid "Enter one of your tags"
-msgstr "Agragar una de tus etiquetas"
+msgstr "Agregar una de tus etiquetas"
 
 #: src/controller.c:1297
 msgid "Enter user name"
@@ -227,18 +228,16 @@ msgid ""
 "  decoder:   GStreamer decoder (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
-"Modo de uso: %s [-c convertidor] [-d decodificador] [-s sink] [url de "
-"radio]\n"
+"Modo de uso: %s [-c convertidor] [-d decodificador] [-s sink] [url de radio]\n"
 "\n"
-"  convertidor: Convertidor GStreamer (por defecto: '%s', 'ninguno' para "
-"desactivar)\n"
+"  convertidor: Convertidor GStreamer (por defecto: '%s', 'ninguno' para desactivar)\n"
 "  decodificador:   Decodificador GStreamer (por defecto: '%s')\n"
 "  sink:      Sink GStreamer (por defecto: '%s')\n"
 
 #: src/main.c:78
 #, c-format
 msgid "Too many unrecognized options\n"
-msgstr "Muchas opciones no validas\n"
+msgstr "Muchas opciones no válidas\n"
 
 #: src/main.c:87
 #, c-format
@@ -261,7 +260,9 @@ msgstr "Saltar esta canción"
 msgid "Mark as loved"
 msgstr "Marcar como favorita"
 
-#: src/mainwin.c:70 src/mainwin.c:817 src/vagalume-tray-icon.c:32
+#: src/mainwin.c:70
+#: src/mainwin.c:817
+#: src/vagalume-tray-icon.c:32
 msgid "Ban this track"
 msgstr "Prohibir esta canción"
 
@@ -269,7 +270,8 @@ msgstr "Prohibir esta canción"
 msgid "Recommend this track"
 msgstr "Recomendar esta canción"
 
-#: src/mainwin.c:78 src/mainwin.c:819
+#: src/mainwin.c:78
+#: src/mainwin.c:819
 msgid "Download this track"
 msgstr "Descargar esta canción"
 
@@ -301,7 +303,8 @@ msgstr "<b>Álbum:</b>\n"
 msgid "<b>Listening to <i>"
 msgstr "<b>Escuchando <i>"
 
-#: src/mainwin.c:348 src/mainwin.c:349
+#: src/mainwin.c:348
+#: src/mainwin.c:349
 msgid "Stopped"
 msgstr "Detenido"
 
@@ -309,7 +312,8 @@ msgstr "Detenido"
 msgid "Playing..."
 msgstr "Reproduciendo..."
 
-#: src/mainwin.c:402 src/mainwin.c:403
+#: src/mainwin.c:402
+#: src/mainwin.c:403
 msgid "Connecting..."
 msgstr "Conectando..."
 
@@ -342,7 +346,8 @@ msgstr "Gallego"
 msgid "Italian"
 msgstr "Italiano"
 
-#: src/mainwin.c:618 src/mainwin.c:619
+#: src/mainwin.c:618
+#: src/mainwin.c:619
 msgid "Portuguese"
 msgstr "Portugués"
 
@@ -351,7 +356,8 @@ msgstr "Portugués"
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/mainwin.c:708 src/vagalume-tray-icon.c:27
+#: src/mainwin.c:708
+#: src/vagalume-tray-icon.c:27
 msgid "Settings..."
 msgstr "Ajustes..."
 
@@ -433,15 +439,21 @@ msgstr "Listas de reproducción..."
 msgid "_Actions"
 msgstr "_Acciones"
 
-#: src/mainwin.c:809 src/vagalume-sb-plugin.c:35 src/vagalume-tray-icon.c:33
+#: src/mainwin.c:809
+#: src/vagalume-sb-plugin.c:35
+#: src/vagalume-tray-icon.c:33
 msgid "Play"
 msgstr "Reproducir"
 
-#: src/mainwin.c:810 src/vagalume-sb-plugin.c:36 src/vagalume-tray-icon.c:34
+#: src/mainwin.c:810
+#: src/vagalume-sb-plugin.c:36
+#: src/vagalume-tray-icon.c:34
 msgid "Stop"
 msgstr "Detener"
 
-#: src/mainwin.c:811 src/vagalume-sb-plugin.c:37 src/vagalume-tray-icon.c:35
+#: src/mainwin.c:811
+#: src/vagalume-sb-plugin.c:37
+#: src/vagalume-tray-icon.c:35
 msgid "Skip"
 msgstr "Saltar"
 
@@ -449,11 +461,13 @@ msgstr "Saltar"
 msgid "Stop after this track"
 msgstr "Detener después de esta canción"
 
-#: src/mainwin.c:816 src/vagalume-tray-icon.c:31
+#: src/mainwin.c:816
+#: src/vagalume-tray-icon.c:31
 msgid "Love this track"
 msgstr "Agregar a canciones favoritas"
 
-#: src/mainwin.c:818 src/vagalume-tray-icon.c:30
+#: src/mainwin.c:818
+#: src/vagalume-tray-icon.c:30
 msgid "Add to playlist"
 msgstr "Agregar a la lista reproducción"
 
@@ -461,7 +475,8 @@ msgstr "Agregar a la lista reproducción"
 msgid "Tag..."
 msgstr "Etiqueta..."
 
-#: src/mainwin.c:821 src/vagalume-tray-icon.c:28
+#: src/mainwin.c:821
+#: src/vagalume-tray-icon.c:28
 msgid "Recommend..."
 msgstr "Recomendar..."
 
@@ -478,7 +493,8 @@ msgstr "Acerca de..."
 msgid "Confirmation"
 msgstr "Confirmación"
 
-#: src/uimisc.c:208 src/uimisc.c:381
+#: src/uimisc.c:208
+#: src/uimisc.c:381
 msgid "Select download directory"
 msgstr "Selecciona el directorio para descargar"
 
@@ -508,7 +524,6 @@ msgstr "Cuenta"
 
 #. Set help
 #: src/uimisc.c:324
-#, fuzzy
 msgid ""
 "* Username and password:\n"
 "From your Last.fm account.\n"
@@ -525,7 +540,8 @@ msgstr ""
 "* Scrobbling:\n"
 "Muestra la música que escuchas en tu perfil Last.fm.\n"
 "\n"
-"* Modo busqueda:\n"
+"* Modo búsqueda:\n"
+"No reproduce canciones que ya hayas escuchado. Se requiere una subscripción a Last.fm."
 
 #: src/uimisc.c:342
 msgid "Use HTTP proxy"
@@ -564,9 +580,10 @@ msgstr "Descargar"
 #: src/uimisc.c:402
 msgid ""
 "* Download directory:\n"
-"Where to download mp3 files. Note that you can only download those songs "
-"marked as freely downloadable by Last.fm."
+"Where to download mp3 files. Note that you can only download those songs marked as freely downloadable by Last.fm."
 msgstr ""
+"* Directorio de descarga:\n"
+"Es donde se descargaran los archivos mp3. NOTA solo se podran descargar los archivos que esten marcados como gratuitos por Last.fm."
 
 #: src/uimisc.c:420
 msgid "IM message template:"
@@ -595,13 +612,17 @@ msgstr "Actualizar es esta de IM"
 #. Set help
 #: src/uimisc.c:458
 msgid ""
-"Vagalume can update the status message of your IM client each time a new "
-"song starts. The template can contain the following keywords:\n"
+"Vagalume can update the status message of your IM client each time a new song starts. The template can contain the following keywords:\n"
 "\n"
 "{artist}: Name of the artist\n"
 "{title}: Song title\n"
 "{version}: Vagalume version"
 msgstr ""
+"Vagalume puede actualizar el mensaje de status de tu cliente IM cada vez que una canción nueva comience. La plantilla puede contener las siguientes palabras clave:\n"
+"\n"
+"{artist}: Nombre de artista\n"
+"{title}: Titulo de la canción\n"
+"{version}: Versión de Vagalume"
 
 #: src/uimisc.c:486
 msgid "Disable confirmation dialogs:"
@@ -643,7 +664,7 @@ msgid ""
 "Hide the Vagalume window when the close button is pressed."
 msgstr ""
 "* Cierra a systray:\n"
-"Econde la ventana de Vagalume cuando el boton de cerrar es presionado."
+"Esconde la ventana de Vagalume cuando el bóton de cerrar es presionado."
 
 #: src/uimisc.c:536
 msgid "Misc"
@@ -665,14 +686,15 @@ msgstr "Canción: "
 msgid "Album: "
 msgstr "Álbum: "
 
-#: src/uimisc.c:876 src/uimisc.c:933
+#: src/uimisc.c:876
+#: src/uimisc.c:933
 msgid "retrieving..."
 msgstr "adquiriendo..."
 
 #. A treemodel for combos with no elements
 #: src/uimisc.c:930
 msgid "(none)"
-msgstr "(ninguno)"
+msgstr "(ninguna)"
 
 #. Dialog and basic settings
 #: src/uimisc.c:938
@@ -682,7 +704,7 @@ msgstr "Etiquetando"
 #. Combo to select what to tag
 #: src/uimisc.c:943
 msgid "Tag this"
-msgstr "Etiqueta esta"
+msgstr "Etiqueta"
 
 #. Text entry
 #: src/uimisc.c:963
@@ -740,11 +762,13 @@ msgstr "Preferida"
 msgid "Ban"
 msgstr "Prohibir"
 
-#: src/vagalume-sb-plugin.c:40 src/vagalume-tray-icon.c:26
+#: src/vagalume-sb-plugin.c:40
+#: src/vagalume-tray-icon.c:26
 msgid "Show main window"
 msgstr "Mostrar ventana principal"
 
-#: src/vagalume-sb-plugin.c:41 src/vagalume-tray-icon.c:36
+#: src/vagalume-sb-plugin.c:41
+#: src/vagalume-tray-icon.c:36
 msgid "Close Vagalume"
 msgstr "Cerrar Vagalume"
 
@@ -780,3 +804,4 @@ msgstr ""
 #: src/vagalume-tray-icon.c:29
 msgid "Tags..."
 msgstr "Etiquetas..."
+
