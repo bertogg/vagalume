@@ -31,6 +31,9 @@ Vagalume has the following features:
       * Scrobbling of tracks that you listen
       * Love/Ban ratings
    * It displays the album cover of the track being played
+   * Tray icon and desktop notifications
+   * Gettext support
+   * D-BUS services and a script to control them from the command line
    * The user can tag artists, tracks and albums
    * The user can send recommendations to other users
    * The user can add tracks to their playlist

@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH VAGALUME 1 "2008\-05\-02"
+.TH VAGALUME 1 "2008\-05\-14"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -19,7 +19,7 @@
 vagalume \- GTK+\-based client for the Last.fm online radio service
 .SH SYNOPSIS
 .B vagalume
-.I [URL]
+.I [OPTIONS] [URL]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B vagalume
@@ -36,6 +36,19 @@ Maemo platform, used by some Nokia devices such as the Nokia 770, N800
 and N810
 
 .SH OPTIONS
+.TP
+.B \-h
+Display a brief summary of the command\-line options and their default
+values.
+.TP
+.BI \-c "\| converter\^"
+GStreamer converter (or 'none' to disable it)
+.TP
+.BI \-d "\| decoder\^"
+GStreamer decoder
+.TP
+.BI \-s "\| sink\^"
+GStreamer sink
 .TP
 .B URL
 A Last.fm radio address, beginning with

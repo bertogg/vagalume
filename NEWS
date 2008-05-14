@@ -1,11 +1,13 @@
-0.6 (?? May 2008)
+0.6 (14 May 2008)
   * Freedesktop tray icon (Gnome only, thanks Mario Sanchez)
   * Notifications support via libnotify (Gnome only, thanks Mario Sanchez)
   * New feature to update the status of several IM clients: Pidgin,
     Telepathy, Gossip and Gajim (thanks, Tim Wegener)
   * Gettext support (thanks, Alejandro Piñeiro)
-  * de, it, gl, es_MX, es_VE, pt and pt_BR translations (see
+  * de, it, fi, gl, es_MX, es_VE, pt and pt_BR translations (see
     TRANSLATORS file for details)
+  * Set the current language when selecting a Last.fm radio, so the
+    name of the radio appears translated.
   * New setting to disable confirmation dialogs
   * Help messages for all configuration settings
   * New D-BUS methods to change the volume level

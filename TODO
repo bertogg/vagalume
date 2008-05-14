@@ -13,7 +13,6 @@ List of features that need to be implemented (in no particular order):
 * Get proxy setting from environment/maemo settings
 * Notify user on successful scrobble
 * Handle lastfm:// urls from non-maemo platforms
-* Add option to disable confirmation dialogs
 * Global hotkeys for the desktop
 * Pause button
 * Multi-user support
