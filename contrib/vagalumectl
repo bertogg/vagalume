@@ -60,7 +60,7 @@ print_usage ()
     echo "     playlist <USER>:   change to a 'playlist' radio for a specific user"
     echo "     playurl <URL>:     just play the specified URL on Vagalume"
     echo "     volumeup [INC]:    increase playback volume"
-    echo "     volumedown [INC]:  decrease playback volume"w
+    echo "     volumedown [INC]:  decrease playback volume"
     echo "     volume <VALUE>:    set the playback volume to a specific value"
     echo "     start:             start Vagalume (if not already running)"
     echo "     close:             close Vagalume (if not already closed)"
