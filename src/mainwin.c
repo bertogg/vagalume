@@ -125,6 +125,7 @@ static const char *translators_tpl =
 "%s (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
          "* Amador Loureiro Blanco <dorfun@adorfunteca.org>\n\n"
 "%s (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
+"%s (lv)\n* Pēteris Caune <cuu508@gmail.com>\n\n"
 "%s (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
 "%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
 
@@ -615,8 +616,8 @@ show_about_dialog(GtkWidget *widget, gpointer data)
         char *translators = g_strdup_printf(translators_tpl, _("German"),
                                             _("Spanish"), _("Spanish"),
                                             _("Finnish"), _("Galician"),
-                                            _("Italian"), _("Portuguese"),
-                                            _("Portuguese"));
+                                            _("Italian"), _("Latvian"),
+                                            _("Portuguese"), _("Portuguese"));
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", _(appdescr), "copyright", copyright,
                               "license", license, "version", APP_VERSION,
