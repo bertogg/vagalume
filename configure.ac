@@ -1,4 +1,6 @@
-# Initialization and basic checks
+#######################################
+### Initialization and basic checks ###
+#######################################
 AC_INIT(Makefile.am)
 AM_INIT_AUTOMAKE(vagalume, 0.6)
 AM_CONFIG_HEADER(config.h)
@@ -87,12 +89,45 @@ AC_CHECK_LIB(curl, curl_easy_escape,
    AC_DEFINE([HAVE_CURL_EASY_ESCAPE],[1],[If curl_easy_escape() exists]),
    have_curl_easy_escape="no")
 
+#################################
+### User configurable options ###
+#################################
+# Autodetect platform
+if $PKG_CONFIG --exists libosso && readlink /etc|grep -q ^/targets; then
+   DETECTED_PLATFORM=maemo
+else
+   DETECTED_PLATFORM=gnome
+fi
+
+# Platform support
+AC_ARG_WITH(platform, [
+Target platform:
+  --with-platform=detect  detect target platform (default)
+  --with-platform=gnome   compile for Gnome
+  --with-platform=maemo   compile for Maemo],
+  PLATFORM=$withval, PLATFORM=detect)
+
+if test "$PLATFORM" = "detect"; then
+   PLATFORM=$DETECTED_PLATFORM
+fi
+PLATFORMVERS=""
+
 # Check whether to use libgcrypt
 AC_ARG_ENABLE(libgcrypt, [
   --enable-libgcrypt      use libgcrypt if glib doesn't support MD5
-                          checksums (default if libgcrypt is available)
-  --disable-libgcrypt     prefer internal MD5 implementation over libgcrypt],
-  use_libgcrypt=$enableval, use_libgcrypt=$have_libgcrypt)
+                          checksums (default in Gnome if libgcrypt exists)
+  --disable-libgcrypt     prefer internal MD5 implementation over libgcrypt
+                          (default in Maemo)],
+  use_libgcrypt=$enableval, use_libgcrypt=default)
+
+# If neither --enable nor --disable have been specified, select the default
+if test "$use_libgcrypt" = "default"; then
+   if test "$PLATFORM" = "gnome"; then
+      use_libgcrypt="$have_libgcrypt"
+   else
+      use_libgcrypt="no"
+   fi
+fi
 
 # Decide the actual MD5 implementation to be used
 if test "$have_gchecksum" = "yes"; then
@@ -138,26 +173,9 @@ AC_ARG_ENABLE(tray-icon, [
   --disable-tray-icon     Disable tray icon and libnotify support],
   enable_tray_icon=$enableval, enable_tray_icon=$have_tray_icon)
 
-# Autodetect platform
-if $PKG_CONFIG --exists libosso && readlink /etc|grep -q ^/targets; then
-   DETECTED_PLATFORM=maemo
-else
-   DETECTED_PLATFORM=gnome
-fi
-
-# Platform support
-AC_ARG_WITH(platform, [
-Target platform:
-  --with-platform=detect  detect target platform (default)
-  --with-platform=gnome   compile for Gnome
-  --with-platform=maemo   compile for Maemo],
-  PLATFORM=$withval, PLATFORM=detect)
-
-if test "$PLATFORM" = "detect"; then
-   PLATFORM=$DETECTED_PLATFORM
-fi
-PLATFORMVERS=""
-
+#################################
+### Platform dependent checks ###
+#################################
 if test "$PLATFORM" = "maemo"; then
 
    # Disable tray icon support on Maemo
@@ -285,6 +303,22 @@ else
 
 fi
 
+####################
+### Translations ###
+####################
+ALL_LINGUAS="de es fi gl it lv pt pt_BR"
+
+VAGALUME_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
+AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
+AM_GLIB_GNU_GETTEXT
+
+GETTEXT_PACKAGE=vagalume
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+
+##################################################################
+### Everything has been checked, now define Automake variables ###
+##################################################################
 AM_CONDITIONAL(MAEMO_PLATFORM, test "$PLATFORM" = "maemo")
 
 AM_CONDITIONAL(HAVE_DBUS_SUPPORT, test -n "$serviceentrydir")
@@ -321,20 +355,9 @@ AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(PLATFORM)
 
-################
-# Translations #
-################
-ALL_LINGUAS="de es fi gl it lv pt pt_BR"
-
-VAGALUME_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
-AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
-AM_GLIB_GNU_GETTEXT
-
-GETTEXT_PACKAGE=vagalume
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
-
-# Produce output files
+############################
+### Produce output files ###
+############################
 AC_OUTPUT(
 	  Makefile \
 	  src/Makefile
@@ -345,7 +368,9 @@ if test "$PLATFORM" = "maemo"; then
    AC_OUTPUT(data/vagalume.conf data/vagalume-rfs.sh)
 fi
 
-# Status summary
+######################
+### Status summary ###
+######################
 echo ""
 echo "****************************************"
 echo "*** Vagalume is ready to be compiled ***"
