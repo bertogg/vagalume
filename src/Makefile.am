@@ -73,3 +73,10 @@ libvagalumesbplugin_la_CFLAGS = $(SBPLUGIN_CFLAGS) \
 	-DAPP_DATA_DIR=\"$(appdatadir)\" \
 	-DPIXMAP_DIR=\"$(pixmapdir)\"
 endif
+
+# These two files are not needed
+install-data-hook:
+	if test "x$(sbplugindir)" != "x"; then \
+	   rm -f "$(DESTDIR)/$(sbplugindir)/libvagalumesbplugin.a" ; \
+	   rm -f "$(DESTDIR)/$(sbplugindir)/libvagalumesbplugin.la" ; \
+	fi
