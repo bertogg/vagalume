@@ -92,7 +92,7 @@ AC_CHECK_LIB(curl, curl_easy_escape,
 #################################
 ### User configurable options ###
 #################################
-# Autodetect platform
+# Autodetect platform (with ugly hack to detect scratchbox, I know)
 if $PKG_CONFIG --exists libosso && readlink /etc|grep -q ^/targets; then
    DETECTED_PLATFORM=maemo
 else
@@ -186,16 +186,14 @@ if test "$PLATFORM" = "maemo"; then
 
    if test "$have_curl_easy_escape" = "no"; then
       PLATFORMVERS=2
-      echo "Compiling for Maemo 2"
    elif test "$libossovers" = "1"; then
       PLATFORMVERS=3
-      echo "Compiling for Maemo 3"
    elif test "$libossovers" = "2"; then
       PLATFORMVERS=4
-      echo "Compiling for Maemo 4"
    else
       AC_MSG_ERROR([Unknown Maemo version])
    fi
+   echo "Compiling for Maemo $PLATFORMVERS"
 
    # These are required but their names vary between Maemo versions
    if test "$PLATFORMVERS" = "2" -o "$PLATFORMVERS" = "3"; then
