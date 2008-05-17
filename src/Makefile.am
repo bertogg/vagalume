@@ -35,6 +35,7 @@ vagalume_SOURCES = \
 	uimisc.c uimisc.h \
 	userconfig.c userconfig.h \
 	util.c util.h \
+	vgl-bookmark-window.c vgl-bookmark-window.h \
 	xmlrpc.c xmlrpc.h
 
 if SET_IM_STATUS

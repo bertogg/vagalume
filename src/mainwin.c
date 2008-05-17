@@ -608,6 +608,12 @@ download_track_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
+manage_bookmarks_selected(GtkWidget *widget, gpointer data)
+{
+        controller_manage_bookmarks();
+}
+
+static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
         GtkWindow *win = GTK_WINDOW(data);
@@ -685,16 +691,17 @@ image_button_new(const button_data *data)
 static GtkWidget *
 create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
 {
-        GtkMenuItem *lastfm, *radio, *actions, *help;
+        GtkMenuItem *lastfm, *radio, *actions, *bookmarks, *help;
         GtkMenuItem *user, *others;
         GtkWidget *group, *globaltag, *similarartist, *urlradio;
-        GtkMenuShell *lastfmsub, *radiosub, *actionssub, *helpsub;
+        GtkMenuShell *lastfmsub, *radiosub, *actionssub, *bmksub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
         GtkWidget *play, *stop, *skip, *separ1, *separ2;
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
+        GtkWidget *managebmk;
         GtkWidget *about;
 #ifdef MAEMO
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_new());
@@ -853,6 +860,17 @@ create_main_menu(lastfm_mainwin *w, GtkAccelGroup *accel)
                          G_CALLBACK(add_to_playlist_selected), NULL);
         g_signal_connect(G_OBJECT(dload), "activate",
                          G_CALLBACK(download_track_selected), NULL);
+
+        /* Bookmarks */
+        bookmarks = GTK_MENU_ITEM(
+                gtk_menu_item_new_with_mnemonic(_("_Bookmarks")));
+        bmksub = GTK_MENU_SHELL(gtk_menu_new());
+        managebmk = gtk_menu_item_new_with_label(_("Manage bookmarks..."));
+        gtk_menu_shell_append(bar, GTK_WIDGET(bookmarks));
+        gtk_menu_item_set_submenu(bookmarks, GTK_WIDGET(bmksub));
+        gtk_menu_shell_append(bmksub, managebmk);
+        g_signal_connect(G_OBJECT(managebmk), "activate",
+                         G_CALLBACK(manage_bookmarks_selected), w->window);
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Help")));

@@ -26,6 +26,7 @@
 #include "dbus.h"
 #include "util.h"
 #include "imstatus.h"
+#include "vgl-bookmark-window.h"
 
 #ifdef HAVE_TRAY_ICON
 #include "vagalume-tray-icon.h"
@@ -905,6 +906,16 @@ controller_download_track(void)
         } else {
                 lastfm_track_unref(t);
         }
+}
+
+/**
+ * Opens the bookmarks window
+ */
+void
+controller_manage_bookmarks(void)
+{
+        g_return_if_fail(mainwin != NULL);
+        vgl_bookmark_window_show(mainwin_get_window(mainwin, FALSE));
 }
 
 /**
