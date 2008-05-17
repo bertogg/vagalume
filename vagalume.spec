@@ -53,7 +53,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/vagalume/icons/hicolor/scalable/actions/process-stop.svg
 %{_mandir}/man1/vagalume.1.gz
 %{_datadir}/locale/de/LC_MESSAGES/vagalume.mo
-%{_datadir}/locale/es_MX/LC_MESSAGES/vagalume.mo
 %{_datadir}/locale/es/LC_MESSAGES/vagalume.mo
 %{_datadir}/locale/fi/LC_MESSAGES/vagalume.mo
 %{_datadir}/locale/gl/LC_MESSAGES/vagalume.mo

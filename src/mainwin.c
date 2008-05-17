@@ -120,7 +120,6 @@ static const char *translators_tpl =
 "%s (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
          "* Oskar Welzl <mail@welzl.info>\n\n"
 "%s (es)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
-"%s (es_MX)\n* Eduardo Rubio Garcia <eduardo.rubio.garcia@gmail.com>\n\n"
 "%s (fi)\n* Janne Mäkinen <janne.makinen@surffi.fi>\n\n"
 "%s (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
          "* Amador Loureiro Blanco <dorfun@adorfunteca.org>\n\n"
@@ -614,10 +613,10 @@ show_about_dialog(GtkWidget *widget, gpointer data)
         GtkWindow *win = GTK_WINDOW(data);
         GdkPixbuf *logo = gdk_pixbuf_new_from_file(APP_ICON_BIG, NULL);
         char *translators = g_strdup_printf(translators_tpl, _("German"),
-                                            _("Spanish"), _("Spanish"),
-                                            _("Finnish"), _("Galician"),
-                                            _("Italian"), _("Latvian"),
-                                            _("Portuguese"), _("Portuguese"));
+                                            _("Spanish"), _("Finnish"),
+                                            _("Galician"), _("Italian"),
+                                            _("Latvian"), _("Portuguese"),
+                                            _("Portuguese"));
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", _(appdescr), "copyright", copyright,
                               "license", license, "version", APP_VERSION,

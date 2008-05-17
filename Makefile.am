@@ -19,6 +19,7 @@ MAINTAINERCLEANFILES = \
 	data/vagalume.desktop \
 	data/vagalume.service \
 	debian/files \
+	debian/vagalume.debhelper.log \
 	debian/vagalume.postinst.debhelper \
 	debian/vagalume.postrm.debhelper \
 	debian/vagalume.substvars \
