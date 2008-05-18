@@ -26,7 +26,6 @@ vagalume_SOURCES = \
 	http.c http.h \
 	imstatus.h \
 	main.c \
-	mainwin.c mainwin.h \
 	metadata.c metadata.h \
 	playlist.c playlist.h \
 	protocol.c protocol.h \
@@ -36,6 +35,7 @@ vagalume_SOURCES = \
 	userconfig.c userconfig.h \
 	util.c util.h \
 	vgl-bookmark-window.c vgl-bookmark-window.h \
+	vgl-main-window.c vgl-main-window.h \
 	xmlrpc.c xmlrpc.h
 
 if SET_IM_STATUS

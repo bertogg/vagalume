@@ -1,5 +1,5 @@
 /*
- * mainwin.c -- Functions to control the main program window
+ * vgl-main-window.c -- Main program window
  * Copyright (C) 2007, 2008 Alberto Garcia <agarcia@igalia.com>
  * Copyright (C) 2008 Felipe Erias Morandeira <femorandeira@igalia.com>
  *
@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "controller.h"
-#include "mainwin.h"
+#include "vgl-main-window.h"
 #include "radio.h"
 #include "uimisc.h"
 #include "xmlrpc.h"

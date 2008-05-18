@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 #include "controller.h"
-#include "mainwin.h"
+#include "vgl-main-window.h"
 #include "globaldefs.h"
 #include "audio.h"
 

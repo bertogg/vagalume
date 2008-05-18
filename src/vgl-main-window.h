@@ -1,13 +1,13 @@
 /*
- * mainwin.h -- Functions to control the main program window
- * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ * vgl-main-window.h -- Main program window
+ * Copyright (C) 2007, 2008 Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
  * See the README file for more details.
  */
 
-#ifndef MAINWIN_H
-#define MAINWIN_H
+#ifndef VGL_MAIN_WINDOW_H
+#define VGL_MAIN_WINDOW_H
 
 #include "globaldefs.h"
 #include "playlist.h"
@@ -93,4 +93,4 @@ gboolean vgl_main_window_is_hidden(VglMainWindow *w);
 
 G_END_DECLS
 
-#endif
+#endif /* VGL_MAIN_WINDOW_H */

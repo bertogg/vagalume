@@ -9,7 +9,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "mainwin.h"
+#include "vgl-main-window.h"
 #include "radio.h"
 #include "xmlrpc.h"
 
