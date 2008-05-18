@@ -1,6 +1,6 @@
 /*
  * main.c -- Main file, basic initialization
- * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ * Copyright (C) 2007, 2008 Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume.
  *
@@ -35,7 +35,7 @@
 int
 main (int argc, char **argv)
 {
-        lastfm_mainwin *mainwin;
+        VglMainWindow *mainwin;
         char *radio = NULL;
 
         signal(SIGPIPE, SIG_IGN);
@@ -103,7 +103,7 @@ main (int argc, char **argv)
         gtk_icon_theme_append_search_path(
                 gtk_icon_theme_get_default(), THEME_ICONS_DIR);
 
-        mainwin = lastfm_mainwin_create();
+        mainwin = VGL_MAIN_WINDOW(vgl_main_window_new());
         controller_run_app(mainwin, radio);
         g_free(radio);
 

@@ -34,7 +34,7 @@ void controller_download_track(void);
 void controller_manage_bookmarks(void);
 void controller_open_usercfg(void);
 void controller_quit_app(void);
-void controller_run_app(lastfm_mainwin *win, const char *radio_url);
+void controller_run_app(VglMainWindow *win, const char *radio_url);
 void controller_show_error(const char *text);
 void controller_show_warning(const char *text);
 void controller_show_info(const char *text);

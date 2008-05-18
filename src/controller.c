@@ -35,7 +35,7 @@
 static lastfm_session *session = NULL;
 static lastfm_pls *playlist = NULL;
 static rsp_session *rsp_sess = NULL;
-static lastfm_mainwin *mainwin = NULL;
+static VglMainWindow *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
 static GList *friends = NULL;
 static GList *usertags = NULL;
@@ -91,8 +91,8 @@ typedef struct {
 void
 controller_show_error(const char *text)
 {
-        g_return_if_fail(mainwin != NULL);
-        ui_error_dialog(mainwin_get_window(mainwin, TRUE), text);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        ui_error_dialog(vgl_main_window_get_window(mainwin, TRUE), text);
 }
 
 /**
@@ -103,8 +103,8 @@ controller_show_error(const char *text)
 void
 controller_show_warning(const char *text)
 {
-        g_return_if_fail(mainwin != NULL);
-        ui_warning_dialog(mainwin_get_window(mainwin, TRUE), text);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        ui_warning_dialog(vgl_main_window_get_window(mainwin, TRUE), text);
 }
 
 /**
@@ -115,8 +115,8 @@ controller_show_warning(const char *text)
 void
 controller_show_info(const char *text)
 {
-        g_return_if_fail(mainwin != NULL);
-        ui_info_dialog(mainwin_get_window(mainwin, TRUE), text);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        ui_info_dialog(vgl_main_window_get_window(mainwin, TRUE), text);
 }
 
 /**
@@ -128,9 +128,9 @@ void
 controller_show_banner(const char *text)
 {
 #ifdef MAEMO
-        ui_info_banner(mainwin_get_window(mainwin, FALSE), text);
+        ui_info_banner(vgl_main_window_get_window(mainwin, FALSE), text);
 #else
-        mainwin_show_status_msg(mainwin, text);
+        vgl_main_window_show_status_msg(mainwin, text);
 #endif
 }
 
@@ -143,12 +143,13 @@ controller_show_banner(const char *text)
 gboolean
 controller_confirm_dialog(const char *text, gboolean show_always)
 {
-        g_return_val_if_fail(mainwin != NULL, FALSE);
+        g_return_val_if_fail(VGL_IS_MAIN_WINDOW(mainwin), FALSE);
 
         if (!show_always && usercfg->disable_confirm_dialogs)
                 return TRUE;
 
-        return ui_confirm_dialog(mainwin_get_window(mainwin, FALSE), text);
+        return ui_confirm_dialog(vgl_main_window_get_window(mainwin, FALSE),
+                                 text);
 }
 
 /**
@@ -159,8 +160,8 @@ controller_confirm_dialog(const char *text, gboolean show_always)
 void
 controller_show_mainwin(gboolean show)
 {
-        g_return_if_fail(mainwin != NULL);
-        mainwin_show_window(mainwin, show);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        vgl_main_window_show(mainwin, show);
 }
 
 /**
@@ -171,8 +172,8 @@ controller_show_mainwin(gboolean show)
 void
 controller_toggle_mainwin_visibility (void)
 {
-        g_return_if_fail(mainwin != NULL);
-        mainwin_toggle_visibility (mainwin);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        vgl_main_window_toggle_visibility(mainwin);
 }
 
 /**
@@ -187,12 +188,12 @@ static gboolean
 controller_show_progress(gpointer data)
 {
         lastfm_track *tr = (lastfm_track *) data;
-        g_return_val_if_fail(mainwin != NULL && tr != NULL, FALSE);
+        g_return_val_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && tr, FALSE);
         if (nowplaying != NULL && tr->id == nowplaying->id) {
                 guint played = lastfm_audio_get_running_time();
                 if (played != -1) {
                         guint length = nowplaying->duration/1000;
-                        mainwin_show_progress(mainwin, length, played);
+                        vgl_main_window_show_progress(mainwin,length,played);
                 }
                 return TRUE;
         } else {
@@ -498,7 +499,7 @@ apply_usercfg(void)
 void
 controller_open_usercfg(void)
 {
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         gboolean userchanged = FALSE;
         gboolean pwchanged = FALSE;
         gboolean changed;
@@ -507,8 +508,8 @@ controller_open_usercfg(void)
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
 
-        changed = ui_usercfg_window(mainwin_get_window(mainwin, FALSE),
-                                    &usercfg);
+        changed = ui_usercfg_window(
+                vgl_main_window_get_window(mainwin, FALSE), &usercfg);
 
         if (changed && usercfg != NULL) {
                 write_usercfg(usercfg);
@@ -580,7 +581,8 @@ check_session_thread(gpointer userdata)
         } else {
                 gdk_threads_enter();
                 session = s;
-                mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_STOPPED, NULL);
+                vgl_main_window_set_state(mainwin,
+                                          VGL_MAIN_WINDOW_STATE_STOPPED,NULL);
                 gdk_threads_leave();
                 connected = TRUE;
         }
@@ -641,8 +643,8 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
                         data->failure_cb = failure_cb;
                         data->cbdata = cbdata;
                         connection_go_online(check_session_conn_cb, data);
-                        mainwin_set_ui_state(mainwin,
-                                             LASTFM_UI_STATE_CONNECTING,
+                        vgl_main_window_set_state(mainwin,
+                                             VGL_MAIN_WINDOW_STATE_CONNECTING,
                                              NULL);
                 } else {
                         controller_disconnect();
@@ -670,7 +672,7 @@ set_album_cover_thread(gpointer data)
         if (t->image_data == NULL) g_warning("Error getting cover image");
         gdk_threads_enter();
         if (mainwin && nowplaying == t) {
-                mainwin_set_album_cover(mainwin, t->image_data,
+                vgl_main_window_set_album_cover(mainwin, t->image_data,
                                         t->image_data_size);
         }
         gdk_threads_leave();
@@ -718,14 +720,15 @@ start_playing_get_pls_thread(gpointer data)
 void
 controller_show_cover(void)
 {
-        g_return_if_fail(mainwin != NULL);
-        if (showing_cover || nowplaying == NULL || mainwin->is_hidden) return;
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        if (showing_cover || nowplaying == NULL ||
+            vgl_main_window_is_hidden(mainwin)) return;
         showing_cover = TRUE;
         if (nowplaying->image_url != NULL) {
                 g_thread_create(set_album_cover_thread,
                                 lastfm_track_ref(nowplaying), FALSE, NULL);
         } else {
-                mainwin_set_album_cover(mainwin, NULL, 0);
+                vgl_main_window_set_album_cover(mainwin, NULL, 0);
         }
 }
 
@@ -736,10 +739,11 @@ controller_show_cover(void)
 static void
 controller_audio_started_cb(void)
 {
-        g_return_if_fail(mainwin != NULL && nowplaying != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && nowplaying);
         lastfm_track *track;
         nowplaying_since = time(NULL);
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_PLAYING, nowplaying);
+        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_PLAYING,
+                                  nowplaying);
         track = lastfm_track_ref(nowplaying);
         controller_show_progress(track);
         im_set_status(usercfg, track);
@@ -761,7 +765,8 @@ controller_start_playing_cb(gpointer userdata)
 {
         lastfm_track *track = NULL;
         g_return_if_fail(mainwin && playlist && nowplaying == NULL);
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_CONNECTING, NULL);
+        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
+                                  NULL);
         if (lastfm_pls_size(playlist) == 0) {
                 lastfm_session *s = lastfm_session_copy(session);
                 g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
@@ -815,7 +820,7 @@ controller_start_playing(void)
 static void
 finish_playing_track(void)
 {
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         if (nowplaying != NULL) {
                 controller_scrobble_track();
                 controller_set_nowplaying(NULL);
@@ -829,11 +834,11 @@ finish_playing_track(void)
 void
 controller_stop_playing(void)
 {
-        g_return_if_fail(mainwin != NULL);
-        lastfm_ui_state new_state = session != NULL ?
-                LASTFM_UI_STATE_STOPPED :
-                LASTFM_UI_STATE_DISCONNECTED;
-        mainwin_set_ui_state(mainwin, new_state, NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        VglMainWindowState new_state = session != NULL ?
+                VGL_MAIN_WINDOW_STATE_STOPPED :
+                VGL_MAIN_WINDOW_STATE_DISCONNECTED;
+        vgl_main_window_set_state(mainwin, new_state, NULL);
         finish_playing_track();
         stopping_after_track = FALSE;
         im_clear_status();
@@ -854,7 +859,7 @@ controller_stop_playing(void)
 void
 controller_skip_track(void)
 {
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         finish_playing_track();
         controller_start_playing();
 }
@@ -914,8 +919,8 @@ controller_download_track(void)
 void
 controller_manage_bookmarks(void)
 {
-        g_return_if_fail(mainwin != NULL);
-        vgl_bookmark_window_show(mainwin_get_window(mainwin, FALSE));
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        vgl_bookmark_window_show(vgl_main_window_get_window(mainwin, FALSE));
 }
 
 /**
@@ -936,11 +941,11 @@ controller_set_stop_after(gboolean stop)
 void
 controller_love_track(gboolean interactive)
 {
-        g_return_if_fail(nowplaying != NULL && mainwin != NULL);
+        g_return_if_fail(nowplaying != NULL && VGL_IS_MAIN_WINDOW(mainwin));
         if (!interactive ||
             controller_confirm_dialog(_("Really mark track as loved?"),FALSE)) {
                 nowplaying_rating = RSP_RATING_LOVE;
-                mainwin_set_track_as_loved(mainwin);
+                vgl_main_window_set_track_as_loved(mainwin);
                 if (interactive) {
                         controller_show_banner(_("Marking track as loved"));
                 }
@@ -1029,7 +1034,7 @@ controller_tag_track()
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
         }
-        accept = tagwin_run(mainwin_get_window(mainwin, FALSE),
+        accept = tagwin_run(vgl_main_window_get_window(mainwin, FALSE),
                             usercfg->username, &tags,
                             usertags, track, &type);
         if (accept && tags != NULL && tags[0] != '\0') {
@@ -1105,7 +1110,7 @@ controller_recomm_track(void)
                 type = REQUEST_ARTIST;
         }
 
-        accept = recommwin_run(mainwin_get_window(mainwin, FALSE),
+        accept = recommwin_run(vgl_main_window_get_window(mainwin, FALSE),
                                &rcpt, &body, friends, track, &type);
         if (accept && rcpt && body && rcpt[0] && body[0]) {
                 g_strstrip(rcpt);
@@ -1157,7 +1162,8 @@ add_to_playlist_thread(gpointer data)
                 controller_show_banner(retval ?
                                        _("Track added to playlist") :
                                        _("Error adding track to playlist"));
-                mainwin_set_track_as_added_to_playlist(mainwin, retval);
+                vgl_main_window_set_track_as_added_to_playlist(mainwin,
+                                                               retval);
         }
         gdk_threads_leave();
         lastfm_track_unref(t);
@@ -1175,7 +1181,7 @@ controller_add_to_playlist(void)
         if (controller_confirm_dialog(
                     _("Really add this track to the playlist?"), FALSE)) {
                 lastfm_track *track = lastfm_track_ref(nowplaying);
-                mainwin_set_track_as_added_to_playlist(mainwin, TRUE);
+                vgl_main_window_set_track_as_added_to_playlist(mainwin, TRUE);
                 g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
         }
 }
@@ -1252,11 +1258,10 @@ controller_play_radio_cb(gpointer userdata)
         } else if (type == LASTFM_USERTAG_RADIO) {
                 static char *previous = NULL;
                 char *tag;
-                tag = ui_input_dialog_with_list(mainwin_get_window(mainwin,
-                                                                   TRUE),
-                                                _("Enter tag"),
-                                                _("Enter one of your tags"),
-                                                usertags, previous);
+                tag = ui_input_dialog_with_list(
+                        vgl_main_window_get_window(mainwin, TRUE),
+                        _("Enter tag"), _("Enter one of your tags"),
+                        usertags, previous);
                 if (tag != NULL) {
                         url = lastfm_usertag_radio_url(usercfg->username, tag);
                         /* Store the new value for later use */
@@ -1303,7 +1308,7 @@ controller_play_others_radio_cb(gpointer userdata)
         lastfm_radio type = GPOINTER_TO_INT(userdata);
         static char *previous = NULL;
         char *url = NULL;
-        char *user = ui_input_dialog_with_list(mainwin_get_window(mainwin,
+        char *user = ui_input_dialog_with_list(vgl_main_window_get_window(mainwin,
                                                                   TRUE),
                                                _("Enter user name"),
                                                _("Play this user's radio"),
@@ -1342,12 +1347,12 @@ controller_play_others_radio(lastfm_radio type)
 void
 controller_play_group_radio(void)
 {
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
         char *url = NULL;
-        char *group = ui_input_dialog(mainwin_get_window(mainwin, TRUE),
-                                      _("Enter group"),
-                                      _("Enter group name"), previous);
+        char *group = ui_input_dialog(
+                vgl_main_window_get_window(mainwin, TRUE),
+                _("Enter group"), _("Enter group name"), previous);
         if (group != NULL) {
                 url = lastfm_radio_url(LASTFM_GROUP_RADIO, group);
                 controller_play_radio_by_url(url);
@@ -1364,14 +1369,13 @@ controller_play_group_radio(void)
 void
 controller_play_globaltag_radio(void)
 {
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
         char *url = NULL;
         char *tag;
-        tag = ui_input_dialog_with_list(mainwin_get_window(mainwin, TRUE),
-                                        _("Enter tag"),
-                                        _("Enter a global tag"),
-                                        usertags, previous);
+        tag = ui_input_dialog_with_list(
+                vgl_main_window_get_window(mainwin, TRUE),
+                _("Enter tag"), _("Enter a global tag"), usertags, previous);
         if (tag != NULL) {
                 url = lastfm_radio_url(LASTFM_GLOBALTAG_RADIO, tag);
                 controller_play_radio_by_url(url);
@@ -1390,12 +1394,12 @@ controller_play_globaltag_radio(void)
 void
 controller_play_similarartist_radio(void)
 {
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
         char *url = NULL;
-        char *artist = ui_input_dialog(mainwin_get_window(mainwin, TRUE),
-                                       _("Enter artist"),
-                                       _("Enter an artist's name"), previous);
+        char *artist = ui_input_dialog(
+                vgl_main_window_get_window(mainwin, TRUE),
+                _("Enter artist"), _("Enter an artist's name"), previous);
         if (artist != NULL) {
                 url = lastfm_radio_url(LASTFM_SIMILAR_ARTIST_RADIO, artist);
                 controller_play_radio_by_url(url);
@@ -1412,10 +1416,10 @@ controller_play_similarartist_radio(void)
 void
 controller_play_radio_ask_url(void)
 {
-        g_return_if_fail(mainwin != NULL);
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
         char *url = NULL;
-        url = ui_input_dialog(mainwin_get_window(mainwin, TRUE),
+        url = ui_input_dialog(vgl_main_window_get_window(mainwin, TRUE),
                               _("Enter radio URL"),
                               _("Enter the URL of the Last.fm radio"),
                               previous ? previous : "lastfm://");
@@ -1466,8 +1470,9 @@ controller_set_volume(int vol)
 void
 controller_quit_app(void)
 {
+        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         controller_stop_playing();
-        mainwin_quit_app();
+        vgl_main_window_destroy(mainwin);
 }
 
 /**
@@ -1480,13 +1485,14 @@ controller_quit_app(void)
  *                  command line
  */
 void
-controller_run_app(lastfm_mainwin *win, const char *radio_url)
+controller_run_app(VglMainWindow *win, const char *radio_url)
 {
         g_return_if_fail(win != NULL && mainwin == NULL);
         const char *errmsg;
         mainwin = win;
-        mainwin_show_window(mainwin, TRUE);
-        mainwin_set_ui_state(mainwin, LASTFM_UI_STATE_DISCONNECTED, NULL);
+        vgl_main_window_show(mainwin, TRUE);
+        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
+                                  NULL);
 
         http_init();
         check_usercfg(FALSE);
@@ -1520,7 +1526,7 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         }
 #endif
 
-        mainwin_run_app();
+        vgl_main_window_run_app();
 
         lastfm_dbus_notify_closing();
 
@@ -1534,7 +1540,6 @@ controller_run_app(lastfm_mainwin *win, const char *radio_url)
         rsp_sess = NULL;
         lastfm_pls_destroy(playlist);
         playlist = NULL;
-        lastfm_mainwin_destroy(mainwin);
         mainwin = NULL;
         if (usercfg != NULL) {
                 set_user_tag_list(usercfg->username, NULL);
