@@ -1190,18 +1190,33 @@ controller_add_to_playlist(void)
  * Start playing a radio by its URL, stopping the current track if
  * necessary
  *
- * This is the success callback of controller_play_radio_by_url()
+ * This is a thread created from controller_play_radio_by_url_cb()
  *
- * @param url The URL of the radio to be played (freed by this function)
+ * @param data The URL of the radio to be played (freed by this function)
+ * @return NULL (not used)
  */
-static void
-controller_play_radio_by_url_cb(char *url)
+static gpointer
+controller_play_radio_by_url_thread(gpointer data)
 {
+        char *url = (char *) data;
+        lastfm_session *sess;
+        gdk_threads_enter();
+        if (!VGL_IS_MAIN_WINDOW(mainwin) || session == NULL) {
+                g_critical("Main window destroyed or session not found");
+                gdk_threads_leave();
+                return NULL;
+        }
+        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
+                                  NULL);
+        sess = lastfm_session_copy(session);
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
         } else if (lastfm_radio_url_is_custom(url)) {
-                lastfm_pls *pls = lastfm_request_custom_playlist(session, url);
+                lastfm_pls *pls;
+                gdk_threads_leave();
+                pls = lastfm_request_custom_playlist(sess, url);
+                gdk_threads_enter();
                 if (pls != NULL) {
                         lastfm_pls_destroy(playlist);
                         playlist = pls;
@@ -1210,17 +1225,40 @@ controller_play_radio_by_url_cb(char *url)
                         controller_stop_playing();
                         controller_show_info(_("Invalid radio URL"));
                 }
-        } else if (lastfm_set_radio(session, url)) {
-                lastfm_pls_clear(playlist);
-                controller_skip_track();
         } else {
-                controller_stop_playing();
-                controller_show_info(_("Invalid radio URL. Either\n"
-                                       "this radio doesn't exist\n"
-                                       "or it is only available\n"
-                                       "for Last.fm subscribers"));
+                gboolean radio_set;
+                gdk_threads_leave();
+                radio_set = lastfm_set_radio(sess, url);
+                gdk_threads_enter();
+                if (radio_set) {
+                        lastfm_pls_clear(playlist);
+                        controller_skip_track();
+                } else {
+                        controller_stop_playing();
+                        controller_show_info(_("Invalid radio URL. Either\n"
+                                               "this radio doesn't exist\n"
+                                               "or it is only available\n"
+                                               "for Last.fm subscribers"));
+                }
         }
+        gdk_threads_leave();
         g_free(url);
+        lastfm_session_destroy(sess);
+        return NULL;
+}
+
+/**
+ * Start playing a radio by its URL, stopping the current track if
+ * necessary
+ *
+ * This is the success callback of controller_play_radio_by_url()
+ *
+ * @param url The URL of the radio to be played (freed by this function)
+ */
+static void
+controller_play_radio_by_url_cb(char *url)
+{
+        g_thread_create(controller_play_radio_by_url_thread, url, FALSE, NULL);
 }
 
 /**
