@@ -815,7 +815,8 @@ controller_start_playing(void)
 
 /**
  * Stop the track being played (if any) and scrobbles it. To be called
- * only from controller_stop_playing() and controller_skip_track()
+ * only from controller_stop_playing(), controller_skip_track() and
+ * controller_play_radio_by_url()
  */
 static void
 finish_playing_track(void)
@@ -1206,8 +1207,6 @@ controller_play_radio_by_url_thread(gpointer data)
                 gdk_threads_leave();
                 return NULL;
         }
-        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
-                                  NULL);
         sess = lastfm_session_copy(session);
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
@@ -1251,7 +1250,9 @@ controller_play_radio_by_url_thread(gpointer data)
  * Start playing a radio by its URL, stopping the current track if
  * necessary
  *
- * This is the success callback of controller_play_radio_by_url()
+ * This is the success callback of controller_play_radio_by_url().
+ * This just creates a thread, the actual code is in
+ * controller_play_radio_by_url_thread()
  *
  * @param url The URL of the radio to be played (freed by this function)
  */
@@ -1273,6 +1274,9 @@ void
 controller_play_radio_by_url(const char *url)
 {
         check_session_cb cb;
+        finish_playing_track();
+        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
+                                  NULL);
         cb = (check_session_cb) controller_play_radio_by_url_cb;
         check_session(cb, (check_session_cb) g_free, g_strdup(url));
 }
