@@ -978,6 +978,7 @@ vgl_main_window_init(VglMainWindow *self)
         g_string_assign(priv->progressbar_text, " ");
         /* Window */
 #ifndef MAEMO
+        win->type = GTK_WINDOW_TOPLEVEL;
         gtk_window_set_default_size(win, 500, -1);
 #endif
         gtk_window_add_accel_group(win, accel);
@@ -1145,6 +1146,5 @@ vgl_main_window_new(void)
 {
         GtkWidget *win;
         win = g_object_new(VGL_TYPE_MAIN_WINDOW, NULL);
-        GTK_WINDOW(win)->type = GTK_WINDOW_TOPLEVEL;
         return win;
 }
