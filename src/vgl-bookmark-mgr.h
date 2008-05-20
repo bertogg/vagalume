@@ -31,6 +31,12 @@ G_BEGIN_DECLS
 typedef struct _VglBookmarkMgr      VglBookmarkMgr;
 typedef struct _VglBookmarkMgrClass VglBookmarkMgrClass;
 
+typedef struct {
+        int id;
+        const char *name;
+        const char *url;
+} VglBookmark;
+
 struct _VglBookmarkMgrClass
 {
         GObjectClass parent_class;
@@ -40,12 +46,6 @@ struct _VglBookmarkMgr
 {
         GObject parent;
 };
-
-typedef struct {
-        int id;
-        const char *name;
-        const char *url;
-} VglBookmark;
 
 GType vgl_bookmark_mgr_get_type (void) G_GNUC_CONST;
 

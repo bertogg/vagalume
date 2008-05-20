@@ -13,6 +13,14 @@
 /* Singleton, only one bookmark manager can exist */
 static VglBookmarkMgr *bookmark_mgr = NULL;
 
+enum {
+  ADDED,
+  REMOVED,
+  LAST_SIGNAL
+};
+
+static guint mgr_signals[LAST_SIGNAL] = { 0 };
+
 G_DEFINE_TYPE (VglBookmarkMgr, vgl_bookmark_mgr, G_TYPE_OBJECT);
 
 #define VGL_BOOKMARK_MGR_GET_PRIVATE(object)                           \
@@ -78,6 +86,20 @@ vgl_bookmark_mgr_class_init(VglBookmarkMgrClass *klass)
         GObjectClass *gobject_class = (GObjectClass *)klass;
         gobject_class->finalize = vgl_bookmark_mgr_finalize;
         g_type_class_add_private(klass, sizeof(VglBookmarkMgrPrivate));
+        mgr_signals[ADDED] =
+                g_signal_new ("bookmark-added",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__POINTER,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+        mgr_signals[REMOVED] =
+                g_signal_new ("bookmark-removed",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__INT,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
 VglBookmarkMgr *
@@ -100,7 +122,7 @@ vgl_bookmark_mgr_add_bookmark(VglBookmarkMgr *mgr,
         bmk = vgl_bookmark_new(priv->min_unused_id, name, url);
         priv->bookmarks = g_list_prepend(priv->bookmarks, bmk);
         priv->min_unused_id++;
-
+        g_signal_emit(mgr, mgr_signals[ADDED], 0, bmk);
         return bmk->id;
 }
 
@@ -118,6 +140,7 @@ vgl_bookmark_mgr_remove_bookmark(VglBookmarkMgr *mgr, int id)
                         vgl_bookmark_destroy(bmk);
                         priv->bookmarks = g_list_delete_link(
                                 priv->bookmarks, l);
+                        g_signal_emit(mgr, mgr_signals[REMOVED], 0, id);
                         return;
                 }
         }
