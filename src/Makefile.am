@@ -34,6 +34,7 @@ vagalume_SOURCES = \
 	uimisc.c uimisc.h \
 	userconfig.c userconfig.h \
 	util.c util.h \
+	vgl-bookmark-mgr.c vgl-bookmark-mgr.h \
 	vgl-bookmark-window.c vgl-bookmark-window.h \
 	vgl-main-window.c vgl-main-window.h \
 	xmlrpc.c xmlrpc.h
