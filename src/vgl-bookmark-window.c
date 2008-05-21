@@ -284,6 +284,10 @@ selection_changed(GtkTreeSelection *sel, VglBookmarkWindow *win)
 static void
 vgl_bookmark_window_finalize (GObject *object)
 {
+        VglBookmarkWindow *win = VGL_BOOKMARK_WINDOW(object);
+        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
+        g_signal_handlers_disconnect_matched(priv->mgr, G_SIGNAL_MATCH_DATA,
+                                             0, 0, NULL, NULL, win);
         g_signal_handlers_destroy(object);
         G_OBJECT_CLASS(vgl_bookmark_window_parent_class)->finalize(object);
 }
@@ -305,6 +309,7 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
         GtkTreeViewColumn *col;
         GtkTreeSelection *sel;
         GtkListStore *store;
+        const GList *bookmarks;
         VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(self);
 
         /* Create widgets and private data */
@@ -339,6 +344,7 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
                                        GTK_POLICY_AUTOMATIC,
                                        GTK_POLICY_AUTOMATIC);
 
+        /* Signals */
         g_signal_connect(priv->playbtn, "clicked",
                          G_CALLBACK(play_button_clicked), self);
         g_signal_connect(priv->addbtn, "clicked",
@@ -361,6 +367,14 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
 
         /* Set initial state of buttons */
         selection_changed(sel, self);
+
+        /* Load all existing bookmarks */
+        bookmarks = vgl_bookmark_mgr_get_bookmark_list(priv->mgr);
+        while (bookmarks != NULL) {
+                VglBookmark *bmk = (VglBookmark *) bookmarks->data;
+                bookmark_added_cb(priv->mgr, bmk, self);
+                bookmarks = bookmarks->next;
+        }
 
         /* Add widgets to window */
         vbox = GTK_BOX(GTK_DIALOG(self)->vbox);
@@ -390,7 +404,8 @@ vgl_bookmark_window_new(GtkWindow *parent)
 static void
 vgl_bookmark_window_close(void)
 {
-        gtk_widget_hide(GTK_WIDGET(bookmark_window));
+        gtk_widget_destroy(GTK_WIDGET(bookmark_window));
+        bookmark_window = NULL;
 }
 
 void

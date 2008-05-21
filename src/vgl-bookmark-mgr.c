@@ -159,7 +159,7 @@ vgl_bookmark_mgr_add_bookmark(VglBookmarkMgr *mgr,
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
 
         bmk = vgl_bookmark_new(priv->min_unused_id, name, url);
-        priv->bookmarks = g_list_prepend(priv->bookmarks, bmk);
+        priv->bookmarks = g_list_append(priv->bookmarks, bmk);
         priv->min_unused_id++;
         g_signal_emit(mgr, mgr_signals[ADDED], 0, bmk);
         return bmk->id;
