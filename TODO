@@ -16,3 +16,5 @@ List of features that need to be implemented (in no particular order):
 * Global hotkeys for the desktop
 * Pause button
 * Multi-user support
+* Create session again when receiving a BADSESSION
+* Save list of unsubmitted tracks
