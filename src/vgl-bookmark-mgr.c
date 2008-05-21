@@ -16,6 +16,7 @@ static VglBookmarkMgr *bookmark_mgr = NULL;
 enum {
   ADDED,
   REMOVED,
+  CHANGED,
   LAST_SIGNAL
 };
 
@@ -52,6 +53,21 @@ vgl_bookmark_destroy(VglBookmark *bookmark)
         g_free((char *)bookmark->name);
         g_free((char *)bookmark->url);
         g_slice_free(VglBookmark, bookmark);
+}
+
+static void
+vgl_bookmark_change(VglBookmark *bookmark, const char *newname,
+                    const char *newurl)
+{
+        g_return_if_fail(bookmark != NULL);
+        if (newname != NULL && newname != bookmark->name) {
+                g_free((char *)bookmark->name);
+                bookmark->name = g_strdup(newname);
+        }
+        if (newurl != NULL && newurl != bookmark->url) {
+                g_free((char *)bookmark->url);
+                bookmark->url = g_strdup(newurl);
+        }
 }
 
 static VglBookmarkMgr *
@@ -100,6 +116,13 @@ vgl_bookmark_mgr_class_init(VglBookmarkMgrClass *klass)
                               0, NULL, NULL,
                               g_cclosure_marshal_VOID__INT,
                               G_TYPE_NONE, 1, G_TYPE_INT);
+        mgr_signals[CHANGED] =
+                g_signal_new ("bookmark-changed",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__POINTER,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 VglBookmarkMgr *
@@ -111,9 +134,25 @@ vgl_bookmark_mgr_get_instance(void)
         return bookmark_mgr;
 }
 
+static GList *
+vgl_bookmark_mgr_find_bookmark_node(VglBookmarkMgr *mgr, int id)
+{
+        g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0, NULL);
+        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
+        GList *l;
+
+        for (l = priv->bookmarks; l != NULL; l = l->next) {
+                VglBookmark *bmk = (VglBookmark *) l->data;
+                if (bmk->id == id) {
+                        return l;
+                }
+        }
+        return NULL;
+}
+
 int
 vgl_bookmark_mgr_add_bookmark(VglBookmarkMgr *mgr,
-                                  const char *name, const char *url)
+                              const char *name, const char *url)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && name && url, -1);
         VglBookmark *bmk;
@@ -131,35 +170,40 @@ vgl_bookmark_mgr_remove_bookmark(VglBookmarkMgr *mgr, int id)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0);
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
-        VglBookmark *bmk;
-        GList *l;
-
-        for (l = priv->bookmarks; l != NULL; l = l->next) {
-                bmk = (VglBookmark *) l->data;
-                if (bmk->id == id) {
-                        vgl_bookmark_destroy(bmk);
-                        priv->bookmarks = g_list_delete_link(
-                                priv->bookmarks, l);
-                        g_signal_emit(mgr, mgr_signals[REMOVED], 0, id);
-                        return;
-                }
+        GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
+        if (l != NULL) {
+                VglBookmark *bmk = (VglBookmark *) l->data;
+                vgl_bookmark_destroy(bmk);
+                priv->bookmarks = g_list_delete_link(
+                        priv->bookmarks, l);
+                g_signal_emit(mgr, mgr_signals[REMOVED], 0, id);
+        } else {
+                g_warning("%s: bookmark %d does not exist", __FUNCTION__, id);
         }
-        g_warning("%s: bookmark %d does not exist", __FUNCTION__, id);
+}
+
+void
+vgl_bookmark_mgr_change_bookmark(VglBookmarkMgr *mgr,
+                                 int id, char *newname, char *newurl)
+{
+        g_return_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0);
+        GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
+        if (l != NULL) {
+                VglBookmark *bmk = (VglBookmark *) l->data;
+                vgl_bookmark_change(bmk, newname, newurl);
+                g_signal_emit(mgr, mgr_signals[CHANGED], 0, bmk);
+        } else {
+                g_warning("%s: bookmark %d does not exist", __FUNCTION__, id);
+        }
 }
 
 const VglBookmark *
 vgl_bookmark_mgr_get_bookmark(VglBookmarkMgr *mgr, int id)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0, NULL);
-        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
-        VglBookmark *bmk;
-        GList *l;
-
-        for (l = priv->bookmarks; l != NULL; l = l->next) {
-                bmk = (VglBookmark *) l->data;
-                if (bmk->id == id) {
-                        return bmk;
-                }
+        GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
+        if (l != NULL) {
+                return (const VglBookmark *) l->data;
         }
         return NULL;
 }
