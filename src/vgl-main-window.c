@@ -47,7 +47,7 @@ struct _VglMainWindowPrivate {
         GtkWidget *dloadbutton, *tagbutton, *addplbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
-        GtkWidget *addtopls, *stopafter, *bmktrack;
+        GtkWidget *addtopls, *stopafter, *bmkartist, *bmktrack;
         GtkWidget *album_cover;
         GtkProgressBar *progressbar;
         GString *progressbar_text;
@@ -406,6 +406,7 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_set_sensitive (priv->tagbutton, FALSE);
                 gtk_widget_set_sensitive (priv->addplbutton, FALSE);
                 gtk_widget_set_sensitive (priv->settings, TRUE);
+                gtk_widget_set_sensitive (priv->bmkartist, FALSE);
                 gtk_widget_set_sensitive (priv->bmktrack, FALSE);
                 gtk_window_set_title(GTK_WINDOW(w), APP_NAME);
                 vgl_main_window_set_album_cover(w, NULL, 0);
@@ -436,7 +437,8 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_set_sensitive (priv->addplbutton, TRUE);
                 gtk_widget_set_sensitive (priv->love, TRUE);
                 gtk_widget_set_sensitive (priv->settings, TRUE);
-                gtk_widget_set_sensitive (priv->bmktrack, TRUE);
+                gtk_widget_set_sensitive (priv->bmkartist, t->artistid > 0);
+                gtk_widget_set_sensitive (priv->bmktrack, t->id > 0);
                 gtk_widget_set_sensitive (priv->dload, t->free_track_url != NULL);
                 break;
         case VGL_MAIN_WINDOW_STATE_CONNECTING:
@@ -458,6 +460,7 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_set_sensitive (priv->tagbutton, FALSE);
                 gtk_widget_set_sensitive (priv->addplbutton, FALSE);
                 gtk_widget_set_sensitive (priv->settings, FALSE);
+                gtk_widget_set_sensitive (priv->bmkartist, FALSE);
                 gtk_widget_set_sensitive (priv->bmktrack, FALSE);
                 gtk_window_set_title(GTK_WINDOW(w), APP_NAME);
                 gtk_widget_set_sensitive(priv->album_cover, FALSE);
@@ -660,9 +663,10 @@ manage_bookmarks_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
-bookmark_track_selected(GtkWidget *widget, gpointer data)
+add_bookmark_selected(GtkWidget *widget, gpointer data)
 {
-        controller_bookmark_track();
+        request_type type = GPOINTER_TO_INT(data);
+        controller_add_bookmark(type);
 }
 
 static void
@@ -754,7 +758,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
-        GtkWidget *managebmk, *bmktrack;
+        GtkWidget *managebmk, *bmkartist, *bmktrack;
         GtkWidget *about;
 #ifdef MAEMO
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_new());
@@ -919,15 +923,21 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
                 gtk_menu_item_new_with_mnemonic(_("_Bookmarks")));
         bmksub = GTK_MENU_SHELL(gtk_menu_new());
         managebmk = gtk_menu_item_new_with_label(_("Manage bookmarks..."));
+        bmkartist = gtk_menu_item_new_with_label(_("Bookmark this artist"));
         bmktrack = gtk_menu_item_new_with_label(_("Bookmark this track"));
         gtk_menu_shell_append(bar, GTK_WIDGET(bookmarks));
         gtk_menu_item_set_submenu(bookmarks, GTK_WIDGET(bmksub));
         gtk_menu_shell_append(bmksub, managebmk);
+        gtk_menu_shell_append(bmksub, bmkartist);
         gtk_menu_shell_append(bmksub, bmktrack);
         g_signal_connect(G_OBJECT(managebmk), "activate",
                          G_CALLBACK(manage_bookmarks_selected), NULL);
+        g_signal_connect(G_OBJECT(bmkartist), "activate",
+                         G_CALLBACK(add_bookmark_selected),
+                         GINT_TO_POINTER(REQUEST_ARTIST));
         g_signal_connect(G_OBJECT(bmktrack), "activate",
-                         G_CALLBACK(bookmark_track_selected), NULL);
+                         G_CALLBACK(add_bookmark_selected),
+                         GINT_TO_POINTER(REQUEST_TRACK));
 
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Help")));
@@ -971,6 +981,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         priv->love = love;
         priv->addtopls = addtopls;
         priv->stopafter = stopafter;
+        priv->bmkartist = bmkartist;
         priv->bmktrack = bmktrack;
         return GTK_WIDGET(bar);
 }

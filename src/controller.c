@@ -928,18 +928,33 @@ controller_manage_bookmarks(void)
 /*
  * Bookmark the current track
  */
-void controller_bookmark_track(void)
+void controller_add_bookmark(request_type type)
 {
         g_return_if_fail(nowplaying != NULL);
         char *name, *url;
+        const char *banner;
         VglBookmarkMgr *mgr = vgl_bookmark_mgr_get_instance();
-        name = g_strdup_printf("%s - %s", nowplaying->artist,
-                               nowplaying->title);
-        url = g_strdup_printf("lastfm://play/tracks/%u", nowplaying->id);
+        if (type == REQUEST_ARTIST) {
+                g_return_if_fail(nowplaying->artistid != 0);
+                name = g_strdup(nowplaying->artist);
+                url = g_strdup_printf("lastfm://play/artists/%u",
+                                      nowplaying->artistid);
+                banner = _("Artist added to bookmarks");
+        } else if (type == REQUEST_TRACK) {
+                g_return_if_fail(nowplaying->id != 0);
+                name = g_strdup_printf("%s - '%s'", nowplaying->artist,
+                                       nowplaying->title);
+                url = g_strdup_printf("lastfm://play/tracks/%u",
+                                      nowplaying->id);
+                banner = _("Track added to bookmarks");
+        } else {
+                g_critical("Bookmark request not supported");
+                return;
+        }
         vgl_bookmark_mgr_add_bookmark(mgr, name, url);
         g_free(name);
         g_free(url);
-        controller_show_banner(_("Track added to bookmarks"));
+        controller_show_banner(banner);
 }
 
 /**

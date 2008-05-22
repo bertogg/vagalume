@@ -194,6 +194,8 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
                         track->title = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "id")) {
                         track->id = strtol(val, NULL, 10);
+                } else if (!xmlStrcmp(name, (xmlChar *) "artistId")) {
+                        track->artistid = strtol(val, NULL, 10);
                 } else if (!xmlStrcmp(name, (xmlChar *) "creator")) {
                         track->artist = g_strstrip(g_strdup(val));
                 } else if (!xmlStrcmp(name, (xmlChar *) "album")) {
