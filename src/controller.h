@@ -32,6 +32,7 @@ void controller_recomm_track(void);
 void controller_add_to_playlist(void);
 void controller_download_track(void);
 void controller_manage_bookmarks(void);
+void controller_bookmark_track(void);
 void controller_open_usercfg(void);
 void controller_quit_app(void);
 void controller_run_app(VglMainWindow *win, const char *radio_url);

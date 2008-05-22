@@ -26,6 +26,7 @@
 #include "dbus.h"
 #include "util.h"
 #include "imstatus.h"
+#include "vgl-bookmark-mgr.h"
 #include "vgl-bookmark-window.h"
 
 #ifdef HAVE_TRAY_ICON
@@ -922,6 +923,23 @@ controller_manage_bookmarks(void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         vgl_bookmark_window_show(vgl_main_window_get_window(mainwin, FALSE));
+}
+
+/*
+ * Bookmark the current track
+ */
+void controller_bookmark_track(void)
+{
+        g_return_if_fail(nowplaying != NULL);
+        char *name, *url;
+        VglBookmarkMgr *mgr = vgl_bookmark_mgr_get_instance();
+        name = g_strdup_printf("%s - %s", nowplaying->artist,
+                               nowplaying->title);
+        url = g_strdup_printf("lastfm://play/tracks/%u", nowplaying->id);
+        vgl_bookmark_mgr_add_bookmark(mgr, name, url);
+        g_free(name);
+        g_free(url);
+        controller_show_banner(_("Track added to bookmarks"));
 }
 
 /**
