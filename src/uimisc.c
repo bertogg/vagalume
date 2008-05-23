@@ -195,6 +195,70 @@ ui_input_dialog(GtkWindow *parent, const char *title,
         return retvalue;
 }
 
+gboolean
+ui_edit_bookmark_dialog(GtkWindow *parent, char **name, char **url,
+                        gboolean add)
+{
+        GtkDialog *dialog;
+        GtkWidget *namelabel, *urllabel;
+        GtkEntry *nameentry, *urlentry;
+        GtkBox *vbox;
+        gboolean done, retvalue;
+        dialog = ui_base_dialog(parent,
+                                add ? _("Add bookmark") : _("Edit bookmark"));
+        namelabel = gtk_label_new(_("Bookmark name"));
+        urllabel = gtk_label_new(_("Last.fm radio address"));
+        nameentry = GTK_ENTRY(gtk_entry_new());
+        urlentry = GTK_ENTRY(gtk_entry_new());
+
+        if (*name != NULL) gtk_entry_set_text(nameentry, *name);
+        if (*url != NULL) gtk_entry_set_text(urlentry, *url);
+
+        vbox = GTK_BOX (dialog->vbox);
+        gtk_box_pack_start(vbox, namelabel, FALSE, FALSE, 4);
+        gtk_box_pack_start(vbox, GTK_WIDGET(nameentry), FALSE, FALSE, 4);
+        gtk_box_pack_start(vbox, urllabel, FALSE, FALSE, 4);
+        gtk_box_pack_start(vbox, GTK_WIDGET(urlentry), FALSE, FALSE, 4);
+        gtk_entry_set_activates_default(nameentry, TRUE);
+        gtk_entry_set_activates_default(urlentry, TRUE);
+        gtk_widget_show_all(GTK_WIDGET(dialog));
+        done = FALSE;
+        while (!done) {
+                if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
+                        char *tmpname, *tmpurl;
+                        tmpname = g_strdup(gtk_entry_get_text(nameentry));
+                        tmpurl = g_strdup(gtk_entry_get_text(urlentry));
+                        g_strstrip(tmpname);
+                        g_strstrip(tmpurl);
+                        if (tmpname[0] == '\0') {
+                                ui_info_dialog(GTK_WINDOW(dialog),
+                                               _("Invalid bookmark name"));
+                                gtk_widget_grab_focus(GTK_WIDGET(nameentry));
+                        } else if (strncmp(tmpurl, "lastfm://", 9)) {
+                                ui_info_dialog(GTK_WINDOW(dialog),
+                                               _("Last.fm radio URLs must "
+                                                 "start with lastfm://"));
+                                gtk_widget_grab_focus(GTK_WIDGET(urlentry));
+                        } else {
+                                retvalue = done = TRUE;
+                                g_free(*name);
+                                g_free(*url);
+                                *name = tmpname;
+                                *url = tmpurl;
+                        }
+                        if (!done) {
+                                g_free(tmpname);
+                                g_free(tmpurl);
+                        }
+                } else {
+                        retvalue = FALSE;
+                        done = TRUE;
+                }
+        }
+        gtk_widget_destroy(GTK_WIDGET(dialog));
+        return retvalue;
+}
+
 static char *
 ui_select_download_dir(GtkWindow *parent, const char *curdir)
 {

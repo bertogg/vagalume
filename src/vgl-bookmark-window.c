@@ -104,76 +104,6 @@ bookmark_removed_cb(VglBookmarkMgr *mgr, int id, VglBookmarkWindow *win)
         }
 }
 
-static gboolean
-edit_bookmark_dialog(GtkWindow *parent, char **name, char **url)
-{
-        GtkWidget *dialog;
-        GtkWidget *namelabel, *urllabel;
-        GtkEntry *nameentry, *urlentry;
-        GtkBox *vbox;
-        gboolean done, retvalue;
-        dialog = gtk_dialog_new_with_buttons(
-                *name ? _("Edit bookmark") : _("Add bookmark"), parent,
-                GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-                GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-                NULL);
-        gtk_dialog_set_default_response(GTK_DIALOG(dialog),
-                                        GTK_RESPONSE_ACCEPT);
-
-        namelabel = gtk_label_new(_("Bookmark name"));
-        urllabel = gtk_label_new(_("Last.fm radio address"));
-        nameentry = GTK_ENTRY(gtk_entry_new());
-        urlentry = GTK_ENTRY(gtk_entry_new());
-
-        if (*name != NULL) gtk_entry_set_text(nameentry, *name);
-        if (*url != NULL) gtk_entry_set_text(urlentry, *url);
-
-        vbox = GTK_BOX (GTK_DIALOG (dialog)->vbox);
-        gtk_box_pack_start(vbox, namelabel, FALSE, FALSE, 4);
-        gtk_box_pack_start(vbox, GTK_WIDGET(nameentry), FALSE, FALSE, 4);
-        gtk_box_pack_start(vbox, urllabel, FALSE, FALSE, 4);
-        gtk_box_pack_start(vbox, GTK_WIDGET(urlentry), FALSE, FALSE, 4);
-        gtk_entry_set_activates_default(nameentry, TRUE);
-        gtk_entry_set_activates_default(urlentry, TRUE);
-        gtk_widget_show_all(GTK_WIDGET(dialog));
-        done = FALSE;
-        while (!done) {
-                if (gtk_dialog_run(GTK_DIALOG(dialog))==GTK_RESPONSE_ACCEPT) {
-                        char *tmpname, *tmpurl;
-                        tmpname = g_strdup(gtk_entry_get_text(nameentry));
-                        tmpurl = g_strdup(gtk_entry_get_text(urlentry));
-                        g_strstrip(tmpname);
-                        g_strstrip(tmpurl);
-                        if (tmpname[0] == '\0') {
-                                ui_info_dialog(GTK_WINDOW(dialog),
-                                               _("Invalid bookmark name"));
-                                gtk_widget_grab_focus(GTK_WIDGET(nameentry));
-                        } else if (strncmp(tmpurl, "lastfm://", 9)) {
-                                ui_info_dialog(GTK_WINDOW(dialog),
-                                               _("Last.fm radio URLs must "
-                                                 "start with lastfm://"));
-                                gtk_widget_grab_focus(GTK_WIDGET(urlentry));
-                        } else {
-                                retvalue = done = TRUE;
-                                g_free(*name);
-                                g_free(*url);
-                                *name = tmpname;
-                                *url = tmpurl;
-                        }
-                        if (!done) {
-                                g_free(tmpname);
-                                g_free(tmpurl);
-                        }
-                } else {
-                        retvalue = FALSE;
-                        done = TRUE;
-                }
-        }
-        gtk_widget_destroy(GTK_WIDGET(dialog));
-        return retvalue;
-}
-
 static void
 play_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 {
@@ -203,7 +133,7 @@ add_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 {
         char *name = NULL, *url = NULL;
         VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
-        if (edit_bookmark_dialog(GTK_WINDOW(win), &name, &url)) {
+        if (ui_edit_bookmark_dialog(GTK_WINDOW(win), &name, &url, TRUE)) {
                 vgl_bookmark_mgr_add_bookmark(priv->mgr, name, url);
                 g_free(name);
                 g_free(url);
@@ -230,7 +160,8 @@ edit_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
                 id = g_value_get_int(&idval);
                 name = g_strdup(g_value_get_string(&nameval));
                 url = g_strdup(g_value_get_string(&urlval));
-                if (edit_bookmark_dialog(GTK_WINDOW(win), &name, &url)) {
+                if (ui_edit_bookmark_dialog(GTK_WINDOW(win),
+                                            &name, &url, FALSE)) {
                         vgl_bookmark_mgr_change_bookmark(priv->mgr,
                                                          id, name, url);
                 }

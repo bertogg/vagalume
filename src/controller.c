@@ -930,7 +930,7 @@ controller_manage_bookmarks(void)
  */
 void controller_add_bookmark(request_type type)
 {
-        g_return_if_fail(nowplaying != NULL);
+        g_return_if_fail(nowplaying != NULL && VGL_IS_MAIN_WINDOW(mainwin));
         char *name, *url;
         const char *banner;
         VglBookmarkMgr *mgr = vgl_bookmark_mgr_get_instance();
@@ -951,10 +951,13 @@ void controller_add_bookmark(request_type type)
                 g_critical("Bookmark request not supported");
                 return;
         }
-        vgl_bookmark_mgr_add_bookmark(mgr, name, url);
+        if (ui_edit_bookmark_dialog(vgl_main_window_get_window(mainwin, FALSE),
+                                    &name, &url, TRUE)) {
+                vgl_bookmark_mgr_add_bookmark(mgr, name, url);
+                controller_show_banner(banner);
+        }
         g_free(name);
         g_free(url);
-        controller_show_banner(banner);
 }
 
 /**
