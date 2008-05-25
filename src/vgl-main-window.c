@@ -138,6 +138,7 @@ static const char *translators_tpl =
          "* Oskar Welzl <mail@welzl.info>\n\n"
 "%s (es)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
 "%s (fi)\n* Janne Mäkinen <janne.makinen@surffi.fi>\n\n"
+"%s (fr)\n* Julien Duponchelle <julien@duponchelle.info>\n\n"
 "%s (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
          "* Amador Loureiro Blanco <dorfun@adorfunteca.org>\n\n"
 "%s (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
@@ -676,6 +677,7 @@ show_about_dialog(GtkWidget *widget, gpointer data)
         GdkPixbuf *logo = gdk_pixbuf_new_from_file(APP_ICON_BIG, NULL);
         char *translators = g_strdup_printf(translators_tpl, _("German"),
                                             _("Spanish"), _("Finnish"),
+                                            _("French"),
                                             _("Galician"), _("Italian"),
                                             _("Latvian"), _("Portuguese"),
                                             _("Portuguese"));

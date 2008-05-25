@@ -304,7 +304,7 @@ fi
 ####################
 ### Translations ###
 ####################
-ALL_LINGUAS="de es fi gl it lv pt pt_BR"
+ALL_LINGUAS="de es fi fr gl it lv pt pt_BR"
 
 VAGALUME_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
 AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
