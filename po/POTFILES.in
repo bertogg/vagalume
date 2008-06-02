@@ -6,5 +6,5 @@ src/main.c
 src/uimisc.c
 src/vagalume-sb-plugin.c
 src/vagalume-tray-icon.c
-src/vgl-bookmark-windon.c
-src/vgl-main-windon.c
+src/vgl-bookmark-window.c
+src/vgl-main-window.c
