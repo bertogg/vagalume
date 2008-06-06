@@ -7,7 +7,10 @@
  */
 
 #include "vgl-bookmark-mgr.h"
+#include "userconfig.h"
+#include "util.h"
 
+#include <libxml/parser.h>
 #include <glib.h>
 
 /* Singleton, only one bookmark manager can exist */
@@ -70,6 +73,127 @@ vgl_bookmark_change(VglBookmark *bookmark, const char *newname,
         }
 }
 
+static const char *
+vgl_bookmark_mgr_get_cfgfile(void)
+{
+        static char *cfgfilename = NULL;
+
+        if (cfgfilename == NULL) {
+                const char *cfgdir = lastfm_usercfg_get_cfgdir ();
+                if (cfgdir != NULL) {
+                        cfgfilename = g_strconcat (cfgdir, "/bookmarks", NULL);
+                }
+        }
+
+        return cfgfilename;
+}
+
+static void
+vgl_bookmark_get_from_xml_node(xmlDoc *doc, xmlNode *node,
+                               char **name, char **url)
+{
+        xmlNode *child;
+
+        g_return_if_fail (node != NULL && name != NULL && url != NULL);
+
+        for (child = node->xmlChildrenNode; child; child = child->next) {
+                char *val = (char *) xmlNodeListGetString(
+                        doc, child->xmlChildrenNode, 1);
+                if (val == NULL) {
+                        /* Ignore empty nodes */;
+                } else if (!xmlStrcmp(child->name, (const xmlChar *) "name")) {
+                        g_free (*name);
+                        *name = g_strdup (val);
+                } else if (!xmlStrcmp(child->name, (const xmlChar *) "url")) {
+                        g_free (*url);
+                        *url = g_strdup (val);
+                }
+                xmlFree ((xmlChar *) val);
+        }
+}
+
+static void
+vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
+{
+        const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
+        xmlDoc *doc;
+        xmlNode *node = NULL;
+
+        g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr) && cfgfile != NULL);
+
+        doc = xmlParseFile (cfgfile);
+        if (doc != NULL) {
+                xmlNode *root = xmlDocGetRootElement (doc);
+                if (!xmlStrcmp(root->name, (const xmlChar *) "bookmarks")) {
+                        node = root->xmlChildrenNode;
+                } else {
+                        g_warning ("Error parsing bookmark file");
+                }
+        } else if (file_exists (cfgfile)) {
+                g_warning ("Bookmark file is not an XML document");
+        }
+
+        for (; node != NULL; node = node->next) {
+                const xmlChar *nodename = node->name;
+                if (!xmlStrcmp(nodename, (const xmlChar *) "bookmark")) {
+                        char *name = NULL;
+                        char *url = NULL;
+                        vgl_bookmark_get_from_xml_node (doc,node,&name,&url);
+                        if (name != NULL && url != NULL) {
+                                vgl_bookmark_mgr_add_bookmark (mgr, name, url);
+                        }
+                        g_free (name);
+                        g_free (url);
+                }
+        }
+
+        if (doc != NULL) xmlFreeDoc(doc);
+}
+
+void
+vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr)
+{
+        const GList *l;
+        const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
+        VglBookmarkMgrPrivate *priv;
+        xmlDoc *doc;
+        xmlNode *root;
+
+        g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr) && cfgfile != NULL);
+        priv = VGL_BOOKMARK_MGR_GET_PRIVATE (mgr);
+
+        doc = xmlNewDoc ((xmlChar *) "1.0");;
+        root = xmlNewNode (NULL, (xmlChar *) "bookmarks");
+        xmlDocSetRootElement (doc, root);
+
+        for (l = priv->bookmarks; l != NULL; l = l->next) {
+                xmlNode *bmknode, *name, *url;
+                xmlChar *enc;
+                const VglBookmark *bmk = (const VglBookmark *) l->data;
+
+                name = xmlNewNode (NULL, (xmlChar *) "name");
+                enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) bmk->name);
+                xmlNodeSetContent (name, (xmlChar *) enc);
+                xmlFree (enc);
+
+                url = xmlNewNode (NULL, (xmlChar *) "url");
+                enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) bmk->url);
+                xmlNodeSetContent (url, (xmlChar *) enc);
+                xmlFree (enc);
+
+                bmknode = xmlNewNode (NULL, (xmlChar *) "bookmark");
+                xmlAddChild (root, bmknode);
+                xmlAddChild (bmknode, name);
+                xmlAddChild (bmknode, url);
+        }
+
+        if (xmlSaveFormatFileEnc (cfgfile, doc, "UTF-8", 1) == -1) {
+                g_critical ("Unable to open %s", cfgfile);
+        }
+
+        xmlFreeDoc (doc);
+}
+
 static VglBookmarkMgr *
 vgl_bookmark_mgr_new(void)
 {
@@ -82,12 +206,15 @@ vgl_bookmark_mgr_init(VglBookmarkMgr *self)
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(self);
         priv->bookmarks = NULL;
         priv->min_unused_id = 0;
+        vgl_bookmark_mgr_load_from_disk (self);
 }
 
 static void
 vgl_bookmark_mgr_finalize(GObject *object)
 {
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(object);
+
+        vgl_bookmark_mgr_save_to_disk (VGL_BOOKMARK_MGR (object));
 
         g_list_foreach(priv->bookmarks, (GFunc) vgl_bookmark_destroy, NULL);
         g_list_free(priv->bookmarks);

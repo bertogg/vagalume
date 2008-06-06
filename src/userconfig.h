@@ -37,7 +37,9 @@ void lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password);
 void lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy);
 void lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir);
 void lastfm_usercfg_set_imstatus_template(lastfm_usercfg *cfg, const char *str);
-lastfm_usercfg *read_usercfg(void);
-gboolean write_usercfg(lastfm_usercfg *cfg);
+
+lastfm_usercfg *lastfm_usercfg_read(void);
+gboolean lastfm_usercfg_write(lastfm_usercfg *cfg);
+const char *lastfm_usercfg_get_cfgdir(void);
 
 #endif

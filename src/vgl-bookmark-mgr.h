@@ -57,6 +57,7 @@ void vgl_bookmark_mgr_change_bookmark(VglBookmarkMgr *mgr, int id,
                                       char *newname, char *newurl);
 const VglBookmark *vgl_bookmark_mgr_get_bookmark(VglBookmarkMgr *mgr, int id);
 const GList *vgl_bookmark_mgr_get_bookmark_list(VglBookmarkMgr *mgr);
+void vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr);
 
 G_END_DECLS
 

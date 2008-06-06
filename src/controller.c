@@ -513,7 +513,7 @@ controller_open_usercfg(void)
                 vgl_main_window_get_window(mainwin, FALSE), &usercfg);
 
         if (changed && usercfg != NULL) {
-                write_usercfg(usercfg);
+                lastfm_usercfg_write(usercfg);
                 userchanged = strcmp(olduser, usercfg->username);
                 pwchanged = strcmp(oldpw, usercfg->password);
                 apply_usercfg();
@@ -541,7 +541,7 @@ controller_open_usercfg(void)
 static gboolean
 check_usercfg(gboolean ask)
 {
-        if (usercfg == NULL) usercfg = read_usercfg();
+        if (usercfg == NULL) usercfg = lastfm_usercfg_read();
         if (usercfg == NULL && ask) controller_open_usercfg();
         if (usercfg != NULL) apply_usercfg();
         return (usercfg != NULL);

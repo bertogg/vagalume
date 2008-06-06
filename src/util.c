@@ -175,3 +175,20 @@ get_pixbuf_from_image(const char *data, size_t size, int imgsize)
         if (ldr != NULL) g_object_unref(G_OBJECT(ldr));
         return pixbuf;
 }
+
+/**
+ * Gets the home directory
+ * @return The HOME directory, or NULL if not found
+ */
+const char *
+get_home_directory (void)
+{
+        const char *homedir = g_getenv ("HOME");
+        if (homedir == NULL) {
+                homedir = g_get_home_dir ();
+        }
+        if (homedir == NULL) {
+                g_warning ("Unable to get home directory");
+        }
+        return homedir;
+}

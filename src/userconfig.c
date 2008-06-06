@@ -8,13 +8,13 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <regex.h>
 
 #include "config.h"
 #include "userconfig.h"
+#include "util.h"
 
 #define DEFAULT_IMSTATUS_TEMPLATE \
         "\342\231\253 {artist} - {title} \342\231\253 (Vagalume {version})"
@@ -43,18 +43,14 @@ cfg_get_val(const char *line, const char *key)
 static char *
 get_cfg_filename(void)
 {
-        const char *homedir = getenv("HOME");
-        if (homedir == NULL) {
-                g_warning("HOME environment variable not set");
-                return NULL;
-        }
+        const char *homedir = get_home_directory ();
         return g_strconcat(homedir, "/" VAGALUME_CONF_FILE, NULL);
 }
 
 static char *
 default_download_dir(void)
 {
-        const char *homedir = getenv("HOME");
+        const char *homedir = get_home_directory ();
         char *dldir = NULL;
         if (homedir == NULL) {
                 return g_strdup("/tmp");
@@ -65,6 +61,19 @@ default_download_dir(void)
         dldir = g_strdup(homedir);
 #endif
         return dldir;
+}
+
+const char *
+lastfm_usercfg_get_cfgdir(void)
+{
+        static char *cfgdir = NULL;
+        if (cfgdir == NULL) {
+                const char *homedir = get_home_directory ();
+                if (homedir != NULL) {
+                        cfgdir = g_strconcat (homedir, "/.vagalume", NULL);
+                }
+        }
+        return cfgdir;
 }
 
 void
@@ -141,7 +150,7 @@ lastfm_usercfg_destroy(lastfm_usercfg *cfg)
 }
 
 lastfm_usercfg *
-read_usercfg(void)
+lastfm_usercfg_read(void)
 {
         lastfm_usercfg *cfg = NULL;
         const int bufsize = 256;
@@ -208,7 +217,7 @@ read_usercfg(void)
 }
 
 gboolean
-write_usercfg(lastfm_usercfg *cfg)
+lastfm_usercfg_write(lastfm_usercfg *cfg)
 {
         g_return_val_if_fail(cfg, FALSE);
         gboolean retval = TRUE;

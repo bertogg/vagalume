@@ -335,6 +335,11 @@ vgl_bookmark_window_new(GtkWindow *parent)
 static void
 vgl_bookmark_window_close(void)
 {
+        VglBookmarkWindowPrivate *priv;
+        priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE (bookmark_window);
+
+        vgl_bookmark_mgr_save_to_disk (priv->mgr);
+
         gtk_widget_destroy(GTK_WIDGET(bookmark_window));
         bookmark_window = NULL;
 }
