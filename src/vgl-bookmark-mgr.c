@@ -116,12 +116,20 @@ static void
 vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
 {
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
-        xmlDoc *doc;
+        xmlDoc *doc = NULL;
         xmlNode *node = NULL;
 
         g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr) && cfgfile != NULL);
 
-        doc = xmlParseFile (cfgfile);
+        /* Load bookmark file */
+        if (file_exists (cfgfile)) {
+                doc = xmlParseFile (cfgfile);
+                if (doc == NULL) {
+                        g_warning ("Bookmark file is not an XML document");
+                }
+        }
+
+        /* Get root element */
         if (doc != NULL) {
                 xmlNode *root = xmlDocGetRootElement (doc);
                 if (!xmlStrcmp(root->name, (const xmlChar *) "bookmarks")) {
@@ -129,10 +137,9 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
                 } else {
                         g_warning ("Error parsing bookmark file");
                 }
-        } else if (file_exists (cfgfile)) {
-                g_warning ("Bookmark file is not an XML document");
         }
 
+        /* Parse each bookmark */
         for (; node != NULL; node = node->next) {
                 const xmlChar *nodename = node->name;
                 if (!xmlStrcmp(nodename, (const xmlChar *) "bookmark")) {
@@ -173,12 +180,12 @@ vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr)
 
                 name = xmlNewNode (NULL, (xmlChar *) "name");
                 enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) bmk->name);
-                xmlNodeSetContent (name, (xmlChar *) enc);
+                xmlNodeSetContent (name, enc);
                 xmlFree (enc);
 
                 url = xmlNewNode (NULL, (xmlChar *) "url");
                 enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) bmk->url);
-                xmlNodeSetContent (url, (xmlChar *) enc);
+                xmlNodeSetContent (url, enc);
                 xmlFree (enc);
 
                 bmknode = xmlNewNode (NULL, (xmlChar *) "bookmark");

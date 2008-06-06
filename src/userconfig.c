@@ -72,6 +72,9 @@ lastfm_usercfg_get_cfgdir(void)
                 if (homedir != NULL) {
                         cfgdir = g_strconcat (homedir, "/.vagalume", NULL);
                 }
+                if (cfgdir != NULL) {
+                        g_mkdir_with_parents (cfgdir, 0755);
+                }
         }
         return cfgdir;
 }
