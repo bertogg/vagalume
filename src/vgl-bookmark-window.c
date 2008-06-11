@@ -105,7 +105,7 @@ bookmark_removed_cb(VglBookmarkMgr *mgr, int id, VglBookmarkWindow *win)
 }
 
 static void
-play_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
+play_selected_row(VglBookmarkWindow *win)
 {
         GtkTreeSelection *sel;
         GtkTreeIter iter;
@@ -126,6 +126,12 @@ play_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
                 controller_play_radio_by_url(url);
                 g_free(url);
         }
+}
+
+static void
+play_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
+{
+        play_selected_row (win);
 }
 
 static void
@@ -213,6 +219,13 @@ selection_changed(GtkTreeSelection *sel, VglBookmarkWindow *win)
 }
 
 static void
+row_clicked (GtkTreeView *tree_view, GtkTreePath *path,
+             GtkTreeViewColumn *column, VglBookmarkWindow *win)
+{
+        play_selected_row (win);
+}
+
+static void
 vgl_bookmark_window_finalize (GObject *object)
 {
         VglBookmarkWindow *win = VGL_BOOKMARK_WINDOW(object);
@@ -278,6 +291,8 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
         /* Signals */
         g_signal_connect(priv->playbtn, "clicked",
                          G_CALLBACK(play_button_clicked), self);
+        g_signal_connect(priv->treeview, "row-activated",
+                         G_CALLBACK(row_clicked), self);
         g_signal_connect(priv->addbtn, "clicked",
                          G_CALLBACK(add_button_clicked), self);
         g_signal_connect(priv->editbtn, "clicked",
