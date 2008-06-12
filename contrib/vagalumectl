@@ -139,7 +139,7 @@ elif [ $# -eq 2 ]; then
   esac;
 
   if [ -n "${URL}" ]; then
-      DBUS_METHOD_CALL="playurl string:"${URL};
+      DBUS_METHOD_CALL=${DBUS_METHOD_PLAYURL}" string:"${URL};
   fi
 else
   invalid_params;
