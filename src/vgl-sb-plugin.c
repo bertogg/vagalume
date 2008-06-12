@@ -1,5 +1,5 @@
 /*
- * vagalume-sb-plugin.c -- Status bar plugin for Vagalume
+ * vgl-sb-plugin.c -- Status bar plugin for Vagalume
  * Copyright (C) 2008 Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
@@ -17,7 +17,7 @@
 #include <libhildondesktop/statusbar-item.h>
 #include <libhildondesktop/libhildondesktop.h>
 
-#include "vagalume-sb-plugin.h"
+#include "vgl-sb-plugin.h"
 #include "globaldefs.h"
 #include "dbus.h"
 
@@ -40,13 +40,12 @@
 #define SHOW_APP_ITEM_STRING _("Show main window")
 #define CLOSE_APP_ITEM_STRING _("Close Vagalume")
 
-#define VAGALUME_SB_PLUGIN_GET_PRIVATE(object) \
-                 (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
-                         VAGALUME_SB_PLUGIN_TYPE, \
-                         VagalumeSbPluginPrivate))
+#define VGL_SB_PLUGIN_GET_PRIVATE(object)      \
+        (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
+                                      VGL_SB_PLUGIN_TYPE, VglSbPluginPrivate))
 
-typedef struct _VagalumeSbPluginPrivate VagalumeSbPluginPrivate;
-struct _VagalumeSbPluginPrivate
+typedef struct _VglSbPluginPrivate VglSbPluginPrivate;
+struct _VglSbPluginPrivate
 {
         osso_context_t *osso_context;
 
@@ -83,36 +82,36 @@ struct _VagalumeSbPluginPrivate
         gint close_vagalume_item_handler_id;
 };
 
-HD_DEFINE_PLUGIN (VagalumeSbPlugin, vagalume_sb_plugin, STATUSBAR_TYPE_ITEM);
+HD_DEFINE_PLUGIN (VglSbPlugin, vgl_sb_plugin, STATUSBAR_TYPE_ITEM);
 
 
 /* Initialization/destruction functions */
-static void vagalume_sb_plugin_class_init (VagalumeSbPluginClass *klass);
-static void vagalume_sb_plugin_init (VagalumeSbPlugin *vsbp);
-static void vagalume_sb_plugin_finalize (GObject *object);
+static void vgl_sb_plugin_class_init (VglSbPluginClass *klass);
+static void vgl_sb_plugin_init (VglSbPlugin *vsbp);
+static void vgl_sb_plugin_finalize (GObject *object);
 
 /* Dbus stuff */
-static gboolean dbus_init (VagalumeSbPlugin *vsbp);
-static void dbus_close (VagalumeSbPlugin *vsbp);
+static gboolean dbus_init (VglSbPlugin *vsbp);
+static void dbus_close (VglSbPlugin *vsbp);
 static gint dbus_req_handler (const gchar* interface, const gchar* method,
                               GArray* arguments, gpointer data,
                               osso_rpc_t* retval);
-static void dbus_send_request (VagalumeSbPlugin *vsbp, const gchar *request);
-static void dbus_send_request_with_param (VagalumeSbPlugin *vsbp,
+static void dbus_send_request (VglSbPlugin *vsbp, const gchar *request);
+static void dbus_send_request_with_param (VglSbPlugin *vsbp,
                                           const gchar *request,
                                           int param_type,
                                           gpointer param_value);
 
-static void notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments);
+static void notify_handler (VglSbPlugin *vsbp, GArray* arguments);
 
 /* Setters */
-static void set_visibility (VagalumeSbPlugin *vsbp, gboolean visible);
-static void set_track_info (VagalumeSbPlugin *vsbp, const gchar *artist,
+static void set_visibility (VglSbPlugin *vsbp, gboolean visible);
+static void set_track_info (VglSbPlugin *vsbp, const gchar *artist,
                             const gchar *track, const gchar *album);
 
 /* Panel update functions */
-static void main_panel_create (VagalumeSbPlugin *vsbp);
-static void main_panel_update (VagalumeSbPlugin *vsbp);
+static void main_panel_create (VglSbPlugin *vsbp);
+static void main_panel_update (VglSbPlugin *vsbp);
 
 /* Signals handlers */
 static void plugin_btn_toggled (GtkWidget *button, gpointer data);
@@ -120,27 +119,27 @@ static void main_panel_item_activated (GtkWidget *item, gpointer data);
 static void main_panel_hidden (GtkWidget *main_panel, gpointer user_data);
 
 /* Utility functions */
-static gboolean vagalume_running (VagalumeSbPlugin *vsbp);
+static gboolean vagalume_running (VglSbPlugin *vsbp);
 
 /* Initialization/destruction functions */
 
 static void
-vagalume_sb_plugin_class_init (VagalumeSbPluginClass *klass)
+vgl_sb_plugin_class_init (VglSbPluginClass *klass)
 {
         GObjectClass *object_class = G_OBJECT_CLASS (klass);
-        object_class->finalize = vagalume_sb_plugin_finalize;
+        object_class->finalize = vgl_sb_plugin_finalize;
 
         g_type_class_add_private (object_class,
-                                  sizeof (VagalumeSbPluginPrivate));
+                                  sizeof (VglSbPluginPrivate));
 
         bindtextdomain (GETTEXT_PACKAGE, VAGALUME_LOCALE_DIR);
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 }
 
 static void
-vagalume_sb_plugin_init (VagalumeSbPlugin *vsbp)
+vgl_sb_plugin_init (VglSbPlugin *vsbp)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         priv->osso_context = NULL;
 
@@ -200,10 +199,10 @@ vagalume_sb_plugin_init (VagalumeSbPlugin *vsbp)
 }
 
 static void
-vagalume_sb_plugin_finalize (GObject *object)
+vgl_sb_plugin_finalize (GObject *object)
 {
-        VagalumeSbPlugin *vsbp = VAGALUME_SB_PLUGIN (object);
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPlugin *vsbp = VGL_SB_PLUGIN (object);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         /* Dbus */
         dbus_close (vsbp);
@@ -241,12 +240,12 @@ vagalume_sb_plugin_finalize (GObject *object)
 /* Dbus stuff */
 
 static gboolean
-dbus_init(VagalumeSbPlugin *vsbp)
+dbus_init(VglSbPlugin *vsbp)
 {
-  VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+  VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         osso_return_t result;
 
-        priv->osso_context = osso_initialize ("vagalume_sb_plugin",
+        priv->osso_context = osso_initialize ("vgl_sb_plugin",
                                               APP_VERSION, TRUE, NULL);
 
         if (!priv->osso_context) {
@@ -270,9 +269,9 @@ dbus_init(VagalumeSbPlugin *vsbp)
         return TRUE;
 }
 
-static void dbus_close (VagalumeSbPlugin *vsbp)
+static void dbus_close (VglSbPlugin *vsbp)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         osso_deinitialize(priv->osso_context);
 }
@@ -281,7 +280,7 @@ static gint
 dbus_req_handler(const gchar* interface, const gchar* method,
                  GArray* arguments, gpointer data, osso_rpc_t* retval)
 {
-        VagalumeSbPlugin *vsbp = VAGALUME_SB_PLUGIN (data);
+        VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
 
         g_debug("Received D-BUS message: %s", method);
 
@@ -294,19 +293,19 @@ dbus_req_handler(const gchar* interface, const gchar* method,
 }
 
 static void
-dbus_send_request (VagalumeSbPlugin *vsbp, const gchar *request)
+dbus_send_request (VglSbPlugin *vsbp, const gchar *request)
 {
         /* Delegate on dbus_send_request_with_param() */
         dbus_send_request_with_param (vsbp, request, DBUS_TYPE_INVALID, NULL);
 }
 
 static void
-dbus_send_request_with_param (VagalumeSbPlugin *vsbp,
+dbus_send_request_with_param (VglSbPlugin *vsbp,
                               const gchar *request,
                               int param_type,
                               gpointer param_value)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         osso_return_t result;
 
         result = osso_rpc_async_run (priv->osso_context,
@@ -325,9 +324,9 @@ dbus_send_request_with_param (VagalumeSbPlugin *vsbp,
 }
 
 static void
-notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments)
+notify_handler (VglSbPlugin *vsbp, GArray* arguments)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         osso_rpc_t val;
         gchar *type = NULL;
         gboolean msg_handled = FALSE;
@@ -424,9 +423,9 @@ notify_handler (VagalumeSbPlugin *vsbp, GArray* arguments)
 /* Setters */
 
 static void
-set_visibility (VagalumeSbPlugin *vsbp, gboolean visible)
+set_visibility (VglSbPlugin *vsbp, gboolean visible)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         gboolean old_condition;
 
         g_object_get (vsbp, "condition", &old_condition, NULL);
@@ -470,14 +469,14 @@ set_field (gchar **field, const gchar *text, const gchar *markup_fmt)
 }
 
 static void
-set_track_info (VagalumeSbPlugin *vsbp,
+set_track_info (VglSbPlugin *vsbp,
                const gchar *artist,
                const gchar *track,
                const gchar *album)
 {
-        g_return_if_fail(VAGALUME_IS_SB_PLUGIN(vsbp));
+        g_return_if_fail(VGL_IS_SB_PLUGIN(vsbp));
 
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         /* Call to set_field (), always with valid data */
         set_field (&priv->artist_string,
@@ -514,9 +513,9 @@ get_small_font (GtkWidget *widget)
 }
 
 static void
-main_panel_create (VagalumeSbPlugin *vsbp)
+main_panel_create (VglSbPlugin *vsbp)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         GtkWidget *label;
 
         /* Create main_panel and main_panel items */
@@ -608,9 +607,9 @@ main_panel_create (VagalumeSbPlugin *vsbp)
 }
 
 static void
-main_panel_update (VagalumeSbPlugin *vsbp)
+main_panel_update (VglSbPlugin *vsbp)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         GtkWidget *label;
 
         if (!priv->running_app) {
@@ -672,7 +671,7 @@ main_panel_position_func (GtkMenu   *main_panel,
                           gboolean  *push_in,
                           gpointer   data)
 {
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (data);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (data);
 
         GtkRequisition req;
 
@@ -688,8 +687,8 @@ main_panel_position_func (GtkMenu   *main_panel,
 static void
 plugin_btn_toggled (GtkWidget *button, gpointer data)
 {
-        VagalumeSbPlugin *vsbp = VAGALUME_SB_PLUGIN (data);
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (button)))
                 return;
@@ -706,8 +705,8 @@ plugin_btn_toggled (GtkWidget *button, gpointer data)
 static void
 main_panel_item_activated (GtkWidget *item, gpointer data)
 {
-        VagalumeSbPlugin *vsbp = VAGALUME_SB_PLUGIN (data);
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         if (item == priv->play_item) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_PLAY);
@@ -744,8 +743,8 @@ main_panel_item_activated (GtkWidget *item, gpointer data)
 static void
 main_panel_hidden (GtkWidget *main_panel, gpointer data)
 {
-        VagalumeSbPlugin *vsbp = VAGALUME_SB_PLUGIN (data);
-        VagalumeSbPluginPrivate *priv = VAGALUME_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         g_debug ("Main panel hidden");
 
@@ -756,7 +755,7 @@ main_panel_hidden (GtkWidget *main_panel, gpointer data)
 /* Utility functions */
 
 static gboolean
-vagalume_running (VagalumeSbPlugin *vsbp)
+vagalume_running (VglSbPlugin *vsbp)
 {
         HDWM *hdwm;
         HDWMEntryInfo *info = NULL;

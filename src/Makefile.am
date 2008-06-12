@@ -48,7 +48,7 @@ vagalume_SOURCES += md5/md5.c md5/md5.h
 endif
 
 if HAVE_TRAY_ICON
-vagalume_SOURCES += vagalume-tray-icon.h vagalume-tray-icon.c
+vagalume_SOURCES += vgl-tray-icon.h vgl-tray-icon.c
 endif
 
 if HAVE_CONIC
@@ -67,7 +67,7 @@ libvagalumesbplugin_la_LDFLAGS = -module -avoid-version
 libvagalumesbplugin_la_SOURCES = \
 	dbus.h \
 	globaldefs.h \
-	vagalume-sb-plugin.c vagalume-sb-plugin.h
+	vgl-sb-plugin.c vgl-sb-plugin.h
 
 libvagalumesbplugin_la_LIBADD = $(SBPLUGIN_LIBS)
 

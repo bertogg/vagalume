@@ -30,7 +30,7 @@
 #include "vgl-bookmark-window.h"
 
 #ifdef HAVE_TRAY_ICON
-#include "vagalume-tray-icon.h"
+#include "vgl-tray-icon.h"
 #endif
 
 static lastfm_session *session = NULL;
@@ -47,7 +47,7 @@ static gboolean showing_cover = FALSE;
 static gboolean stopping_after_track = FALSE;
 
 #ifdef HAVE_TRAY_ICON
-static VagalumeTrayIcon *tray_icon = NULL;
+static VglTrayIcon *tray_icon = NULL;
 #endif
 
 typedef struct {
@@ -486,7 +486,7 @@ apply_usercfg(void)
         }
 #ifdef HAVE_TRAY_ICON
         if (tray_icon != NULL) {
-                vagalume_tray_icon_show_notifications (
+                vgl_tray_icon_show_notifications (
                         tray_icon, usercfg->show_notifications);
         }
 #endif
@@ -781,7 +781,7 @@ controller_start_playing_cb(gpointer userdata)
 
 #ifdef HAVE_TRAY_ICON
         if (tray_icon) {
-                vagalume_tray_icon_notify_playback (tray_icon, track);
+                vgl_tray_icon_notify_playback (tray_icon, track);
         }
 #endif
 
@@ -850,7 +850,7 @@ controller_stop_playing(void)
 
 #ifdef HAVE_TRAY_ICON
         if (tray_icon) {
-                vagalume_tray_icon_notify_playback (tray_icon, NULL);
+                vgl_tray_icon_notify_playback (tray_icon, NULL);
         }
 #endif
 }
@@ -1596,10 +1596,10 @@ controller_run_app(VglMainWindow *win, const char *radio_url)
 
 #ifdef HAVE_TRAY_ICON
         /* Init Freedesktop tray icon */
-        tray_icon = vagalume_tray_icon_create ();
-        vagalume_tray_icon_notify_playback (tray_icon, NULL);
+        tray_icon = vgl_tray_icon_create ();
+        vgl_tray_icon_notify_playback (tray_icon, NULL);
         if (usercfg != NULL) {
-                vagalume_tray_icon_show_notifications (
+                vgl_tray_icon_show_notifications (
                         tray_icon, usercfg->show_notifications);
         }
 #endif

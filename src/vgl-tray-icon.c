@@ -1,5 +1,5 @@
 /*
- * vagalume-tray-icon.c -- Freedesktop tray icon
+ * vgl-tray-icon.c -- Freedesktop tray icon
  * Copyright (C) 2008 Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -9,7 +9,7 @@
 #include <glib/gi18n.h>
 #include <libnotify/notify.h>
 
-#include "vagalume-tray-icon.h"
+#include "vgl-tray-icon.h"
 #include "globaldefs.h"
 
 #include "controller.h"
@@ -50,15 +50,15 @@
 #define SKIP_ITEM_ICON_NAME "media-skip-forward"
 #define CLOSE_APP_ITEM_ICON_NAME "window-close"
 
-#define VAGALUME_TRAY_ICON_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), \
-                                      VAGALUME_TRAY_ICON_TYPE, \
-                                      VagalumeTrayIconPrivate))
+#define VGL_TRAY_ICON_GET_PRIVATE(object)      \
+        (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
+                                      VGL_TRAY_ICON_TYPE, VglTrayIconPrivate))
 
-G_DEFINE_TYPE (VagalumeTrayIcon, vagalume_tray_icon, G_TYPE_OBJECT);
+G_DEFINE_TYPE (VglTrayIcon, vgl_tray_icon, G_TYPE_OBJECT);
 
 /* Private struct */
-typedef struct _VagalumeTrayIconPrivate VagalumeTrayIconPrivate;
-struct _VagalumeTrayIconPrivate
+typedef struct _VglTrayIconPrivate VglTrayIconPrivate;
+struct _VglTrayIconPrivate
 {
         GtkStatusIcon *tray_icon;
 
@@ -99,17 +99,17 @@ struct _VagalumeTrayIconPrivate
 /* Private */
 
 /* Initialization/destruction functions */
-static void vagalume_tray_icon_finalize (GObject* object);
-static void vagalume_tray_icon_class_init(VagalumeTrayIconClass *klass);
-static void vagalume_tray_icon_init (VagalumeTrayIcon *vagalume_tray_icon);
+static void vgl_tray_icon_finalize (GObject* object);
+static void vgl_tray_icon_class_init(VglTrayIconClass *klass);
+static void vgl_tray_icon_init (VglTrayIcon *vgl_tray_icon);
 
 /* Libnotify functions */
-static void setup_libnotify  (VagalumeTrayIcon *vti);
-static void cleanup_libnotify  (VagalumeTrayIcon *vti);
+static void setup_libnotify  (VglTrayIcon *vti);
+static void cleanup_libnotify  (VglTrayIcon *vti);
 
 /* Panel update functions */
-static void ctxt_menu_create (VagalumeTrayIcon *vti);
-static void ctxt_menu_update (VagalumeTrayIcon *vti);
+static void ctxt_menu_create (VglTrayIcon *vti);
+static void ctxt_menu_update (VglTrayIcon *vti);
 
 /* Signals handlers */
 static void tray_icon_clicked (GtkStatusIcon *status_icon,
@@ -125,18 +125,18 @@ static void ctxt_menu_item_activated (GtkWidget *item, gpointer data);
 /* Initialization/destruction functions */
 
 static void
-vagalume_tray_icon_class_init(VagalumeTrayIconClass *klass)
+vgl_tray_icon_class_init(VglTrayIconClass *klass)
 {
         GObjectClass *obj_class = G_OBJECT_CLASS(klass);
 
-        obj_class -> finalize = vagalume_tray_icon_finalize;
-        g_type_class_add_private (obj_class, sizeof (VagalumeTrayIconPrivate));
+        obj_class -> finalize = vgl_tray_icon_finalize;
+        g_type_class_add_private (obj_class, sizeof (VglTrayIconPrivate));
 }
 
 static void
-vagalume_tray_icon_init (VagalumeTrayIcon *vti)
+vgl_tray_icon_init (VglTrayIcon *vti)
 {
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         /* Init private attributes */
         priv->tray_icon = gtk_status_icon_new ();
@@ -183,10 +183,10 @@ vagalume_tray_icon_init (VagalumeTrayIcon *vti)
 }
 
 static void
-vagalume_tray_icon_finalize (GObject* object)
+vgl_tray_icon_finalize (GObject* object)
 {
-        VagalumeTrayIcon *vti = VAGALUME_TRAY_ICON (object);
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIcon *vti = VGL_TRAY_ICON (object);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         /* Cleanup libnotify */
         cleanup_libnotify (vti);
@@ -229,12 +229,12 @@ vagalume_tray_icon_finalize (GObject* object)
         }
 
         /* call super class */
-        G_OBJECT_CLASS (vagalume_tray_icon_parent_class) -> finalize(object);
+        G_OBJECT_CLASS (vgl_tray_icon_parent_class) -> finalize(object);
 }
 
 /* Libnotify functions */
 static void
-setup_libnotify  (VagalumeTrayIcon *vti)
+setup_libnotify  (VglTrayIcon *vti)
 {
         if (!notify_init (APP_NAME)) {
                 g_debug ("[TRAY ICON] :: Error initializing libnotify");
@@ -244,9 +244,9 @@ setup_libnotify  (VagalumeTrayIcon *vti)
 }
 
 static void
-cleanup_libnotify  (VagalumeTrayIcon *vti)
+cleanup_libnotify  (VglTrayIcon *vti)
 {
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         if (notify_is_initted ()) {
                 if (priv->notification) {
@@ -280,9 +280,9 @@ ctxt_menu_item_create (const gchar *icon_name, const gchar *label)
 }
 
 static void
-ctxt_menu_create (VagalumeTrayIcon *vti)
+ctxt_menu_create (VglTrayIcon *vti)
 {
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         /* Create ctxt_menu and ctxt_menu items */
         priv->ctxt_menu = gtk_menu_new ();
@@ -366,9 +366,9 @@ ctxt_menu_create (VagalumeTrayIcon *vti)
 }
 
 static void
-ctxt_menu_update (VagalumeTrayIcon *vti)
+ctxt_menu_update (VglTrayIcon *vti)
 {
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         /* Adjust sentitiveness for ctxt_menu items and show/hide buttons */
         if (priv->now_playing) {
@@ -412,8 +412,8 @@ static void
 tray_icon_popup_menu (GtkStatusIcon *status_icon, guint button,
                       guint activate_time, gpointer data)
 {
-        VagalumeTrayIcon *vti = VAGALUME_TRAY_ICON (data);
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIcon *vti = VGL_TRAY_ICON (data);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
                         NULL, NULL,
@@ -426,8 +426,8 @@ tray_icon_popup_menu (GtkStatusIcon *status_icon, guint button,
 static void
 ctxt_menu_item_activated (GtkWidget *item, gpointer data)
 {
-        VagalumeTrayIcon *vti = VAGALUME_TRAY_ICON (data);
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIcon *vti = VGL_TRAY_ICON (data);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         if (item == priv->show_app_item) {
                 controller_show_mainwin(TRUE);
@@ -459,10 +459,10 @@ ctxt_menu_item_activated (GtkWidget *item, gpointer data)
 
 /* Public */
 
-VagalumeTrayIcon *
-vagalume_tray_icon_create (void)
+VglTrayIcon *
+vgl_tray_icon_create (void)
 {
-        return g_object_new(VAGALUME_TRAY_ICON_TYPE, NULL);
+        return g_object_new(VGL_TRAY_ICON_TYPE, NULL);
 }
 
 static GdkPixbuf *
@@ -502,14 +502,14 @@ get_album_cover_icon (lastfm_track *track)
 
 typedef struct {
         lastfm_track *track;
-        VagalumeTrayIcon *vti;
-} VagalumeTrayIconPlaybackData;
+        VglTrayIcon *vti;
+} VglTrayIconPlaybackData;
 
 static void
-show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
+show_notification (VglTrayIcon *vti, lastfm_track *track)
 {
-        g_return_if_fail(VAGALUME_IS_TRAY_ICON(vti) && track != NULL);
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        g_return_if_fail(VGL_IS_TRAY_ICON(vti) && track != NULL);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         GdkPixbuf *icon = NULL;
         gchar *notification_summary = NULL;
@@ -583,14 +583,14 @@ show_notification (VagalumeTrayIcon *vti, lastfm_track *track)
 }
 
 static gpointer
-notify_playback_thread (VagalumeTrayIconPlaybackData *d)
+notify_playback_thread (VglTrayIconPlaybackData *d)
 {
         g_return_val_if_fail(d != NULL, NULL);
-        VagalumeTrayIconPrivate *priv;
+        VglTrayIconPrivate *priv;
 
         gdk_threads_enter();
         /* Set the now_playing private attribute and update panel */
-        priv = VAGALUME_TRAY_ICON_GET_PRIVATE (d->vti);
+        priv = VGL_TRAY_ICON_GET_PRIVATE (d->vti);
         priv->now_playing = (d->track != NULL);
         ctxt_menu_update (d->vti);
 
@@ -618,25 +618,25 @@ notify_playback_thread (VagalumeTrayIconPlaybackData *d)
         /* Cleanup */
         g_object_unref(d->vti);
         if (d->track != NULL) lastfm_track_unref(d->track);
-        g_slice_free(VagalumeTrayIconPlaybackData, d);
+        g_slice_free(VglTrayIconPlaybackData, d);
 
         return NULL;
 }
 
 void
-vagalume_tray_icon_notify_playback (VagalumeTrayIcon *vti, lastfm_track *track)
+vgl_tray_icon_notify_playback (VglTrayIcon *vti, lastfm_track *track)
 {
-        g_return_if_fail(VAGALUME_IS_TRAY_ICON(vti));
-        VagalumeTrayIconPlaybackData *data;
-        data = g_slice_new(VagalumeTrayIconPlaybackData);
+        g_return_if_fail(VGL_IS_TRAY_ICON(vti));
+        VglTrayIconPlaybackData *data;
+        data = g_slice_new(VglTrayIconPlaybackData);
         data->vti = g_object_ref(vti);
         data->track = track ? lastfm_track_ref(track) : NULL;
         g_thread_create((GThreadFunc)notify_playback_thread,data,FALSE,NULL);
 }
 
 void
-vagalume_tray_icon_show_notifications (VagalumeTrayIcon *vti, gboolean show_notifications)
+vgl_tray_icon_show_notifications (VglTrayIcon *vti, gboolean show_notifications)
 {
-        VagalumeTrayIconPrivate *priv = VAGALUME_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
         priv->show_notifications = show_notifications;
 }
