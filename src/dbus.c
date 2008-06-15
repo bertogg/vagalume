@@ -7,17 +7,15 @@
  * See the README file for more details.
  */
 
-#include <glib/gi18n.h>
 #include "dbus.h"
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <strings.h>
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib-lowlevel.h>
 
-#ifdef MAEMO
-#include <libosso.h>
-
-static osso_context_t *context = NULL;
-#endif
+static DBusConnection *dbus_connection = NULL;
 
 static gboolean
 playurl_handler_idle(gpointer data)
@@ -109,16 +107,6 @@ volumeset_handler_idle(gpointer data)
 }
 
 static gboolean
-closeapp_handler_idle(gpointer data)
-{
-        gdk_threads_enter();
-        controller_quit_app();
-        gdk_threads_leave();
-        return FALSE;
-}
-
-#ifdef MAEMO
-static gboolean
 requeststatus_handler_idle(gpointer data)
 {
         lastfm_track *current_track = NULL;
@@ -132,200 +120,224 @@ requeststatus_handler_idle(gpointer data)
 }
 
 static gboolean
-get_bool_parameter (GArray* arguments)
+closeapp_handler_idle(gpointer data)
 {
-        if (arguments->len > 0) {
-                osso_rpc_t val;
-                val = g_array_index(arguments, osso_rpc_t, 0);
-                return val.value.b;
-        }
+        gdk_threads_enter();
+        controller_quit_app();
+        gdk_threads_leave();
         return FALSE;
 }
 
-static guint32
-get_uint32_parameter (GArray* arguments)
-{
-        if (arguments->len > 0) {
-                osso_rpc_t val;
-                val = g_array_index(arguments, osso_rpc_t, 0);
-                return val.value.u;
-        }
-        return G_MAXUINT32;
-}
-
-static gint
-dbus_req_handler(const gchar* interface, const gchar* method,
-                 GArray* arguments, gpointer data, osso_rpc_t* retval)
-{
-        g_debug("Received D-BUS message: %s", method);
-        if (!strcasecmp(method, APP_DBUS_METHOD_PLAYURL)) {
-                osso_rpc_t val = g_array_index(arguments, osso_rpc_t, 0);
-                gchar *url = g_strdup(val.value.s);
-                g_idle_add(playurl_handler_idle, url);
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_PLAY)) {
-                g_idle_add(play_handler_idle, NULL);
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_STOP)) {
-                g_idle_add(stop_handler_idle, NULL);
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_SKIP)) {
-                g_idle_add(skip_handler_idle, NULL);
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_LOVETRACK)) {
-                gboolean interactive = get_bool_parameter(arguments);
-                g_idle_add(lovetrack_handler_idle, GINT_TO_POINTER(interactive));
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_BANTRACK)) {
-                gboolean interactive = get_bool_parameter(arguments);
-                g_idle_add(bantrack_handler_idle, GINT_TO_POINTER(interactive));
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_SHOWWINDOW)) {
-                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_HIDEWINDOW)) {
-                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(FALSE));
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_CLOSEAPP)) {
-                g_idle_add(closeapp_handler_idle, NULL);
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEUP)) {
-                guint32 inc = get_uint32_parameter (arguments);
-                if (inc == G_MAXUINT32) {
-                        inc = 5;
-                }
-                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER((gint)inc));
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_VOLUMEDOWN)) {
-                guint32 inc = get_uint32_parameter (arguments);
-                if (inc == G_MAXUINT32) {
-                        inc = 5;
-                }
-                g_idle_add(volumechange_handler_idle, GINT_TO_POINTER((gint)-inc));
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_SETVOLUME)) {
-                guint32 vol = get_uint32_parameter (arguments);
-                if (vol != G_MAXUINT32) {
-                        g_idle_add(volumeset_handler_idle, GINT_TO_POINTER((gint)vol));
-                } else {
-                        g_debug ("No parameter received for " APP_DBUS_METHOD_SETVOLUME);
-                }
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_TOPAPP)) {
-                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
-        } else if (!strcasecmp(method, APP_DBUS_METHOD_REQUEST_STATUS)) {
-                g_idle_add(requeststatus_handler_idle, NULL);
-        }
-        return OSSO_OK;
-}
-
 static void
-hw_event_handler(osso_hw_state_t *state, gpointer data) {
-        /* The device is about to be shutdown */
-        if (state->shutdown_ind) {
-                controller_disconnect();
-        }
-}
-
-const char *
-lastfm_dbus_init(void)
+send_message(char *message, int first_type, ...)
 {
-        osso_return_t result;
-        context = osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL);
-        if (!context) {
-                return _("Unable to initialize OSSO context");
-        }
-        result = osso_rpc_set_cb_f(context, APP_DBUS_SERVICE, APP_DBUS_OBJECT,
-                                   APP_DBUS_IFACE, dbus_req_handler, NULL);
-        if (result != OSSO_OK) {
-                return _("Unable to set D-BUS callback");
-        }
+        DBusMessage *dbus_msg = NULL;
+        va_list ap;
 
-        result = osso_hw_set_event_cb(context, NULL, hw_event_handler, NULL);
-        if (result != OSSO_OK) {
-                return _("Unable to set hw callback");
+        dbus_msg = dbus_message_new_method_call (SB_PLUGIN_DBUS_SERVICE,
+                                                 SB_PLUGIN_DBUS_OBJECT,
+                                                 SB_PLUGIN_DBUS_IFACE,
+                                                 message);
+        dbus_message_set_no_reply (dbus_msg, TRUE);
+        if (first_type != DBUS_TYPE_INVALID)
+        {
+                va_start (ap, first_type);
+                dbus_message_append_args_valist (dbus_msg, first_type, ap);
+                va_end (ap);
         }
-
-        return NULL;
-}
-
-void
-lastfm_dbus_close(void)
-{
-        osso_deinitialize(context);
+        dbus_connection_send (dbus_connection, dbus_msg, 0);
+        dbus_connection_flush (dbus_connection);
+        dbus_message_unref (dbus_msg);
 }
 
 void
 lastfm_dbus_notify_playback (lastfm_track *track)
 {
-        osso_return_t result;
-        const char *notify_type = NULL;
+        const char *param = NULL;
 
         if (track != NULL) {
-
                 /* Now playing */
-
-                notify_type = SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING;
-                result = osso_rpc_async_run(context,
-                                            SB_PLUGIN_DBUS_SERVICE,
-                                            SB_PLUGIN_DBUS_OBJECT,
-                                            SB_PLUGIN_DBUS_IFACE,
-                                            SB_PLUGIN_DBUS_METHOD_NOTIFY,
-                                            NULL,
-                                            NULL,
-                                            DBUS_TYPE_STRING, notify_type,
-                                            DBUS_TYPE_STRING, track->artist,
-                                            DBUS_TYPE_STRING, track->title,
-                                            DBUS_TYPE_STRING, track->album,
-                                            DBUS_TYPE_INVALID);
+                param = SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING;
+                send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                             DBUS_TYPE_STRING, &param,
+                             DBUS_TYPE_STRING, &track->artist,
+                             DBUS_TYPE_STRING, &track->title,
+                             DBUS_TYPE_STRING, &track->album,
+                             DBUS_TYPE_INVALID);
 
         } else {
-
                 /* Stopped */
-
-                notify_type = SB_PLUGIN_DBUS_METHOD_NOTIFY_STOPPED;
-                result = osso_rpc_async_run(context,
-                                            SB_PLUGIN_DBUS_SERVICE,
-                                            SB_PLUGIN_DBUS_OBJECT,
-                                            SB_PLUGIN_DBUS_IFACE,
-                                            SB_PLUGIN_DBUS_METHOD_NOTIFY,
-                                            NULL,
-                                            NULL,
-                                            DBUS_TYPE_STRING, notify_type,
-                                            DBUS_TYPE_INVALID);
-        }
-
-        if (result != OSSO_OK) {
-                g_warning("Error sending DBus message");
+                param = SB_PLUGIN_DBUS_METHOD_NOTIFY_STOPPED;
+                send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                             DBUS_TYPE_STRING, &param,
+                             DBUS_TYPE_INVALID);
         }
 }
 
 void
 lastfm_dbus_notify_started(void)
 {
-        osso_return_t result;
+        const char *param = SB_PLUGIN_DBUS_METHOD_NOTIFY_STARTED;
 
-        result = osso_rpc_async_run(context,
-                                    SB_PLUGIN_DBUS_SERVICE,
-                                    SB_PLUGIN_DBUS_OBJECT,
-                                    SB_PLUGIN_DBUS_IFACE,
-                                    SB_PLUGIN_DBUS_METHOD_NOTIFY,
-                                    NULL,
-                                    NULL,
-                                    DBUS_TYPE_STRING,
-                                    SB_PLUGIN_DBUS_METHOD_NOTIFY_STARTED,
-                                    DBUS_TYPE_INVALID);
-
-        if (result != OSSO_OK) {
-                g_warning("Error sending DBus message");
-        }
+        send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                     DBUS_TYPE_STRING,
+                     &param,
+                     DBUS_TYPE_INVALID);
 }
 
 void
 lastfm_dbus_notify_closing(void)
 {
-        osso_return_t result;
+        const char *param = SB_PLUGIN_DBUS_METHOD_NOTIFY_CLOSING;
 
-        result = osso_rpc_async_run(context,
-                                    SB_PLUGIN_DBUS_SERVICE,
-                                    SB_PLUGIN_DBUS_OBJECT,
-                                    SB_PLUGIN_DBUS_IFACE,
-                                    SB_PLUGIN_DBUS_METHOD_NOTIFY,
-                                    NULL,
-                                    NULL,
-                                    DBUS_TYPE_STRING,
-                                    SB_PLUGIN_DBUS_METHOD_NOTIFY_CLOSING,
-                                    DBUS_TYPE_INVALID);
-        if (result != OSSO_OK) {
-                g_warning("Error sending DBus message");
-        }
+        send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                     DBUS_TYPE_STRING,
+                     &param,
+                     DBUS_TYPE_INVALID);
 }
-#endif /* MAEMO */
+
+static DBusHandlerResult
+dbus_req_handler(DBusConnection *connection, DBusMessage *message,
+                 gpointer user_data)
+{
+        DBusMessage *reply = NULL;
+        DBusHandlerResult result = DBUS_HANDLER_RESULT_HANDLED;
+
+        if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                        APP_DBUS_METHOD_PLAYURL)) {
+                char *url = NULL;
+                dbus_message_get_args(message, NULL,
+                                      DBUS_TYPE_STRING,
+                                      &url,
+                                      DBUS_TYPE_INVALID);
+                g_idle_add(playurl_handler_idle, g_strdup(url));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_PLAY)) {
+                g_idle_add(play_handler_idle, NULL);
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_STOP)) {
+                g_idle_add(stop_handler_idle, NULL);
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_SKIP)) {
+                g_idle_add(skip_handler_idle, NULL);
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_LOVETRACK)) {
+                gboolean interactive;
+                dbus_message_get_args (message, NULL, DBUS_TYPE_BOOLEAN,
+                                       &interactive, DBUS_TYPE_INVALID);
+                g_idle_add (lovetrack_handler_idle,
+                            GINT_TO_POINTER (interactive));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_BANTRACK)) {
+                gboolean interactive;
+                dbus_message_get_args (message, NULL, DBUS_TYPE_BOOLEAN,
+                                       &interactive, DBUS_TYPE_INVALID);
+                g_idle_add (bantrack_handler_idle,
+                            GINT_TO_POINTER (interactive));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_SHOWWINDOW)) {
+                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_HIDEWINDOW)) {
+                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(FALSE));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                                APP_DBUS_METHOD_CLOSEAPP)) {
+                g_idle_add(closeapp_handler_idle, NULL);
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_VOLUMEUP)) {
+                guint32 inc;
+                dbus_message_get_args(message, NULL, DBUS_TYPE_UINT32,
+                                      &inc, DBUS_TYPE_INVALID);
+                if (inc == G_MAXUINT32) {
+                        inc = 5;
+                }
+                g_idle_add (volumechange_handler_idle,
+                            GINT_TO_POINTER ((gint) inc));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_VOLUMEDOWN)) {
+                guint32 inc;
+                dbus_message_get_args(message, NULL, DBUS_TYPE_UINT32,
+                                      &inc, DBUS_TYPE_INVALID);
+                if (inc == G_MAXUINT32) {
+                        inc = 5;
+                }
+                g_idle_add (volumechange_handler_idle,
+                            GINT_TO_POINTER ((gint) -inc));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_SETVOLUME)) {
+                guint32 vol;
+                dbus_message_get_args(message, NULL, DBUS_TYPE_UINT32,
+                                      &vol, DBUS_TYPE_INVALID);
+                if (vol != G_MAXUINT32) {
+                        g_idle_add (volumeset_handler_idle,
+                                    GINT_TO_POINTER ((gint) vol));
+                } else {
+                        g_debug ("No parameter received for "
+                                 APP_DBUS_METHOD_SETVOLUME);
+                }
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_TOPAPP)) {
+                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
+        } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
+                                               APP_DBUS_METHOD_REQUEST_STATUS)) {
+                g_idle_add(requeststatus_handler_idle, NULL);
+        } else {
+                result = DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+        }
+
+        /* Send message reply, if handled */
+        if (result == DBUS_HANDLER_RESULT_HANDLED) {
+                reply = dbus_message_new_method_return (message);
+                dbus_connection_send (connection, reply, NULL);
+                dbus_message_unref (reply);
+
+                g_debug("D-BUS message handled");
+        }
+
+        return result;
+}
+
+gboolean
+lastfm_dbus_init(void)
+{
+        int result;
+
+        g_debug("Initializing D-Bus...");
+
+        dbus_connection = dbus_bus_get(DBUS_BUS_SESSION, NULL);
+
+        if (!dbus_connection) {
+                g_debug("Unable to get DBUS connection");
+                return FALSE;
+        }
+
+        dbus_connection_setup_with_g_main(dbus_connection, NULL);
+
+        if (!dbus_connection_add_filter(dbus_connection, dbus_req_handler,
+                                        NULL, NULL)) {
+                g_debug("Unable to add a filter");
+                return FALSE;
+        }
+
+        result = dbus_bus_request_name(dbus_connection, APP_DBUS_SERVICE,
+                                       DBUS_NAME_FLAG_DO_NOT_QUEUE,
+                                       NULL);
+
+        if (result == -1) {
+                g_debug("Unable to request name on DBUS");
+                return FALSE;
+        }
+
+        if (result == DBUS_REQUEST_NAME_REPLY_EXISTS) {
+                g_debug("Another instance is running");
+                return FALSE;
+        }
+
+        return TRUE;
+}
+
+void
+lastfm_dbus_close(void)
+{
+        dbus_connection_unref (dbus_connection);
+}

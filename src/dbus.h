@@ -42,7 +42,7 @@
 
 #ifdef HAVE_DBUS_SUPPORT
 
-const char *lastfm_dbus_init(void);
+gboolean lastfm_dbus_init(void);
 void lastfm_dbus_close(void);
 void lastfm_dbus_notify_playback(lastfm_track *track);
 void lastfm_dbus_notify_started(void);
@@ -50,7 +50,7 @@ void lastfm_dbus_notify_closing(void);
 
 #else
 
-const char *lastfm_dbus_init(void) { return NULL; }
+gboolean lastfm_dbus_init(void) { return TRUE; }
 void lastfm_dbus_close(void) { }
 void lastfm_dbus_notify_playback(lastfm_track *track) { }
 void lastfm_dbus_notify_started() { }

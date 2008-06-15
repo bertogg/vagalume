@@ -33,6 +33,10 @@
 #include "vgl-tray-icon.h"
 #endif
 
+#ifdef MAEMO
+#include <libosso.h>
+#endif
+
 static lastfm_session *session = NULL;
 static lastfm_pls *playlist = NULL;
 static rsp_session *rsp_sess = NULL;
@@ -1566,7 +1570,11 @@ void
 controller_run_app(VglMainWindow *win, const char *radio_url)
 {
         g_return_if_fail(win != NULL && mainwin == NULL);
-        const char *errmsg;
+        const char *errmsg = NULL;
+#ifdef MAEMO
+        osso_context_t *osso_context = NULL;
+#endif
+
         mainwin = win;
         vgl_main_window_show(mainwin, TRUE);
         vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
@@ -1580,7 +1588,20 @@ controller_run_app(VglMainWindow *win, const char *radio_url)
                 controller_show_error(_("Error initializing audio system"));
                 return;
         }
-        errmsg = lastfm_dbus_init();
+
+#ifdef MAEMO
+        /* Initialize osso context */
+        osso_context = osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL);
+        if (!osso_context) {
+                errmsg = _("Unable to initialize OSSO context");
+        }
+#endif
+
+        if (!errmsg) {
+                if (!lastfm_dbus_init()) {
+                        errmsg = _("Unable to initialize DBUS");
+                }
+        }
         if (!errmsg) {
                 errmsg = connection_init();
         }
@@ -1627,6 +1648,11 @@ controller_run_app(VglMainWindow *win, const char *radio_url)
         }
         lastfm_audio_clear();
         lastfm_dbus_close();
+
+#ifdef MAEMO
+        /* Cleanup OSSO context */
+        osso_deinitialize(osso_context);
+#endif
 }
 
 /**

@@ -281,7 +281,7 @@ elif test "$PLATFORM" = "gnome"; then
 
    echo "Compiling for Gnome"
 
-   # serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
+   serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
    desktopentrydir="\${datadir}/applications"
 
    if test "$enable_tray_icon" = "yes" -a "$have_tray_icon" = "no"; then
@@ -383,6 +383,7 @@ else
    echo "Maemo status bar plugin enabled: $have_sb_plugin"
    echo "Libconic support: $have_conic"
 fi
+echo "D-Bus Support enabled:" $have_dbus_glib
 echo ""
 echo "Type 'make' to compile Vagalume"
 echo ""
