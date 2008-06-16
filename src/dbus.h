@@ -9,9 +9,8 @@
 #ifndef VAGALUME_DBUS_H
 #define VAGALUME_DBUS_H
 
-#include "config.h"
 #include "globaldefs.h"
-#include "controller.h"
+#include "playlist.h"
 
 #define APP_DBUS_SERVICE "com.igalia." APP_NAME_LC
 #define APP_DBUS_OBJECT "/com/igalia/" APP_NAME_LC
