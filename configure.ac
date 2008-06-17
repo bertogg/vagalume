@@ -104,7 +104,8 @@ AC_ARG_WITH(platform, [
 Target platform:
   --with-platform=detect  detect target platform (default)
   --with-platform=gnome   compile for Gnome
-  --with-platform=maemo   compile for Maemo],
+  --with-platform=maemo   compile for Maemo
+  --with-platform=moblin  compile for Moblin (experimental)],
   PLATFORM=$withval, PLATFORM=detect)
 
 if test "$PLATFORM" = "detect"; then
@@ -199,9 +200,13 @@ if test "$PLATFORM" = "maemo"; then
    if test "$PLATFORMVERS" = "2" -o "$PLATFORMVERS" = "3"; then
       PKG_CHECK_MODULES(hildon, hildon-libs)
       PKG_CHECK_MODULES(hildonfm, hildon-fm)
+      AC_DEFINE([HILDON_LIBS], [1], [Defined if using hildon-libs])
+      AC_DEFINE([HILDON_FM], [1], [Defined if using hildon-fm])
    else
       PKG_CHECK_MODULES(hildon, hildon-1)
       PKG_CHECK_MODULES(hildonfm, hildon-fm-2)
+      AC_DEFINE([HILDON_1], [1], [Defined if using hildon-1])
+      AC_DEFINE([HILDON_FM_2], [1], [Defined if using hildon-fm-2])
    fi
    EXTRA_CFLAGS="$EXTRA_CFLAGS $hildon_CFLAGS $hildonfm_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $hildon_LIBS $hildonfm_LIBS"
@@ -257,6 +262,7 @@ if test "$PLATFORM" = "maemo"; then
    fi
 
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])
+   AC_DEFINE([USE_HILDON_WINDOW], [1], [Defined if using HildonWindow])
    if test "$PLATFORMVERS" = "2"; then
       AC_DEFINE([MAEMO2], [], [Defined if building for Maemo 2 (gregale)])
    elif test "$PLATFORMVERS" = "3"; then
@@ -295,6 +301,22 @@ elif test "$PLATFORM" = "gnome"; then
       have_tray_icon="no"
       echo "Compiling without tray icon and notifications"
    fi
+
+elif test "$PLATFORM" = "moblin"; then
+
+   # Disable tray icon support on Moblin
+   have_tray_icon="no"
+
+   echo "Compiling for Moblin"
+
+   PKG_CHECK_MODULES(hildon, hildon-1)
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $hildon_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $hildon_LIBS"
+
+   AC_DEFINE([MOBLIN], [1], [Defined if building for Moblin])
+   AC_DEFINE([HILDON_1], [1], [Defined if using hildon-1])
+   AC_DEFINE([USE_HILDON_WINDOW], [1], [Defined if using HildonWindow])
+
 else
 
    AC_MSG_ERROR([Unknown platform $PLATFORM selected])
@@ -379,7 +401,7 @@ echo "Method to compute MD5 sums: $md5_method"
 echo "\"Set IM status\" enabled: $set_im_status"
 if test "$PLATFORM" = "gnome"; then
    echo "Tray icon and notifications enabled: $have_tray_icon"
-else
+elif test "$PLATFORM" = "maemo"; then
    echo "Maemo status bar plugin enabled: $have_sb_plugin"
    echo "Libconic support: $have_conic"
 fi

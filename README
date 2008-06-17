@@ -19,6 +19,9 @@ in any Unix-like system that meets the following requirements:
    * Gnome libxml2
    * libcurl
 
+There is also experimental support for the Moblin platform. hildon-1
+is required to compile Vagalume for Moblin.
+
 Vagalume has the following features:
 
    * It plays Last.fm streams using the Last.fm protocol v1.2

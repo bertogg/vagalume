@@ -13,17 +13,22 @@
 #include "metadata.h"
 #include "util.h"
 
-#include <gtk/gtk.h>
-#if defined(MAEMO2) || defined(MAEMO3)
-#include <hildon-widgets/hildon-program.h>
-#include <hildon-widgets/hildon-banner.h>
-#include <hildon-widgets/hildon-file-chooser-dialog.h>
-#elif defined(MAEMO4)
-#include <hildon/hildon-program.h>
-#include <hildon/hildon-banner.h>
-#include <hildon/hildon-file-chooser-dialog.h>
-#endif
 #include <string.h>
+#include <gtk/gtk.h>
+
+#if defined(HILDON_LIBS)
+#        include <hildon-widgets/hildon-program.h>
+#        include <hildon-widgets/hildon-banner.h>
+#elif defined(HILDON_1)
+#        include <hildon/hildon-program.h>
+#        include <hildon/hildon-banner.h>
+#endif
+
+#if defined(HILDON_FM)
+#        include <hildon-widgets/hildon-file-chooser-dialog.h>
+#elif defined(HILDON_FM_2)
+#        include <hildon/hildon-file-chooser-dialog.h>
+#endif
 
 static void tagwin_selcombo_changed(GtkComboBox *combo, gpointer data);
 

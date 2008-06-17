@@ -18,14 +18,17 @@
 #include "xmlrpc.h"
 #include "util.h"
 
-#ifdef MAEMO
-#        define PARENT_CLASS_TYPE HILDON_TYPE_WINDOW
+#if defined(MAEMO)
 #        define ALBUM_COVER_SIZE 200
 #        define COVER_FRAME_SIZE 230
 #        define BIGBUTTON_IMG_SIZE 64
 #        define SMALLBUTTON_IMG_SIZE 50
+#elif defined(MOBLIN)
+#        define ALBUM_COVER_SIZE 230
+#        define COVER_FRAME_SIZE 250
+#        define BIGBUTTON_IMG_SIZE 98
+#        define SMALLBUTTON_IMG_SIZE 82
 #else
-#        define PARENT_CLASS_TYPE GTK_TYPE_WINDOW
 #        define ALBUM_COVER_SIZE 110
 #        define COVER_FRAME_SIZE 130
 #        define BIGBUTTON_IMG_SIZE 48
@@ -33,6 +36,12 @@
 #endif
 
 #define BIGBUTTON_SIZE ((COVER_FRAME_SIZE - 5) / 2)
+
+#ifdef USE_HILDON_WINDOW
+#        define PARENT_CLASS_TYPE HILDON_TYPE_WINDOW
+#else
+#        define PARENT_CLASS_TYPE GTK_TYPE_WINDOW
+#endif
 
 #define VGL_MAIN_WINDOW_GET_PRIVATE(object) \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), VGL_TYPE_MAIN_WINDOW, \
@@ -762,7 +771,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         GtkWidget *personal2, *neigh2, *loved2, *playlist2;
         GtkWidget *managebmk, *bmkartist, *bmktrack;
         GtkWidget *about;
-#ifdef MAEMO
+#ifdef USE_HILDON_WINDOW
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_new());
 #else
         GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_bar_new());
@@ -776,7 +785,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);
-#ifndef MAEMO
+#ifndef USE_HILDON_WINDOW
         gtk_menu_shell_append(lastfmsub, quit);
 #endif
         g_signal_connect(G_OBJECT(settings), "activate",
@@ -950,7 +959,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         gtk_menu_shell_append(helpsub, about);
         g_signal_connect(G_OBJECT(about), "activate",
                          G_CALLBACK(show_about_dialog), w);
-#ifdef MAEMO
+#ifdef USE_HILDON_WINDOW
         gtk_menu_shell_append(bar, quit);
 #endif
 
@@ -1004,7 +1013,7 @@ vgl_main_window_init(VglMainWindow *self)
         priv->progressbar_text = g_string_sized_new(30);
         g_string_assign(priv->progressbar_text, " ");
         /* Window */
-#ifndef MAEMO
+#ifndef USE_HILDON_WINDOW
         win->type = GTK_WINDOW_TOPLEVEL;
         gtk_window_set_default_size(win, 500, -1);
 #endif
@@ -1102,7 +1111,7 @@ vgl_main_window_init(VglMainWindow *self)
 
         gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(vbox));
 
-#ifdef MAEMO
+#ifdef USE_HILDON_WINDOW
         hildon_window_set_menu(HILDON_WINDOW(win), GTK_MENU(menu));
 #else
         gtk_box_pack_start(vbox, menu, FALSE, FALSE, 0);

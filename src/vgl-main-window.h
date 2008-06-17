@@ -13,10 +13,10 @@
 #include "playlist.h"
 #include <gtk/gtk.h>
 
-#if defined(MAEMO2) || defined(MAEMO3)
-#include <hildon-widgets/hildon-program.h>
-#elif defined(MAEMO4)
-#include <hildon/hildon-program.h>
+#if defined(HILDON_LIBS)
+#        include <hildon-widgets/hildon-program.h>
+#elif defined(HILDON_1)
+#        include <hildon/hildon-program.h>
 #endif
 
 G_BEGIN_DECLS
@@ -47,7 +47,7 @@ typedef struct _VglMainWindowClass VglMainWindowClass;
 
 struct _VglMainWindowClass
 {
-#ifdef MAEMO
+#ifdef USE_HILDON_WINDOW
     HildonWindowClass parent_class;
 #else
     GtkWindowClass parent_class;
@@ -56,7 +56,7 @@ struct _VglMainWindowClass
 
 struct _VglMainWindow
 {
-#ifdef MAEMO
+#ifdef USE_HILDON_WINDOW
     HildonWindow parent;
 #else
     GtkWindow parent;

@@ -34,10 +34,10 @@ SUBDIRS = src po
 
 pixmap_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
-appdata_DATA = data/$(PLATFORM)/*
 desktopentry_DATA = data/vagalume.desktop
 
 if MAEMO_PLATFORM
+appdata_DATA = data/maemo/*
 icon26dir = $(datadir)/icons/hicolor/26x26/apps
 icon26_DATA = data/icons/26x26/*
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
@@ -51,6 +51,7 @@ backupconf_DATA = data/vagalume.conf
 restoresettingsexecscriptdir = @RESTORE_SETTINGS_SCRIPTS_DIR@
 restoresettingsexecscript_SCRIPTS = data/vagalume-rfs.sh
 else
+appdata_DATA = data/gnome/*
 themeicondir = $(appdatadir)/icons/hicolor/scalable/actions
 themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg
 man1_MANS = vagalume.1
