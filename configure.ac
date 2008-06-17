@@ -55,6 +55,13 @@ PKG_CHECK_MODULES(dbus_glib, dbus-glib-1, [have_dbus_glib="yes"],
 PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
                   [have_libnotify="yes"], [have_libnotify="no"])
 
+# D-BUS versions < 1.0 require DBUS_API_SUBJECT_TO_CHANGE
+if test "$have_dbus_glib" = "yes"; then
+   if ! $PKG_CONFIG --atleast-version=1.0 dbus-1; then
+      dbus_glib_CFLAGS="$dbus_glib_CFLAGS -DDBUS_API_SUBJECT_TO_CHANGE"
+   fi
+fi
+
 # Tray icon support requires Gtk 2.10 and libnotify
 if test "$have_libnotify" = "yes"; then
    echo -n "checking for Gtk2 >= 2.10... "
