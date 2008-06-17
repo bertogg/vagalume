@@ -81,7 +81,8 @@ vgl_bookmark_mgr_get_cfgfile(void)
         if (cfgfilename == NULL) {
                 const char *cfgdir = lastfm_usercfg_get_cfgdir ();
                 if (cfgdir != NULL) {
-                        cfgfilename = g_strconcat (cfgdir, "/bookmarks", NULL);
+                        cfgfilename = g_strconcat (cfgdir, "/bookmarks.xml",
+                                                   NULL);
                 }
         }
 
