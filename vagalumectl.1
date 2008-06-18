@@ -1,0 +1,123 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH vagalumectl 1 "2008\-06\-18"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+vagalumectl \- Remotely control Vagalume via its D\-Bus interface
+.SH SYNOPSIS
+.B vagalumectl
+.I [command]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B vagalumectl
+command.
+.PP
+.B vagalumectl
+is a front end to easily control the Vagalume Last.fm client via its
+D\-Bus interface without having to use low\-level commands.
+.SH COMMANDS
+.TP
+.B play
+Start playing the last selected radio.
+.TP
+.B skip
+Skip to the next song.
+.TP
+.B stop
+Stop playing.
+.TP
+.B love
+Mark the current song as 'loved'.
+.TP
+.B ban
+Mark the current song as 'banned' and skip to the next one.
+.TP
+.BI tag "\| tag\^"
+Play a 'global tag' radio.
+.TP
+.BI artist "\| artist\^"
+Play a 'similar artists' radio.
+.TP
+.BI group "\| group\^"
+Play a 'Last.fm group' radio.
+.TP
+.BI loved "\| user\^"
+Play a user's 'loved tracks' radio.
+.TP
+.BI neighbours "\| user\^"
+Play a user's 'neighbours' radio.
+.TP
+.BI personal "\| user\^"
+Play a user's 'personal' radio.
+.TP
+.BI playlist "\| user\^"
+Play a user's playlist.
+.TP
+.BI playurl "\| url\^"
+Play an arbitrary radio URL.
+.TP
+.BI volumeup "\| [inc]\^"
+Increase playback volume. If
+.I inc
+is not specified it takes 5 as the default value. This command is not
+available on all platforms.
+.TP
+.BI volumedown "\| [inc]\^"
+Decrease playback volume. If
+.I inc
+is not specified it takes 5 as the default value. This command is not
+available on all platforms.
+.TP
+.BI volume "\| value\^"
+Set the playback volume to a specific value. This command is not
+available on all platforms.
+.TP
+.B start
+Start Vagalume (if not already running).
+.TP
+.B close
+Close Vagalume (if not already closed).
+.TP
+.B help
+Show a quick reference of all available commands.
+.SH EXAMPLES
+
+Start playing the last selected radio:
+
+  $ vagalumectl play
+
+Play your loved tracks' radio:
+
+  $ vagalumectl loved YOURUSERNAME
+
+Play your best friend's playlist:
+
+  $ vagalumectl playlist USERNAME
+
+Please notice that quotes are recommended around parameters that might
+contain white spaces, such as
+.B tag
+or
+.B artist
+, e.g:
+
+  $ vagalumectl tag "hard rock"
+  $ vagalumectl artist "Led Zeppelin"
+.SH SEE ALSO
+.BR vagalume (1)
+.SH AUTHOR
+This manpage has been written by
+Mario Sanchez Prada <msanchez@igalia.com>

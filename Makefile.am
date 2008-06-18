@@ -31,6 +31,7 @@ MAINTAINERCLEANFILES = \
 	po/Makefile.in.in
 
 SUBDIRS = src po
+man1_MANS =
 
 pixmap_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
@@ -53,12 +54,13 @@ restoresettingsexecscript_SCRIPTS = data/vagalume-rfs.sh
 else
 themeicondir = $(appdatadir)/icons/hicolor/scalable/actions
 themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg
-man1_MANS = vagalume.1
+man1_MANS += vagalume.1
 endif
 
 if HAVE_DBUS_SUPPORT
 serviceentry_DATA = data/vagalume.service
-bin_SCRIPTS = contrib/vagalumectl
+bin_SCRIPTS = scripts/vagalumectl
+man1_MANS += vagalumectl.1
 endif
 
 if HAVE_MAEMO_SB_PLUGIN
