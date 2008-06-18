@@ -294,7 +294,10 @@ elif test "$PLATFORM" = "gnome"; then
 
    echo "Compiling for Gnome"
 
-   serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
+   if test "$have_dbus_glib" = "yes"; then
+      serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
+   fi
+
    desktopentrydir="\${datadir}/applications"
 
    if test "$enable_tray_icon" = "yes" -a "$have_tray_icon" = "no"; then
