@@ -48,6 +48,8 @@ typedef struct _VglSbPluginPrivate VglSbPluginPrivate;
 struct _VglSbPluginPrivate
 {
         osso_context_t *osso_context;
+        DBusConnection *dbus_connection;
+        gboolean dbus_filter_added;
 
         gboolean is_visible;
         gboolean now_playing;
@@ -80,6 +82,8 @@ struct _VglSbPluginPrivate
         gint ban_item_handler_id;
         gint open_vagalume_item_handler_id;
         gint close_vagalume_item_handler_id;
+
+        gboolean dispose_has_run;
 };
 
 HD_DEFINE_PLUGIN (VglSbPlugin, vgl_sb_plugin, STATUSBAR_TYPE_ITEM);
@@ -88,21 +92,19 @@ HD_DEFINE_PLUGIN (VglSbPlugin, vgl_sb_plugin, STATUSBAR_TYPE_ITEM);
 /* Initialization/destruction functions */
 static void vgl_sb_plugin_class_init (VglSbPluginClass *klass);
 static void vgl_sb_plugin_init (VglSbPlugin *vsbp);
-static void vgl_sb_plugin_finalize (GObject *object);
+static void vgl_sb_plugin_dispose (GObject *object);
 
 /* Dbus stuff */
 static gboolean dbus_init (VglSbPlugin *vsbp);
-static void dbus_close (VglSbPlugin *vsbp);
-static gint dbus_req_handler (const gchar* interface, const gchar* method,
-                              GArray* arguments, gpointer data,
-                              osso_rpc_t* retval);
+static void dbus_cleanup (VglSbPlugin *vsbp);
+static DBusHandlerResult dbus_req_handler (DBusConnection *connection,
+                                           DBusMessage *message,
+                                           gpointer data);
 static void dbus_send_request (VglSbPlugin *vsbp, const gchar *request);
-static void dbus_send_request_with_param (VglSbPlugin *vsbp,
-                                          const gchar *request,
-                                          int param_type,
-                                          gpointer param_value);
+static void dbus_send_request_with_params (VglSbPlugin *vsbp, const char *request,
+                                           int first_type, ...);
 
-static void notify_handler (VglSbPlugin *vsbp, GArray* arguments);
+static void notify_handler (VglSbPlugin *vsbp, DBusMessage *message);
 
 /* Setters */
 static void set_visibility (VglSbPlugin *vsbp, gboolean visible);
@@ -127,7 +129,7 @@ static void
 vgl_sb_plugin_class_init (VglSbPluginClass *klass)
 {
         GObjectClass *object_class = G_OBJECT_CLASS (klass);
-        object_class->finalize = vgl_sb_plugin_finalize;
+        object_class->dispose = vgl_sb_plugin_dispose;
 
         g_type_class_add_private (object_class,
                                   sizeof (VglSbPluginPrivate));
@@ -140,77 +142,93 @@ static void
 vgl_sb_plugin_init (VglSbPlugin *vsbp)
 {
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        GdkPixbuf *icon_pixbuf;
 
+        /* Init private attributes to their default values */
         priv->osso_context = NULL;
+        priv->dbus_connection = NULL;
+        priv->dbus_filter_added = FALSE;
+        priv->is_visible = FALSE;
+        priv->now_playing = FALSE;
+        priv->running_app = FALSE;
+        priv->artist_string = NULL;
+        priv->track_string = NULL;
+        priv->album_string = NULL;
+        priv->button = NULL;
+        priv->icon = NULL;
+        priv->main_panel = NULL;
+        priv->artist_item = NULL;
+        priv->track_item = NULL;
+        priv->album_item = NULL;
+        priv->play_item = NULL;
+        priv->stop_item = NULL;
+        priv->next_item = NULL;
+        priv->love_item = NULL;
+        priv->ban_item = NULL;
+        priv->open_vagalume_item = NULL;
+        priv->close_vagalume_item = NULL;
+        priv->dispose_has_run = FALSE;
+
+        /* Setup libosso */
+        priv->osso_context = osso_initialize ("vgl_sb_plugin",
+                                              APP_VERSION, TRUE, NULL);
+        if (!priv->osso_context) {
+                g_debug ("Unable to initialize OSSO context");
+                return;
+        }
 
         /* Setup dbus */
-        if (dbus_init (vsbp)) {
-                GdkPixbuf *icon_pixbuf;
-                icon_pixbuf = gdk_pixbuf_new_from_file(APP_ICON, NULL);
-
-                /* Init private attributes */
-                priv->is_visible = FALSE;
-                priv->now_playing = FALSE;
-                priv->running_app = FALSE;
-                priv->artist_string = NULL;
-                priv->track_string = NULL;
-                priv->album_string = NULL;
-                priv->button = NULL;
-                priv->icon = NULL;
-                priv->main_panel = NULL;
-                priv->artist_item = NULL;
-                priv->track_item = NULL;
-                priv->album_item = NULL;
-                priv->play_item = NULL;
-                priv->stop_item = NULL;
-                priv->next_item = NULL;
-                priv->love_item = NULL;
-                priv->ban_item = NULL;
-                priv->open_vagalume_item = NULL;
-                priv->close_vagalume_item = NULL;
-
-                /* Create status bar plugin button */
-                priv->button = gtk_toggle_button_new ();
-                priv->icon = gtk_image_new_from_pixbuf (icon_pixbuf);
-                gtk_container_add (GTK_CONTAINER (priv->button), priv->icon);
-                gtk_container_add (GTK_CONTAINER (vsbp), priv->button);
-
-                /* Connect signals */
-                priv->plugin_btn_handler_id =
-                        g_signal_connect(priv->button, "toggled",
-                                         G_CALLBACK(plugin_btn_toggled), vsbp);
-
-                /* Show widgets */
-                gtk_widget_show_all (priv->button);
-
-                /* Create main panel */
-                main_panel_create (vsbp);
-
-                /* Check if vagalume is running */
-                if (vagalume_running (vsbp)) {
-                        priv->is_visible = TRUE;
-                        dbus_send_request (vsbp,
-                                           APP_DBUS_METHOD_REQUEST_STATUS);
-                }
-
-                /* Update visibililty */
-                set_visibility (vsbp, priv->is_visible);
+        if (!dbus_init (vsbp)) {
+                g_debug ("Unable to initialize D-Bus system");
+                return;
         }
+
+        /* Create status bar plugin button */
+        icon_pixbuf = gdk_pixbuf_new_from_file (APP_ICON, NULL);
+        priv->button = gtk_toggle_button_new ();
+        priv->icon = gtk_image_new_from_pixbuf (icon_pixbuf);
+        gtk_container_add (GTK_CONTAINER (priv->button), priv->icon);
+        gtk_container_add (GTK_CONTAINER (vsbp), priv->button);
+
+        /* Connect signals */
+        priv->plugin_btn_handler_id =
+                g_signal_connect (priv->button, "toggled",
+                                  G_CALLBACK(plugin_btn_toggled), vsbp);
+
+        /* Show widgets */
+        gtk_widget_show_all (priv->button);
+
+        /* Create main panel */
+        main_panel_create (vsbp);
+
+        /* Check if vagalume is running */
+        if (vagalume_running (vsbp)) {
+                priv->is_visible = TRUE;
+                dbus_send_request (vsbp,
+                                   APP_DBUS_METHOD_REQUEST_STATUS);
+        }
+
+        /* Update visibililty */
+        set_visibility (vsbp, priv->is_visible);
 }
 
 static void
-vgl_sb_plugin_finalize (GObject *object)
+vgl_sb_plugin_dispose (GObject *object)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (object);
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
-        /* Dbus */
-        dbus_close (vsbp);
-
-        /* Destroy local widgets */
-        if (priv->main_panel) {
-                gtk_widget_destroy (priv->main_panel);
+        /* Ensure dispose is called only once */
+        if (priv->dispose_has_run) {
+                return;
         }
+        priv->dispose_has_run = TRUE;
+
+        /* Dbus cleanup */
+        dbus_cleanup (vsbp);
+
+        /* Libosso cleanup */
+        osso_deinitialize (priv->osso_context);
 
         /* Disconnect handlers */
         g_signal_handler_disconnect (priv->button,
@@ -232,119 +250,153 @@ vgl_sb_plugin_finalize (GObject *object)
         g_signal_handler_disconnect (priv->close_vagalume_item,
                                      priv->close_vagalume_item_handler_id);
 
-        G_OBJECT_CLASS (g_type_class_peek_parent
-                        (G_OBJECT_GET_CLASS(object)))->finalize(object);
-}
+        /* Destroy local widgets */
+        if (priv->main_panel) {
+                gtk_widget_destroy (priv->main_panel);
+        }
 
+        /* Free private strings */
+        if (priv->artist_string != NULL) {
+                g_free (priv->artist_string);
+        }
+        if (priv->track_string != NULL) {
+                g_free (priv->track_string);
+        }
+        if (priv->album_string != NULL) {
+                g_free (priv->album_string);
+        }
+
+        G_OBJECT_CLASS (g_type_class_peek_parent
+                        (G_OBJECT_GET_CLASS(object)))->dispose(object);
+}
 
 /* Dbus stuff */
 
 static gboolean
 dbus_init(VglSbPlugin *vsbp)
 {
-  VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
-        osso_return_t result;
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
-        priv->osso_context = osso_initialize ("vgl_sb_plugin",
-                                              APP_VERSION, TRUE, NULL);
 
-        if (!priv->osso_context) {
-                g_debug ("Unable to initialize OSSO context");
+        /* Get the D-Bus connection to the session bus */
+        priv->dbus_connection = dbus_bus_get (DBUS_BUS_SESSION, NULL);
+        if (!priv->dbus_connection) {
+                g_debug ("Unable to get DBUS connection");
                 return FALSE;
         }
 
-        result = osso_rpc_set_cb_f_with_free (priv->osso_context,
-                                              SB_PLUGIN_DBUS_SERVICE,
-                                              SB_PLUGIN_DBUS_OBJECT,
-                                              SB_PLUGIN_DBUS_IFACE,
-                                              dbus_req_handler,
-                                              vsbp,
-                                              osso_rpc_free_val);
+        /* Integrate D-Bus with GMainLoop */
+        dbus_connection_setup_with_g_main (priv->dbus_connection, NULL);
 
-        if (result != OSSO_OK) {
-                g_debug ("Unable to set D-BUS callback");
+        /* Match only signals emitted from Vagalume */
+        dbus_bus_add_match (priv->dbus_connection,
+                            "type='signal',interface='" APP_DBUS_IFACE "'", NULL);
+        dbus_connection_flush (priv->dbus_connection);
+
+        /* Add a handler for incoming messages */
+        if (!dbus_connection_add_filter (priv->dbus_connection, dbus_req_handler,
+                                         vsbp, NULL)) {
+                g_debug ("Unable to add D-Bus filter");
                 return FALSE;
         }
+        priv->dbus_filter_added = TRUE;
 
         return TRUE;
 }
 
-static void dbus_close (VglSbPlugin *vsbp)
+static void dbus_cleanup (VglSbPlugin *vsbp)
 {
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
-        osso_deinitialize(priv->osso_context);
+        /* Remove filter and matching rules */
+        if (priv->dbus_filter_added) {
+                dbus_connection_remove_filter (priv->dbus_connection,
+                                               dbus_req_handler,
+                                               vsbp);
+                dbus_bus_remove_match (priv->dbus_connection,
+                                       "type='signal',interface='" APP_DBUS_IFACE "'", NULL);
+        }
+
+        /* Unref the D-bus connection */
+        if (priv->dbus_connection) {
+                dbus_connection_unref (priv->dbus_connection);
+        }
 }
 
-static gint
-dbus_req_handler(const gchar* interface, const gchar* method,
-                 GArray* arguments, gpointer data, osso_rpc_t* retval)
+static DBusHandlerResult
+dbus_req_handler (DBusConnection *connection, DBusMessage *message, gpointer data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
 
-        g_debug("Received D-BUS message: %s", method);
-
-        if (!strcmp (interface, SB_PLUGIN_DBUS_IFACE) &&
-            !strcasecmp(method, SB_PLUGIN_DBUS_METHOD_NOTIFY)) {
-                notify_handler (vsbp, arguments);
+        if (dbus_message_is_signal (message,
+                                    APP_DBUS_IFACE,
+                                    APP_DBUS_SIGNAL_NOTIFY)) {
+                /* Received a playback notification signal */
+                notify_handler (vsbp, message);
+                return DBUS_HANDLER_RESULT_HANDLED;
         }
-
-        return OSSO_OK;
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
 static void
 dbus_send_request (VglSbPlugin *vsbp, const gchar *request)
 {
-        /* Delegate on dbus_send_request_with_param() */
-        dbus_send_request_with_param (vsbp, request, DBUS_TYPE_INVALID, NULL);
+        /* Delegate on dbus_send_request_with_params() */
+        dbus_send_request_with_params (vsbp, request, DBUS_TYPE_INVALID);
 }
 
 static void
-dbus_send_request_with_param (VglSbPlugin *vsbp,
-                              const gchar *request,
-                              int param_type,
-                              gpointer param_value)
+dbus_send_request_with_params (VglSbPlugin *vsbp, const char *request, int first_type, ...)
 {
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
-        osso_return_t result;
+        DBusMessage *dbus_msg = NULL;
+        va_list ap;
 
-        result = osso_rpc_async_run (priv->osso_context,
-                                     APP_DBUS_SERVICE,
-                                     APP_DBUS_OBJECT,
-                                     APP_DBUS_IFACE,
-                                     request,
-                                     NULL,
-                                     NULL,
-                                     param_type,
-                                     param_value,
-                                     DBUS_TYPE_INVALID);
-        if (result != OSSO_OK) {
-                g_warning ("Error sending DBus message");
+        dbus_msg = dbus_message_new_method_call (APP_DBUS_SERVICE,
+                                                 APP_DBUS_OBJECT,
+                                                 APP_DBUS_IFACE,
+                                                 request);
+
+        if (first_type != DBUS_TYPE_INVALID)
+        {
+                va_start (ap, first_type);
+                dbus_message_append_args_valist (dbus_msg, first_type, ap);
+                va_end (ap);
         }
+        dbus_connection_send (priv->dbus_connection, dbus_msg, 0);
+        dbus_connection_flush (priv->dbus_connection);
+        dbus_message_unref (dbus_msg);
 }
 
 static void
-notify_handler (VglSbPlugin *vsbp, GArray* arguments)
+notify_handler (VglSbPlugin *vsbp, DBusMessage *message)
 {
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
-        osso_rpc_t val;
+        DBusMessageIter iter;
         gchar *type = NULL;
         gboolean msg_handled = FALSE;
 
         /* Ensure you have appropiate arguments */
-        g_return_if_fail (arguments->len > 0);
+        if (!dbus_message_iter_init (message, &iter))
+        {
+                g_debug ("Message has no parameters");
+                g_return_if_reached ();
+        }
 
         /* Check notification type */
-        val = g_array_index(arguments, osso_rpc_t, 0);
-        type = g_strdup(val.value.s);
+        if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
+        {
+                g_debug ("First parameter is not a string");
+                g_return_if_reached ();
+        }
+        dbus_message_iter_get_basic (&iter, &type);
 
         /* Let's assume that an application is running
            if a message was received from Vagalume */
         priv->running_app = TRUE;
 
-        if (!strcmp (type, SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING)) {
+        if (!strcmp (type, APP_DBUS_SIGNAL_NOTIFY_PLAYING)) {
                 /* Retrieve arguments */
-
                 gchar *artist = NULL;
                 gchar *track = NULL;
                 gchar *album = NULL;
@@ -352,21 +404,21 @@ notify_handler (VglSbPlugin *vsbp, GArray* arguments)
                 g_debug ("NOTIFY PLAYING RECEIVED");
 
                 /* Artist */
-                if (arguments->len > 1) {
-                        val = g_array_index(arguments, osso_rpc_t, 1);
-                        artist = g_strdup(val.value.s);
+                if (dbus_message_iter_next (&iter) &&
+                    dbus_message_iter_get_arg_type (&iter) == DBUS_TYPE_STRING) {
+                        dbus_message_iter_get_basic (&iter, &artist);
                 }
 
                 /* Track title */
-                if (arguments->len > 2) {
-                        val = g_array_index(arguments, osso_rpc_t, 2);
-                        track = g_strdup(val.value.s);
+                if (dbus_message_iter_next (&iter) &&
+                    dbus_message_iter_get_arg_type (&iter) == DBUS_TYPE_STRING) {
+                        dbus_message_iter_get_basic (&iter, &track);
                 }
 
                 /* Album */
-                if (arguments->len > 3) {
-                        val = g_array_index(arguments, osso_rpc_t, 3);
-                        album = g_strdup(val.value.s);
+                if (dbus_message_iter_next (&iter) &&
+                    dbus_message_iter_get_arg_type (&iter) == DBUS_TYPE_STRING) {
+                        dbus_message_iter_get_basic (&iter, &album);
                 }
 
                 /* Update private attributes */
@@ -374,11 +426,7 @@ notify_handler (VglSbPlugin *vsbp, GArray* arguments)
                 priv->now_playing = TRUE;
 
                 msg_handled = TRUE;
-
-                g_free (artist);
-                g_free (track);
-                g_free (album);
-        } else if (!strcmp (type, SB_PLUGIN_DBUS_METHOD_NOTIFY_STOPPED)) {
+        } else if (!strcmp (type, APP_DBUS_SIGNAL_NOTIFY_STOPPED)) {
                 g_debug ("NOTIFY STOPPED RECEIVED");
 
                 /* Update private attributes */
@@ -386,7 +434,7 @@ notify_handler (VglSbPlugin *vsbp, GArray* arguments)
                 priv->now_playing = FALSE;
 
                 msg_handled = TRUE;
-        } else if (!strcmp (type, SB_PLUGIN_DBUS_METHOD_NOTIFY_STARTED)) {
+        } else if (!strcmp (type, APP_DBUS_SIGNAL_NOTIFY_STARTED)) {
                 g_debug ("NOTIFY STARTED RECEIVED");
 
                 /* Set the plugin invisible */
@@ -394,7 +442,7 @@ notify_handler (VglSbPlugin *vsbp, GArray* arguments)
                 dbus_send_request (vsbp, APP_DBUS_METHOD_REQUEST_STATUS);
 
                 msg_handled = TRUE;
-        } else if (!strcmp (type, SB_PLUGIN_DBUS_METHOD_NOTIFY_CLOSING)) {
+        } else if (!strcmp (type, APP_DBUS_SIGNAL_NOTIFY_CLOSING)) {
                 g_debug ("NOTIFY CLOSING RECEIVED");
 
                 /* Update private attributes */
@@ -409,10 +457,7 @@ notify_handler (VglSbPlugin *vsbp, GArray* arguments)
                 /* Wrong notification */
                 g_debug ("Wrong notification received: %s", type);
                 msg_handled = FALSE;
-                return;
         }
-
-        g_free (type);
 
         /* If the message was handled update the panel */
         if (msg_handled) {
@@ -707,6 +752,7 @@ main_panel_item_activated (GtkWidget *item, gpointer data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        const gboolean interactive = TRUE;
 
         if (item == priv->play_item) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_PLAY);
@@ -718,16 +764,18 @@ main_panel_item_activated (GtkWidget *item, gpointer data)
                 dbus_send_request (vsbp, APP_DBUS_METHOD_SKIP);
                 g_debug ("DBUS request sent: Skip");
         } else if (item == priv->love_item) {
-                dbus_send_request_with_param (vsbp,
-                                              APP_DBUS_METHOD_LOVETRACK,
-                                              DBUS_TYPE_BOOLEAN,
-                                              GINT_TO_POINTER(TRUE));
+                dbus_send_request_with_params (vsbp,
+                                               APP_DBUS_METHOD_LOVETRACK,
+                                               DBUS_TYPE_BOOLEAN,
+                                               &interactive,
+                                               DBUS_TYPE_INVALID);
                 g_debug ("DBUS request sent: LoveTrack");
         } else if (item == priv->ban_item) {
-                dbus_send_request_with_param (vsbp,
-                                              APP_DBUS_METHOD_BANTRACK,
-                                              DBUS_TYPE_BOOLEAN,
-                                              GINT_TO_POINTER(TRUE));
+                dbus_send_request_with_params (vsbp,
+                                               APP_DBUS_METHOD_BANTRACK,
+                                               DBUS_TYPE_BOOLEAN,
+                                               &interactive,
+                                               DBUS_TYPE_INVALID);
                 g_debug ("DBUS request sent: BanTrack");
         } else if (item == priv->open_vagalume_item) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_SHOWWINDOW);

@@ -15,6 +15,8 @@
 #define APP_DBUS_SERVICE "com.igalia." APP_NAME_LC
 #define APP_DBUS_OBJECT "/com/igalia/" APP_NAME_LC
 #define APP_DBUS_IFACE APP_DBUS_SERVICE
+
+/* D-Bus methods */
 #define APP_DBUS_METHOD_PLAYURL "PlayUrl"
 #define APP_DBUS_METHOD_PLAY "Play"
 #define APP_DBUS_METHOD_STOP "Stop"
@@ -30,14 +32,12 @@
 #define APP_DBUS_METHOD_TOPAPP "top_application"
 #define APP_DBUS_METHOD_REQUEST_STATUS "request_status"
 
-#define SB_PLUGIN_DBUS_SERVICE "com.igalia.vagalume_sb_plugin"
-#define SB_PLUGIN_DBUS_OBJECT "/com/igalia/vagalume_sb_plugin"
-#define SB_PLUGIN_DBUS_IFACE SB_PLUGIN_DBUS_SERVICE
-#define SB_PLUGIN_DBUS_METHOD_NOTIFY "notify"
-#define SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING "playing"
-#define SB_PLUGIN_DBUS_METHOD_NOTIFY_STOPPED "stopped"
-#define SB_PLUGIN_DBUS_METHOD_NOTIFY_STARTED "started"
-#define SB_PLUGIN_DBUS_METHOD_NOTIFY_CLOSING "closing"
+/* D-Bus signals */
+#define APP_DBUS_SIGNAL_NOTIFY "notify"
+#define APP_DBUS_SIGNAL_NOTIFY_PLAYING "playing"
+#define APP_DBUS_SIGNAL_NOTIFY_STOPPED "stopped"
+#define APP_DBUS_SIGNAL_NOTIFY_STARTED "started"
+#define APP_DBUS_SIGNAL_NOTIFY_CLOSING "closing"
 
 #ifdef HAVE_DBUS_SUPPORT
 

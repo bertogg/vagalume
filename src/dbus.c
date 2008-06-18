@@ -135,13 +135,11 @@ send_message(char *message, int first_type, ...)
         DBusMessage *dbus_msg = NULL;
         va_list ap;
 
-        dbus_msg = dbus_message_new_method_call (SB_PLUGIN_DBUS_SERVICE,
-                                                 SB_PLUGIN_DBUS_OBJECT,
-                                                 SB_PLUGIN_DBUS_IFACE,
-                                                 message);
-        dbus_message_set_no_reply (dbus_msg, TRUE);
-        if (first_type != DBUS_TYPE_INVALID)
-        {
+        dbus_msg = dbus_message_new_signal(APP_DBUS_OBJECT,
+                                           APP_DBUS_IFACE,
+                                           message);
+
+        if (first_type != DBUS_TYPE_INVALID) {
                 va_start (ap, first_type);
                 dbus_message_append_args_valist (dbus_msg, first_type, ap);
                 va_end (ap);
@@ -158,8 +156,8 @@ lastfm_dbus_notify_playback (lastfm_track *track)
 
         if (track != NULL) {
                 /* Now playing */
-                param = SB_PLUGIN_DBUS_METHOD_NOTIFY_PLAYING;
-                send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                param = APP_DBUS_SIGNAL_NOTIFY_PLAYING;
+                send_message(APP_DBUS_SIGNAL_NOTIFY,
                              DBUS_TYPE_STRING, &param,
                              DBUS_TYPE_STRING, &track->artist,
                              DBUS_TYPE_STRING, &track->title,
@@ -168,8 +166,8 @@ lastfm_dbus_notify_playback (lastfm_track *track)
 
         } else {
                 /* Stopped */
-                param = SB_PLUGIN_DBUS_METHOD_NOTIFY_STOPPED;
-                send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+                param = APP_DBUS_SIGNAL_NOTIFY_STOPPED;
+                send_message(APP_DBUS_SIGNAL_NOTIFY,
                              DBUS_TYPE_STRING, &param,
                              DBUS_TYPE_INVALID);
         }
@@ -178,9 +176,9 @@ lastfm_dbus_notify_playback (lastfm_track *track)
 void
 lastfm_dbus_notify_started(void)
 {
-        const char *param = SB_PLUGIN_DBUS_METHOD_NOTIFY_STARTED;
+        const char *param = APP_DBUS_SIGNAL_NOTIFY_STARTED;
 
-        send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+        send_message(APP_DBUS_SIGNAL_NOTIFY,
                      DBUS_TYPE_STRING,
                      &param,
                      DBUS_TYPE_INVALID);
@@ -189,19 +187,32 @@ lastfm_dbus_notify_started(void)
 void
 lastfm_dbus_notify_closing(void)
 {
-        const char *param = SB_PLUGIN_DBUS_METHOD_NOTIFY_CLOSING;
+        const char *param = APP_DBUS_SIGNAL_NOTIFY_CLOSING;
 
-        send_message(SB_PLUGIN_DBUS_METHOD_NOTIFY,
+        send_message(APP_DBUS_SIGNAL_NOTIFY,
                      DBUS_TYPE_STRING,
                      &param,
                      DBUS_TYPE_INVALID);
+}
+
+static gboolean
+method_is_interactive (DBusMessage *message)
+{
+        gboolean interactive = FALSE;
+        DBusMessageIter iter;
+
+        if (dbus_message_iter_init (message, &iter) &&
+            dbus_message_iter_get_arg_type (&iter) == DBUS_TYPE_BOOLEAN) {
+                dbus_message_iter_get_basic (&iter, &interactive);
+        }
+
+        return interactive;
 }
 
 static DBusHandlerResult
 dbus_req_handler(DBusConnection *connection, DBusMessage *message,
                  gpointer user_data)
 {
-        DBusMessage *reply = NULL;
         DBusHandlerResult result = DBUS_HANDLER_RESULT_HANDLED;
 
         if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
@@ -223,16 +234,12 @@ dbus_req_handler(DBusConnection *connection, DBusMessage *message,
                 g_idle_add(skip_handler_idle, NULL);
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_LOVETRACK)) {
-                gboolean interactive;
-                dbus_message_get_args (message, NULL, DBUS_TYPE_BOOLEAN,
-                                       &interactive, DBUS_TYPE_INVALID);
+                gboolean interactive = method_is_interactive (message);
                 g_idle_add (lovetrack_handler_idle,
                             GINT_TO_POINTER (interactive));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_BANTRACK)) {
-                gboolean interactive;
-                dbus_message_get_args (message, NULL, DBUS_TYPE_BOOLEAN,
-                                       &interactive, DBUS_TYPE_INVALID);
+                gboolean interactive = method_is_interactive (message);
                 g_idle_add (bantrack_handler_idle,
                             GINT_TO_POINTER (interactive));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
@@ -286,13 +293,12 @@ dbus_req_handler(DBusConnection *connection, DBusMessage *message,
                 result = DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
         }
 
-        /* Send message reply, if handled */
-        if (result == DBUS_HANDLER_RESULT_HANDLED) {
-                reply = dbus_message_new_method_return (message);
-                dbus_connection_send (connection, reply, NULL);
-                dbus_message_unref (reply);
-
-                g_debug("D-BUS message handled");
+        /* Send message reply, if needed */
+        if (result == DBUS_HANDLER_RESULT_HANDLED &&
+            !dbus_message_get_no_reply(message)) {
+                DBusMessage *reply  = dbus_message_new_method_return(message);
+                dbus_connection_send(connection, reply, NULL);
+                dbus_message_unref(reply);
         }
 
         return result;
