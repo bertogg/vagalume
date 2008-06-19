@@ -1,5 +1,8 @@
 2008-06-19  Alberto Garcia  <agarcia@igalia.com>
 
+	* Makefile.am: Install vagalumectl manpage only in the Gnome
+	version
+
 	* ChangeLog: added ChangeLog file
 
 2008-06-18  Mario Sanchez Prada <msanchez@igalia.com>

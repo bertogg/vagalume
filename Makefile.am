@@ -31,12 +31,22 @@ MAINTAINERCLEANFILES = \
 	po/Makefile.in.in
 
 SUBDIRS = src po
-man1_MANS =
+manpages = vagalume.1
 
 pixmap_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
 desktopentry_DATA = data/vagalume.desktop
 appdata_DATA = data/$(PLATFORM)/*
+
+if HAVE_DBUS_SUPPORT
+serviceentry_DATA = data/vagalume.service
+bin_SCRIPTS = scripts/vagalumectl
+manpages += vagalumectl.1
+endif
+
+if HAVE_MAEMO_SB_PLUGIN
+sbplugindesktopentry_DATA = data/vagalume-sb-plugin.desktop
+endif
 
 if MAEMO_PLATFORM
 icon26dir = $(datadir)/icons/hicolor/26x26/apps
@@ -54,17 +64,7 @@ restoresettingsexecscript_SCRIPTS = data/vagalume-rfs.sh
 else
 themeicondir = $(appdatadir)/icons/hicolor/scalable/actions
 themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg
-man1_MANS += vagalume.1
-endif
-
-if HAVE_DBUS_SUPPORT
-serviceentry_DATA = data/vagalume.service
-bin_SCRIPTS = scripts/vagalumectl
-man1_MANS += vagalumectl.1
-endif
-
-if HAVE_MAEMO_SB_PLUGIN
-sbplugindesktopentry_DATA = data/vagalume-sb-plugin.desktop
+man1_MANS = $(manpages)
 endif
 
 edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@ICONDIR\@,$(icondir),g'
