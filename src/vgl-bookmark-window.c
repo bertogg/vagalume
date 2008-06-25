@@ -338,7 +338,8 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
 static GtkWidget *
 vgl_bookmark_window_new(GtkWindow *parent)
 {
-        GtkWidget *win = g_object_new(VGL_TYPE_BOOKMARK_WINDOW, NULL);
+        GtkWidget *win = g_object_new (VGL_TYPE_BOOKMARK_WINDOW,
+                                       "default-height", 300, NULL);
         if (parent) {
                 gtk_window_set_transient_for(GTK_WINDOW(win), parent);
         }
