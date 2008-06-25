@@ -1,3 +1,8 @@
+2008-06-25  Alberto Garcia  <agarcia@igalia.com>
+
+	* configure.ac: Don't enable media player keys if there's no D-BUS
+	support.
+
 2008-06-25  Mario Sanchez Prada <msanchez@igalia.com>
 
 	* configure.ac:

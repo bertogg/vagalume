@@ -296,6 +296,8 @@ elif test "$PLATFORM" = "gnome"; then
 
    if test "$have_dbus_glib" = "yes"; then
       serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
+      AC_DEFINE([HAVE_GSD_MEDIA_PLAYER_KEYS], [1],
+                [Media player keys in some keyboards])
    fi
 
    desktopentrydir="\${datadir}/applications"
@@ -311,9 +313,6 @@ elif test "$PLATFORM" = "gnome"; then
       have_tray_icon="no"
       echo "Compiling without tray icon and notifications"
    fi
-
-   AC_DEFINE([HAVE_GSD_MEDIA_PLAYER_KEYS], [1],
-             [Media player keys in some keyboards])
 
 elif test "$PLATFORM" = "moblin"; then
 
