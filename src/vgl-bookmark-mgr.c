@@ -172,6 +172,7 @@ vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr)
 
         doc = xmlNewDoc ((xmlChar *) "1.0");;
         root = xmlNewNode (NULL, (xmlChar *) "bookmarks");
+        xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
         xmlDocSetRootElement (doc, root);
 
         for (l = priv->bookmarks; l != NULL; l = l->next) {

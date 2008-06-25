@@ -1,5 +1,8 @@
 2008-06-25  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_save_to_disk): Add
+	version number to the XML file.
+
 	* src/vgl-bookmark-window.c
 	(vgl_bookmark_window_show):
 	Move the static bookmark_window variable to
