@@ -39,6 +39,23 @@
 #define APP_DBUS_SIGNAL_NOTIFY_STARTED "started"
 #define APP_DBUS_SIGNAL_NOTIFY_CLOSING "closing"
 
+#ifdef HAVE_GSD_MEDIA_PLAYER_KEYS
+
+/* Gnome Settings Daemon - Media Player Keys D-Bus interface */
+#define GSD_DBUS_SERVICE "org.gnome.SettingsDaemon"
+#define GSD_DBUS_MK_OBJECT "/org/gnome/SettingsDaemon/MediaKeys"
+#define GSD_DBUS_MK_IFACE GSD_DBUS_SERVICE ".MediaKeys"
+
+#define GSD_DBUS_MK_GRAB_KEYS "GrabMediaPlayerKeys"
+#define GSD_DBUS_MK_RELEASE_KEYS "ReleaseMediaPlayerKeys"
+#define GSD_DBUS_MK_KEYPRESSED "MediaPlayerKeyPressed"
+#define GSD_DBUS_MK_KEYPRESSED_STOP "Stop"
+#define GSD_DBUS_MK_KEYPRESSED_PLAY "Play"
+#define GSD_DBUS_MK_KEYPRESSED_PREVIOUS "Previous"
+#define GSD_DBUS_MK_KEYPRESSED_NEXT "Next"
+
+#endif /* HAVE_GSD_MEDIA_PLAYER_KEYS */
+
 #ifdef HAVE_DBUS_SUPPORT
 
 gboolean lastfm_dbus_init(void);

@@ -1,3 +1,11 @@
+2008-06-25  Mario Sanchez Prada <msanchez@igalia.com>
+
+	* configure.ac:
+	* src/dbus.c:
+	* src/dbus.h:
+	Add support for the media player keys present in some keyboards
+	via the Gnome Settings Daemon.
+
 2008-06-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am: Install vagalumectl manpage only in the Gnome

@@ -312,6 +312,9 @@ elif test "$PLATFORM" = "gnome"; then
       echo "Compiling without tray icon and notifications"
    fi
 
+   AC_DEFINE([HAVE_GSD_MEDIA_PLAYER_KEYS], [1],
+             [Media player keys in some keyboards])
+
 elif test "$PLATFORM" = "moblin"; then
 
    # Disable tray icon support on Moblin

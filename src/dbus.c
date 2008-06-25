@@ -17,6 +17,7 @@
 #include <dbus/dbus-glib-lowlevel.h>
 
 static DBusConnection *dbus_connection = NULL;
+static gboolean dbus_filter_added = FALSE;
 
 static gboolean
 playurl_handler_idle(gpointer data)
@@ -120,6 +121,85 @@ requeststatus_handler_idle(gpointer data)
         return FALSE;
 }
 
+#ifdef HAVE_GSD_MEDIA_PLAYER_KEYS
+
+static gboolean
+gsd_mp_keys_handler_idle(gpointer data)
+{
+        g_return_val_if_fail (data != NULL, FALSE);
+
+        gchar *key_pressed = (gchar *) data;
+        GCallback key_handler = NULL;
+
+        if (g_str_equal(key_pressed, GSD_DBUS_MK_KEYPRESSED_STOP)) {
+                key_handler = controller_stop_playing;
+        } else if (g_str_equal(key_pressed, GSD_DBUS_MK_KEYPRESSED_PLAY) &&
+                   (controller_get_current_track () == NULL)) {
+                key_handler = controller_start_playing;
+        } else if (g_str_equal(key_pressed, GSD_DBUS_MK_KEYPRESSED_NEXT)) {
+                key_handler = controller_skip_track;
+        }
+
+        if (key_handler) {
+                gdk_threads_enter();
+                key_handler ();
+                gdk_threads_leave();
+        }
+
+        /* Free passed memory */
+        g_free (key_pressed);
+
+        return FALSE;
+}
+
+static void
+grab_media_player_keys(void)
+{
+        DBusMessage *dbus_msg = NULL;
+        gchar *app_name = g_strdup (APP_NAME);
+        guint32 unknown;
+
+        dbus_msg = dbus_message_new_method_call(GSD_DBUS_SERVICE,
+                                                GSD_DBUS_MK_OBJECT,
+                                                GSD_DBUS_MK_IFACE,
+                                                GSD_DBUS_MK_GRAB_KEYS);
+
+        dbus_message_append_args (dbus_msg,
+                                  DBUS_TYPE_STRING, &app_name,
+                                  DBUS_TYPE_UINT32, &unknown,
+                                  DBUS_TYPE_INVALID);
+
+        dbus_connection_send (dbus_connection, dbus_msg, 0);
+        dbus_connection_flush (dbus_connection);
+        dbus_message_unref (dbus_msg);
+
+        g_free (app_name);
+}
+
+static void
+release_media_player_keys(void)
+{
+        DBusMessage *dbus_msg = NULL;
+        gchar *app_name = g_strdup (APP_NAME);
+
+        dbus_msg = dbus_message_new_method_call(GSD_DBUS_SERVICE,
+                                                GSD_DBUS_MK_OBJECT,
+                                                GSD_DBUS_MK_IFACE,
+                                                GSD_DBUS_MK_RELEASE_KEYS);
+
+        dbus_message_append_args (dbus_msg,
+                                  DBUS_TYPE_STRING, &app_name,
+                                  DBUS_TYPE_INVALID);
+
+        dbus_connection_send (dbus_connection, dbus_msg, 0);
+        dbus_connection_flush (dbus_connection);
+        dbus_message_unref (dbus_msg);
+
+        g_free (app_name);
+}
+
+#endif /* HAVE_GSD_MEDIA_PLAYER_KEYS */
+
 static gboolean
 closeapp_handler_idle(gpointer data)
 {
@@ -215,6 +295,7 @@ dbus_req_handler(DBusConnection *connection, DBusMessage *message,
 {
         DBusHandlerResult result = DBUS_HANDLER_RESULT_HANDLED;
 
+        /* Check calls to Vagalume D-Bus methods */
         if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                         APP_DBUS_METHOD_PLAYURL)) {
                 char *url = NULL;
@@ -293,6 +374,27 @@ dbus_req_handler(DBusConnection *connection, DBusMessage *message,
                 result = DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
         }
 
+#ifdef HAVE_GSD_MEDIA_PLAYER_KEYS
+        /* Match signals from the Gnome Settings Daemon */
+        if (dbus_message_is_signal(message, GSD_DBUS_MK_IFACE,
+                                   GSD_DBUS_MK_KEYPRESSED)) {
+                gchar *app_name = NULL;
+                gchar *key_pressed = NULL;
+
+                dbus_message_get_args(message, NULL,
+                                      DBUS_TYPE_STRING, &app_name,
+                                      DBUS_TYPE_STRING, &key_pressed,
+                                      DBUS_TYPE_INVALID);
+
+                if (app_name != NULL && key_pressed != NULL &&
+                    g_str_equal (app_name, APP_NAME)) {
+                        g_idle_add(gsd_mp_keys_handler_idle,
+                                   g_strdup (key_pressed));
+                }
+                result = DBUS_HANDLER_RESULT_HANDLED;
+        }
+#endif /* HAVE_GSD_MEDIA_PLAYER_KEYS */
+
         /* Send message reply, if needed */
         if (result == DBUS_HANDLER_RESULT_HANDLED &&
             !dbus_message_get_no_reply(message)) {
@@ -311,8 +413,8 @@ lastfm_dbus_init(void)
 
         g_debug("Initializing D-Bus...");
 
+        /* Get D-Bus connection */
         dbus_connection = dbus_bus_get(DBUS_BUS_SESSION, NULL);
-
         if (!dbus_connection) {
                 g_debug("Unable to get DBUS connection");
                 return FALSE;
@@ -320,12 +422,34 @@ lastfm_dbus_init(void)
 
         dbus_connection_setup_with_g_main(dbus_connection, NULL);
 
-        if (!dbus_connection_add_filter(dbus_connection, dbus_req_handler,
-                                        NULL, NULL)) {
+        /* Add D-Bus handler */
+        dbus_filter_added = dbus_connection_add_filter(dbus_connection,
+                                                       dbus_req_handler,
+                                                       NULL,
+                                                       NULL);
+        if (!dbus_filter_added) {
                 g_debug("Unable to add a filter");
                 return FALSE;
         }
 
+#ifdef HAVE_GSD_MEDIA_PLAYER_KEYS
+        /* Grab media player keys for Vagalume */
+        grab_media_player_keys();
+
+        /* Match gnome-settings-daemon signals for media player keys  */
+        dbus_bus_add_match (dbus_connection,
+                            "type='signal',interface='" GSD_DBUS_MK_IFACE "'",
+                            NULL);
+
+        dbus_connection_flush (dbus_connection);
+#endif /* HAVE_GSD_MEDIA_PLAYER_KEYS */
+
+        /* Release name in D-Bus if already present */
+        if (dbus_bus_name_has_owner(dbus_connection, APP_DBUS_SERVICE, NULL)) {
+                dbus_bus_release_name(dbus_connection, APP_DBUS_SERVICE, NULL);
+        }
+
+        /* Request name in D-Bus for Vagalume */
         result = dbus_bus_request_name(dbus_connection, APP_DBUS_SERVICE,
                                        DBUS_NAME_FLAG_DO_NOT_QUEUE,
                                        NULL);
@@ -346,5 +470,26 @@ lastfm_dbus_init(void)
 void
 lastfm_dbus_close(void)
 {
-        dbus_connection_unref (dbus_connection);
+        /* Remove filter, if added */
+        if (dbus_filter_added) {
+                dbus_connection_remove_filter (dbus_connection,
+                                               dbus_req_handler,
+                                               NULL);
+        }
+
+#ifdef HAVE_GSD_MEDIA_PLAYER_KEYS
+        /* Remove matching rules */
+        dbus_bus_remove_match (dbus_connection,
+                               "type='signal',interface='"
+                               GSD_DBUS_MK_IFACE "'",
+                               NULL);
+
+        /* Release media player keys for Vagalume */
+        release_media_player_keys();
+#endif /* HAVE_GSD_MEDIA_PLAYER_KEYS */
+
+        /* Unref the D-bus connection */
+        if (dbus_connection) {
+                dbus_connection_unref (dbus_connection);
+        }
 }
