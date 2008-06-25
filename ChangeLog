@@ -4,6 +4,7 @@
 	(vgl_bookmark_window_show):
 	Move the static bookmark_window variable to
 	vgl_bookmark_window_show() and clear it using a weak pointer.
+	Rename 'bookmark_window' to just 'win'
 	(play_selected_row, close_button_clicked, vgl_bookmark_window_init)
 	(vgl_bookmark_window_close):
 	Make vgl_bookmark_window_close() receive the window to be

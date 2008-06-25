@@ -360,11 +360,10 @@ void
 vgl_bookmark_window_show(GtkWindow *parent)
 {
         /* Singleton, only one bookmark window can exist */
-        static GtkWidget *bookmark_window = NULL;
-        if (bookmark_window == NULL) {
-                bookmark_window = vgl_bookmark_window_new (parent);
-                g_object_add_weak_pointer (G_OBJECT (bookmark_window),
-                                           (gpointer) &bookmark_window);
+        static GtkWidget *win = NULL;
+        if (win == NULL) {
+                win = vgl_bookmark_window_new (parent);
+                g_object_add_weak_pointer (G_OBJECT (win), (gpointer) &win);
         }
-        gtk_window_present(GTK_WINDOW(bookmark_window));
+        gtk_window_present (GTK_WINDOW (win));
 }
