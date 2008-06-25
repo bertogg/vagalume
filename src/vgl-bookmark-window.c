@@ -14,9 +14,6 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-/* Singleton, only one bookmark window can exist */
-static VglBookmarkWindow *bookmark_window = NULL;
-
 enum {
         ID_COLUMN,
         NAME_COLUMN,
@@ -36,7 +33,7 @@ struct _VglBookmarkWindowPrivate {
         GtkWidget *playbtn, *addbtn, *editbtn, *delbtn, *closebtn;
 };
 
-static void vgl_bookmark_window_close(void);
+static void vgl_bookmark_window_close(VglBookmarkWindow *win);
 
 static gboolean
 find_bookmark_by_id(GtkTreeModel *model, int id, GtkTreeIter *iter)
@@ -121,7 +118,7 @@ play_selected_row(VglBookmarkWindow *win)
         } else {
                 g_critical("Play button clicked with no item selected!");
         }
-        vgl_bookmark_window_close();
+        vgl_bookmark_window_close(win);
         if (url != NULL) {
                 controller_play_radio_by_url(url);
                 g_free(url);
@@ -204,7 +201,7 @@ delete_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 static void
 close_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 {
-        vgl_bookmark_window_close();
+        vgl_bookmark_window_close(win);
 }
 
 static void
@@ -304,7 +301,7 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
                          G_CALLBACK(close_button_clicked), self);
         g_signal_connect(sel, "changed", G_CALLBACK(selection_changed), self);
         g_signal_connect(self, "delete-event",
-                         G_CALLBACK(vgl_bookmark_window_close), NULL);
+                         G_CALLBACK(vgl_bookmark_window_close), self);
         g_signal_connect(priv->mgr, "bookmark-added",
                          G_CALLBACK(bookmark_added_cb), self);
         g_signal_connect(priv->mgr, "bookmark-changed",
@@ -349,23 +346,25 @@ vgl_bookmark_window_new(GtkWindow *parent)
 }
 
 static void
-vgl_bookmark_window_close(void)
+vgl_bookmark_window_close(VglBookmarkWindow *win)
 {
         VglBookmarkWindowPrivate *priv;
-        priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE (bookmark_window);
+        priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE (win);
 
         vgl_bookmark_mgr_save_to_disk (priv->mgr);
 
-        gtk_widget_destroy(GTK_WIDGET(bookmark_window));
-        bookmark_window = NULL;
+        gtk_widget_destroy(GTK_WIDGET(win));
 }
 
 void
 vgl_bookmark_window_show(GtkWindow *parent)
 {
+        /* Singleton, only one bookmark window can exist */
+        static GtkWidget *bookmark_window = NULL;
         if (bookmark_window == NULL) {
-                bookmark_window = VGL_BOOKMARK_WINDOW(
-                        vgl_bookmark_window_new(parent));
+                bookmark_window = vgl_bookmark_window_new (parent);
+                g_object_add_weak_pointer (G_OBJECT (bookmark_window),
+                                           (gpointer) &bookmark_window);
         }
         gtk_window_present(GTK_WINDOW(bookmark_window));
 }
