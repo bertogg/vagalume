@@ -73,6 +73,19 @@ vgl_bookmark_change(VglBookmark *bookmark, const char *newname,
         }
 }
 
+static int
+vgl_bookmark_compare (gconstpointer bookmark, gconstpointer bookmark_id)
+{
+        const VglBookmark *bmk = (const VglBookmark *) bookmark;
+        int id = GPOINTER_TO_INT (bookmark_id);
+        g_return_val_if_fail (bmk != NULL && id >= 0, 0);
+        if (bmk->id == id) {
+                return 0;
+        } else {
+                return (bmk->id > id) ? 1 : -1;
+        }
+}
+
 static const char *
 vgl_bookmark_mgr_get_cfgfile(void)
 {
@@ -275,15 +288,8 @@ vgl_bookmark_mgr_find_bookmark_node(VglBookmarkMgr *mgr, int id)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0, NULL);
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
-        GList *l;
-
-        for (l = priv->bookmarks; l != NULL; l = l->next) {
-                VglBookmark *bmk = (VglBookmark *) l->data;
-                if (bmk->id == id) {
-                        return l;
-                }
-        }
-        return NULL;
+        return g_list_find_custom (priv->bookmarks, GINT_TO_POINTER (id),
+                                   vgl_bookmark_compare);
 }
 
 int
@@ -350,4 +356,33 @@ vgl_bookmark_mgr_get_bookmark_list(VglBookmarkMgr *mgr)
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr), NULL);
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
         return priv->bookmarks;
+}
+
+/**
+ * Reorders the list of bookmarks using the bookmark IDs as keys.
+ *
+ * @param mgr The bookmark manager
+ * @para ids An array indicating the new order, finishing with -1
+ */
+void
+vgl_bookmark_mgr_reorder (VglBookmarkMgr *mgr, const int *ids)
+{
+        g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr));
+        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE (mgr);
+        GList *iter;
+        int pos = 0;
+        for (iter = priv->bookmarks; iter != NULL; iter = iter->next, pos++) {
+                VglBookmark *bmk = (VglBookmark *) iter->data;
+                int id = ids [pos];
+                g_return_if_fail (bmk != NULL && id != -1);
+                if (bmk->id != id) {
+                        GList *l;
+                        l = g_list_find_custom (iter, GINT_TO_POINTER (id),
+                                                vgl_bookmark_compare);
+                        g_return_if_fail (l != NULL);
+                        iter->data = l->data;
+                        l->data = bmk;
+                }
+        }
+        g_return_if_fail (ids [pos] == -1);
 }

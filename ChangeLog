@@ -1,3 +1,19 @@
+2008-06-27  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-bookmark-mgr.h
+	* src/vgl-bookmark-mgr.c
+	(vgl_bookmark_mgr_reorder):
+	New function to reorder items in the bookmark list.
+	(vgl_bookmark_mgr_find_bookmark_node, vgl_bookmark_compare):
+	Use g_list_find_custom() to find bookmarks.
+
+	* src/vgl-bookmark-window.c
+	(vgl_bookmark_window_init)
+	(vgl_bookmark_window_finalize):	Disconnect signal handlers using
+	their ID.
+	(drag_end_cb): Reorder items in the bookmark manager after a drag
+	and drop.
+
 2008-06-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-window.c (vgl_bookmark_window_new): Set a

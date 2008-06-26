@@ -58,6 +58,7 @@ void vgl_bookmark_mgr_change_bookmark(VglBookmarkMgr *mgr, int id,
 const VglBookmark *vgl_bookmark_mgr_get_bookmark(VglBookmarkMgr *mgr, int id);
 const GList *vgl_bookmark_mgr_get_bookmark_list(VglBookmarkMgr *mgr);
 void vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr);
+void vgl_bookmark_mgr_reorder(VglBookmarkMgr *mgr, const int *ids);
 
 G_END_DECLS
 

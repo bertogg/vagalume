@@ -21,6 +21,13 @@ enum {
         N_COLUMNS
 };
 
+enum {
+        BMK_ADDED,
+        BMK_CHANGED,
+        BMK_REMOVED,
+        N_SIGNALS
+};
+
 #define VGL_BOOKMARK_WINDOW_GET_PRIVATE(object) \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), VGL_TYPE_BOOKMARK_WINDOW, \
                                       VglBookmarkWindowPrivate))
@@ -31,9 +38,35 @@ struct _VglBookmarkWindowPrivate {
         GtkTreeView *treeview;
         VglBookmarkMgr *mgr;
         GtkWidget *playbtn, *addbtn, *editbtn, *delbtn, *closebtn;
+        gulong sig[N_SIGNALS];
 };
 
 static void vgl_bookmark_window_close(VglBookmarkWindow *win);
+
+/* After a drag and drop, make sure that the bookmark manager keeps
+ * the items in the same order as the treeview */
+static void
+drag_end_cb (GtkWidget *widget, GdkDragContext *ctx, VglBookmarkWindow *win)
+{
+        g_return_if_fail (VGL_IS_BOOKMARK_WINDOW (win));
+        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE (win);
+        GtkTreeIter iter;
+        GtkTreeModel *model = gtk_tree_view_get_model (priv->treeview);
+        gboolean valid = gtk_tree_model_get_iter_first (model, &iter);
+        int length = gtk_tree_model_iter_n_children (model, NULL);
+        int *ids = g_new (int, length + 1); /* List of bookmark IDs */
+        int pos = 0;
+        while (valid) {
+                GValue val = { 0 };
+                gtk_tree_model_get_value (model, &iter, ID_COLUMN, &val);
+                ids [pos++] = g_value_get_int (&val);
+                g_value_unset (&val);
+                valid = gtk_tree_model_iter_next (model, &iter);
+        }
+        ids [pos] = -1; /* Terminate the list */
+        vgl_bookmark_mgr_reorder (priv->mgr, ids);
+        g_free (ids);
+}
 
 static gboolean
 find_bookmark_by_id(GtkTreeModel *model, int id, GtkTreeIter *iter)
@@ -227,8 +260,9 @@ vgl_bookmark_window_finalize (GObject *object)
 {
         VglBookmarkWindow *win = VGL_BOOKMARK_WINDOW(object);
         VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
-        g_signal_handlers_disconnect_matched(priv->mgr, G_SIGNAL_MATCH_DATA,
-                                             0, 0, NULL, NULL, win);
+        g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_ADDED]);
+        g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_CHANGED]);
+        g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_REMOVED]);
         g_signal_handlers_destroy(object);
         G_OBJECT_CLASS(vgl_bookmark_window_parent_class)->finalize(object);
 }
@@ -291,6 +325,8 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
                          G_CALLBACK(play_button_clicked), self);
         g_signal_connect(priv->treeview, "row-activated",
                          G_CALLBACK(row_clicked), self);
+        g_signal_connect(priv->treeview, "drag-end",
+                         G_CALLBACK(drag_end_cb), self);
         g_signal_connect(priv->addbtn, "clicked",
                          G_CALLBACK(add_button_clicked), self);
         g_signal_connect(priv->editbtn, "clicked",
@@ -302,12 +338,16 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
         g_signal_connect(sel, "changed", G_CALLBACK(selection_changed), self);
         g_signal_connect(self, "delete-event",
                          G_CALLBACK(vgl_bookmark_window_close), self);
-        g_signal_connect(priv->mgr, "bookmark-added",
-                         G_CALLBACK(bookmark_added_cb), self);
-        g_signal_connect(priv->mgr, "bookmark-changed",
-                         G_CALLBACK(bookmark_changed_cb), self);
-        g_signal_connect(priv->mgr, "bookmark-removed",
-                         G_CALLBACK(bookmark_removed_cb), self);
+
+        priv->sig[BMK_ADDED] = g_signal_connect (
+                priv->mgr, "bookmark-added",
+                G_CALLBACK (bookmark_added_cb), self);
+        priv->sig[BMK_CHANGED] = g_signal_connect (
+                priv->mgr, "bookmark-changed",
+                G_CALLBACK (bookmark_changed_cb), self);
+        priv->sig[BMK_REMOVED] = g_signal_connect (
+                priv->mgr, "bookmark-removed",
+                G_CALLBACK (bookmark_removed_cb), self);
 
         /* Set initial state of buttons */
         selection_changed(sel, self);
