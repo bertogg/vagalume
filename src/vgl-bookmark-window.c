@@ -315,6 +315,7 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
         gtk_tree_view_set_headers_visible(priv->treeview, FALSE);
         gtk_tree_view_append_column(priv->treeview, col);
         gtk_tree_view_set_reorderable(priv->treeview, TRUE);
+        gtk_tree_view_set_search_column(priv->treeview, NAME_COLUMN);
 
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrwindow),
                                        GTK_POLICY_AUTOMATIC,

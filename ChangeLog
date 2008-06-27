@@ -1,5 +1,8 @@
 2008-06-27  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-bookmark-window.c (vgl_bookmark_window_init): Enable
+	searching in the treeview.
+
 	* src/vgl-bookmark-mgr.h
 	* src/vgl-bookmark-mgr.c
 	(vgl_bookmark_mgr_reorder):
