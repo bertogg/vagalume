@@ -6,6 +6,7 @@
  * See the README file for more details.
  */
 
+#include "globaldefs.h"
 #include "vgl-bookmark-mgr.h"
 #include "userconfig.h"
 #include "util.h"
@@ -13,17 +14,14 @@
 #include <libxml/parser.h>
 #include <glib.h>
 
-/* Singleton, only one bookmark manager can exist */
-static VglBookmarkMgr *bookmark_mgr = NULL;
-
 enum {
   ADDED,
   REMOVED,
   CHANGED,
-  LAST_SIGNAL
+  N_SIGNALS
 };
 
-static guint mgr_signals[LAST_SIGNAL] = { 0 };
+static guint mgr_signals[N_SIGNALS] = { 0 };
 
 G_DEFINE_TYPE (VglBookmarkMgr, vgl_bookmark_mgr, G_TYPE_OBJECT);
 
@@ -146,11 +144,18 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
         /* Get root element */
         if (doc != NULL) {
                 xmlNode *root = xmlDocGetRootElement (doc);
-                if (!xmlStrcmp(root->name, (const xmlChar *) "bookmarks")) {
-                        node = root->xmlChildrenNode;
-                } else {
+                xmlChar *mv = xmlGetProp (root, (xmlChar *) "version");
+                if (mv == NULL ||
+                    xmlStrcmp (root->name, (const xmlChar *) "bookmarks")) {
                         g_warning ("Error parsing bookmark file");
+                } else if (xmlStrcmp (mv, (const xmlChar *) "1")) {
+                        g_warning ("This bookmark file is version %s, but "
+                                   "Vagalume " APP_VERSION " can only "
+                                   "read version 1", mv);
+                } else {
+                        node = root->xmlChildrenNode;
                 }
+                if (mv != NULL) xmlFree (mv);
         }
 
         /* Parse each bookmark */
@@ -186,6 +191,7 @@ vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr)
         doc = xmlNewDoc ((xmlChar *) "1.0");;
         root = xmlNewNode (NULL, (xmlChar *) "bookmarks");
         xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
+        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "1");
         xmlDocSetRootElement (doc, root);
 
         for (l = priv->bookmarks; l != NULL; l = l->next) {
@@ -277,10 +283,13 @@ vgl_bookmark_mgr_class_init(VglBookmarkMgrClass *klass)
 VglBookmarkMgr *
 vgl_bookmark_mgr_get_instance(void)
 {
-        if (bookmark_mgr == NULL) {
-                bookmark_mgr = vgl_bookmark_mgr_new();
+        /* Singleton, only one bookmark manager can exist */
+        static VglBookmarkMgr *mgr = NULL;
+        if (mgr == NULL) {
+                mgr = vgl_bookmark_mgr_new();
+                g_object_add_weak_pointer (G_OBJECT (mgr), (gpointer) &mgr);
         }
-        return bookmark_mgr;
+        return mgr;
 }
 
 static GList *

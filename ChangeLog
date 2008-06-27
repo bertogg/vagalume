@@ -6,6 +6,12 @@
 	New function to reorder items in the bookmark list.
 	(vgl_bookmark_mgr_find_bookmark_node, vgl_bookmark_compare):
 	Use g_list_find_custom() to find bookmarks.
+	(vgl_bookmark_mgr_get_instance): Move static bookmark_mgr variable
+	here and clear it using a weak pointer.
+	(vgl_bookmark_mgr_load_from_disk): Check version number of
+	bookmark file.
+	(vgl_bookmark_mgr_save_to_disk): Store revision number of bookmark
+	file.
 
 	* src/vgl-bookmark-window.c
 	(vgl_bookmark_window_init)
