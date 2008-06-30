@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-30 11:17+0200\n"
-"PO-Revision-Date: 2008-05-16 12:51+0200\n"
+"PO-Revision-Date: 2008-06-30 13:22+0300\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -58,12 +58,11 @@ msgstr "Fails eksistē. Pārrakstīt?"
 
 #: src/controller.c:946
 msgid "Artist added to bookmarks"
-msgstr ""
+msgstr "Pievienots grāmatzīmēm"
 
 #: src/controller.c:953
-#, fuzzy
 msgid "Track added to bookmarks"
-msgstr "Ieraksts pievienots repertuāram"
+msgstr "Ieraksts pievienots grāmatzīmēm"
 
 #: src/controller.c:987
 msgid "Really mark track as loved?"
@@ -194,9 +193,8 @@ msgid "Unable to initialize OSSO context"
 msgstr "Neizdevās inicializēt OSSO kontekstu"
 
 #: src/controller.c:1602
-#, fuzzy
 msgid "Unable to initialize DBUS"
-msgstr "Neizdevās inicializēt OSSO kontekstu"
+msgstr "Neizdevās inicializēt DBUS"
 
 #: src/dlwin.c:100
 msgid "Download complete!"
@@ -260,23 +258,23 @@ msgstr "Apstiprinājums"
 
 #: src/uimisc.c:213
 msgid "Add bookmark"
-msgstr ""
+msgstr "Pievienot grāmatzīmi"
 
 #: src/uimisc.c:213
 msgid "Edit bookmark"
-msgstr ""
+msgstr "Labot grāmatzīmi"
 
 #: src/uimisc.c:214
 msgid "Bookmark name"
-msgstr ""
+msgstr "Grāmatzīmes nosaukums"
 
 #: src/uimisc.c:215
 msgid "Last.fm radio address"
-msgstr ""
+msgstr "Last.fm radio adrese"
 
 #: src/uimisc.c:240
 msgid "Invalid bookmark name"
-msgstr ""
+msgstr "Nederīgs grāmatzīmes nosaukums"
 
 #: src/uimisc.c:277 src/uimisc.c:450
 msgid "Select download directory"
@@ -532,7 +530,7 @@ msgstr "Rekomendācijas ziņa"
 #. Configure widgets
 #: src/vgl-bookmark-window.c:308
 msgid "Bookmarks"
-msgstr ""
+msgstr "Grāmatzīmes"
 
 #: src/vgl-main-window.c:80
 msgid "Start playing"
@@ -625,7 +623,7 @@ msgstr "Somu"
 
 #: src/vgl-main-window.c:689
 msgid "French"
-msgstr ""
+msgstr "Franču"
 
 #: src/vgl-main-window.c:690
 msgid "Galician"
@@ -637,7 +635,7 @@ msgstr "Itāļu"
 
 #: src/vgl-main-window.c:691
 msgid "Latvian"
-msgstr ""
+msgstr "Latviešu"
 
 #: src/vgl-main-window.c:691 src/vgl-main-window.c:692
 msgid "Portuguese"
@@ -732,7 +730,7 @@ msgstr "_Darbības"
 
 #: src/vgl-main-window.c:884 src/vgl-sb-plugin.c:35 src/vgl-tray-icon.c:33
 msgid "Play"
-msgstr "_Atskaņot"
+msgstr "Atskaņot"
 
 #: src/vgl-main-window.c:885 src/vgl-sb-plugin.c:36 src/vgl-tray-icon.c:34
 msgid "Stop"
@@ -764,20 +762,19 @@ msgstr "Rekomendēt..."
 
 #: src/vgl-main-window.c:934
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Grāmatzīmes"
 
 #: src/vgl-main-window.c:936
 msgid "Manage bookmarks..."
-msgstr ""
+msgstr "Pārvaldīt grāmatzīmes..."
 
 #: src/vgl-main-window.c:937
 msgid "Bookmark this artist"
-msgstr ""
+msgstr "Pievienot šo izpildītāju grāmatzīmēm"
 
 #: src/vgl-main-window.c:938
-#, fuzzy
 msgid "Bookmark this track"
-msgstr "Aizliegt šo ierakstu"
+msgstr "Pievienot šo ierakstu grāmatzīmēm"
 
 #. Help
 #: src/vgl-main-window.c:954
@@ -849,8 +846,3 @@ msgstr ""
 msgid "Tags..."
 msgstr "Tagi..."
 
-#~ msgid "Unable to set D-BUS callback"
-#~ msgstr "Neizdodas uzstādīt D-BUS izsaukumu"
-
-#~ msgid "Unable to set hw callback"
-#~ msgstr "Neizdodas uzstādīt aparatūras izsaukumu"
