@@ -1,5 +1,12 @@
 2008-06-30  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.h
+	* src/controller.c (controller_run_app)
+	* src/main.c (main): Move creation of main window from main() to
+	controller_run_app()
+
+2008-06-30  Alberto Garcia  <agarcia@igalia.com>
+
 	* po/lv.po: Updated Latvian translation (by Pēteris Caune)
 
 	* po/it.po: Updated Italian translation (by Andrea Grandi)

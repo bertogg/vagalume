@@ -24,7 +24,6 @@
 #include <unistd.h>
 
 #include "controller.h"
-#include "vgl-main-window.h"
 #include "globaldefs.h"
 #include "audio.h"
 
@@ -35,7 +34,6 @@
 int
 main (int argc, char **argv)
 {
-        VglMainWindow *mainwin;
         char *radio = NULL;
 
         signal(SIGPIPE, SIG_IGN);
@@ -103,8 +101,7 @@ main (int argc, char **argv)
         gtk_icon_theme_append_search_path(
                 gtk_icon_theme_get_default(), THEME_ICONS_DIR);
 
-        mainwin = VGL_MAIN_WINDOW(vgl_main_window_new());
-        controller_run_app(mainwin, radio);
+        controller_run_app (radio);
         g_free(radio);
 
         gdk_threads_leave ();

@@ -1567,15 +1567,15 @@ controller_quit_app(void)
  *                  command line
  */
 void
-controller_run_app(VglMainWindow *win, const char *radio_url)
+controller_run_app (const char *radio_url)
 {
-        g_return_if_fail(win != NULL && mainwin == NULL);
+        g_return_if_fail (mainwin == NULL);
         const char *errmsg = NULL;
 #ifdef MAEMO
         osso_context_t *osso_context = NULL;
 #endif
 
-        mainwin = win;
+        mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());
         vgl_main_window_show(mainwin, TRUE);
         vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
                                   NULL);
