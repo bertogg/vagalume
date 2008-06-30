@@ -167,7 +167,7 @@ gboolean
 tag_track(const char *user, const char *password, const lastfm_track *track,
           request_type type, GSList *tags)
 {
-        g_return_val_if_fail(user && password && track && tags, FALSE);
+        g_return_val_if_fail(user && password && track, FALSE);
         gboolean retval;
         char *request;
         xmlNode *param1, *param2, *param3, *param4;

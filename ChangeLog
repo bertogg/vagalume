@@ -1,5 +1,11 @@
 2008-06-30  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/xmlrpc.c (tag_track)
+	* src/controller.c (controller_tag_track): Allow removing all tags
+	from a track. Fixes #2655.
+
+2008-06-30  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.h
 	* src/controller.c (controller_run_app)
 	* src/main.c (main): Move creation of main window from main() to

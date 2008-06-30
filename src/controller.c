@@ -1078,8 +1078,11 @@ controller_tag_track()
         accept = tagwin_run(vgl_main_window_get_window(mainwin, FALSE),
                             usercfg->username, &tags,
                             usertags, track, &type);
-        if (accept && tags != NULL && tags[0] != '\0') {
+        if (accept) {
                 tag_data *d = g_slice_new0(tag_data);
+                if (tags == NULL) {
+                        tags = g_strdup("");
+                }
                 d->track = track;
                 d->taglist = tags;
                 d->type = type;
