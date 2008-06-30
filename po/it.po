@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-30 11:17+0200\n"
-"PO-Revision-Date: 2008-05-14 14:33+0200\n"
+"PO-Revision-Date: 2008-06-30 14:57+0200\n"
 "Last-Translator: Andrea Grandi <a.grandi@gmail.com>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -58,12 +58,11 @@ msgstr "Il file esiste. Sovrascrivere?"
 
 #: src/controller.c:946
 msgid "Artist added to bookmarks"
-msgstr ""
+msgstr "Artista aggiunto ai segnalibri"
 
 #: src/controller.c:953
-#, fuzzy
 msgid "Track added to bookmarks"
-msgstr "Traccia aggiunta alla playlist"
+msgstr "Traccia aggiunta ai segnalibri"
 
 #: src/controller.c:987
 msgid "Really mark track as loved?"
@@ -196,9 +195,8 @@ msgid "Unable to initialize OSSO context"
 msgstr "Impossibile inizializzare la libreria OSSO"
 
 #: src/controller.c:1602
-#, fuzzy
 msgid "Unable to initialize DBUS"
-msgstr "Impossibile inizializzare la libreria OSSO"
+msgstr "Impossibile inizializzare la libreria DBUS"
 
 #: src/dlwin.c:100
 msgid "Download complete!"
@@ -261,23 +259,23 @@ msgstr "Conferma"
 
 #: src/uimisc.c:213
 msgid "Add bookmark"
-msgstr ""
+msgstr "Aggiungi ai segnalibri"
 
 #: src/uimisc.c:213
 msgid "Edit bookmark"
-msgstr ""
+msgstr "Modifica segnalibri"
 
 #: src/uimisc.c:214
 msgid "Bookmark name"
-msgstr ""
+msgstr "Nome segnalibro"
 
 #: src/uimisc.c:215
 msgid "Last.fm radio address"
-msgstr ""
+msgstr "Indirizzo della radio Last.fm"
 
 #: src/uimisc.c:240
 msgid "Invalid bookmark name"
-msgstr ""
+msgstr "Nome di segnalibro non valido"
 
 #: src/uimisc.c:277 src/uimisc.c:450
 msgid "Select download directory"
@@ -535,7 +533,7 @@ msgstr "Messaggio di raccomandazione"
 #. Configure widgets
 #: src/vgl-bookmark-window.c:308
 msgid "Bookmarks"
-msgstr ""
+msgstr "Segnalibri"
 
 #: src/vgl-main-window.c:80
 msgid "Start playing"
@@ -628,7 +626,7 @@ msgstr "Finlandese"
 
 #: src/vgl-main-window.c:689
 msgid "French"
-msgstr ""
+msgstr "Francese"
 
 #: src/vgl-main-window.c:690
 msgid "Galician"
@@ -640,7 +638,7 @@ msgstr "Italiano"
 
 #: src/vgl-main-window.c:691
 msgid "Latvian"
-msgstr ""
+msgstr "Lettone"
 
 #: src/vgl-main-window.c:691 src/vgl-main-window.c:692
 msgid "Portuguese"
@@ -767,20 +765,19 @@ msgstr "Raccomanda..."
 
 #: src/vgl-main-window.c:934
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Segnalibri"
 
 #: src/vgl-main-window.c:936
 msgid "Manage bookmarks..."
-msgstr ""
+msgstr "Gestione segnalibri..."
 
 #: src/vgl-main-window.c:937
 msgid "Bookmark this artist"
-msgstr ""
+msgstr "Aggiungi questo artista ai segnalibri"
 
 #: src/vgl-main-window.c:938
-#, fuzzy
 msgid "Bookmark this track"
-msgstr "Banna questa traccia"
+msgstr "Aggiungi questa traccia ai segnalibri"
 
 #. Help
 #: src/vgl-main-window.c:954
@@ -852,8 +849,3 @@ msgstr ""
 msgid "Tags..."
 msgstr "Etichette..."
 
-#~ msgid "Unable to set D-BUS callback"
-#~ msgstr "Impossibile impostare la callback D-BUS"
-
-#~ msgid "Unable to set hw callback"
-#~ msgstr "Impossibile impostare la callback hw"
