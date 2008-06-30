@@ -1,3 +1,9 @@
+2008-06-30  Alberto Garcia  <agarcia@igalia.com>
+
+	* po/de.po, po/es.po, po/fi.po, po/fr.po, po/gl.po, po/it.po
+	* po/lv.po, po/pt.po, po/pt_BR.po, po/vagalume.pot: Update
+	translation files
+
 2008-06-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* scripts/vagalumectl: Check for dbus-send
