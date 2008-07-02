@@ -1,5 +1,10 @@
 2008-07-02  Alberto Garcia  <agarcia@igalia.com>
 
+	* TRANSLATORS
+	* po/fi.po
+	* src/vgl-main-window.c: Updated Finnish translation (by Mika
+	Tapojärvi and Tommi Franttila)
+
 	* po/pt.po: Updated Portuguese translation (by Marcos Garcia)
 
 2008-06-30  Alberto Garcia  <agarcia@igalia.com>
