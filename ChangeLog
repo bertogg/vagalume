@@ -1,3 +1,8 @@
+2008-07-04  Alberto Garcia  <agarcia@igalia.com>
+
+	* debian/control.maemo (Build-Depends): Updated Build-Depends for
+	Maemo.
+
 2008-07-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
