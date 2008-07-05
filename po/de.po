@@ -1,7 +1,6 @@
 # Copyright (C) 2007,2008 Alberto Garcia Gonzalez
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
-#
 # Stephan Reichholf <stephan@reichholf.net>, 2008
 # Oskar Welzl <mail@welzl.info>, 2008
 msgid ""
@@ -9,12 +8,12 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-30 11:17+0200\n"
-"PO-Revision-Date: 2008-05-14 14:33+0200\n"
+"PO-Revision-Date: 2008-07-06 01:28+0200\n"
 "Last-Translator: Oskar Welzl <mail@welzl.info>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: src/connection.c:55
 msgid "Error initializing internet connection manager"
@@ -56,12 +55,11 @@ msgstr "Datei existiert. Überschreiben?"
 
 #: src/controller.c:946
 msgid "Artist added to bookmarks"
-msgstr ""
+msgstr "Interpret zu Favoriten hinzugefügt"
 
 #: src/controller.c:953
-#, fuzzy
 msgid "Track added to bookmarks"
-msgstr "Titel zur Playlist hinzugefügt"
+msgstr "Titel zu Lesezeichen hinzugefügt"
 
 #: src/controller.c:987
 msgid "Really mark track as loved?"
@@ -192,9 +190,8 @@ msgid "Unable to initialize OSSO context"
 msgstr "OSSO Kontext konnte nicht initialisiert werden"
 
 #: src/controller.c:1602
-#, fuzzy
 msgid "Unable to initialize DBUS"
-msgstr "OSSO Kontext konnte nicht initialisiert werden"
+msgstr "DBUS konnte nicht initialisiert werden"
 
 #: src/dlwin.c:100
 msgid "Download complete!"
@@ -257,23 +254,23 @@ msgstr "Bestätigung"
 
 #: src/uimisc.c:213
 msgid "Add bookmark"
-msgstr ""
+msgstr "Lesezeichen hinzufügen"
 
 #: src/uimisc.c:213
 msgid "Edit bookmark"
-msgstr ""
+msgstr "Lesezeichen bearbeiten"
 
 #: src/uimisc.c:214
 msgid "Bookmark name"
-msgstr ""
+msgstr "Name des Lesezeichens"
 
 #: src/uimisc.c:215
 msgid "Last.fm radio address"
-msgstr ""
+msgstr "Last.fm-Radio Adresse"
 
 #: src/uimisc.c:240
 msgid "Invalid bookmark name"
-msgstr ""
+msgstr "Ungültiger Name des Lesezeichens"
 
 #: src/uimisc.c:277 src/uimisc.c:450
 msgid "Select download directory"
@@ -529,7 +526,7 @@ msgstr "Empfehlungsnachricht"
 #. Configure widgets
 #: src/vgl-bookmark-window.c:308
 msgid "Bookmarks"
-msgstr ""
+msgstr "Lesezeichen"
 
 #: src/vgl-main-window.c:80
 msgid "Start playing"
@@ -622,7 +619,7 @@ msgstr "Finnisch"
 
 #: src/vgl-main-window.c:689
 msgid "French"
-msgstr ""
+msgstr "Französisch"
 
 #: src/vgl-main-window.c:690
 msgid "Galician"
@@ -634,7 +631,7 @@ msgstr "Italienisch"
 
 #: src/vgl-main-window.c:691
 msgid "Latvian"
-msgstr ""
+msgstr "Lettisch"
 
 #: src/vgl-main-window.c:691 src/vgl-main-window.c:692
 msgid "Portuguese"
@@ -761,20 +758,19 @@ msgstr "Empfehlen..."
 
 #: src/vgl-main-window.c:934
 msgid "_Bookmarks"
-msgstr ""
+msgstr "Lese_zeichen"
 
 #: src/vgl-main-window.c:936
 msgid "Manage bookmarks..."
-msgstr ""
+msgstr "Lesezeichen verwalten..."
 
 #: src/vgl-main-window.c:937
 msgid "Bookmark this artist"
-msgstr ""
+msgstr "Interpreten zu Lesezeichen hinzufügen"
 
 #: src/vgl-main-window.c:938
-#, fuzzy
 msgid "Bookmark this track"
-msgstr "Nie mehr spielen"
+msgstr "Titel zu Lesezeichen hinzufügen"
 
 #. Help
 #: src/vgl-main-window.c:954
