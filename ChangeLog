@@ -1,3 +1,7 @@
+2008-07-07  Alberto Garcia  <agarcia@igalia.com>
+
+	* debian/control: Added 'Homepage:' field
+
 2008-07-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po: Updated German translation (by Oskar Welzl).
