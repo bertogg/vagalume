@@ -1,5 +1,8 @@
 2008-07-07  Alberto Garcia  <agarcia@igalia.com>
 
+	* po/pt_BR.po: Updated Brazilian Portuguese translation (by
+	Rodrigo Flores)
+
 	* debian/control: Added 'Homepage:' field
 
 2008-07-06  Alberto Garcia  <agarcia@igalia.com>

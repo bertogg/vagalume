@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.5.1-1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-30 11:17+0200\n"
-"PO-Revision-Date: 2008-05-14 14:33+0200\n"
+"PO-Revision-Date: 2008-07-06 23:373+0300\n"
 "Last-Translator: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
 "Language-Team: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -56,12 +56,11 @@ msgstr "O arquivo existe. Sobrescrevê-lo?"
 
 #: src/controller.c:946
 msgid "Artist added to bookmarks"
-msgstr ""
+msgstr "Artista adicionado aos marcadores"
 
 #: src/controller.c:953
-#, fuzzy
 msgid "Track added to bookmarks"
-msgstr "Faixa adicionada à lista de reprodução"
+msgstr "Faixa adicionada aos marcadores"
 
 #: src/controller.c:987
 msgid "Really mark track as loved?"
@@ -191,9 +190,8 @@ msgid "Unable to initialize OSSO context"
 msgstr "Não foi possível iniciar contexto OSSO"
 
 #: src/controller.c:1602
-#, fuzzy
 msgid "Unable to initialize DBUS"
-msgstr "Não foi possível iniciar contexto OSSO"
+msgstr "Não foi possível iniciar DBUS"
 
 #: src/dlwin.c:100
 msgid "Download complete!"
@@ -257,23 +255,23 @@ msgstr "Confirmação"
 
 #: src/uimisc.c:213
 msgid "Add bookmark"
-msgstr ""
+msgstr "Adicionar marcador"
 
 #: src/uimisc.c:213
 msgid "Edit bookmark"
-msgstr ""
+msgstr "Editar marcador"
 
 #: src/uimisc.c:214
 msgid "Bookmark name"
-msgstr ""
+msgstr "Nome do marcador"
 
 #: src/uimisc.c:215
 msgid "Last.fm radio address"
-msgstr ""
+msgstr "Endereço da rádio do Last.fm"
 
 #: src/uimisc.c:240
 msgid "Invalid bookmark name"
-msgstr ""
+msgstr "Nome do marcador inválido"
 
 #: src/uimisc.c:277 src/uimisc.c:450
 msgid "Select download directory"
@@ -529,7 +527,7 @@ msgstr "Mensagem de recomendação"
 #. Configure widgets
 #: src/vgl-bookmark-window.c:308
 msgid "Bookmarks"
-msgstr ""
+msgstr "Marcadores"
 
 #: src/vgl-main-window.c:80
 msgid "Start playing"
@@ -622,7 +620,7 @@ msgstr "Finlandês"
 
 #: src/vgl-main-window.c:689
 msgid "French"
-msgstr ""
+msgstr "Francês"
 
 #: src/vgl-main-window.c:690
 msgid "Galician"
@@ -634,7 +632,7 @@ msgstr "Italiano"
 
 #: src/vgl-main-window.c:691
 msgid "Latvian"
-msgstr ""
+msgstr "Lituano"
 
 #: src/vgl-main-window.c:691 src/vgl-main-window.c:692
 msgid "Portuguese"
@@ -761,20 +759,19 @@ msgstr "Recomendar..."
 
 #: src/vgl-main-window.c:934
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Marcadores"
 
 #: src/vgl-main-window.c:936
 msgid "Manage bookmarks..."
-msgstr ""
+msgstr "Gerenciar Marcadores..."
 
 #: src/vgl-main-window.c:937
 msgid "Bookmark this artist"
-msgstr ""
+msgstr "Marcar este artista"
 
 #: src/vgl-main-window.c:938
-#, fuzzy
 msgid "Bookmark this track"
-msgstr "Banir esta faixa"
+msgstr "Marcar esta faixa"
 
 #. Help
 #: src/vgl-main-window.c:954
