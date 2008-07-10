@@ -1,5 +1,7 @@
 2008-07-10  Alberto Garcia  <agarcia@igalia.com>
 
+	* po/fi.po: Minor translation fixes.
+
 	* src/dbus.h
 	* src/dbus.c
 	(lastfm_dbus_init):

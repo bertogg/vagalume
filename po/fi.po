@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-02 14:36+0300\n"
-"PO-Revision-Date: 2008-07-02 22:07+0200\n"
+"PO-Revision-Date: 2008-07-10 12:03+0200\n"
 "Last-Translator: Mika Tapojärvi <mika.tapojarvi@sse.fi>\n"
 "Language-Team: Finnish\n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,6 @@ msgid "Artist added to bookmarks"
 msgstr "Esittäjä lisätty kirjanmerkkeihin"
 
 #: src/controller.c:970
-#, fuzzy
 msgid "Track added to bookmarks"
 msgstr "Kappale lisätty kirjanmerkkeihin"
 
@@ -193,7 +192,6 @@ msgid "Unable to initialize OSSO context"
 msgstr "Virhe käynnistäessä OSSO-palvelua"
 
 #: src/controller.c:1622
-#, fuzzy
 msgid "Unable to initialize DBUS"
 msgstr "Virhe käynnistäessä DBUS-palvelua"
 
@@ -657,7 +655,7 @@ msgstr "Lopeta"
 #. Radio
 #: src/vgl-main-window.c:820
 msgid "Play _Radio"
-msgstr "Soita _Radiota"
+msgstr "Soita _radiota"
 
 #: src/vgl-main-window.c:822
 msgid "My radios"
@@ -773,7 +771,6 @@ msgid "Bookmark this artist"
 msgstr "Lisää tämä esittäjä kirjanmerkkeihin"
 
 #: src/vgl-main-window.c:961
-#, fuzzy
 msgid "Bookmark this track"
 msgstr "Lisää tämä kappale kirjanmerkkeihin"
 
