@@ -56,21 +56,29 @@
 
 #endif /* HAVE_GSD_MEDIA_PLAYER_KEYS */
 
+typedef enum {
+        DBUS_INIT_OK,
+        DBUS_INIT_ERROR,
+        DBUS_INIT_ALREADY_RUNNING
+} DbusInitReturnCode;
+
 #ifdef HAVE_DBUS_SUPPORT
 
-gboolean lastfm_dbus_init(void);
+DbusInitReturnCode lastfm_dbus_init(void);
 void lastfm_dbus_close(void);
 void lastfm_dbus_notify_playback(lastfm_track *track);
 void lastfm_dbus_notify_started(void);
 void lastfm_dbus_notify_closing(void);
+void lastfm_dbus_play_radio_url(const char *url);
 
 #else
 
-gboolean lastfm_dbus_init(void) { return TRUE; }
+DbusInitReturnCode lastfm_dbus_init(void) { return DBUS_INIT_OK; }
 void lastfm_dbus_close(void) { }
 void lastfm_dbus_notify_playback(lastfm_track *track) { }
-void lastfm_dbus_notify_started() { }
-void lastfm_dbus_notify_closing() { }
+void lastfm_dbus_notify_started(void) { }
+void lastfm_dbus_notify_closing(void) { }
+void lastfm_dbus_play_radio(void) { }
 
 #endif /* HAVE_DBUS_SUPPORT */
 

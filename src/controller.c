@@ -1577,6 +1577,17 @@ controller_run_app (const char *radio_url)
 #ifdef MAEMO
         osso_context_t *osso_context = NULL;
 #endif
+        DbusInitReturnCode dbuscode = lastfm_dbus_init ();
+        if (dbuscode == DBUS_INIT_ERROR) {
+                errmsg = _("Unable to initialize DBUS");
+        } else if (dbuscode == DBUS_INIT_ALREADY_RUNNING) {
+                if (radio_url) {
+                        g_debug ("Playing radio URL %s in running instance",
+                                 radio_url);
+                        lastfm_dbus_play_radio_url (radio_url);
+                }
+                return;
+        }
 
         mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());
         vgl_main_window_show(mainwin, TRUE);
@@ -1587,24 +1598,21 @@ controller_run_app (const char *radio_url)
         check_usercfg(FALSE);
         playlist = lastfm_pls_new();
 
-        if (!lastfm_audio_init()) {
+        if (!errmsg && !lastfm_audio_init()) {
                 controller_show_error(_("Error initializing audio system"));
                 return;
         }
 
 #ifdef MAEMO
         /* Initialize osso context */
-        osso_context = osso_initialize(APP_NAME_LC, APP_VERSION, FALSE, NULL);
-        if (!osso_context) {
-                errmsg = _("Unable to initialize OSSO context");
-        }
-#endif
-
         if (!errmsg) {
-                if (!lastfm_dbus_init()) {
-                        errmsg = _("Unable to initialize DBUS");
+                osso_context = osso_initialize (APP_NAME_LC,
+                                                APP_VERSION, FALSE, NULL);
+                if (!osso_context) {
+                        errmsg = _("Unable to initialize OSSO context");
                 }
         }
+#endif
         if (!errmsg) {
                 errmsg = connection_init();
         }

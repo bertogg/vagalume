@@ -289,6 +289,24 @@ method_is_interactive (DBusMessage *message)
         return interactive;
 }
 
+void
+lastfm_dbus_play_radio_url (const char *url)
+{
+        DBusMessage *dbus_msg = NULL;
+        dbus_msg = dbus_message_new_method_call (APP_DBUS_SERVICE,
+                                                 APP_DBUS_OBJECT,
+                                                 APP_DBUS_IFACE,
+                                                 APP_DBUS_METHOD_PLAYURL);
+
+        dbus_message_append_args (dbus_msg,
+                                  DBUS_TYPE_STRING, &url,
+                                  DBUS_TYPE_INVALID);
+
+        dbus_connection_send (dbus_connection, dbus_msg, 0);
+        dbus_connection_flush (dbus_connection);
+        dbus_message_unref (dbus_msg);
+}
+
 static DBusHandlerResult
 dbus_req_handler(DBusConnection *connection, DBusMessage *message,
                  gpointer user_data)
@@ -406,7 +424,7 @@ dbus_req_handler(DBusConnection *connection, DBusMessage *message,
         return result;
 }
 
-gboolean
+DbusInitReturnCode
 lastfm_dbus_init(void)
 {
         int result;
@@ -417,7 +435,7 @@ lastfm_dbus_init(void)
         dbus_connection = dbus_bus_get(DBUS_BUS_SESSION, NULL);
         if (!dbus_connection) {
                 g_debug("Unable to get DBUS connection");
-                return FALSE;
+                return DBUS_INIT_ERROR;
         }
 
         dbus_connection_setup_with_g_main(dbus_connection, NULL);
@@ -429,7 +447,7 @@ lastfm_dbus_init(void)
                                                        NULL);
         if (!dbus_filter_added) {
                 g_debug("Unable to add a filter");
-                return FALSE;
+                return DBUS_INIT_ERROR;
         }
 
 #ifdef HAVE_GSD_MEDIA_PLAYER_KEYS
@@ -456,15 +474,15 @@ lastfm_dbus_init(void)
 
         if (result == -1) {
                 g_debug("Unable to request name on DBUS");
-                return FALSE;
+                return DBUS_INIT_ERROR;
         }
 
         if (result == DBUS_REQUEST_NAME_REPLY_EXISTS) {
                 g_debug("Another instance is running");
-                return FALSE;
+                return DBUS_INIT_ALREADY_RUNNING;
         }
 
-        return TRUE;
+        return DBUS_INIT_OK;
 }
 
 void

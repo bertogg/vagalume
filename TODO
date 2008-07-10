@@ -12,8 +12,6 @@ List of features that need to be implemented (in no particular order):
 * Add links to launch browser to go to last.fm page
 * Get proxy setting from environment/maemo settings
 * Notify user on successful scrobble
-* Handle lastfm:// urls from non-maemo platforms
-* Global hotkeys for the desktop
 * Pause button
 * Multi-user support
 * Create session again when receiving a BADSESSION
