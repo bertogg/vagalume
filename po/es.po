@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-30 11:17+0200\n"
-"PO-Revision-Date: 2008-05-18 01:03+0200\n"
+"PO-Revision-Date: 2008-07-15 00:41+0200\n"
 "Last-Translator: Oscar A. Mata T. <omata_mac@yahoo.com>\n"
 "Language-Team: es_VE\n"
 "MIME-Version: 1.0\n"
@@ -55,12 +55,11 @@ msgstr "El archivo ya existe. ¿Desea sobre-escribirlo?"
 
 #: src/controller.c:946
 msgid "Artist added to bookmarks"
-msgstr ""
+msgstr "Artista agregado a favoritos"
 
 #: src/controller.c:953
-#, fuzzy
 msgid "Track added to bookmarks"
-msgstr "Pista agregada a la lista de reproducción"
+msgstr "Pista agregada a favoritos"
 
 #: src/controller.c:987
 msgid "Really mark track as loved?"
@@ -134,7 +133,8 @@ msgstr ""
 "disponible para suscriptores\n"
 "de Last.fm"
 
-#: src/controller.c:1345 src/controller.c:1460
+#: src/controller.c:1345
+#: src/controller.c:1460
 msgid "Enter tag"
 msgstr "Introducir Etiqueta"
 
@@ -178,7 +178,8 @@ msgstr "Introducir URL de radio"
 msgid "Enter the URL of the Last.fm radio"
 msgstr "Introducir la URL de la radio Last.fm"
 
-#: src/controller.c:1515 src/uimisc.c:244
+#: src/controller.c:1515
+#: src/uimisc.c:244
 msgid "Last.fm radio URLs must start with lastfm://"
 msgstr "Las URL de Last.fm deben comenzar con lastfm://"
 
@@ -191,9 +192,8 @@ msgid "Unable to initialize OSSO context"
 msgstr "Imposible inicializar contexto de OSSO"
 
 #: src/controller.c:1602
-#, fuzzy
 msgid "Unable to initialize DBUS"
-msgstr "Imposible inicializar contexto de OSSO"
+msgstr "Imposible inicializar DBUS"
 
 #: src/dlwin.c:100
 msgid "Download complete!"
@@ -236,8 +236,7 @@ msgid ""
 msgstr ""
 "Uso: %s [-c converter] [-d decoder] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: Convertidor GStreamer (predeterminado: '%s', 'none' para "
-"desactivarlo)\n"
+"  converter: Convertidor GStreamer (predeterminado: '%s', 'none' para desactivarlo)\n"
 "  decoder:   Decodificador GStreamer (predeterminado: '%s')\n"
 "  sink:      GStreamer sink (predeterminado: '%s')\n"
 
@@ -257,25 +256,26 @@ msgstr "Confirmación"
 
 #: src/uimisc.c:213
 msgid "Add bookmark"
-msgstr ""
+msgstr "Agregar favorito"
 
 #: src/uimisc.c:213
 msgid "Edit bookmark"
-msgstr ""
+msgstr "Editar favorito"
 
 #: src/uimisc.c:214
 msgid "Bookmark name"
-msgstr ""
+msgstr "Nombre de favorito"
 
 #: src/uimisc.c:215
 msgid "Last.fm radio address"
-msgstr ""
+msgstr "Dirección de radio last.fm"
 
 #: src/uimisc.c:240
 msgid "Invalid bookmark name"
-msgstr ""
+msgstr "Nombre de favorito inválido"
 
-#: src/uimisc.c:277 src/uimisc.c:450
+#: src/uimisc.c:277
+#: src/uimisc.c:450
 msgid "Select download directory"
 msgstr "Seleccionar directorio de descargas"
 
@@ -322,8 +322,7 @@ msgstr ""
 "Muestra la música que escuchas en tu perfil de Last.fm.\n"
 "\n"
 "* Modo de descubrimiento:\n"
-"No reproduce la música que ya escuchaste. Requiere de una suscripción a Last."
-"fm."
+"No reproduce la música que ya escuchaste. Requiere de una suscripción a Last.fm."
 
 #: src/uimisc.c:411
 msgid "Use HTTP proxy"
@@ -362,12 +361,10 @@ msgstr "Descargar"
 #: src/uimisc.c:471
 msgid ""
 "* Download directory:\n"
-"Where to download mp3 files. Note that you can only download those songs "
-"marked as freely downloadable by Last.fm."
+"Where to download mp3 files. Note that you can only download those songs marked as freely downloadable by Last.fm."
 msgstr ""
 "* Directorio de descarga:\n"
-"Ruta donde se descargarán los archivos mp3. Nótese que sólo se podrán "
-"descargar aquellas canciones marcadas como descargas gratuitas por Last.fm."
+"Ruta donde se descargarán los archivos mp3. Nótese que sólo se podrán descargar aquellas canciones marcadas como descargas gratuitas por Last.fm."
 
 #: src/uimisc.c:489
 msgid "IM message template:"
@@ -396,16 +393,13 @@ msgstr "Actualizar estado de MI:"
 #. Set help
 #: src/uimisc.c:527
 msgid ""
-"Vagalume can update the status message of your IM client each time a new "
-"song starts. The template can contain the following keywords:\n"
+"Vagalume can update the status message of your IM client each time a new song starts. The template can contain the following keywords:\n"
 "\n"
 "{artist}: Name of the artist\n"
 "{title}: Song title\n"
 "{version}: Vagalume version"
 msgstr ""
-"Vagalume puede actualizar el mensaje de estado de su cliente de MI cada vez "
-"que comience una nueva canción. La plantilla puede contener las siguientes "
-"palabras clave:\n"
+"Vagalume puede actualizar el mensaje de estado de su cliente de MI cada vez que comience una nueva canción. La plantilla puede contener las siguientes palabras clave:\n"
 "\n"
 "{artist}: Nombre del artista\n"
 "{title}: Título de la canción\n"
@@ -473,7 +467,8 @@ msgstr "Pista:"
 msgid "Album: "
 msgstr "Álbum:"
 
-#: src/uimisc.c:945 src/uimisc.c:1002
+#: src/uimisc.c:945
+#: src/uimisc.c:1002
 msgid "retrieving..."
 msgstr "obteniendo..."
 
@@ -531,7 +526,7 @@ msgstr "Mensaje de recomendación"
 #. Configure widgets
 #: src/vgl-bookmark-window.c:308
 msgid "Bookmarks"
-msgstr ""
+msgstr "Favoritos"
 
 #: src/vgl-main-window.c:80
 msgid "Start playing"
@@ -549,7 +544,9 @@ msgstr "Omitir esta pista"
 msgid "Mark as loved"
 msgstr "Marcar como favorita"
 
-#: src/vgl-main-window.c:96 src/vgl-main-window.c:892 src/vgl-tray-icon.c:32
+#: src/vgl-main-window.c:96
+#: src/vgl-main-window.c:892
+#: src/vgl-tray-icon.c:32
 msgid "Ban this track"
 msgstr "Excluir esta pista"
 
@@ -557,7 +554,8 @@ msgstr "Excluir esta pista"
 msgid "Recommend this track"
 msgstr "Recomendar esta pista"
 
-#: src/vgl-main-window.c:104 src/vgl-main-window.c:894
+#: src/vgl-main-window.c:104
+#: src/vgl-main-window.c:894
 msgid "Download this track"
 msgstr "Descargar esta pista"
 
@@ -589,7 +587,8 @@ msgstr "<b>Álbum:</b>\n"
 msgid "<b>Listening to <i>"
 msgstr "<b>Escuchando a <i>"
 
-#: src/vgl-main-window.c:398 src/vgl-main-window.c:399
+#: src/vgl-main-window.c:398
+#: src/vgl-main-window.c:399
 msgid "Stopped"
 msgstr "Detenido"
 
@@ -597,7 +596,8 @@ msgstr "Detenido"
 msgid "Playing..."
 msgstr "Reproduciendo..."
 
-#: src/vgl-main-window.c:456 src/vgl-main-window.c:457
+#: src/vgl-main-window.c:456
+#: src/vgl-main-window.c:457
 msgid "Connecting..."
 msgstr "Conectando..."
 
@@ -624,7 +624,7 @@ msgstr "Finlandés"
 
 #: src/vgl-main-window.c:689
 msgid "French"
-msgstr ""
+msgstr "Francés"
 
 #: src/vgl-main-window.c:690
 msgid "Galician"
@@ -636,9 +636,10 @@ msgstr "Italiano"
 
 #: src/vgl-main-window.c:691
 msgid "Latvian"
-msgstr ""
+msgstr "Letón"
 
-#: src/vgl-main-window.c:691 src/vgl-main-window.c:692
+#: src/vgl-main-window.c:691
+#: src/vgl-main-window.c:692
 msgid "Portuguese"
 msgstr "Portugués"
 
@@ -647,7 +648,8 @@ msgstr "Portugués"
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/vgl-main-window.c:783 src/vgl-tray-icon.c:27
+#: src/vgl-main-window.c:783
+#: src/vgl-tray-icon.c:27
 msgid "Settings..."
 msgstr "Configuraciones..."
 
@@ -729,15 +731,21 @@ msgstr "Lista de reproducción..."
 msgid "_Actions"
 msgstr "_Acciones"
 
-#: src/vgl-main-window.c:884 src/vgl-sb-plugin.c:35 src/vgl-tray-icon.c:33
+#: src/vgl-main-window.c:884
+#: src/vgl-sb-plugin.c:35
+#: src/vgl-tray-icon.c:33
 msgid "Play"
 msgstr "Reproducir"
 
-#: src/vgl-main-window.c:885 src/vgl-sb-plugin.c:36 src/vgl-tray-icon.c:34
+#: src/vgl-main-window.c:885
+#: src/vgl-sb-plugin.c:36
+#: src/vgl-tray-icon.c:34
 msgid "Stop"
 msgstr "Detener"
 
-#: src/vgl-main-window.c:886 src/vgl-sb-plugin.c:37 src/vgl-tray-icon.c:35
+#: src/vgl-main-window.c:886
+#: src/vgl-sb-plugin.c:37
+#: src/vgl-tray-icon.c:35
 msgid "Skip"
 msgstr "Omitir"
 
@@ -745,11 +753,13 @@ msgstr "Omitir"
 msgid "Stop after this track"
 msgstr "Detener después de esta pista"
 
-#: src/vgl-main-window.c:891 src/vgl-tray-icon.c:31
+#: src/vgl-main-window.c:891
+#: src/vgl-tray-icon.c:31
 msgid "Love this track"
 msgstr "Pista favorita"
 
-#: src/vgl-main-window.c:893 src/vgl-tray-icon.c:30
+#: src/vgl-main-window.c:893
+#: src/vgl-tray-icon.c:30
 msgid "Add to playlist"
 msgstr "Agregar a lista de reproducción"
 
@@ -757,26 +767,26 @@ msgstr "Agregar a lista de reproducción"
 msgid "Tag..."
 msgstr "Etiqueta..."
 
-#: src/vgl-main-window.c:896 src/vgl-tray-icon.c:28
+#: src/vgl-main-window.c:896
+#: src/vgl-tray-icon.c:28
 msgid "Recommend..."
 msgstr "Recomendar..."
 
 #: src/vgl-main-window.c:934
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Favoritos"
 
 #: src/vgl-main-window.c:936
 msgid "Manage bookmarks..."
-msgstr ""
+msgstr "Administrar favoritos..."
 
 #: src/vgl-main-window.c:937
 msgid "Bookmark this artist"
-msgstr ""
+msgstr "Agregar este atista a favoritos"
 
 #: src/vgl-main-window.c:938
-#, fuzzy
 msgid "Bookmark this track"
-msgstr "Excluir esta pista"
+msgstr "Agregar a favoritos esta pista"
 
 #. Help
 #: src/vgl-main-window.c:954
@@ -807,11 +817,13 @@ msgstr "Favorita"
 msgid "Ban"
 msgstr "Excluir"
 
-#: src/vgl-sb-plugin.c:40 src/vgl-tray-icon.c:26
+#: src/vgl-sb-plugin.c:40
+#: src/vgl-tray-icon.c:26
 msgid "Show main window"
 msgstr "Mostrar ventana principal"
 
-#: src/vgl-sb-plugin.c:41 src/vgl-tray-icon.c:36
+#: src/vgl-sb-plugin.c:41
+#: src/vgl-tray-icon.c:36
 msgid "Close Vagalume"
 msgstr "Cerrar Vagalume"
 
@@ -848,8 +860,3 @@ msgstr ""
 msgid "Tags..."
 msgstr "Etiquetas..."
 
-#~ msgid "Unable to set D-BUS callback"
-#~ msgstr "Imposible establecer llamada a D-BUS"
-
-#~ msgid "Unable to set hw callback"
-#~ msgstr "Imposible establecer llamada a hardware"
