@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-02 14:36+0300\n"
-"PO-Revision-Date: 2008-07-10 12:03+0200\n"
+"POT-Creation-Date: 2008-07-15 00:45+0200\n"
+"PO-Revision-Date: 2008-07-15 00:47+0200\n"
 "Last-Translator: Mika Tapojärvi <mika.tapojarvi@sse.fi>\n"
 "Language-Team: Finnish\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Error initializing internet connection manager"
 msgstr "Virhe käynnistäessä internet-yhteyden hallintaa"
 
-#: src/controller.c:597
+#: src/controller.c:580
 msgid ""
 "Unable to login to Last.fm\n"
 "Check username and password"
@@ -29,11 +29,11 @@ msgstr ""
 "Kirjautuminen Last.fm-palveluun epäonnistui\n"
 "Tarkista käyttäjätunnus ja salasana"
 
-#: src/controller.c:600
+#: src/controller.c:583
 msgid "Network connection error"
 msgstr "Virhe verkkoyhteydessä"
 
-#: src/controller.c:673
+#: src/controller.c:656
 msgid ""
 "You need to enter your Last.fm\n"
 "username and password to be able\n"
@@ -43,63 +43,63 @@ msgstr ""
 "käyttäjätunnus ja salasana voidaksesi\n"
 "käyttää tätä ohjelmaa."
 
-#: src/controller.c:724
+#: src/controller.c:707
 msgid "No more content to play"
 msgstr "Ei enempää soitettavia kappaleita"
 
-#: src/controller.c:916
+#: src/controller.c:899
 msgid "Download this track?"
 msgstr "Lataa tämä kappale?"
 
-#: src/controller.c:924
+#: src/controller.c:907
 msgid "File exists. Overwrite?"
 msgstr "Tiedosto on jo olemassa. Korvataanko se?"
 
-#: src/controller.c:963
+#: src/controller.c:946
 msgid "Artist added to bookmarks"
 msgstr "Esittäjä lisätty kirjanmerkkeihin"
 
-#: src/controller.c:970
+#: src/controller.c:953
 msgid "Track added to bookmarks"
 msgstr "Kappale lisätty kirjanmerkkeihin"
 
-#: src/controller.c:1004
+#: src/controller.c:987
 msgid "Really mark track as loved?"
 msgstr "Haluatko varmasti merkitä kappaleen pidetyksi?"
 
-#: src/controller.c:1008
+#: src/controller.c:991
 msgid "Marking track as loved"
 msgstr "Merkitään kappale pidetyksi"
 
-#: src/controller.c:1022
+#: src/controller.c:1005
 msgid "Really ban this track?"
 msgstr "Haluatko varmasti estää tämän kappaleen?"
 
-#: src/controller.c:1026
+#: src/controller.c:1009
 msgid "Banning track"
 msgstr "Estetään kappale"
 
-#: src/controller.c:1070
+#: src/controller.c:1053
 msgid "Tags set correctly"
 msgstr "Leimaaminen onnistui"
 
-#: src/controller.c:1071
+#: src/controller.c:1054
 msgid "Error tagging"
 msgstr "Leimaaminen epäonnistui"
 
-#: src/controller.c:1109
+#: src/controller.c:1092
 msgid "You must type a list of tags"
 msgstr "Kirjoita lista leimasanoja"
 
-#: src/controller.c:1145
+#: src/controller.c:1128
 msgid "Recommendation sent"
 msgstr "Suositus lähetetty"
 
-#: src/controller.c:1146
+#: src/controller.c:1129
 msgid "Error sending recommendation"
 msgstr "Virhe suositusta lähetettäessä"
 
-#: src/controller.c:1186
+#: src/controller.c:1169
 msgid ""
 "You must type a user name\n"
 "and a recommendation message."
@@ -107,23 +107,23 @@ msgstr ""
 "Kirjoita käyttäjätunnus\n"
 "ja suositteluviesti."
 
-#: src/controller.c:1224
+#: src/controller.c:1207
 msgid "Track added to playlist"
 msgstr "Kappale lisätty soittolistalle"
 
-#: src/controller.c:1225
+#: src/controller.c:1208
 msgid "Error adding track to playlist"
 msgstr "Virhe lisättäessä kappaletta soittolistalle"
 
-#: src/controller.c:1243
+#: src/controller.c:1226
 msgid "Really add this track to the playlist?"
 msgstr "Haluatko varmasti lisätä tämän kappaleen soittolistalle?"
 
-#: src/controller.c:1285
+#: src/controller.c:1268
 msgid "Invalid radio URL"
 msgstr "Virheellinen radion URL-osoite"
 
-#: src/controller.c:1297
+#: src/controller.c:1280
 msgid ""
 "Invalid radio URL. Either\n"
 "this radio doesn't exist\n"
@@ -135,65 +135,65 @@ msgstr ""
 "tai vain Last.fm-palvelun tilaajat\n"
 "voivat käyttää sitä"
 
-#: src/controller.c:1365 src/controller.c:1480
+#: src/controller.c:1348 src/controller.c:1463
 msgid "Enter tag"
 msgstr "Anna leima"
 
-#: src/controller.c:1365
+#: src/controller.c:1348
 msgid "Enter one of your tags"
 msgstr "Anna yksi leimoistasi"
 
-#: src/controller.c:1415
+#: src/controller.c:1398
 msgid "Enter user name"
 msgstr "Anna käyttäjätunnus"
 
-#: src/controller.c:1416
+#: src/controller.c:1399
 msgid "Play this user's radio"
 msgstr "Soita tämän käyttäjän radiota"
 
-#: src/controller.c:1457
+#: src/controller.c:1440
 msgid "Enter group"
 msgstr "Anna ryhmä"
 
-#: src/controller.c:1457
+#: src/controller.c:1440
 msgid "Enter group name"
 msgstr "Anna ryhmän nimi"
 
-#: src/controller.c:1480
+#: src/controller.c:1463
 msgid "Enter a global tag"
 msgstr "Anna yleinen leima"
 
-#: src/controller.c:1504
+#: src/controller.c:1487
 msgid "Enter artist"
 msgstr "Anna esiintyjä"
 
-#: src/controller.c:1504
+#: src/controller.c:1487
 msgid "Enter an artist's name"
 msgstr "Anna esiintyjän nimi"
 
-#: src/controller.c:1525
+#: src/controller.c:1508
 msgid "Enter radio URL"
 msgstr "Anna radion URL-osoite"
 
-#: src/controller.c:1526
+#: src/controller.c:1509
 msgid "Enter the URL of the Last.fm radio"
 msgstr "Anna Last.fm-radion URL-osoite"
 
-#: src/controller.c:1535 src/uimisc.c:244
+#: src/controller.c:1518 src/uimisc.c:244
 msgid "Last.fm radio URLs must start with lastfm://"
 msgstr "Last.fm radion URL-osoitteen täytyy alkaa kirjaimilla lastfm://"
 
-#: src/controller.c:1608
+#: src/controller.c:1582
+msgid "Unable to initialize DBUS"
+msgstr "Virhe käynnistäessä DBUS-palvelua"
+
+#: src/controller.c:1602
 msgid "Error initializing audio system"
 msgstr "Virhe käynnistäessä äänijärjestelmää"
 
-#: src/controller.c:1616
+#: src/controller.c:1612
 msgid "Unable to initialize OSSO context"
 msgstr "Virhe käynnistäessä OSSO-palvelua"
-
-#: src/controller.c:1622
-msgid "Unable to initialize DBUS"
-msgstr "Virhe käynnistäessä DBUS-palvelua"
 
 #: src/dlwin.c:100
 msgid "Download complete!"
@@ -530,256 +530,256 @@ msgstr "Suositteluviesti"
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
 
-#: src/vgl-main-window.c:85
+#: src/vgl-main-window.c:80
 msgid "Start playing"
 msgstr "Aloita toisto"
 
-#: src/vgl-main-window.c:89
+#: src/vgl-main-window.c:84
 msgid "Stop playing"
 msgstr "Lopeta toisto"
 
-#: src/vgl-main-window.c:93
+#: src/vgl-main-window.c:88
 msgid "Skip this track"
 msgstr "Hyppää tämän kappaleen yli"
 
-#: src/vgl-main-window.c:97
+#: src/vgl-main-window.c:92
 msgid "Mark as loved"
 msgstr "Merkitse pidetyksi"
 
-#: src/vgl-main-window.c:101 src/vgl-main-window.c:915 src/vgl-tray-icon.c:32
+#: src/vgl-main-window.c:96 src/vgl-main-window.c:894 src/vgl-tray-icon.c:32
 msgid "Ban this track"
 msgstr "Estä tämä kappale"
 
-#: src/vgl-main-window.c:105
+#: src/vgl-main-window.c:100
 msgid "Recommend this track"
 msgstr "Suosittele tätä kappaletta"
 
-#: src/vgl-main-window.c:109 src/vgl-main-window.c:917
+#: src/vgl-main-window.c:104 src/vgl-main-window.c:896
 msgid "Download this track"
 msgstr "Lataa tämä kappale"
 
-#: src/vgl-main-window.c:113
+#: src/vgl-main-window.c:108
 msgid "Edit tags for this track"
 msgstr "Muokkaa tämän kappaleen leimoja"
 
-#: src/vgl-main-window.c:117
+#: src/vgl-main-window.c:112
 msgid "Add this track to playlist"
 msgstr "Lisää tämä kappale soittolistalle"
 
-#: src/vgl-main-window.c:132
+#: src/vgl-main-window.c:127
 msgid "A Last.fm client for Gnome and Maemo"
 msgstr "Last.fm-asiakasohjelma Gnomelle ja Maemolle"
 
-#: src/vgl-main-window.c:246
+#: src/vgl-main-window.c:240
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Esittäjä:</b>\n"
 
-#: src/vgl-main-window.c:252
+#: src/vgl-main-window.c:246
 msgid "<b>Title:</b>\n"
 msgstr "<b>Kappale:</b>\n"
 
-#: src/vgl-main-window.c:274
+#: src/vgl-main-window.c:253
 msgid "<b>Album:</b>\n"
 msgstr "<b>Albumi:</b>\n"
 
-#: src/vgl-main-window.c:283
+#: src/vgl-main-window.c:262
 msgid "<b>Listening to <i>"
 msgstr "<b>Kuunnellaan <i>"
 
-#: src/vgl-main-window.c:421 src/vgl-main-window.c:422
+#: src/vgl-main-window.c:400 src/vgl-main-window.c:401
 msgid "Stopped"
 msgstr "Pysäytetty"
 
-#: src/vgl-main-window.c:454
+#: src/vgl-main-window.c:433
 msgid "Playing..."
 msgstr "Soitetaan..."
 
-#: src/vgl-main-window.c:479 src/vgl-main-window.c:480
+#: src/vgl-main-window.c:458 src/vgl-main-window.c:459
 msgid "Connecting..."
 msgstr "Yhdistetään..."
 
-#: src/vgl-main-window.c:508
+#: src/vgl-main-window.c:487
 msgid "Disconnected"
 msgstr "Ei yhteyttä"
 
-#: src/vgl-main-window.c:571
+#: src/vgl-main-window.c:550
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Äänenvoimakkuus: %d/100"
 
-#: src/vgl-main-window.c:710
+#: src/vgl-main-window.c:689
 msgid "German"
 msgstr "Saksa"
 
-#: src/vgl-main-window.c:711
+#: src/vgl-main-window.c:690
 msgid "Spanish"
 msgstr "Espanja"
 
-#: src/vgl-main-window.c:711
+#: src/vgl-main-window.c:690
 msgid "Finnish"
 msgstr "Suomi"
 
-#: src/vgl-main-window.c:712
+#: src/vgl-main-window.c:691
 msgid "French"
 msgstr "Ranska"
 
-#: src/vgl-main-window.c:713
+#: src/vgl-main-window.c:692
 msgid "Galician"
 msgstr "Galicia"
 
-#: src/vgl-main-window.c:713
+#: src/vgl-main-window.c:692
 msgid "Italian"
 msgstr "Italia"
 
-#: src/vgl-main-window.c:714
+#: src/vgl-main-window.c:693
 msgid "Latvian"
 msgstr "Latvia"
 
-#: src/vgl-main-window.c:714 src/vgl-main-window.c:715
+#: src/vgl-main-window.c:693 src/vgl-main-window.c:694
 msgid "Portuguese"
 msgstr "Portugali"
 
 #. Last.fm
-#: src/vgl-main-window.c:804
+#: src/vgl-main-window.c:783
 msgid "_Last.fm"
 msgstr "_Last.fm"
 
-#: src/vgl-main-window.c:806 src/vgl-tray-icon.c:27
+#: src/vgl-main-window.c:785 src/vgl-tray-icon.c:27
 msgid "Settings..."
 msgstr "Asetukset..."
 
-#: src/vgl-main-window.c:807
+#: src/vgl-main-window.c:786
 msgid "Quit"
 msgstr "Lopeta"
 
 #. Radio
-#: src/vgl-main-window.c:820
+#: src/vgl-main-window.c:799
 msgid "Play _Radio"
 msgstr "Soita _radiota"
 
-#: src/vgl-main-window.c:822
+#: src/vgl-main-window.c:801
 msgid "My radios"
 msgstr "Minun radioni"
 
-#: src/vgl-main-window.c:824
+#: src/vgl-main-window.c:803
 msgid "Others' radios"
 msgstr "Muiden radiot"
 
-#: src/vgl-main-window.c:825
+#: src/vgl-main-window.c:804
 msgid "Group radio..."
 msgstr "Ryhmäradio..."
 
-#: src/vgl-main-window.c:826
+#: src/vgl-main-window.c:805
 msgid "Music tagged..."
 msgstr "Leimatut kappaleet..."
 
-#: src/vgl-main-window.c:827
+#: src/vgl-main-window.c:806
 msgid "Artists similar to..."
 msgstr "Samanlaiset esiintyjät kuin..."
 
-#: src/vgl-main-window.c:828
+#: src/vgl-main-window.c:807
 msgid "Enter URL..."
 msgstr "Kirjoita URL-osoite..."
 
-#: src/vgl-main-window.c:849
+#: src/vgl-main-window.c:828
 msgid "My personal radio"
 msgstr "Henkilökohtainen radioni"
 
-#: src/vgl-main-window.c:850
+#: src/vgl-main-window.c:829
 msgid "My neighbours"
 msgstr "Naapurini"
 
-#: src/vgl-main-window.c:851
+#: src/vgl-main-window.c:830
 msgid "My loved tracks"
 msgstr "Pitämäni kappaleet"
 
-#: src/vgl-main-window.c:852
+#: src/vgl-main-window.c:831
 msgid "My playlist"
 msgstr "Soittolistani"
 
-#: src/vgl-main-window.c:853
+#: src/vgl-main-window.c:832
 msgid "My recommendations"
 msgstr "Suositukseni"
 
-#: src/vgl-main-window.c:854
+#: src/vgl-main-window.c:833
 msgid "My music tagged..."
 msgstr "Leimaamani kappaleet..."
 
-#: src/vgl-main-window.c:883
+#: src/vgl-main-window.c:862
 msgid "Personal..."
 msgstr "Henkilökohtainen..."
 
-#: src/vgl-main-window.c:884
+#: src/vgl-main-window.c:863
 msgid "Neighbours..."
 msgstr "Naapurit..."
 
-#: src/vgl-main-window.c:885
+#: src/vgl-main-window.c:864
 msgid "Loved tracks..."
 msgstr "Pidetyt kappaleet..."
 
-#: src/vgl-main-window.c:886
+#: src/vgl-main-window.c:865
 msgid "Playlist..."
 msgstr "Soittolista..."
 
 #. Actions
-#: src/vgl-main-window.c:905
+#: src/vgl-main-window.c:884
 msgid "_Actions"
 msgstr "_Toiminnot"
 
-#: src/vgl-main-window.c:907 src/vgl-sb-plugin.c:35 src/vgl-tray-icon.c:33
+#: src/vgl-main-window.c:886 src/vgl-sb-plugin.c:35 src/vgl-tray-icon.c:33
 msgid "Play"
 msgstr "Toista"
 
-#: src/vgl-main-window.c:908 src/vgl-sb-plugin.c:36 src/vgl-tray-icon.c:34
+#: src/vgl-main-window.c:887 src/vgl-sb-plugin.c:36 src/vgl-tray-icon.c:34
 msgid "Stop"
 msgstr "Pysäytä"
 
-#: src/vgl-main-window.c:909 src/vgl-sb-plugin.c:37 src/vgl-tray-icon.c:35
+#: src/vgl-main-window.c:888 src/vgl-sb-plugin.c:37 src/vgl-tray-icon.c:35
 msgid "Skip"
 msgstr "Hyppää yli"
 
-#: src/vgl-main-window.c:913
+#: src/vgl-main-window.c:892
 msgid "Stop after this track"
 msgstr "Pysäytä toisto tämän kappaleen jälkeen"
 
-#: src/vgl-main-window.c:914 src/vgl-tray-icon.c:31
+#: src/vgl-main-window.c:893 src/vgl-tray-icon.c:31
 msgid "Love this track"
 msgstr "Merkitse kappale tykätyksi"
 
-#: src/vgl-main-window.c:916 src/vgl-tray-icon.c:30
+#: src/vgl-main-window.c:895 src/vgl-tray-icon.c:30
 msgid "Add to playlist"
 msgstr "Lisää soittolistalle"
 
-#: src/vgl-main-window.c:918
+#: src/vgl-main-window.c:897
 msgid "Tag..."
 msgstr "Leimaa..."
 
-#: src/vgl-main-window.c:919 src/vgl-tray-icon.c:28
+#: src/vgl-main-window.c:898 src/vgl-tray-icon.c:28
 msgid "Recommend..."
 msgstr "Suosittele..."
 
-#: src/vgl-main-window.c:957
+#: src/vgl-main-window.c:936
 msgid "_Bookmarks"
 msgstr "_Kirjanmerkit"
 
-#: src/vgl-main-window.c:959
+#: src/vgl-main-window.c:938
 msgid "Manage bookmarks..."
 msgstr "Järjestele kirjanmerkkejä"
 
-#: src/vgl-main-window.c:960
-msgid "Bookmark this artist"
-msgstr "Lisää tämä esittäjä kirjanmerkkeihin"
+#: src/vgl-main-window.c:939
+msgid "Bookmark this artist..."
+msgstr "Lisää tämä esittäjä kirjanmerkkeihin..."
 
-#: src/vgl-main-window.c:961
-msgid "Bookmark this track"
-msgstr "Lisää tämä kappale kirjanmerkkeihin"
+#: src/vgl-main-window.c:940
+msgid "Bookmark this track..."
+msgstr "Lisää tämä kappale kirjanmerkkeihin..."
 
 #. Help
-#: src/vgl-main-window.c:977
+#: src/vgl-main-window.c:956
 msgid "_Help"
 msgstr "_Apua"
 
-#: src/vgl-main-window.c:979
+#: src/vgl-main-window.c:958
 msgid "About..."
 msgstr "Tietoja ohjelmasta..."
 

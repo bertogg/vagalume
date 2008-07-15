@@ -936,8 +936,8 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
                 gtk_menu_item_new_with_mnemonic(_("_Bookmarks")));
         bmksub = GTK_MENU_SHELL(gtk_menu_new());
         managebmk = gtk_menu_item_new_with_label(_("Manage bookmarks..."));
-        bmkartist = gtk_menu_item_new_with_label(_("Bookmark this artist"));
-        bmktrack = gtk_menu_item_new_with_label(_("Bookmark this track"));
+        bmkartist = gtk_menu_item_new_with_label(_("Bookmark this artist..."));
+        bmktrack = gtk_menu_item_new_with_label(_("Bookmark this track..."));
         gtk_menu_shell_append(bar, GTK_WIDGET(bookmarks));
         gtk_menu_item_set_submenu(bookmarks, GTK_WIDGET(bmksub));
         gtk_menu_shell_append(bmksub, managebmk);
