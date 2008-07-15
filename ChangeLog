@@ -1,5 +1,9 @@
 2008-07-15  Alberto Garcia  <agarcia@igalia.com>
 
+	* po/de.po, po/es.po, po/fi.po, po/fr.po, po/gl.po, po/it.po
+	* po/lv.po, po/pt.po, po/pt_BR.po, po/vagalume.pot
+	* src/vgl-main-window.c: Updated translation string
+
 	* po/es.po: Updated Spanish translation (by Oscar Mata).
 
 2008-07-10  Alberto Garcia  <agarcia@igalia.com>
