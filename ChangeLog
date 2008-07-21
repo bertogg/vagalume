@@ -1,3 +1,7 @@
+2008-07-22  Alberto Garcia  <agarcia@igalia.com>
+
+	* scripts/vagalumectl: Renamed 'tag' to 'globaltag'
+
 2008-07-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po, po/es.po, po/fi.po, po/fr.po, po/gl.po, po/it.po

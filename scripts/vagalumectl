@@ -51,7 +51,7 @@ print_usage ()
     echo "     stop:              stop playing the current radio"
     echo "     love:              mark the current song as 'loved'"
     echo "     ban:               mark the current song as 'banned'"
-    echo "     tag <TAG>:         change to a 'global tag' radio."
+    echo "     globaltag <TAG>:   change to a 'global tag' radio."
     echo "     artist <ARTIST>:   change to a 'similar artists' radio"
     echo "     group <GROUP>:     change to a 'last.fm group' radio"
     echo "     loved <USER>:      change to a 'loved' radio for a specific user"
@@ -69,7 +69,7 @@ print_usage ()
     echo " Double quotes are REQUIRED when specifying parameters to some commands,"
     echo " such as TAG or ARTIST, because of the white spaces they might contain, e.g:"
     echo
-    echo "     $ $PROGNAME tag \"hard rock\""
+    echo "     $ $PROGNAME globaltag \"hard rock\""
     echo "     $ $PROGNAME artist \"Led Zeppelin\""
     echo
 }
@@ -119,7 +119,7 @@ elif [ $# -eq 2 ]; then
   # Commands requiring a parameter
   ENCODED_PARAM=`echo ${2} | tr " " "+"`
   case ${COMMAND} in
-    "tag") URL="lastfm://globaltags/"${ENCODED_PARAM};;
+    "globaltag") URL="lastfm://globaltags/"${ENCODED_PARAM};;
     "artist") URL="lastfm://artist/"${ENCODED_PARAM};;
     "group") URL="lastfm://group/"${ENCODED_PARAM};;
     "loved") URL="lastfm://user/"${ENCODED_PARAM}"/loved";;
