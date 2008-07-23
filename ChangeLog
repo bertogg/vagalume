@@ -1,3 +1,23 @@
+2008-07-23  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/userconfig.c
+	(lastfm_usercfg_read, lastfm_usercfg_write, get_cfg_filename)
+	(xml_get_bool, xml_get_string, xml_add_bool, xml_add_string):
+	New, XML-based configuration file. The old file is converted to
+	the new one and deleted if necessary.
+	(lastfm_old_usercfg_read, get_old_cfg_filename):
+	Legacy functions to read the old configuration file.
+
+	* src/util.h
+	* src/util.c (obfuscate_string): New function to obfuscate
+	strings. Used for passwords in the new config file.
+
+	* configure.ac
+	* data/vagalume-rfs.sh.in
+	* data/vagalume.conf.in: Replace config file with config dir.
+
+	* vagalume.1: Update location of the config file.
+
 2008-07-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* scripts/vagalumectl: Renamed 'tag' to 'globaltag'

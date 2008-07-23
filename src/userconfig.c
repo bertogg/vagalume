@@ -8,11 +8,13 @@
  */
 
 #include <stdio.h>
+#include <glib/gstdio.h>
 #include <string.h>
 #include <sys/types.h>
 #include <regex.h>
+#include <libxml/parser.h>
 
-#include "config.h"
+#include "globaldefs.h"
 #include "userconfig.h"
 #include "util.h"
 
@@ -40,11 +42,12 @@ cfg_get_val(const char *line, const char *key)
         return value;
 }
 
+/* Old config file, to be removed soon */
 static char *
-get_cfg_filename(void)
+get_old_cfg_filename(void)
 {
         const char *homedir = get_home_directory ();
-        return g_strconcat(homedir, "/" VAGALUME_CONF_FILE, NULL);
+        return g_strconcat(homedir, "/.vagalumerc", NULL);
 }
 
 static char *
@@ -70,13 +73,26 @@ lastfm_usercfg_get_cfgdir(void)
         if (cfgdir == NULL) {
                 const char *homedir = get_home_directory ();
                 if (homedir != NULL) {
-                        cfgdir = g_strconcat (homedir, "/.vagalume", NULL);
+                        cfgdir = g_strconcat (homedir, "/" VAGALUME_CONFIG_DIR,
+                                              NULL);
                 }
                 if (cfgdir != NULL) {
                         g_mkdir_with_parents (cfgdir, 0755);
                 }
         }
         return cfgdir;
+}
+
+static const char *
+get_cfg_filename(void)
+{
+        static char *cfgfile = NULL;
+
+        if (cfgfile == NULL) {
+                const char *cfgdir = lastfm_usercfg_get_cfgdir ();
+                cfgfile = g_strconcat (cfgdir, "/config" , NULL);
+        }
+        return cfgfile;
 }
 
 void
@@ -152,15 +168,15 @@ lastfm_usercfg_destroy(lastfm_usercfg *cfg)
         g_slice_free(lastfm_usercfg, cfg);
 }
 
-lastfm_usercfg *
-lastfm_usercfg_read(void)
+static lastfm_usercfg *
+lastfm_old_usercfg_read(void)
 {
         lastfm_usercfg *cfg = NULL;
         const int bufsize = 256;
         char buf[bufsize];
         char *cfgfile;
         FILE *fd = NULL;
-        cfgfile = get_cfg_filename();
+        cfgfile = get_old_cfg_filename();
         if (cfgfile != NULL) fd = fopen(cfgfile, "r");
         g_free(cfgfile);
         if (fd == NULL) {
@@ -219,54 +235,187 @@ lastfm_usercfg_read(void)
         return cfg;
 }
 
-gboolean
-lastfm_usercfg_write(lastfm_usercfg *cfg)
+static void
+xml_add_string (xmlNode *parent, const char *name, const char *value)
 {
-        g_return_val_if_fail(cfg, FALSE);
-        gboolean retval = TRUE;
-        char *cfgfile, *base64pw;
-        FILE *fd = NULL;
-        cfgfile = get_cfg_filename();
-        if (cfgfile != NULL) fd = fopen(cfgfile, "w");
-        g_free(cfgfile);
-        if (fd == NULL) {
-                g_warning("Unable to write config file");
-                return FALSE;
+        xmlNode *node;
+        xmlChar *enc;
+
+        node = xmlNewNode (NULL, (xmlChar *) name);
+        enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) value);
+        xmlNodeSetContent (node, enc);
+        xmlFree (enc);
+
+        xmlAddChild (parent, node);
+}
+
+static void
+xml_add_bool (xmlNode *parent, const char *name, gboolean value)
+{
+        xml_add_string (parent, name, value ? "1" : "0");
+}
+
+static void
+xml_get_string (xmlDoc *doc, const xmlNode *node,
+                const char *name, char **value)
+{
+        const xmlNode *iter;
+        xmlChar *val = NULL;
+        gboolean found = FALSE;
+
+        g_return_if_fail (doc && node && name && value);
+
+        for (iter = node; iter != NULL && !found; iter = iter->next) {
+                if (!xmlStrcmp (iter->name, (const xmlChar *) name)) {
+                        val = xmlNodeListGetString
+                                (doc, iter->xmlChildrenNode, 1);
+                        found = TRUE;
+                }
+
         }
-#ifdef MAEMO
-        base64pw = g_strdup(cfg->password);
-#else
-        base64pw = g_base64_encode((guchar *)cfg->password,
-                                   MAX(1,strlen(cfg->password)));
-#endif
-        if (fprintf(fd, "username=\"%s\"\npassword=\"%s\"\n"
-                    "http_proxy=\"%s\"\nuse_proxy=\"%d\"\n"
-                    "scrobble=\"%d\"\ndiscovery=\"%d\"\n"
-                    "download_dir=\"%s\"\n"
-                    "imstatus_template=\"%s\"\n"
-                    "im_pidgin=\"%d\"\n"
-                    "im_gajim=\"%d\"\n"
-                    "im_gossip=\"%d\"\n"
-                    "im_telepathy=\"%d\"\n"
-                    "disable_confirm_dialogs=\"%d\"\n"
-                    "show_notifications=\"%d\"\n"
-                    "close_to_systray=\"%d\"\n",
-                    cfg->username, base64pw, cfg->http_proxy,
-                    !!cfg->use_proxy, !!cfg->enable_scrobbling,
-                    !!cfg->discovery_mode,
-                    cfg->download_dir,
-                    cfg->imstatus_template,
-                    !!cfg->im_pidgin,
-                    !!cfg->im_gajim,
-                    !!cfg->im_gossip,
-                    !!cfg->im_telepathy,
-                    !!cfg->disable_confirm_dialogs,
-                    !!cfg->show_notifications,
-                    !!cfg->close_to_systray) <= 0) {
-                g_warning("Error writing to config file");
-                retval = FALSE;
+
+        g_free (*value);
+
+        if (val != NULL) {
+                *value = g_strstrip (g_strdup ((char *) val));
+                xmlFree (val);
+        } else {
+                *value = g_strdup ("");
         }
-        g_free(base64pw);
-        fclose(fd);
-        return retval;
+
+}
+
+static void
+xml_get_bool (xmlDoc *doc, const xmlNode *node,
+              const char *name, gboolean *value)
+{
+        char *strval = NULL;
+
+        g_return_if_fail (value != NULL);
+
+        xml_get_string (doc, node, name, &strval);
+        *value = g_str_equal (strval, "1");
+        g_free (strval);
+}
+
+lastfm_usercfg *
+lastfm_usercfg_read (void)
+{
+        xmlDoc *doc = NULL;
+        xmlNode *root = NULL;
+        xmlNode *node = NULL;
+        lastfm_usercfg *cfg = NULL;
+        const char *cfgfile = get_cfg_filename ();
+
+        if (file_exists (cfgfile)) {
+                doc = xmlParseFile (cfgfile);
+                if (doc == NULL) {
+                        g_warning ("Config file is not a valid XML file");
+                }
+        } else {
+                /* Read old cfg file if the new one doesn't exist */
+                g_debug ("Config file not found. Trying old config file.");
+                cfg = lastfm_old_usercfg_read ();
+                if (cfg != NULL) {
+                        g_debug ("Converting old config file to new one.");
+                        if (lastfm_usercfg_write (cfg)) {
+                                char *oldcfg = get_old_cfg_filename ();
+                                g_unlink (oldcfg);
+                                g_free (oldcfg);
+                        }
+                }
+        }
+
+        /* Read the config file and do some basic checks */
+        if (doc != NULL) {
+                root = xmlDocGetRootElement (doc);
+                xmlChar *version = xmlGetProp (root, (xmlChar *) "version");
+                if (version == NULL ||
+                    xmlStrcmp (root->name, (const xmlChar *) "config")) {
+                        g_warning ("Error parsing config file");
+                } else if (xmlStrcmp (version, (const xmlChar *) "1")) {
+                        g_warning ("This config file is version %s, but "
+                                   "Vagalume " APP_VERSION " can only "
+                                   "read version 1", version);
+                } else {
+                        node = root->xmlChildrenNode;
+                }
+        }
+
+        /* Parse the configuration */
+        if (node != NULL) {
+                cfg = lastfm_usercfg_new();
+                /* This code is not very optimal, but it is simpler */
+                xml_get_string (doc, node, "username", &(cfg->username));
+                xml_get_string (doc, node, "password", &(cfg->password));
+                obfuscate_string (cfg->password);
+                xml_get_string (doc, node, "http-proxy", &(cfg->http_proxy));
+                xml_get_string (doc, node, "download-dir",
+                                &(cfg->download_dir));
+                xml_get_string (doc, node, "imstatus-template",
+                                &(cfg->imstatus_template));
+                xml_get_bool (doc, node, "use-proxy", &(cfg->use_proxy));
+                xml_get_bool (doc, node, "discovery-mode",
+                              &(cfg->discovery_mode));
+                xml_get_bool (doc, node, "enable-scrobbling",
+                              &(cfg->enable_scrobbling));
+                xml_get_bool (doc, node, "im-pidgin", &(cfg->im_pidgin));
+                xml_get_bool (doc, node, "im-gajim", &(cfg->im_gajim));
+                xml_get_bool (doc, node, "im-gossip", &(cfg->im_gossip));
+                xml_get_bool (doc, node, "im-telepathy", &(cfg->im_telepathy));
+                xml_get_bool (doc, node, "disable-confirm-dialogs",
+                              &(cfg->disable_confirm_dialogs));
+                xml_get_bool (doc, node, "show-notifications",
+                              &(cfg->show_notifications));
+                xml_get_bool (doc, node, "close-to-systray",
+                              &(cfg->close_to_systray));
+        }
+
+        if (doc != NULL) xmlFreeDoc (doc);
+
+        return cfg;
+}
+
+gboolean
+lastfm_usercfg_write (lastfm_usercfg *cfg)
+{
+        xmlDoc *doc;
+        xmlNode *root;
+        gboolean retvalue = TRUE;
+
+        const char *cfgfile = get_cfg_filename ();
+
+        g_return_val_if_fail (cfg != NULL, FALSE);
+
+        doc = xmlNewDoc ((xmlChar *) "1.0");
+        root = xmlNewNode (NULL, (xmlChar *) "config");
+        xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
+        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "1");
+        xmlDocSetRootElement (doc, root);
+
+        xml_add_string (root, "username", cfg->username);
+        xml_add_string (root, "password", obfuscate_string (cfg->password));
+        obfuscate_string (cfg->password);
+        xml_add_string (root, "http-proxy", cfg->http_proxy);
+        xml_add_string (root, "download-dir", cfg->download_dir);
+        xml_add_string (root, "imstatus-template", cfg->imstatus_template);
+        xml_add_bool (root, "use-proxy", cfg->use_proxy);
+        xml_add_bool (root, "discovery-mode", cfg->discovery_mode);
+        xml_add_bool (root, "enable-scrobbling", cfg->enable_scrobbling);
+        xml_add_bool (root, "im-pidgin", cfg->im_pidgin);
+        xml_add_bool (root, "im-gajim", cfg->im_gajim);
+        xml_add_bool (root, "im-gossip", cfg->im_gossip);
+        xml_add_bool (root, "im-telepathy", cfg->im_telepathy);
+        xml_add_bool (root, "disable-confirm-dialogs",
+                      cfg->disable_confirm_dialogs);
+        xml_add_bool (root, "show-notifications", cfg->show_notifications);
+        xml_add_bool (root, "close-to-systray", cfg->close_to_systray);
+
+        if (xmlSaveFormatFileEnc (cfgfile, doc, "UTF-8", 1) == -1) {
+                g_critical ("Unable to open %s", cfgfile);
+                retvalue = FALSE;
+        }
+
+        xmlFreeDoc (doc);
+        return retvalue;
 }

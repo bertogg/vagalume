@@ -13,15 +13,15 @@ AC_PROG_LN_S
 AC_HEADER_STDC
 
 # Some variables
-VAGALUME_CONF_FILE=".vagalumerc"
+VAGALUME_CONFIG_DIR=".vagalume"
 
 # Defines for config.h
 AC_DEFINE_UNQUOTED([KERNEL_NAME],"`uname -s`",[Name of the kernel])
 AC_DEFINE_UNQUOTED([KERNEL_NAME_LC],"`uname -s|tr A-Z a-z`",
                    [Name of the kernel (lowercase)])
 AC_DEFINE_UNQUOTED([ARCH],"`uname -m`",[Architecture])
-AC_DEFINE_UNQUOTED(VAGALUME_CONF_FILE, "$VAGALUME_CONF_FILE",
-                   [Vagalume configuration file])
+AC_DEFINE_UNQUOTED(VAGALUME_CONFIG_DIR, "$VAGALUME_CONFIG_DIR",
+                   [Vagalume configuration directory])
 
 # Extra flags for compiler and linker
 EXTRA_CFLAGS=""
@@ -278,7 +278,7 @@ if test "$PLATFORM" = "maemo"; then
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
    fi
 
-   VAGALUME_CONF_FULLPATH="/home/user/$VAGALUME_CONF_FILE"
+   VAGALUME_CONF_FULLPATH="/home/user/$VAGALUME_CONFIG_DIR"
    AC_SUBST(VAGALUME_CONF_FULLPATH)
 
    BACKUP_CONFIGURATION_DIR="/etc/osso-backup/applications"

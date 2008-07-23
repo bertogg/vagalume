@@ -192,3 +192,28 @@ get_home_directory (void)
         }
         return homedir;
 }
+
+/**
+ * Obfuscates an ASCII string. All characters between 33 and 126 will
+ * be modified. The string will be modified in place. Calling this
+ * function twice will return the original string.
+ * @param str The string to be obfuscated. It will be modified in place
+ * @return The same string, for convenience
+ */
+char *
+obfuscate_string (char *str)
+{
+        guchar *ptr;
+
+        g_return_val_if_fail (str != NULL, NULL);
+
+        for (ptr = (guchar *) str; *ptr != '\0'; ptr++) {
+                if (*ptr >= 33 && *ptr < 127) {
+                        int offset = *ptr - 33;
+                        offset = (offset + ((127 - 33) / 2)) % (127 - 33);
+                        *ptr = (guchar) (33 + offset);
+                }
+        }
+
+        return str;
+}

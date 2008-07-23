@@ -19,5 +19,6 @@ void string_replace_gstr(GString *str, const char *old, const char *new);
 char *string_replace(const char *str, const char *old, const char *new);
 GdkPixbuf *get_pixbuf_from_image(const char *data, size_t size, int imgsize);
 const char *get_home_directory(void);
+char *obfuscate_string(char *str);
 
 #endif
