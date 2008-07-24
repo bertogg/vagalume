@@ -1,3 +1,7 @@
+2008-07-25  Alberto Garcia  <agarcia@igalia.com>
+
+	* po/fi.po, po/pt.po: Add missing ellipsis
+
 2008-07-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c

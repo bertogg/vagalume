@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-15 00:45+0200\n"
-"PO-Revision-Date: 2008-07-15 00:47+0200\n"
+"PO-Revision-Date: 2008-07-25 00:40+0200\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -762,7 +762,7 @@ msgstr "_Marcadores"
 
 #: src/vgl-main-window.c:938
 msgid "Manage bookmarks..."
-msgstr "Organizar marcadores"
+msgstr "Organizar marcadores..."
 
 #: src/vgl-main-window.c:939
 msgid "Bookmark this artist..."
