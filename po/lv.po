@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-15 00:45+0200\n"
-"PO-Revision-Date: 2008-07-15 00:47+0200\n"
+"POT-Creation-Date: 2008-07-25 01:03+0200\n"
+"PO-Revision-Date: 2008-07-25 01:09+0200\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -684,8 +684,8 @@ msgid "Enter URL..."
 msgstr "Ievadīt adresi..."
 
 #: src/vgl-main-window.c:828
-msgid "My personal radio"
-msgstr "Mans personiskais radio"
+msgid "My library"
+msgstr ""
 
 #: src/vgl-main-window.c:829
 msgid "My neighbours"
@@ -708,8 +708,8 @@ msgid "My music tagged..."
 msgstr "Mana mūzika ar tagiem..."
 
 #: src/vgl-main-window.c:862
-msgid "Personal..."
-msgstr "Personisks..."
+msgid "Library..."
+msgstr ""
 
 #: src/vgl-main-window.c:863
 msgid "Neighbours..."

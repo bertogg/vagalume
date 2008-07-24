@@ -25,7 +25,7 @@ lastfm_radio_url(lastfm_radio type, const char *data)
         case LASTFM_NEIGHBOURS_RADIO:
                 return g_strconcat("lastfm://user/", data,
                                    "/neighbours", NULL);
-        case LASTFM_PERSONAL_RADIO:
+        case LASTFM_LIBRARY_RADIO:
                 return g_strconcat("lastfm://user/", data,
                                    "/personal", NULL);
         case LASTFM_SIMILAR_ARTIST_RADIO:

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-15 00:45+0200\n"
-"PO-Revision-Date: 2008-07-15 00:47+0200\n"
+"POT-Creation-Date: 2008-07-25 01:03+0200\n"
+"PO-Revision-Date: 2008-07-25 01:04+0200\n"
 "Last-Translator: Oscar A. Mata T. <omata_mac@yahoo.com>\n"
 "Language-Team: es_VE\n"
 "MIME-Version: 1.0\n"
@@ -683,8 +683,8 @@ msgid "Enter URL..."
 msgstr "Introduzca URL..."
 
 #: src/vgl-main-window.c:828
-msgid "My personal radio"
-msgstr "Mi radio personal"
+msgid "My library"
+msgstr "Mi colección"
 
 #: src/vgl-main-window.c:829
 msgid "My neighbours"
@@ -707,8 +707,8 @@ msgid "My music tagged..."
 msgstr "Mi música etiquetada..."
 
 #: src/vgl-main-window.c:862
-msgid "Personal..."
-msgstr "Personal..."
+msgid "Library..."
+msgstr "Colección..."
 
 #: src/vgl-main-window.c:863
 msgid "Neighbours..."

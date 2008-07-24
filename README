@@ -25,7 +25,7 @@ is required to compile Vagalume for Moblin.
 Vagalume has the following features:
 
    * It plays Last.fm streams using the Last.fm protocol v1.2
-   * It can play any Last.fm radio: personal, neighbours, loved
+   * It can play any Last.fm radio: library, neighbours, loved
      tracks, or any other arbitrary URL.
    * It can download free tracks
    * It implements the Audioscrobbler Realtime Submission Protocol

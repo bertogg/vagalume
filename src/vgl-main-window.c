@@ -769,8 +769,8 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         GtkWidget *settings, *quit;
         GtkWidget *play, *stop, *skip, *separ1, *separ2;
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
-        GtkWidget *personal, *neigh, *loved, *playlist, *recomm, *usertag;
-        GtkWidget *personal2, *neigh2, *loved2, *playlist2;
+        GtkWidget *library, *neigh, *loved, *playlist, *recomm, *usertag;
+        GtkWidget *library2, *neigh2, *loved2, *playlist2;
         GtkWidget *managebmk, *bmkartist, *bmktrack;
         GtkWidget *about;
 #ifdef USE_HILDON_WINDOW
@@ -825,21 +825,21 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         /* Radio -> My radios */
         usersub = GTK_MENU_SHELL(gtk_menu_new());
         gtk_menu_item_set_submenu(user, GTK_WIDGET(usersub));
-        personal = gtk_menu_item_new_with_label(_("My personal radio"));
+        library = gtk_menu_item_new_with_label(_("My library"));
         neigh = gtk_menu_item_new_with_label(_("My neighbours"));
         loved = gtk_menu_item_new_with_label(_("My loved tracks"));
         playlist = gtk_menu_item_new_with_label(_("My playlist"));
         recomm = gtk_menu_item_new_with_label(_("My recommendations"));
         usertag = gtk_menu_item_new_with_label(_("My music tagged..."));
-        gtk_menu_shell_append(usersub, personal);
+        gtk_menu_shell_append(usersub, library);
         gtk_menu_shell_append(usersub, neigh);
         gtk_menu_shell_append(usersub, loved);
         gtk_menu_shell_append(usersub, playlist);
         gtk_menu_shell_append(usersub, recomm);
         gtk_menu_shell_append(usersub, usertag);
-        g_signal_connect(G_OBJECT(personal), "activate",
+        g_signal_connect(G_OBJECT(library), "activate",
                          G_CALLBACK(radio_selected),
-                         GINT_TO_POINTER(LASTFM_PERSONAL_RADIO));
+                         GINT_TO_POINTER(LASTFM_LIBRARY_RADIO));
         g_signal_connect(G_OBJECT(neigh), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_NEIGHBOURS_RADIO));
@@ -859,17 +859,17 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         /* Radio -> Others' radios */
         othersub = GTK_MENU_SHELL(gtk_menu_new());
         gtk_menu_item_set_submenu(others, GTK_WIDGET(othersub));
-        personal2 = gtk_menu_item_new_with_label(_("Personal..."));
+        library2 = gtk_menu_item_new_with_label(_("Library..."));
         neigh2 = gtk_menu_item_new_with_label(_("Neighbours..."));
         loved2 = gtk_menu_item_new_with_label(_("Loved tracks..."));
         playlist2 = gtk_menu_item_new_with_label(_("Playlist..."));
-        gtk_menu_shell_append(othersub, personal2);
+        gtk_menu_shell_append(othersub, library2);
         gtk_menu_shell_append(othersub, neigh2);
         gtk_menu_shell_append(othersub, loved2);
         gtk_menu_shell_append(othersub, playlist2);
-        g_signal_connect(G_OBJECT(personal2), "activate",
+        g_signal_connect(G_OBJECT(library2), "activate",
                          G_CALLBACK(others_radio_selected),
-                         GINT_TO_POINTER(LASTFM_PERSONAL_RADIO));
+                         GINT_TO_POINTER(LASTFM_LIBRARY_RADIO));
         g_signal_connect(G_OBJECT(neigh2), "activate",
                          G_CALLBACK(others_radio_selected),
                          GINT_TO_POINTER(LASTFM_NEIGHBOURS_RADIO));

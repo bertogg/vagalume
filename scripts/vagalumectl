@@ -56,7 +56,7 @@ print_usage ()
     echo "     group <GROUP>:     change to a 'last.fm group' radio"
     echo "     loved <USER>:      change to a 'loved' radio for a specific user"
     echo "     neighbours <USER>: change to a 'neighbours' radio for a specific user"
-    echo "     personal <USER>:   change to a 'personal' radio for a specific user"
+    echo "     library <USER>:    change to a 'library' radio for a specific user"
     echo "     playlist <USER>:   change to a 'playlist' radio for a specific user"
     echo "     playurl <URL>:     just play the specified URL on Vagalume"
     echo "     volumeup [INC]:    increase playback volume"
@@ -124,7 +124,7 @@ elif [ $# -eq 2 ]; then
     "group") URL="lastfm://group/"${ENCODED_PARAM};;
     "loved") URL="lastfm://user/"${ENCODED_PARAM}"/loved";;
     "neighbours") URL="lastfm://user/"${ENCODED_PARAM}"/neighbours";;
-    "personal") URL="lastfm://user/"${ENCODED_PARAM};;
+    "library") URL="lastfm://user/"${ENCODED_PARAM}"/personal";;
     "playlist") URL="lastfm://user/"${ENCODED_PARAM}"/playlist";;
     "playurl") URL=${ENCODED_PARAM};;
     "volumeup") DBUS_METHOD_CALL=${DBUS_METHOD_VOLUMEUP};;

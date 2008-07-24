@@ -1,5 +1,15 @@
 2008-07-25  Alberto Garcia  <agarcia@igalia.com>
 
+	* README
+	* scripts/vagalumectl
+	* src/radio.c
+	* src/radio.h
+	* src/vgl-main-window.c
+	* vagalumectl.1
+	* po/vagalume.pot, po/de.po, po/es.po, po/fi.po, po/fr.po
+	* po/gl.po, po/it.po, po/lv.po, po/pt.po, po/pt_BR.po:
+	Rename "personal radio" to "library" as per Last.fm update
+
 	* po/fi.po, po/pt.po: Add missing ellipsis
 
 2008-07-23  Alberto Garcia  <agarcia@igalia.com>

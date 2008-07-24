@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-15 00:45+0200\n"
-"PO-Revision-Date: 2008-07-25 00:40+0200\n"
+"POT-Creation-Date: 2008-07-25 01:03+0200\n"
+"PO-Revision-Date: 2008-07-25 01:07+0200\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -680,8 +680,8 @@ msgid "Enter URL..."
 msgstr "Introduza o URL..."
 
 #: src/vgl-main-window.c:828
-msgid "My personal radio"
-msgstr "A minha rádio pessoal"
+msgid "My library"
+msgstr "A minha biblioteca"
 
 #: src/vgl-main-window.c:829
 msgid "My neighbours"
@@ -704,8 +704,8 @@ msgid "My music tagged..."
 msgstr "A minha música etiquetada..."
 
 #: src/vgl-main-window.c:862
-msgid "Personal..."
-msgstr "Pessoal..."
+msgid "Library..."
+msgstr "Biblioteca..."
 
 #: src/vgl-main-window.c:863
 msgid "Neighbours..."
@@ -841,9 +841,3 @@ msgstr ""
 #: src/vgl-tray-icon.c:29
 msgid "Tags..."
 msgstr "Etiquetas..."
-
-#~ msgid "Unable to set D-BUS callback"
-#~ msgstr "Não foi possível estabelecer o D-BUS callback"
-
-#~ msgid "Unable to set hw callback"
-#~ msgstr "Não foi possível estabelecer o hw callback"

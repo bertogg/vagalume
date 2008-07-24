@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-15 00:45+0200\n"
+"POT-Creation-Date: 2008-07-25 01:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -629,7 +629,7 @@ msgid "Enter URL..."
 msgstr ""
 
 #: src/vgl-main-window.c:828
-msgid "My personal radio"
+msgid "My library"
 msgstr ""
 
 #: src/vgl-main-window.c:829
@@ -653,7 +653,7 @@ msgid "My music tagged..."
 msgstr ""
 
 #: src/vgl-main-window.c:862
-msgid "Personal..."
+msgid "Library..."
 msgstr ""
 
 #: src/vgl-main-window.c:863

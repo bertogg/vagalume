@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-15 00:45+0200\n"
-"PO-Revision-Date: 2008-07-15 00:47+0200\n"
+"POT-Creation-Date: 2008-07-25 01:03+0200\n"
+"PO-Revision-Date: 2008-07-25 01:09+0200\n"
 "Last-Translator: Julien Duponchelle <julien@duponchelle.info>\n"
 "Language-Team:  <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -691,8 +691,8 @@ msgid "Enter URL..."
 msgstr "Entrez l'url..."
 
 #: src/vgl-main-window.c:828
-msgid "My personal radio"
-msgstr "Ma radio personnel"
+msgid "My library"
+msgstr ""
 
 #: src/vgl-main-window.c:829
 msgid "My neighbours"
@@ -715,8 +715,8 @@ msgid "My music tagged..."
 msgstr "La musique que j'ai tagué"
 
 #: src/vgl-main-window.c:862
-msgid "Personal..."
-msgstr "Personnel..."
+msgid "Library..."
+msgstr ""
 
 #: src/vgl-main-window.c:863
 msgid "Neighbours..."
