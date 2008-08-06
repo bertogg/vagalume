@@ -1,3 +1,7 @@
+2008-08-06  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/dbus.h: Fix compilation error.
+
 2008-07-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* README

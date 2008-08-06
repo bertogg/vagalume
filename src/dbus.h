@@ -78,7 +78,7 @@ void lastfm_dbus_close(void) { }
 void lastfm_dbus_notify_playback(lastfm_track *track) { }
 void lastfm_dbus_notify_started(void) { }
 void lastfm_dbus_notify_closing(void) { }
-void lastfm_dbus_play_radio(void) { }
+void lastfm_dbus_play_radio_url(const char *url) { }
 
 #endif /* HAVE_DBUS_SUPPORT */
 
