@@ -319,6 +319,8 @@ elif test "$PLATFORM" = "moblin"; then
    # Disable tray icon support on Moblin
    have_tray_icon="no"
 
+   desktopentrydir="\${datadir}/applications"
+
    echo "Compiling for Moblin"
 
    PKG_CHECK_MODULES(hildon, hildon-1)

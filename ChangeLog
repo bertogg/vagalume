@@ -1,3 +1,7 @@
+2008-08-07  Alberto Garcia  <agarcia@igalia.com>
+
+	* configure.ac: Define desktopentrydir in Moblin build
+
 2008-08-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/dbus.h: Fix compilation error.
