@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Vagalume en Galego 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-25 01:03+0200\n"
-"PO-Revision-Date: 2008-07-25 01:08+0200\n"
+"PO-Revision-Date: 2008-07-31 12:52+0200\n"
 "Last-Translator: Amador Loureiro Blanco <dorfun@adorfunteca.org>\n"
 "Language-Team: Vagalume en Galego <dorfun@adorfunteca.org>\n"
 "MIME-Version: 1.0\n"
@@ -671,7 +671,7 @@ msgstr "Radios de outros"
 
 #: src/vgl-main-window.c:804
 msgid "Group radio..."
-msgstr "Grupo de radios..."
+msgstr "Radio de grupo..."
 
 #: src/vgl-main-window.c:805
 msgid "Music tagged..."

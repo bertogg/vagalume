@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-25 01:03+0200\n"
-"PO-Revision-Date: 2008-07-25 01:04+0200\n"
+"PO-Revision-Date: 2008-07-25 14:32+0200\n"
 "Last-Translator: Oskar Welzl <mail@welzl.info>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -681,7 +681,7 @@ msgstr "URL eingeben..."
 
 #: src/vgl-main-window.c:828
 msgid "My library"
-msgstr ""
+msgstr "Meine Musiksammlung"
 
 #: src/vgl-main-window.c:829
 msgid "My neighbours"
@@ -705,7 +705,7 @@ msgstr "Meine Musik mit Tags..."
 
 #: src/vgl-main-window.c:862
 msgid "Library..."
-msgstr ""
+msgstr "Musiksammlung..."
 
 #: src/vgl-main-window.c:863
 msgid "Neighbours..."
