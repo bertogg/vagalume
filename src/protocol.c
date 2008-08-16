@@ -169,7 +169,7 @@ lastfm_session_new(const char *username, const char *password,
  * @return Whether a track has been found and added to the playlist
  */
 static gboolean
-lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
+lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
                    const char *pls_title, gboolean custom_pls)
 {
         g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
@@ -177,7 +177,7 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
         gboolean retval = FALSE;
         const xmlChar *name;
         char *val;
-        lastfm_track *track = lastfm_track_new();
+        LastfmTrack *track = lastfm_track_new();
         track->pls_title = g_strdup(pls_title);
         track->custom_pls = custom_pls;
 
@@ -241,13 +241,13 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, lastfm_pls *pls,
  * @param bufsize Size of the buffer
  * @return A new playlist, or NULL if none was found
  */
-static lastfm_pls *
+static LastfmPls *
 lastfm_parse_playlist(const char *buffer, size_t bufsize)
 {
         xmlDoc *doc = NULL;
         xmlNode *node = NULL;
         xmlNode *tracklist = NULL;
-        lastfm_pls *pls = NULL;
+        LastfmPls *pls = NULL;
         const xmlChar *name;
         char *pls_title = NULL;
         gboolean custom_pls = FALSE;
@@ -320,7 +320,7 @@ lastfm_parse_playlist(const char *buffer, size_t bufsize)
  * @param discovery Whether to use discovery mode or not
  * @return A new playlist or NULL if none has been obtained
  */
-lastfm_pls *
+LastfmPls *
 lastfm_request_playlist(lastfm_session *s, gboolean discovery)
 {
         g_return_val_if_fail(s && s->id && s->base_url && s->base_path, NULL);
@@ -328,7 +328,7 @@ lastfm_request_playlist(lastfm_session *s, gboolean discovery)
         char *url;
         char *buffer = NULL;
         size_t bufsize = 0;
-        lastfm_pls *pls = NULL;
+        LastfmPls *pls = NULL;
 
         url = g_strconcat("http://", s->base_url, s->base_path,
                           "/xspf.php?sk=", s->id, "&discovery=", disc_mode,
@@ -349,13 +349,13 @@ lastfm_request_playlist(lastfm_session *s, gboolean discovery)
  * @param radio_url URL of the playlist
  * @return A new playlist, or NULL if none has been obtained
  */
-lastfm_pls *
+LastfmPls *
 lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
 {
         g_return_val_if_fail(s != NULL && radio_url != NULL, NULL);
         char *buffer = NULL;
         size_t bufsize = 0;
-        lastfm_pls *pls = NULL;
+        LastfmPls *pls = NULL;
         char *url = NULL;
         char *radio_url_escaped = escape_url(radio_url, TRUE);
         url = g_strconcat("http://", s->base_url, custom_pls_path,

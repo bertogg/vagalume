@@ -16,10 +16,10 @@
 
 GtkWidget *compat_gtk_button_new(void);
 gboolean tagwin_run(GtkWindow *parent, const char *user, char **newtags,
-                    const GList *usertags, lastfm_track *track,
+                    const GList *usertags, LastfmTrack *track,
                     request_type *type);
 gboolean recommwin_run(GtkWindow *parent, char **user, char **message,
-                       const GList *friends, const lastfm_track *track,
+                       const GList *friends, const LastfmTrack *track,
                        request_type *type);
 void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text);

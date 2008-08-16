@@ -23,34 +23,34 @@ static const char *rsp_session_url =
        "&c=" LASTFM_APP_ID "&v=" LASTFM_APP_VERSION;
 
 void
-rsp_session_destroy(rsp_session *s)
+rsp_session_destroy(RspSession *s)
 {
         if (s == NULL) return;
         g_return_if_fail(s->id && s->np_url && s->post_url);
         g_free(s->id);
         g_free(s->np_url);
         g_free(s->post_url);
-        g_slice_free(rsp_session, s);
+        g_slice_free(RspSession, s);
 }
 
-rsp_session *
-rsp_session_copy(const rsp_session *s)
+RspSession *
+rsp_session_copy(const RspSession *s)
 {
         if (s == NULL) return NULL;
         g_return_val_if_fail(s->id && s->np_url && s->post_url, NULL);
-        rsp_session *s2 = g_slice_new0(rsp_session);
+        RspSession *s2 = g_slice_new0(RspSession);
         s2->id = g_strdup(s->id);
         s2->np_url = g_strdup(s->np_url);
         s2->post_url = g_strdup(s->post_url);
         return s2;
 }
 
-rsp_session *
+RspSession *
 rsp_session_new(const char *username, const char *password,
                 lastfm_err *err)
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
-        rsp_session *s = NULL;
+        RspSession *s = NULL;
         char *timestamp, *auth, *url;
         char *buffer = NULL;
         timestamp = g_strdup_printf("%lu", time(NULL));
@@ -66,7 +66,7 @@ rsp_session_new(const char *username, const char *password,
                         /* Split in 5 parts and not 4 to prevent
                            trailing garbage from going to r[3] */
                         char **r = g_strsplit(buffer, "\n", 5);
-                        s = g_slice_new0(rsp_session);
+                        s = g_slice_new0(RspSession);
                         if (r[0] && r[1] && r[2] && r[3]) {
                                 s->id = g_strdup(r[1]);
                                 s->np_url = g_strdup(r[2]);
@@ -90,7 +90,7 @@ rsp_session_new(const char *username, const char *password,
 }
 
 void
-rsp_set_nowplaying(const rsp_session *rsp, const lastfm_track *t)
+rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t)
 {
         g_return_if_fail(rsp != NULL && t != NULL);
         char *buffer;
@@ -122,8 +122,8 @@ rsp_set_nowplaying(const rsp_session *rsp, const lastfm_track *t)
 }
 
 void
-rsp_scrobble(const rsp_session *rsp, const lastfm_track *t, time_t start,
-             rsp_rating rating)
+rsp_scrobble(const RspSession *rsp, const LastfmTrack *t, time_t start,
+             RspRating rating)
 {
         g_return_if_fail(rsp != NULL && t != NULL);
         char *buffer;

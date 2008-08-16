@@ -164,7 +164,7 @@ xmlrpc_send_request(const char *request, const char *name)
  * @return Whether the operation was successful or not
  */
 gboolean
-tag_track(const char *user, const char *password, const lastfm_track *track,
+tag_track(const char *user, const char *password, const LastfmTrack *track,
           request_type type, GSList *tags)
 {
         g_return_val_if_fail(user && password && track, FALSE);
@@ -211,7 +211,7 @@ tag_track(const char *user, const char *password, const lastfm_track *track,
  */
 gboolean
 love_ban_track(const char *user, const char *password,
-               const lastfm_track *track, gboolean love)
+               const LastfmTrack *track, gboolean love)
 {
         g_return_val_if_fail(user && password && track, FALSE);
         gboolean retval;
@@ -239,7 +239,7 @@ love_ban_track(const char *user, const char *password,
  */
 gboolean
 recommend_track(const char *user, const char *password,
-                const lastfm_track *track, const char *text,
+                const LastfmTrack *track, const char *text,
                 request_type type, const char *rcpt)
 {
         g_return_val_if_fail(user && password && track && text && rcpt, FALSE);
@@ -280,7 +280,7 @@ recommend_track(const char *user, const char *password,
  */
 gboolean
 add_to_playlist(const char *user, const char *password,
-                const lastfm_track *track)
+                const LastfmTrack *track)
 {
         g_return_val_if_fail(user && password && track, FALSE);
         gboolean retval;

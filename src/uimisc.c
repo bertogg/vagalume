@@ -43,7 +43,7 @@ typedef struct {
         GtkEntry *entry;
         GtkComboBox *selcombo;
         GtkComboBox *globalcombo;
-        lastfm_track *track;
+        LastfmTrack *track;
         char *user;
         char *tags_artist;
         char *tags_track;
@@ -735,7 +735,7 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
 }
 
 static GtkComboBox *
-artist_track_album_selection_combo(const lastfm_track *t)
+artist_track_album_selection_combo(const LastfmTrack *t)
 {
         g_return_val_if_fail(t != NULL, NULL);
         char *text;
@@ -979,7 +979,7 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 
 gboolean
 tagwin_run(GtkWindow *parent, const char *user, char **newtags,
-           const GList *usertags, lastfm_track *track, request_type *type)
+           const GList *usertags, LastfmTrack *track, request_type *type)
 {
         g_return_val_if_fail(track && type && user && newtags, FALSE);
         tagwin *t;
@@ -1139,7 +1139,7 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
 
 gboolean
 recommwin_run(GtkWindow *parent, char **user, char **message,
-              const GList *friends, const lastfm_track *track,
+              const GList *friends, const LastfmTrack *track,
               request_type *type)
 {
         g_return_val_if_fail(user && message && track && type, FALSE);

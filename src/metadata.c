@@ -182,7 +182,7 @@ lastfm_get_user_tags(const char *username, GList **taglist)
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_user_track_tags(const char *username, const lastfm_track *track,
+lastfm_get_user_track_tags(const char *username, const LastfmTrack *track,
                            request_type req, GList **taglist)
 {
         g_return_val_if_fail(username && track && taglist, FALSE);
@@ -225,7 +225,7 @@ lastfm_get_user_track_tags(const char *username, const lastfm_track *track,
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_track_tags(const lastfm_track *track, request_type req,
+lastfm_get_track_tags(const LastfmTrack *track, request_type req,
                       GList **taglist)
 {
         g_return_val_if_fail(track != NULL && taglist != NULL, FALSE);
@@ -267,7 +267,7 @@ lastfm_get_track_tags(const lastfm_track *track, request_type req,
  * @param track The track
  */
 void
-lastfm_get_track_cover_image(lastfm_track *track)
+lastfm_get_track_cover_image(LastfmTrack *track)
 {
         g_return_if_fail(track != NULL);
         static GList *dloads_in_progress = NULL;

@@ -38,15 +38,15 @@
 #endif
 
 static lastfm_session *session = NULL;
-static lastfm_pls *playlist = NULL;
-static rsp_session *rsp_sess = NULL;
+static LastfmPls *playlist = NULL;
+static RspSession *rsp_sess = NULL;
 static VglMainWindow *mainwin = NULL;
 static lastfm_usercfg *usercfg = NULL;
 static GList *friends = NULL;
 static GList *usertags = NULL;
-static lastfm_track *nowplaying = NULL;
+static LastfmTrack *nowplaying = NULL;
 static time_t nowplaying_since = 0;
-static rsp_rating nowplaying_rating = RSP_RATING_NONE;
+static RspRating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
 static gboolean stopping_after_track = FALSE;
 
@@ -55,19 +55,19 @@ static VglTrayIcon *tray_icon = NULL;
 #endif
 
 typedef struct {
-        lastfm_track *track;
-        rsp_rating rating;
+        LastfmTrack *track;
+        RspRating rating;
         time_t start;
 } rsp_data;
 
 typedef struct {
-        lastfm_track *track;
+        LastfmTrack *track;
         char *taglist;                /* comma-separated list of tags */
         request_type type;
 } tag_data;
 
 typedef struct {
-        lastfm_track *track;
+        LastfmTrack *track;
         char *rcpt;                  /* Recipient of the recommendation */
         char *text;                  /* text of the recommendation */
         request_type type;
@@ -186,13 +186,13 @@ controller_toggle_mainwin_visibility (void)
  * updates the UI (progressbars, etc). to reflect that. To be called
  * using g_timeout_add()
  *
- * @param data A pointer to the lastfm_track being played
+ * @param data A pointer to the LastfmTrack being played
  * @return TRUE if the track hasn't fininished yet, FALSE otherwise
  */
 static gboolean
 controller_show_progress(gpointer data)
 {
-        lastfm_track *tr = (lastfm_track *) data;
+        LastfmTrack *tr = (LastfmTrack *) data;
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && tr, FALSE);
         if (nowplaying != NULL && tr->id == nowplaying->id) {
                 guint played = lastfm_audio_get_running_time();
@@ -211,7 +211,7 @@ controller_show_progress(gpointer data)
  * Gets the track that is currently being played
  * @return The track
  */
-lastfm_track *
+LastfmTrack *
 controller_get_current_track(void)
 {
   return nowplaying;
@@ -258,7 +258,7 @@ set_user_tag_list(const char *user, GList *list)
  * @param sess The new session (can be NULL)
  */
 static void
-set_rsp_session(const char *user, rsp_session *sess)
+set_rsp_session(const char *user, RspSession *sess)
 {
         g_return_if_fail(user != NULL && usercfg != NULL);
         if (!strcmp(user, usercfg->username)) {
@@ -280,7 +280,7 @@ static gpointer
 scrobble_track_thread(gpointer data)
 {
         rsp_data *d = (rsp_data *) data;
-        rsp_session *s = NULL;
+        RspSession *s = NULL;
         g_return_val_if_fail(d != NULL && d->track != NULL && d->start > 0,
                              NULL);
         char *user = NULL, *pass = NULL;
@@ -352,7 +352,7 @@ set_nowplaying_thread(gpointer data)
 {
         rsp_data *d = (rsp_data *) data;
         g_return_val_if_fail(d != NULL && d->track != NULL, FALSE);
-        rsp_session *s = NULL;
+        RspSession *s = NULL;
         gboolean set_np = FALSE;
         g_usleep(10 * G_USEC_PER_SEC);
         gdk_threads_enter();
@@ -380,7 +380,7 @@ set_nowplaying_thread(gpointer data)
  * @param track The track to be set as Now Playing
  */
 static void
-controller_set_nowplaying(lastfm_track *track)
+controller_set_nowplaying(LastfmTrack *track)
 {
         g_return_if_fail(usercfg != NULL);
         if (nowplaying != NULL) {
@@ -412,7 +412,7 @@ get_user_extradata(void)
         gboolean rsp_ok = FALSE;
         gboolean friends_ok = FALSE;
         gboolean usertags_ok = FALSE;
-        rsp_session *sess = NULL;
+        RspSession *sess = NULL;
         GList *friends = NULL;
         GList *usertags = NULL;
         gdk_threads_enter();
@@ -665,13 +665,13 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
 /**
  * Set the album cover image. This must be done in a thread to avoid
  * freezing the UI.
- * @param data A pointer to the lastfm_track
+ * @param data A pointer to the LastfmTrack
  * @return NULL (not used)
  */
 static gpointer
 set_album_cover_thread(gpointer data)
 {
-        lastfm_track *t = (lastfm_track *) data;
+        LastfmTrack *t = (LastfmTrack *) data;
         g_return_val_if_fail(t != NULL && t->image_url != NULL, NULL);
         lastfm_get_track_cover_image(t);
         if (t->image_data == NULL) g_warning("Error getting cover image");
@@ -700,7 +700,7 @@ start_playing_get_pls_thread(gpointer data)
 {
         lastfm_session *s = (lastfm_session *) data;
         g_return_val_if_fail(s != NULL && usercfg != NULL, NULL);
-        lastfm_pls *pls = lastfm_request_playlist(s, usercfg->discovery_mode);
+        LastfmPls *pls = lastfm_request_playlist(s, usercfg->discovery_mode);
         gdk_threads_enter();
         if (pls == NULL) {
                 controller_stop_playing();
@@ -745,7 +745,7 @@ static void
 controller_audio_started_cb(void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && nowplaying);
-        lastfm_track *track;
+        LastfmTrack *track;
         nowplaying_since = time(NULL);
         vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_PLAYING,
                                   nowplaying);
@@ -768,7 +768,7 @@ controller_audio_started_cb(void)
 static void
 controller_start_playing_cb(gpointer userdata)
 {
-        lastfm_track *track = NULL;
+        LastfmTrack *track = NULL;
         g_return_if_fail(mainwin && playlist && nowplaying == NULL);
         vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
                                   NULL);
@@ -895,7 +895,7 @@ void
 controller_download_track(void)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
-        lastfm_track *t = lastfm_track_ref(nowplaying);
+        LastfmTrack *t = lastfm_track_ref(nowplaying);
         if (controller_confirm_dialog(_("Download this track?"), FALSE)) {
                 char *filename, *dstpath;
                 gboolean download = TRUE;
@@ -1070,7 +1070,7 @@ controller_tag_track()
         /* Keep this static to remember the previous value */
         static request_type type = REQUEST_ARTIST;
         char *tags = NULL;
-        lastfm_track *track = lastfm_track_ref(nowplaying);
+        LastfmTrack *track = lastfm_track_ref(nowplaying);
         gboolean accept;
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
@@ -1148,7 +1148,7 @@ controller_recomm_track(void)
         char *body = NULL;
         /* Keep this static to remember the previous value */
         static request_type type = REQUEST_TRACK;
-        lastfm_track *track = lastfm_track_ref(nowplaying);
+        LastfmTrack *track = lastfm_track_ref(nowplaying);
         gboolean accept;
         if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
                 type = REQUEST_ARTIST;
@@ -1179,14 +1179,14 @@ controller_recomm_track(void)
  * Add a track to the user's playlist. This can take some seconds, so
  * it must be called using g_thread_create() to avoid freezing the UI.
  *
- * @param data Pointer to the lastfm_track to add. This data must be
+ * @param data Pointer to the LastfmTrack to add. This data must be
  *             freed here
  * @return NULL (this value is not used)
  */
 gpointer
 add_to_playlist_thread(gpointer data)
 {
-        lastfm_track *t = (lastfm_track *) data;
+        LastfmTrack *t = (LastfmTrack *) data;
         g_return_val_if_fail(t != NULL, NULL);
         gboolean retval = FALSE;
         char *user = NULL, *pass = NULL;
@@ -1224,7 +1224,7 @@ controller_add_to_playlist(void)
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         if (controller_confirm_dialog(
                     _("Really add this track to the playlist?"), FALSE)) {
-                lastfm_track *track = lastfm_track_ref(nowplaying);
+                LastfmTrack *track = lastfm_track_ref(nowplaying);
                 vgl_main_window_set_track_as_added_to_playlist(mainwin, TRUE);
                 g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
         }
@@ -1255,7 +1255,7 @@ controller_play_radio_by_url_thread(gpointer data)
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
         } else if (lastfm_radio_url_is_custom(url)) {
-                lastfm_pls *pls;
+                LastfmPls *pls;
                 gdk_threads_leave();
                 pls = lastfm_request_custom_playlist(sess, url);
                 gdk_threads_enter();

@@ -1,3 +1,22 @@
+2008-08-16  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.[ch]
+	* src/dbus.[ch]
+	* src/imstatus.[ch]
+	* src/metadata.[ch]
+	* src/playlist.[ch]
+	* src/protocol.[ch]
+	* src/scrobbler.[ch]
+	* src/uimisc.[ch]
+	* src/vgl-main-window.[ch]
+	* src/vgl-tray-icon.[ch]
+	* src/xmlrpc.[ch]:
+	Data types renamed:
+	lastfm_pls   -> LastfmPls
+	lastfm_track -> LastfmTrack
+	rsp_session  -> RspSession
+	rsp_rating   -> RspRating
+
 2008-08-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/lv.po: Update translation (by Pēteris Caune)

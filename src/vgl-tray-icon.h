@@ -41,7 +41,7 @@ GType vgl_tray_icon_get_type(void) G_GNUC_CONST;
 /* Public methods */
 
 VglTrayIcon *vgl_tray_icon_create (void);
-void vgl_tray_icon_notify_playback (VglTrayIcon *vti, lastfm_track *track);
+void vgl_tray_icon_notify_playback (VglTrayIcon *vti, LastfmTrack *track);
 void vgl_tray_icon_show_notifications (VglTrayIcon *vti, gboolean show_notifications);
 
 G_END_DECLS

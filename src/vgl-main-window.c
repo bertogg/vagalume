@@ -229,7 +229,7 @@ vgl_main_window_set_album_cover(VglMainWindow *w, const char *data, int size)
 }
 
 static void
-vgl_main_window_update_track_info(VglMainWindow *w, const lastfm_track *t)
+vgl_main_window_update_track_info(VglMainWindow *w, const LastfmTrack *t)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w) && t != NULL);
         VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
@@ -388,7 +388,7 @@ menu_enable_all_items(GtkWidget *menu, gboolean enable)
 
 void
 vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
-                          const lastfm_track *t)
+                          const LastfmTrack *t)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);

@@ -24,7 +24,7 @@ static char *saved_gossip_status = NULL;
 typedef struct {
         gboolean im_pidgin, im_gajim, im_gossip, im_telepathy;
         GString *msg;
-        lastfm_track *track;
+        LastfmTrack *track;
 } ImStatusData;
 
 static gboolean
@@ -362,7 +362,7 @@ im_clear_status_idle(gpointer data)
 }
 
 void
-im_set_status(const lastfm_usercfg *cfg, lastfm_track *track)
+im_set_status(const lastfm_usercfg *cfg, LastfmTrack *track)
 {
         g_return_if_fail(cfg != NULL && track != NULL);
         ImStatusData *data = g_slice_new(ImStatusData);

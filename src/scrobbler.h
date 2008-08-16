@@ -19,20 +19,20 @@ typedef enum {
         RSP_RATING_LOVE,
         RSP_RATING_BAN,
         RSP_RATING_SKIP
-} rsp_rating;
+} RspRating;
 
 typedef struct {
         char *id;
         char *np_url;
         char *post_url;
-} rsp_session;
+} RspSession;
 
-rsp_session *rsp_session_new(const char *username, const char *password,
+RspSession *rsp_session_new(const char *username, const char *password,
                              lastfm_err *err);
-rsp_session *rsp_session_copy(const rsp_session *s);
-void rsp_session_destroy(rsp_session *session);
-void rsp_set_nowplaying(const rsp_session *rsp, const lastfm_track *t);
-void rsp_scrobble(const rsp_session *rsp, const lastfm_track *t,
-                  time_t start, rsp_rating rating);
+RspSession *rsp_session_copy(const RspSession *s);
+void rsp_session_destroy(RspSession *session);
+void rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t);
+void rsp_scrobble(const RspSession *rsp, const LastfmTrack *t,
+                  time_t start, RspRating rating);
 
 #endif

@@ -66,7 +66,7 @@ typedef enum {
 
 DbusInitReturnCode lastfm_dbus_init(void);
 void lastfm_dbus_close(void);
-void lastfm_dbus_notify_playback(lastfm_track *track);
+void lastfm_dbus_notify_playback(LastfmTrack *track);
 void lastfm_dbus_notify_started(void);
 void lastfm_dbus_notify_closing(void);
 void lastfm_dbus_play_radio_url(const char *url);
@@ -75,7 +75,7 @@ void lastfm_dbus_play_radio_url(const char *url);
 
 DbusInitReturnCode lastfm_dbus_init(void) { return DBUS_INIT_OK; }
 void lastfm_dbus_close(void) { }
-void lastfm_dbus_notify_playback(lastfm_track *track) { }
+void lastfm_dbus_notify_playback(LastfmTrack *track) { }
 void lastfm_dbus_notify_started(void) { }
 void lastfm_dbus_notify_closing(void) { }
 void lastfm_dbus_play_radio_url(const char *url) { }

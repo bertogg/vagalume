@@ -14,13 +14,13 @@
 #include "playlist.h"
 
 gboolean tag_track(const char *user, const char *password,
-                   const lastfm_track *track, request_type type, GSList *tags);
+                   const LastfmTrack *track, request_type type, GSList *tags);
 gboolean love_ban_track(const char *user, const char *password,
-                        const lastfm_track *track, gboolean love);
+                        const LastfmTrack *track, gboolean love);
 gboolean recommend_track(const char *user, const char *password,
-                         const lastfm_track *track, const char *text,
+                         const LastfmTrack *track, const char *text,
                          request_type type, const char *rcpt);
 gboolean add_to_playlist(const char *user, const char *password,
-                         const lastfm_track *track);
+                         const LastfmTrack *track);
 
 #endif

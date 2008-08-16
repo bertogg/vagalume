@@ -111,7 +111,7 @@ volumeset_handler_idle(gpointer data)
 static gboolean
 requeststatus_handler_idle(gpointer data)
 {
-        lastfm_track *current_track = NULL;
+        LastfmTrack *current_track = NULL;
 
         current_track = controller_get_current_track();
         gdk_threads_enter();
@@ -230,7 +230,7 @@ send_message(char *message, int first_type, ...)
 }
 
 void
-lastfm_dbus_notify_playback (lastfm_track *track)
+lastfm_dbus_notify_playback (LastfmTrack *track)
 {
         const char *param = NULL;
 

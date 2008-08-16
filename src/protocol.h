@@ -29,8 +29,8 @@ typedef struct {
 lastfm_session *lastfm_session_new(const char *username,
                                    const char *password,
                                    lastfm_err *err);
-lastfm_pls *lastfm_request_playlist(lastfm_session *s, gboolean discovery);
-lastfm_pls *lastfm_request_custom_playlist(lastfm_session *s,
+LastfmPls *lastfm_request_playlist(lastfm_session *s, gboolean discovery);
+LastfmPls *lastfm_request_custom_playlist(lastfm_session *s,
                                            const char *radio_url);
 lastfm_session *lastfm_session_copy(const lastfm_session *session);
 void lastfm_session_destroy(lastfm_session *session);

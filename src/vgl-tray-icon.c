@@ -479,7 +479,7 @@ get_default_album_cover_icon (void)
 }
 
 static GdkPixbuf *
-get_album_cover_icon (lastfm_track *track)
+get_album_cover_icon (LastfmTrack *track)
 {
         g_return_val_if_fail(track != NULL && track->image_url != NULL, NULL);
         GdkPixbuf *pixbuf = NULL;
@@ -501,12 +501,12 @@ get_album_cover_icon (lastfm_track *track)
 }
 
 typedef struct {
-        lastfm_track *track;
+        LastfmTrack *track;
         VglTrayIcon *vti;
 } VglTrayIconPlaybackData;
 
 static void
-show_notification (VglTrayIcon *vti, lastfm_track *track)
+show_notification (VglTrayIcon *vti, LastfmTrack *track)
 {
         g_return_if_fail(VGL_IS_TRAY_ICON(vti) && track != NULL);
         VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
@@ -624,7 +624,7 @@ notify_playback_thread (VglTrayIconPlaybackData *d)
 }
 
 void
-vgl_tray_icon_notify_playback (VglTrayIcon *vti, lastfm_track *track)
+vgl_tray_icon_notify_playback (VglTrayIcon *vti, LastfmTrack *track)
 {
         g_return_if_fail(VGL_IS_TRAY_ICON(vti));
         VglTrayIconPlaybackData *data;
