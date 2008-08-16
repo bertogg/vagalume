@@ -1,5 +1,11 @@
 2008-08-16  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/scrobbler.h
+	* src/scrobbler.c (rsp_set_nowplaying, rsp_scrobble): Return a
+	value indicating whether the operation was successful or not.
+
+2008-08-16  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.[ch]
 	* src/dbus.[ch]
 	* src/imstatus.[ch]

@@ -21,6 +21,12 @@ typedef enum {
         RSP_RATING_SKIP
 } RspRating;
 
+typedef enum {
+        RSP_RESPONSE_OK,
+        RSP_RESPONSE_BADSESSION,
+        RSP_RESPONSE_ERROR
+} RspResponse;
+
 typedef struct {
         char *id;
         char *np_url;
@@ -31,8 +37,8 @@ RspSession *rsp_session_new(const char *username, const char *password,
                              lastfm_err *err);
 RspSession *rsp_session_copy(const RspSession *s);
 void rsp_session_destroy(RspSession *session);
-void rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t);
-void rsp_scrobble(const RspSession *rsp, const LastfmTrack *t,
-                  time_t start, RspRating rating);
+RspResponse rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t);
+RspResponse rsp_scrobble(const RspSession *rsp, const LastfmTrack *t,
+                         time_t start, RspRating rating);
 
 #endif

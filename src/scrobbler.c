@@ -89,10 +89,11 @@ rsp_session_new(const char *username, const char *password,
         return s;
 }
 
-void
+RspResponse
 rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t)
 {
-        g_return_if_fail(rsp != NULL && t != NULL);
+        g_return_val_if_fail(rsp != NULL && t != NULL, RSP_RESPONSE_ERROR);
+        RspResponse retvalue = RSP_RESPONSE_ERROR;
         char *buffer;
         char *retbuf = NULL;
         char *duration = NULL;
@@ -108,8 +109,12 @@ rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t)
         http_post_buffer(rsp->np_url, buffer, &retbuf, NULL);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Correctly set Now Playing");
+                retvalue = RSP_RESPONSE_OK;
         } else if (retbuf != NULL) {
                 g_debug("Problem setting Now Playing, response: %s", retbuf);
+                if (!strcmp (retbuf, "BADSESSION")) {
+                        retvalue = RSP_RESPONSE_BADSESSION;
+                }
         } else {
                 g_debug("Problem setting Now Playing, connection error?");
         }
@@ -119,13 +124,15 @@ rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t)
         g_free(artist);
         g_free(title);
         g_free(album);
+        return retvalue;
 }
 
-void
+RspResponse
 rsp_scrobble(const RspSession *rsp, const LastfmTrack *t, time_t start,
              RspRating rating)
 {
-        g_return_if_fail(rsp != NULL && t != NULL);
+        g_return_val_if_fail(rsp != NULL && t != NULL, RSP_RESPONSE_ERROR);
+        RspResponse retvalue = RSP_RESPONSE_ERROR;
         char *buffer;
         char *retbuf = NULL;
         char *duration = NULL;
@@ -156,8 +163,12 @@ rsp_scrobble(const RspSession *rsp, const LastfmTrack *t, time_t start,
         http_post_buffer(rsp->post_url, buffer, &retbuf, NULL);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Track scrobbled");
+                retvalue = RSP_RESPONSE_OK;
         } else if (retbuf != NULL) {
                 g_debug("Problem scrobbling track, response: %s", retbuf);
+                if (!strcmp (retbuf, "BADSESSION")) {
+                        retvalue = RSP_RESPONSE_BADSESSION;
+                }
         } else {
                 g_debug("Problem scrobbling track, connection error?");
         }
@@ -168,4 +179,5 @@ rsp_scrobble(const RspSession *rsp, const LastfmTrack *t, time_t start,
         g_free(artist);
         g_free(title);
         g_free(album);
+        return retvalue;
 }
