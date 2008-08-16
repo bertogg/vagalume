@@ -1,5 +1,14 @@
 2008-08-16  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c
+	* src/protocol.[ch]
+	* src/scrobbler.[ch]:
+	More type renames:
+	lastfm_session -> LastfmSession
+	lastfm_err     -> LastfmErr
+
+2008-08-16  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/scrobbler.h
 	* src/scrobbler.c (rsp_set_nowplaying, rsp_scrobble): Return a
 	value indicating whether the operation was successful or not.

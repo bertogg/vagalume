@@ -47,7 +47,7 @@ rsp_session_copy(const RspSession *s)
 
 RspSession *
 rsp_session_new(const char *username, const char *password,
-                lastfm_err *err)
+                LastfmErr *err)
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
         RspSession *s = NULL;

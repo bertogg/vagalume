@@ -37,7 +37,7 @@
 #include <libosso.h>
 #endif
 
-static lastfm_session *session = NULL;
+static LastfmSession *session = NULL;
 static LastfmPls *playlist = NULL;
 static RspSession *rsp_sess = NULL;
 static VglMainWindow *mainwin = NULL;
@@ -569,8 +569,8 @@ check_session_thread(gpointer userdata)
         g_return_val_if_fail(userdata != NULL, NULL);
         check_session_thread_data *data;
         gboolean connected = FALSE;
-        lastfm_err err = LASTFM_ERR_NONE;
-        lastfm_session *s;
+        LastfmErr err = LASTFM_ERR_NONE;
+        LastfmSession *s;
         data = (check_session_thread_data *) userdata;
         s = lastfm_session_new(data->user, data->pass, &err);
         if (s == NULL || s->id == NULL) {
@@ -691,14 +691,14 @@ set_album_cover_thread(gpointer data)
  * otherwise. This can take a bit, so it is done in a separate thread
  * to avoid freezing the UI.
  *
- * @param data A copy of the lastfm_session used to get the new
+ * @param data A copy of the LastfmSession used to get the new
  *             playlist.
  * @return NULL (not used)
  */
 static gpointer
 start_playing_get_pls_thread(gpointer data)
 {
-        lastfm_session *s = (lastfm_session *) data;
+        LastfmSession *s = (LastfmSession *) data;
         g_return_val_if_fail(s != NULL && usercfg != NULL, NULL);
         LastfmPls *pls = lastfm_request_playlist(s, usercfg->discovery_mode);
         gdk_threads_enter();
@@ -773,7 +773,7 @@ controller_start_playing_cb(gpointer userdata)
         vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
                                   NULL);
         if (lastfm_pls_size(playlist) == 0) {
-                lastfm_session *s = lastfm_session_copy(session);
+                LastfmSession *s = lastfm_session_copy(session);
                 g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
                 return;
         }
@@ -1243,7 +1243,7 @@ static gpointer
 controller_play_radio_by_url_thread(gpointer data)
 {
         char *url = (char *) data;
-        lastfm_session *sess;
+        LastfmSession *sess;
         gdk_threads_enter();
         if (!VGL_IS_MAIN_WINDOW(mainwin) || session == NULL) {
                 g_critical("Main window destroyed or session not found");

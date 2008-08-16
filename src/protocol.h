@@ -17,23 +17,23 @@ typedef enum {
         LASTFM_ERR_NONE,
         LASTFM_ERR_CONN,
         LASTFM_ERR_LOGIN
-} lastfm_err;
+} LastfmErr;
 
 typedef struct {
         char *id;
         gboolean subscriber;
         char *base_url;
         char *base_path;
-} lastfm_session;
+} LastfmSession;
 
-lastfm_session *lastfm_session_new(const char *username,
+LastfmSession *lastfm_session_new(const char *username,
                                    const char *password,
-                                   lastfm_err *err);
-LastfmPls *lastfm_request_playlist(lastfm_session *s, gboolean discovery);
-LastfmPls *lastfm_request_custom_playlist(lastfm_session *s,
+                                   LastfmErr *err);
+LastfmPls *lastfm_request_playlist(LastfmSession *s, gboolean discovery);
+LastfmPls *lastfm_request_custom_playlist(LastfmSession *s,
                                            const char *radio_url);
-lastfm_session *lastfm_session_copy(const lastfm_session *session);
-void lastfm_session_destroy(lastfm_session *session);
-gboolean lastfm_set_radio(lastfm_session *s, const char *radio_url);
+LastfmSession *lastfm_session_copy(const LastfmSession *session);
+void lastfm_session_destroy(LastfmSession *session);
+gboolean lastfm_set_radio(LastfmSession *s, const char *radio_url);
 
 #endif

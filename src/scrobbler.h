@@ -34,7 +34,7 @@ typedef struct {
 } RspSession;
 
 RspSession *rsp_session_new(const char *username, const char *password,
-                             lastfm_err *err);
+                             LastfmErr *err);
 RspSession *rsp_session_copy(const RspSession *s);
 void rsp_session_destroy(RspSession *session);
 RspResponse rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t);

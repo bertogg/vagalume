@@ -80,29 +80,29 @@ lastfm_parse_handshake(const char *buffer)
 }
 
 /**
- * Destroy a lastfm_session object, freeing all of its memory
+ * Destroy a LastfmSession object, freeing all of its memory
  * @param session The session
  */
 void
-lastfm_session_destroy(lastfm_session *session)
+lastfm_session_destroy(LastfmSession *session)
 {
         if (session == NULL) return;
         g_free(session->id);
         g_free(session->base_url);
         g_free(session->base_path);
-        g_slice_free(lastfm_session, session);
+        g_slice_free(LastfmSession, session);
 }
 
 /**
- * Copy a lastfm_session object
+ * Copy a LastfmSession object
  * @param session The original object
  * @return A new object
  */
-lastfm_session *
-lastfm_session_copy(const lastfm_session *session)
+LastfmSession *
+lastfm_session_copy(const LastfmSession *session)
 {
         if (session == NULL) return NULL;
-        lastfm_session *s = g_slice_new0(lastfm_session);
+        LastfmSession *s = g_slice_new0(LastfmSession);
         *s = *session;
         s->id = g_strdup(session->id);
         s->base_url = g_strdup(session->base_url);
@@ -115,11 +115,11 @@ lastfm_session_copy(const lastfm_session *session)
  * @param username User's ID
  * @param password User's passwords
  * @param err If non-NULL, an error code will be written here
- * @return A new lastfm_session or NULL if it couldn't be created
+ * @return A new LastfmSession or NULL if it couldn't be created
  */
-lastfm_session *
+LastfmSession *
 lastfm_session_new(const char *username, const char *password,
-                   lastfm_err *err)
+                   LastfmErr *err)
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
         char *buffer = NULL;
@@ -140,7 +140,7 @@ lastfm_session_new(const char *username, const char *password,
 
         g_free(buffer);
 
-        lastfm_session *s = g_slice_new0(lastfm_session);
+        LastfmSession *s = g_slice_new0(LastfmSession);
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
         s->base_url = g_strdup(g_hash_table_lookup(response, "base_url"));
         s->base_path = g_strdup(g_hash_table_lookup(response, "base_path"));
@@ -321,7 +321,7 @@ lastfm_parse_playlist(const char *buffer, size_t bufsize)
  * @return A new playlist or NULL if none has been obtained
  */
 LastfmPls *
-lastfm_request_playlist(lastfm_session *s, gboolean discovery)
+lastfm_request_playlist(LastfmSession *s, gboolean discovery)
 {
         g_return_val_if_fail(s && s->id && s->base_url && s->base_path, NULL);
         const char *disc_mode = discovery ? "1" : "0";
@@ -350,7 +350,7 @@ lastfm_request_playlist(lastfm_session *s, gboolean discovery)
  * @return A new playlist, or NULL if none has been obtained
  */
 LastfmPls *
-lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
+lastfm_request_custom_playlist(LastfmSession *s, const char *radio_url)
 {
         g_return_val_if_fail(s != NULL && radio_url != NULL, NULL);
         char *buffer = NULL;
@@ -379,7 +379,7 @@ lastfm_request_custom_playlist(lastfm_session *s, const char *radio_url)
  * @return Whether the radio has been set correctly
  */
 gboolean
-lastfm_set_radio(lastfm_session *s, const char *radio_url)
+lastfm_set_radio(LastfmSession *s, const char *radio_url)
 {
         g_return_val_if_fail(s != NULL && s->id != NULL &&
                              s->base_url != NULL &&
