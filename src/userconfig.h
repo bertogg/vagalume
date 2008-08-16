@@ -28,18 +28,18 @@ typedef struct {
         gboolean disable_confirm_dialogs;
         gboolean show_notifications;
         gboolean close_to_systray;
-} lastfm_usercfg;
+} VglUserCfg;
 
-lastfm_usercfg *lastfm_usercfg_new(void);
-void lastfm_usercfg_destroy(lastfm_usercfg *cfg);
-void lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username);
-void lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password);
-void lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy);
-void lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir);
-void lastfm_usercfg_set_imstatus_template(lastfm_usercfg *cfg, const char *str);
+VglUserCfg *vgl_user_cfg_new(void);
+void vgl_user_cfg_destroy(VglUserCfg *cfg);
+void vgl_user_cfg_set_username(VglUserCfg *cfg, const char *username);
+void vgl_user_cfg_set_password(VglUserCfg *cfg, const char *password);
+void vgl_user_cfg_set_http_proxy(VglUserCfg *cfg, const char *proxy);
+void vgl_user_cfg_set_download_dir(VglUserCfg *cfg, const char *dir);
+void vgl_user_cfg_set_imstatus_template(VglUserCfg *cfg, const char *str);
 
-lastfm_usercfg *lastfm_usercfg_read(void);
-gboolean lastfm_usercfg_write(lastfm_usercfg *cfg);
-const char *lastfm_usercfg_get_cfgdir(void);
+VglUserCfg *vgl_user_cfg_read(void);
+gboolean vgl_user_cfg_write(VglUserCfg *cfg);
+const char *vgl_user_cfg_get_cfgdir(void);
 
 #endif

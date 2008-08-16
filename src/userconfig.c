@@ -67,7 +67,7 @@ default_download_dir(void)
 }
 
 const char *
-lastfm_usercfg_get_cfgdir(void)
+vgl_user_cfg_get_cfgdir(void)
 {
         static char *cfgdir = NULL;
         if (cfgdir == NULL) {
@@ -89,14 +89,14 @@ get_cfg_filename(void)
         static char *cfgfile = NULL;
 
         if (cfgfile == NULL) {
-                const char *cfgdir = lastfm_usercfg_get_cfgdir ();
+                const char *cfgdir = vgl_user_cfg_get_cfgdir ();
                 cfgfile = g_strconcat (cfgdir, "/config" , NULL);
         }
         return cfgfile;
 }
 
 void
-lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username)
+vgl_user_cfg_set_username(VglUserCfg *cfg, const char *username)
 {
         g_return_if_fail(cfg != NULL && username != NULL);
         g_free(cfg->username);
@@ -104,7 +104,7 @@ lastfm_usercfg_set_username(lastfm_usercfg *cfg, const char *username)
 }
 
 void
-lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password)
+vgl_user_cfg_set_password(VglUserCfg *cfg, const char *password)
 {
         g_return_if_fail(cfg != NULL && password != NULL);
         g_free(cfg->password);
@@ -112,7 +112,7 @@ lastfm_usercfg_set_password(lastfm_usercfg *cfg, const char *password)
 }
 
 void
-lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy)
+vgl_user_cfg_set_http_proxy(VglUserCfg *cfg, const char *proxy)
 {
         g_return_if_fail(cfg != NULL && proxy != NULL);
         g_free(cfg->http_proxy);
@@ -120,7 +120,7 @@ lastfm_usercfg_set_http_proxy(lastfm_usercfg *cfg, const char *proxy)
 }
 
 void
-lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir)
+vgl_user_cfg_set_download_dir(VglUserCfg *cfg, const char *dir)
 {
         g_return_if_fail(cfg != NULL && dir != NULL);
         g_free(cfg->download_dir);
@@ -128,17 +128,17 @@ lastfm_usercfg_set_download_dir(lastfm_usercfg *cfg, const char *dir)
 }
 
 void
-lastfm_usercfg_set_imstatus_template(lastfm_usercfg *cfg, const char *str)
+vgl_user_cfg_set_imstatus_template(VglUserCfg *cfg, const char *str)
 {
         g_return_if_fail(cfg != NULL && str != NULL);
         g_free(cfg->imstatus_template);
         cfg->imstatus_template = g_strstrip(g_strdup(str));
 }
 
-lastfm_usercfg *
-lastfm_usercfg_new(void)
+VglUserCfg *
+vgl_user_cfg_new(void)
 {
-        lastfm_usercfg *cfg = g_slice_new0(lastfm_usercfg);
+        VglUserCfg *cfg = g_slice_new0(VglUserCfg);
         cfg->username = g_strdup("");
         cfg->password = g_strdup("");
         cfg->http_proxy = g_strdup("");
@@ -158,20 +158,20 @@ lastfm_usercfg_new(void)
 }
 
 void
-lastfm_usercfg_destroy(lastfm_usercfg *cfg)
+vgl_user_cfg_destroy(VglUserCfg *cfg)
 {
         g_free(cfg->username);
         g_free(cfg->password);
         g_free(cfg->http_proxy);
         g_free(cfg->download_dir);
         g_free(cfg->imstatus_template);
-        g_slice_free(lastfm_usercfg, cfg);
+        g_slice_free(VglUserCfg, cfg);
 }
 
-static lastfm_usercfg *
+static VglUserCfg *
 lastfm_old_usercfg_read(void)
 {
-        lastfm_usercfg *cfg = NULL;
+        VglUserCfg *cfg = NULL;
         const int bufsize = 256;
         char buf[bufsize];
         char *cfgfile;
@@ -183,23 +183,23 @@ lastfm_old_usercfg_read(void)
                 g_debug("Config file not found");
                 return NULL;
         }
-        cfg = lastfm_usercfg_new();
+        cfg = vgl_user_cfg_new();
         while (fgets(buf, bufsize, fd)) {
                 int len = strlen(buf);
                 char *val;
                 if (len == 0) continue;
                 if (buf[len-1] == '\n') buf[len-1] = '\0';
                 if ((val = cfg_get_val(buf, "username")) != NULL) {
-                        lastfm_usercfg_set_username(cfg, val);
+                        vgl_user_cfg_set_username(cfg, val);
                 } else if ((val = cfg_get_val(buf, "password")) != NULL) {
 #ifdef MAEMO
-                        lastfm_usercfg_set_password(cfg, val);
+                        vgl_user_cfg_set_password(cfg, val);
 #else
                         gsize len;
                         char *pw = (char *) g_base64_decode(val, &len);
                         pw = g_realloc(pw, len+1);
                         pw[len] = '\0';
-                        lastfm_usercfg_set_password(cfg, pw);
+                        vgl_user_cfg_set_password(cfg, pw);
                         g_free(pw);
 #endif
                 } else if ((val = cfg_get_val(buf, "discovery")) != NULL) {
@@ -209,11 +209,11 @@ lastfm_old_usercfg_read(void)
                 } else if ((val = cfg_get_val(buf, "use_proxy")) != NULL) {
                         cfg->use_proxy = !strcmp(val, "1");
                 } else if ((val = cfg_get_val(buf, "http_proxy")) != NULL) {
-                        lastfm_usercfg_set_http_proxy(cfg, val);
+                        vgl_user_cfg_set_http_proxy(cfg, val);
                 } else if ((val = cfg_get_val(buf, "download_dir")) != NULL) {
-                        lastfm_usercfg_set_download_dir(cfg, val);
+                        vgl_user_cfg_set_download_dir(cfg, val);
                 } else if ((val = cfg_get_val(buf, "imstatus_template")) != NULL) {
-                        lastfm_usercfg_set_imstatus_template(cfg, val);
+                        vgl_user_cfg_set_imstatus_template(cfg, val);
                 } else if ((val = cfg_get_val(buf, "im_pidgin")) != NULL) {
                         cfg->im_pidgin = !strcmp(val, "1");
                 } else if ((val = cfg_get_val(buf, "im_gajim")) != NULL) {
@@ -298,13 +298,13 @@ xml_get_bool (xmlDoc *doc, const xmlNode *node,
         g_free (strval);
 }
 
-lastfm_usercfg *
-lastfm_usercfg_read (void)
+VglUserCfg *
+vgl_user_cfg_read (void)
 {
         xmlDoc *doc = NULL;
         xmlNode *root = NULL;
         xmlNode *node = NULL;
-        lastfm_usercfg *cfg = NULL;
+        VglUserCfg *cfg = NULL;
         const char *cfgfile = get_cfg_filename ();
 
         if (file_exists (cfgfile)) {
@@ -318,7 +318,7 @@ lastfm_usercfg_read (void)
                 cfg = lastfm_old_usercfg_read ();
                 if (cfg != NULL) {
                         g_debug ("Converting old config file to new one.");
-                        if (lastfm_usercfg_write (cfg)) {
+                        if (vgl_user_cfg_write (cfg)) {
                                 char *oldcfg = get_old_cfg_filename ();
                                 g_unlink (oldcfg);
                                 g_free (oldcfg);
@@ -344,7 +344,7 @@ lastfm_usercfg_read (void)
 
         /* Parse the configuration */
         if (node != NULL) {
-                cfg = lastfm_usercfg_new();
+                cfg = vgl_user_cfg_new();
                 /* This code is not very optimal, but it is simpler */
                 xml_get_string (doc, node, "username", &(cfg->username));
                 xml_get_string (doc, node, "password", &(cfg->password));
@@ -377,7 +377,7 @@ lastfm_usercfg_read (void)
 }
 
 gboolean
-lastfm_usercfg_write (lastfm_usercfg *cfg)
+vgl_user_cfg_write (VglUserCfg *cfg)
 {
         xmlDoc *doc;
         xmlNode *root;

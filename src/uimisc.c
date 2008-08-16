@@ -332,7 +332,7 @@ usercfg_user_pw_modified(GObject *obj, GParamSpec *arg, usercfgwin *win)
 }
 
 static void
-usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
+usercfg_add_account_settings(usercfgwin *win, VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -399,7 +399,7 @@ usercfg_add_account_settings(usercfgwin *win, lastfm_usercfg *cfg)
 }
 
 static void
-usercfg_add_connection_settings(usercfgwin *win, lastfm_usercfg *cfg)
+usercfg_add_connection_settings(usercfgwin *win, VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -438,7 +438,7 @@ usercfg_add_connection_settings(usercfgwin *win, lastfm_usercfg *cfg)
 }
 
 static void
-usercfg_add_download_settings(usercfgwin *win, lastfm_usercfg *cfg)
+usercfg_add_download_settings(usercfgwin *win, VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -475,7 +475,7 @@ usercfg_add_download_settings(usercfgwin *win, lastfm_usercfg *cfg)
 }
 
 static void
-usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
+usercfg_add_imstatus_settings(usercfgwin *win, VglUserCfg *cfg)
 {
 #ifdef SET_IM_STATUS
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
@@ -535,7 +535,7 @@ usercfg_add_imstatus_settings(usercfgwin *win, lastfm_usercfg *cfg)
 }
 
 static void
-usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
+usercfg_add_misc_settings(usercfgwin *win, VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -610,15 +610,15 @@ usercfg_add_misc_settings(usercfgwin *win, lastfm_usercfg *cfg)
 }
 
 gboolean
-ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
+ui_usercfg_window(GtkWindow *parent, VglUserCfg **cfg)
 {
         g_return_val_if_fail(cfg != NULL, FALSE);
         change_dir_selected_data *windata;
         gboolean changed = FALSE;
         usercfgwin win;
-        const lastfm_usercfg *origcfg = *cfg;
+        const VglUserCfg *origcfg = *cfg;
 
-        if (*cfg == NULL) *cfg = lastfm_usercfg_new();
+        if (*cfg == NULL) *cfg = vgl_user_cfg_new();
         memset (&win, 0, sizeof(win));
         win.dialog = ui_base_dialog(parent, _("User settings"));
         win.nb = GTK_NOTEBOOK(gtk_notebook_new());
@@ -646,10 +646,10 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
 
         gtk_widget_show_all(GTK_WIDGET(win.dialog));
         if (gtk_dialog_run(win.dialog) == GTK_RESPONSE_ACCEPT) {
-                lastfm_usercfg_set_username(*cfg, gtk_entry_get_text(win.user));
-                lastfm_usercfg_set_password(*cfg, gtk_entry_get_text(win.pw));
-                lastfm_usercfg_set_http_proxy(*cfg, gtk_entry_get_text(win.proxy));
-                lastfm_usercfg_set_download_dir(*cfg,
+                vgl_user_cfg_set_username(*cfg, gtk_entry_get_text(win.user));
+                vgl_user_cfg_set_password(*cfg, gtk_entry_get_text(win.pw));
+                vgl_user_cfg_set_http_proxy(*cfg, gtk_entry_get_text(win.proxy));
+                vgl_user_cfg_set_download_dir(*cfg,
                                                 gtk_entry_get_text(win.dlentry));
                 (*cfg)->enable_scrobbling = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.scrobble));
@@ -658,7 +658,7 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
                 (*cfg)->use_proxy = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.useproxy));
 #ifdef SET_IM_STATUS
-                lastfm_usercfg_set_imstatus_template(*cfg,
+                vgl_user_cfg_set_imstatus_template(*cfg,
                                                      gtk_entry_get_text(win.imtemplateentry));
                 (*cfg)->im_pidgin = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.impidgin));
@@ -681,7 +681,7 @@ ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg)
         } else if (origcfg == NULL) {
                 /* If settings haven't been modified, restore the
                    original pointer if it was NULL */
-                lastfm_usercfg_destroy(*cfg);
+                vgl_user_cfg_destroy(*cfg);
                 *cfg = NULL;
         }
         gtk_widget_destroy(GTK_WIDGET(win.dialog));

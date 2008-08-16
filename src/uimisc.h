@@ -32,7 +32,7 @@ char *ui_input_dialog_with_list(GtkWindow *parent, const char *title,
                                 const char *value);
 gboolean ui_edit_bookmark_dialog(GtkWindow *parent, char **name,
                                  char **url, gboolean add);
-gboolean ui_usercfg_window(GtkWindow *parent, lastfm_usercfg **cfg);
+gboolean ui_usercfg_window(GtkWindow *parent, VglUserCfg **cfg);
 gboolean ui_confirm_dialog(GtkWindow *parent, const char *text);
 void flush_ui_events(void);
 

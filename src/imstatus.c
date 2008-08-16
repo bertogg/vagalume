@@ -362,7 +362,7 @@ im_clear_status_idle(gpointer data)
 }
 
 void
-im_set_status(const lastfm_usercfg *cfg, LastfmTrack *track)
+im_set_status(const VglUserCfg *cfg, LastfmTrack *track)
 {
         g_return_if_fail(cfg != NULL && track != NULL);
         ImStatusData *data = g_slice_new(ImStatusData);

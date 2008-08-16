@@ -1,6 +1,16 @@
 2008-08-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
+	* src/imstatus.[ch]
+	* src/uimisc.[ch]
+	* src/userconfig.[ch]
+	* src/vgl-bookmark-mgr.c
+	More type renames:
+	lastfm_usercfg -> VglUserCfg
+
+2008-08-16  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c
 	* src/protocol.[ch]
 	* src/scrobbler.[ch]:
 	More type renames:

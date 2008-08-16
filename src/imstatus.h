@@ -15,12 +15,12 @@
 
 #ifdef SET_IM_STATUS
 
-void im_set_status(const lastfm_usercfg *cfg, LastfmTrack *track);
+void im_set_status(const VglUserCfg *cfg, LastfmTrack *track);
 void im_clear_status(void);
 
 #else
 
-void im_set_status(const lastfm_usercfg *cfg, LastfmTrack *track) { }
+void im_set_status(const VglUserCfg *cfg, LastfmTrack *track) { }
 void im_clear_status(void) { }
 
 #endif /* SET_IM_STATUS */

@@ -41,7 +41,7 @@ static LastfmSession *session = NULL;
 static LastfmPls *playlist = NULL;
 static RspSession *rsp_sess = NULL;
 static VglMainWindow *mainwin = NULL;
-static lastfm_usercfg *usercfg = NULL;
+static VglUserCfg *usercfg = NULL;
 static GList *friends = NULL;
 static GList *usertags = NULL;
 static LastfmTrack *nowplaying = NULL;
@@ -517,7 +517,7 @@ controller_open_usercfg(void)
                 vgl_main_window_get_window(mainwin, FALSE), &usercfg);
 
         if (changed && usercfg != NULL) {
-                lastfm_usercfg_write(usercfg);
+                vgl_user_cfg_write(usercfg);
                 userchanged = strcmp(olduser, usercfg->username);
                 pwchanged = strcmp(oldpw, usercfg->password);
                 apply_usercfg();
@@ -545,7 +545,7 @@ controller_open_usercfg(void)
 static gboolean
 check_usercfg(gboolean ask)
 {
-        if (usercfg == NULL) usercfg = lastfm_usercfg_read();
+        if (usercfg == NULL) usercfg = vgl_user_cfg_read();
         if (usercfg == NULL && ask) controller_open_usercfg();
         if (usercfg != NULL) apply_usercfg();
         return (usercfg != NULL);
@@ -1654,7 +1654,7 @@ controller_run_app (const char *radio_url)
         if (usercfg != NULL) {
                 set_user_tag_list(usercfg->username, NULL);
                 set_friend_list(usercfg->username, NULL);
-                lastfm_usercfg_destroy(usercfg);
+                vgl_user_cfg_destroy(usercfg);
                 usercfg = NULL;
         }
         lastfm_audio_clear();
