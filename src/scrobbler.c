@@ -112,7 +112,7 @@ rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t)
                 retvalue = RSP_RESPONSE_OK;
         } else if (retbuf != NULL) {
                 g_debug("Problem setting Now Playing, response: %s", retbuf);
-                if (!strcmp (retbuf, "BADSESSION")) {
+                if (g_str_has_prefix (retbuf, "BADSESSION")) {
                         retvalue = RSP_RESPONSE_BADSESSION;
                 }
         } else {
@@ -166,7 +166,7 @@ rsp_scrobble(const RspSession *rsp, const LastfmTrack *t, time_t start,
                 retvalue = RSP_RESPONSE_OK;
         } else if (retbuf != NULL) {
                 g_debug("Problem scrobbling track, response: %s", retbuf);
-                if (!strcmp (retbuf, "BADSESSION")) {
+                if (g_str_has_prefix (retbuf, "BADSESSION")) {
                         retvalue = RSP_RESPONSE_BADSESSION;
                 }
         } else {

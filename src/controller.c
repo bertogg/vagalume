@@ -268,6 +268,34 @@ set_rsp_session(const char *user, RspSession *sess)
 }
 
 /**
+ * Renews the RSP session. Must be called from a thread.
+ */
+static void
+renew_rsp_session (void)
+{
+        char *user, *pass;
+        RspSession *session;
+
+        g_return_if_fail (usercfg != NULL);
+
+        gdk_threads_enter ();
+        user = g_strdup (usercfg->username);
+        pass = g_strdup (usercfg->password);
+        gdk_threads_leave ();
+
+        g_debug ("Renewing RSP session ...");
+        session = rsp_session_new (user, pass, NULL);
+        if (session != NULL) {
+                gdk_threads_enter ();
+                set_rsp_session (user, session);
+                gdk_threads_leave ();
+        }
+
+        g_free (user);
+        g_free (pass);
+}
+
+/**
  * Scrobble a track using the Audioscrobbler Realtime Submission
  * Protocol. This can take some seconds, so it must be called using
  * g_thread_create() to avoid freezing the UI.
@@ -292,8 +320,17 @@ scrobble_track_thread(gpointer data)
         }
         gdk_threads_leave();
         if (s != NULL) {
-                rsp_scrobble(s, d->track, d->start, d->rating);
-                rsp_session_destroy(s);
+                RspResponse ret;
+                ret = rsp_scrobble (s, d->track, d->start, d->rating);
+                if (ret == RSP_RESPONSE_BADSESSION) {
+                        rsp_session_destroy (s);
+                        renew_rsp_session ();
+                        gdk_threads_enter ();
+                        s = rsp_session_copy (rsp_sess);
+                        gdk_threads_leave ();
+                        rsp_scrobble (s, d->track, d->start, d->rating);
+                }
+                rsp_session_destroy (s);
         }
         /* This love_ban_track() call won't be needed anymore with
          * Lastfm's new protocol v1.2 */
@@ -362,8 +399,16 @@ set_nowplaying_thread(gpointer data)
         }
         gdk_threads_leave();
         if (set_np) {
-                rsp_set_nowplaying(s, d->track);
-                rsp_session_destroy(s);
+                RspResponse ret = rsp_set_nowplaying (s, d->track);
+                if (ret == RSP_RESPONSE_BADSESSION) {
+                        rsp_session_destroy (s);
+                        renew_rsp_session ();
+                        gdk_threads_enter ();
+                        s = rsp_session_copy (rsp_sess);
+                        gdk_threads_leave ();
+                        rsp_set_nowplaying (s, d->track);
+                }
+                rsp_session_destroy (s);
         }
         lastfm_track_unref(d->track);
         g_slice_free(rsp_data, d);

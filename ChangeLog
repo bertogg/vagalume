@@ -1,5 +1,17 @@
 2008-08-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c
+	(renew_rsp_session): New function to renew a RSP session.
+	(scrobble_track_thread)
+	(set_nowplaying_thread): Renew the RSP session if it has expired.
+
+	* src/scrobbler.c (rsp_set_nowplaying, rsp_scrobble): Detect
+	correctly the BADSESSION response.
+
+	Fixes: #2554
+
+2008-08-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/metadata.c
 	(lastfm_get_user_track_tags)
 	(lastfm_get_track_tags)
