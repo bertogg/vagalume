@@ -408,6 +408,7 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_hide (priv->stopbutton);
                 menu_enable_all_items (priv->actionsmenu, FALSE);
                 menu_enable_all_items (priv->radiomenu, TRUE);
+                menu_enable_all_items (priv->bmkmenu, TRUE);
                 gtk_widget_set_sensitive (priv->play, TRUE);
                 gtk_widget_set_sensitive (priv->playbutton, TRUE);
                 gtk_widget_set_sensitive (priv->skipbutton, FALSE);
@@ -437,6 +438,7 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_show (priv->stopbutton);
                 menu_enable_all_items (priv->actionsmenu, TRUE);
                 menu_enable_all_items (priv->radiomenu, TRUE);
+                menu_enable_all_items (priv->bmkmenu, TRUE);
                 gtk_widget_set_sensitive (priv->play, FALSE);
                 gtk_widget_set_sensitive (priv->stopbutton, TRUE);
                 gtk_widget_set_sensitive (priv->skipbutton, TRUE);

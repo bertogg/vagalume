@@ -1,5 +1,10 @@
 2008-08-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-main-window.c (vgl_main_window_set_state): Enable the
+	bookmarks menu when stopped or playing.
+
+2008-08-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/util.h
 	* src/util.c (lastfm_url_decode, lastfm_url_encode)
 	* src/protocol.c (lastfm_parse_playlist): New functions to
