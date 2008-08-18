@@ -30,18 +30,18 @@ lastfm_track_destroy(LastfmTrack *track)
 {
         if (track == NULL) return;
         g_mutex_free(track->mutex);
-        g_free(track->stream_url);
-        g_free(track->title);
+        g_free ((gpointer) track->stream_url);
+        g_free ((gpointer) track->title);
         if (track->album_artist != track->artist) {
-                g_free(track->album_artist);
+                g_free ((gpointer) track->album_artist);
         }
-        g_free(track->artist);
-        g_free(track->album);
-        g_free(track->pls_title);
-        g_free(track->image_url);
-        g_free(track->image_data);
-        g_free(track->trackauth);
-        g_free(track->free_track_url);
+        g_free ((gpointer) track->artist);
+        g_free ((gpointer) track->album);
+        g_free ((gpointer) track->pls_title);
+        g_free ((gpointer) track->image_url);
+        g_free ((gpointer) track->image_data);
+        g_free ((gpointer) track->trackauth);
+        g_free ((gpointer) track->free_track_url);
         g_slice_free(LastfmTrack, track);
 }
 
@@ -89,7 +89,7 @@ lastfm_track_set_cover_image(LastfmTrack *track, char *data, size_t size)
 {
         g_return_if_fail(track != NULL);
         g_mutex_lock(track->mutex);
-        g_free(track->image_data);
+        g_free ((gpointer) track->image_data);
         track->image_data = data;
         track->image_data_size = size;
         track->image_data_available = TRUE;

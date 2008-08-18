@@ -1,5 +1,13 @@
 2008-08-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/playlist.h
+	* src/playlist.c (lastfm_track_destroy)
+	(lastfm_track_set_cover_image)
+	* src/protocol.c (lastfm_parse_track): Make all pointers in
+	LastfmTrack const.
+
+2008-08-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c
 	(renew_rsp_session): New function to renew a RSP session.
 	(scrobble_track_thread)

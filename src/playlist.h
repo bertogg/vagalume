@@ -18,22 +18,22 @@ typedef enum {
 } request_type;
 
 typedef struct {
-        char *stream_url;
-        char *title;
+        const char *stream_url;
+        const char *title;
         guint id;
-        char *artist;
+        const char *artist;
         guint artistid;
-        char *album; /* "" if empty, never NULL */
+        const char *album; /* "" if empty, never NULL */
         /* "" if empty, can also be the _same pointer_ as artist */
-        char *album_artist;
-        char *pls_title;
+        const char *album_artist;
+        const char *pls_title;
         guint duration;
-        char *image_url;
-        char *image_data;
+        const char *image_url;
+        const char *image_data;
         size_t image_data_size;
         gboolean image_data_available;
-        char *trackauth;
-        char *free_track_url;
+        const char *trackauth;
+        const char *free_track_url;
         gboolean custom_pls;
         /* Private */
         int refcount;

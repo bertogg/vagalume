@@ -239,7 +239,9 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
                 g_debug("Found track with no artist, discarding it");
         } else {
                 if (track->album == NULL) {
-                        g_free (track->album_artist); /* Just in case */
+                        /* album_artist != NULL unlikely if album == NULL,
+                           but we free it just in case */
+                        g_free ((gpointer) track->album_artist);
                         track->album = g_strdup("");
                         track->album_artist = g_strdup("");
                 }
@@ -247,7 +249,7 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
                 if (track->album_artist == NULL ||
                     !strcmp (track->artist, track->album_artist)) {
                         /* Don't waste memory */
-                        g_free (track->album_artist);
+                        g_free ((gpointer) track->album_artist);
                         track->album_artist = track->artist;
                 }
                 lastfm_pls_add_track(pls, track);
