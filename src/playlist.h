@@ -32,6 +32,7 @@ typedef struct {
         gboolean image_data_available;
         char *trackauth;
         char *free_track_url;
+        char *album_page_url;
         gboolean custom_pls;
         /* Private */
         int refcount;

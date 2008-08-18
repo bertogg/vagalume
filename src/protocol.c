@@ -22,6 +22,8 @@ static const char *custom_pls_path =
        "/1.0/webclient/getresourceplaylist.php";
 static const xmlChar *free_track_rel = (xmlChar *)
        "http://www.last.fm/freeTrackURL";
+static const xmlChar *album_page_rel = (xmlChar *)
+       "http://www.last.fm/albumpage";
 
 /**
  * Get the 2-letter language code from the currently active language
@@ -212,6 +214,9 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
                                 if (!xmlStrcmp(rel, free_track_rel)) {
                                         track->free_track_url =
                                                 g_strstrip(g_strdup(val));
+                                } else if (!xmlStrcmp(rel, album_page_rel)) {
+                                        track->album_page_url =
+                                                g_strstrip(g_strdup(val));
                                 }
                                 xmlFree(rel);
                         }
@@ -271,17 +276,8 @@ lastfm_parse_playlist(const char *buffer, size_t bufsize)
                         char *title = (char *) xmlNodeListGetString(doc,
                                                node->xmlChildrenNode, 1);
                         if (title != NULL && pls_title == NULL) {
-                                int i;
-                                /* The playlist contains ampersands
-                                 * encoded as '%26amp%3B', so we must
-                                 * decode them in two steps */
-                                char *tmp = escape_url(title, FALSE);
-                                pls_title = string_replace(tmp, "&amp;", "&");
-                                g_free(tmp);
-                                for (i = 0; pls_title[i] != 0; i++) {
-                                        if (pls_title[i] == '+')
-                                                pls_title[i] = ' ';
-                                }
+                                /* The playlist comes encoded */
+                                pls_title = lastfm_url_decode (title);
                         }
                         xmlFree((xmlChar *)title);
                 } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {

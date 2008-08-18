@@ -1,5 +1,26 @@
 2008-08-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/util.h
+	* src/util.c (lastfm_url_decode, lastfm_url_encode)
+	* src/protocol.c (lastfm_parse_playlist): New functions to
+	encode/decode using Last.fm URL format.
+
+	* src/playlist.h
+	* src/playlist.c (lastfm_track_destroy)
+	* src/protocol.c (lastfm_parse_track): Store the album URL in
+	LastfmTrack.
+
+	* src/xmlrpc.c (tag_track): When tagging an album, get the artist
+	name from the Last.fm album URL rather thant using the interpreter
+	of the current song.
+
+	* src/metadata.c (lastfm_get_track_tags): Use Last.fm URL encoding
+	to get existing tags.
+
+	Fixes: #2741
+
+2008-08-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-bookmark-mgr.h
 	* src/vgl-bookmark-window.c (vgl_bookmark_window_close)
 	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_load_from_disk)

@@ -8,6 +8,7 @@
 
 #include "metadata.h"
 #include "http.h"
+#include "util.h"
 #include <libxml/parser.h>
 #include <strings.h>
 
@@ -229,7 +230,7 @@ lastfm_get_track_tags(const LastfmTrack *track, request_type req,
                       GList **taglist)
 {
         g_return_val_if_fail(track != NULL && taglist != NULL, FALSE);
-        char *artist = escape_url(track->artist, TRUE);
+        char *artist = lastfm_url_encode (track->artist);
         char *album = NULL;
         char *title = NULL;
         char *url = NULL;
@@ -239,11 +240,11 @@ lastfm_get_track_tags(const LastfmTrack *track, request_type req,
                 break;
         case REQUEST_ALBUM:
                 g_return_val_if_fail(track->album[0] != '\0', FALSE);
-                album = escape_url(track->album, TRUE);
+                album = lastfm_url_encode (track->album);
                 url = g_strdup_printf(album_tags_url, artist, album);
                 break;
         case REQUEST_TRACK:
-                title = escape_url(track->title, TRUE);
+                title = lastfm_url_encode (track->title);
                 url = g_strdup_printf(track_tags_url, artist, title);
                 break;
         default:

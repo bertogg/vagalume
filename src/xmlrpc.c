@@ -172,18 +172,32 @@ tag_track(const char *user, const char *password, const LastfmTrack *track,
         char *request;
         xmlNode *param1, *param2, *param3, *param4;
         const char *method;
-        param1 = string_param(track->artist);
         param3 = array_param(tags);
         param4 = string_param("set");                  /* or use "append" */
         if (type == REQUEST_ARTIST) {
                 method = "tagArtist";
+                param1 = string_param(track->artist);
                 param2 = NULL;
         } else if (type == REQUEST_TRACK) {
                 method = "tagTrack";
+                param1 = string_param(track->artist);
                 param2 = string_param(track->title);
         } else {
+                const char *prefix = "http://www.last.fm/music/";
                 method = "tagAlbum";
-                param2 = string_param(track->album);
+                if (track->album_page_url &&
+                    g_str_has_prefix (track->album_page_url, prefix)) {
+                        /* Take the album artist from the albumpage URL */
+                        char *artist, **parts;
+                        parts = g_strsplit (track->album_page_url, "/", 0);
+                        artist = lastfm_url_decode (parts[4]);
+                        param1 = string_param (artist);
+                        g_strfreev (parts);
+                        g_free (artist);
+                } else {
+                        param1 = string_param (track->artist);
+                }
+                param2 = string_param (track->album);
         }
         if (param2 != NULL) {
                 request = new_request(user, password, method, param1, param2,

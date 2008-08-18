@@ -39,6 +39,7 @@ lastfm_track_destroy(LastfmTrack *track)
         g_free(track->image_data);
         g_free(track->trackauth);
         g_free(track->free_track_url);
+        g_free(track->album_page_url);
         g_slice_free(LastfmTrack, track);
 }
 

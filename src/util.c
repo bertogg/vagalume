@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include "util.h"
+#include "http.h"
 
 #ifndef HAVE_GCHECKSUM
 #   ifdef HAVE_LIBGCRYPT
@@ -129,7 +130,7 @@ string_replace_gstr(GString *str, const char *old, const char *new)
 
 /**
  * Replaces all occurrences of a text within a string (char *)
- * @param str The string to be modified
+ * @param str The original string
  * @param old The original text
  * @param new The new text
  * @return A newly-created string
@@ -141,6 +142,24 @@ string_replace(const char *str, const char *old, const char *new)
         GString *gstr = g_string_new(str);
         string_replace_gstr(gstr, old, new);
         return g_string_free(gstr, FALSE);
+}
+
+/**
+ * Replaces all occurences of a char within a string (char *)
+ * @param str The string to be modified
+ * @param old The original char
+ * @param new The new char
+ **/
+static void
+string_replace_char (char *str, char old, char new)
+{
+        char *i;
+        g_return_if_fail (str != NULL);
+        for (i = str; *i != '\0'; i++) {
+                if (*i == old) {
+                        *i = new;
+                }
+        }
 }
 
 /**
@@ -216,4 +235,56 @@ obfuscate_string (char *str)
         }
 
         return str;
+}
+
+/**
+ * Decodes a string stored in the encoding used by Last.fm in URLs:
+ * spaces are replaced by '+', and some chars such as the ampersand
+ * are encoded twice
+ * @param str The original string
+ * @return The decoded string in a newly-allocated buffer
+ */
+char *
+lastfm_url_decode (const char *str)
+{
+        char *tmp;
+        GString *gstr;
+
+        g_return_val_if_fail (str != NULL, NULL);
+
+        tmp = escape_url (str, FALSE);
+        gstr = g_string_new (tmp);
+        g_free (tmp);
+
+        string_replace_gstr (gstr, "&amp;", "&");
+        string_replace_gstr (gstr, "%26", "&");
+        string_replace_char (gstr->str, '+', ' ');
+
+        return g_string_free (gstr, FALSE);
+}
+
+/**
+ * Encodes a string with the encoding used by Last.fm in URLs: spaces
+ * are replaced by '+', and some chars such as the ampersand are
+ * encoded twice
+ * @param str The original string
+ * @return The encoded string in a newly-allocated buffer
+ */
+char *
+lastfm_url_encode (const char *str)
+{
+        char *tmp;
+        GString *gstr;
+
+        g_return_val_if_fail (str != NULL, NULL);
+
+        gstr = g_string_new (str);
+
+        string_replace_char (gstr->str, ' ', '+');
+        string_replace_gstr (gstr, "&", "%26");
+        tmp = escape_url (gstr->str, TRUE);
+
+        g_string_free (gstr, TRUE);
+
+        return tmp;
 }

@@ -20,5 +20,7 @@ char *string_replace(const char *str, const char *old, const char *new);
 GdkPixbuf *get_pixbuf_from_image(const char *data, size_t size, int imgsize);
 const char *get_home_directory(void);
 char *obfuscate_string(char *str);
+char *lastfm_url_decode (const char *url);
+char *lastfm_url_encode (const char *url);
 
 #endif
