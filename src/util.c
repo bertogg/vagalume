@@ -273,7 +273,7 @@ lastfm_url_decode (const char *str)
 char *
 lastfm_url_encode (const char *str)
 {
-        char *tmp;
+        char *retvalue;
         GString *gstr;
 
         g_return_val_if_fail (str != NULL, NULL);
@@ -282,9 +282,8 @@ lastfm_url_encode (const char *str)
 
         string_replace_char (gstr->str, ' ', '+');
         string_replace_gstr (gstr, "&", "%26");
-        tmp = escape_url (gstr->str, TRUE);
+        retvalue = escape_url (gstr->str, TRUE);
 
         g_string_free (gstr, TRUE);
-
-        return tmp;
+        return retvalue;
 }

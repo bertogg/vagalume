@@ -1,5 +1,11 @@
 2008-08-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/util.c (lastfm_url_encode): Minor updates.
+
+	* TODO: Update TODO file.
+
+2008-08-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/playlist.h
 	* src/playlist.c (lastfm_track_destroy)
 	(lastfm_track_set_cover_image)

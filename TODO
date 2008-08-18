@@ -14,5 +14,4 @@ List of features that need to be implemented (in no particular order):
 * Notify user on successful scrobble
 * Pause button
 * Multi-user support
-* Create session again when receiving a BADSESSION
 * Save list of unsubmitted tracks
