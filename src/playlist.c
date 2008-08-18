@@ -32,6 +32,9 @@ lastfm_track_destroy(LastfmTrack *track)
         g_mutex_free(track->mutex);
         g_free(track->stream_url);
         g_free(track->title);
+        if (track->album_artist != track->artist) {
+                g_free(track->album_artist);
+        }
         g_free(track->artist);
         g_free(track->album);
         g_free(track->pls_title);
@@ -39,7 +42,6 @@ lastfm_track_destroy(LastfmTrack *track)
         g_free(track->image_data);
         g_free(track->trackauth);
         g_free(track->free_track_url);
-        g_free(track->album_page_url);
         g_slice_free(LastfmTrack, track);
 }
 

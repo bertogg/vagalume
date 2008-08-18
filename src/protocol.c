@@ -24,6 +24,8 @@ static const xmlChar *free_track_rel = (xmlChar *)
        "http://www.last.fm/freeTrackURL";
 static const xmlChar *album_page_rel = (xmlChar *)
        "http://www.last.fm/albumpage";
+static const char *lastfm_music_prefix =
+       "http://www.last.fm/music/";
 
 /**
  * Get the 2-letter language code from the currently active language
@@ -214,9 +216,14 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
                                 if (!xmlStrcmp(rel, free_track_rel)) {
                                         track->free_track_url =
                                                 g_strstrip(g_strdup(val));
-                                } else if (!xmlStrcmp(rel, album_page_rel)) {
-                                        track->album_page_url =
-                                                g_strstrip(g_strdup(val));
+                                } else if (!xmlStrcmp(rel, album_page_rel) &&
+                                           g_str_has_prefix (
+                                                   val, lastfm_music_prefix)) {
+                                        char *artist, **parts;
+                                        parts = g_strsplit (val, "/", 6);
+                                        artist = lastfm_url_decode (parts[4]);
+                                        g_strfreev (parts);
+                                        track->album_artist = artist;
                                 }
                                 xmlFree(rel);
                         }
@@ -231,8 +238,18 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
         } else if (track->artist == NULL || track->artist[0] == '\0') {
                 g_debug("Found track with no artist, discarding it");
         } else {
-                if (track->album == NULL) track->album = g_strdup("");
+                if (track->album == NULL) {
+                        g_free (track->album_artist); /* Just in case */
+                        track->album = g_strdup("");
+                        track->album_artist = g_strdup("");
+                }
                 if (track->trackauth == NULL) track->trackauth = g_strdup("");
+                if (track->album_artist == NULL ||
+                    !strcmp (track->artist, track->album_artist)) {
+                        /* Don't waste memory */
+                        g_free (track->album_artist);
+                        track->album_artist = track->artist;
+                }
                 lastfm_pls_add_track(pls, track);
                 retval = TRUE;
         }

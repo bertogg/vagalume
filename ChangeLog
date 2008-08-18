@@ -1,5 +1,19 @@
 2008-08-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/metadata.c
+	(lastfm_get_user_track_tags)
+	(lastfm_get_track_tags)
+	* src/xmlrpc.c (tag_track, recommend_track): When dealing with
+	album data, use the artist name from the album rather than the one
+	from the track.
+
+	* src/playlist.h
+	* src/playlist.c (lastfm_track_destroy)
+	* src/protocol.c (lastfm_parse_track): Store the artist's album
+	rather than the album page URL.
+
+2008-08-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-main-window.c (vgl_main_window_set_state): Enable the
 	bookmarks menu when stopped or playing.
 

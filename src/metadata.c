@@ -187,21 +187,24 @@ lastfm_get_user_track_tags(const char *username, const LastfmTrack *track,
                            request_type req, GList **taglist)
 {
         g_return_val_if_fail(username && track && taglist, FALSE);
-        char *artist = escape_url(track->artist, TRUE);
+        char *artist = NULL;
         char *album = NULL;
         char *title = NULL;
         char *url = NULL;
         switch (req) {
         case REQUEST_ARTIST:
+                artist = escape_url(track->artist, TRUE);
                 url = g_strdup_printf(user_artist_tags_url, username, artist);
                 break;
         case REQUEST_ALBUM:
                 g_return_val_if_fail(track->album[0] != '\0', FALSE);
+                artist = escape_url(track->album_artist, TRUE);
                 album = escape_url(track->album, TRUE);
                 url = g_strdup_printf(user_album_tags_url, username,
                                       artist, album);
                 break;
         case REQUEST_TRACK:
+                artist = escape_url(track->artist, TRUE);
                 title = escape_url(track->title, TRUE);
                 url = g_strdup_printf(user_track_tags_url, username,
                                       artist, title);
@@ -230,20 +233,23 @@ lastfm_get_track_tags(const LastfmTrack *track, request_type req,
                       GList **taglist)
 {
         g_return_val_if_fail(track != NULL && taglist != NULL, FALSE);
-        char *artist = lastfm_url_encode (track->artist);
+        char *artist = NULL;
         char *album = NULL;
         char *title = NULL;
         char *url = NULL;
         switch (req) {
         case REQUEST_ARTIST:
+                artist = lastfm_url_encode (track->artist);
                 url = g_strdup_printf(artist_tags_url, artist);
                 break;
         case REQUEST_ALBUM:
                 g_return_val_if_fail(track->album[0] != '\0', FALSE);
+                artist = lastfm_url_encode (track->album_artist);
                 album = lastfm_url_encode (track->album);
                 url = g_strdup_printf(album_tags_url, artist, album);
                 break;
         case REQUEST_TRACK:
+                artist = lastfm_url_encode (track->artist);
                 title = lastfm_url_encode (track->title);
                 url = g_strdup_printf(track_tags_url, artist, title);
                 break;

@@ -24,6 +24,8 @@ typedef struct {
         char *artist;
         guint artistid;
         char *album; /* "" if empty, never NULL */
+        /* "" if empty, can also be the _same pointer_ as artist */
+        char *album_artist;
         char *pls_title;
         guint duration;
         char *image_url;
@@ -32,7 +34,6 @@ typedef struct {
         gboolean image_data_available;
         char *trackauth;
         char *free_track_url;
-        char *album_page_url;
         gboolean custom_pls;
         /* Private */
         int refcount;

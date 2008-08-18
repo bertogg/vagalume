@@ -183,20 +183,8 @@ tag_track(const char *user, const char *password, const LastfmTrack *track,
                 param1 = string_param(track->artist);
                 param2 = string_param(track->title);
         } else {
-                const char *prefix = "http://www.last.fm/music/";
                 method = "tagAlbum";
-                if (track->album_page_url &&
-                    g_str_has_prefix (track->album_page_url, prefix)) {
-                        /* Take the album artist from the albumpage URL */
-                        char *artist, **parts;
-                        parts = g_strsplit (track->album_page_url, "/", 0);
-                        artist = lastfm_url_decode (parts[4]);
-                        param1 = string_param (artist);
-                        g_strfreev (parts);
-                        g_free (artist);
-                } else {
-                        param1 = string_param (track->artist);
-                }
+                param1 = string_param (track->album_artist);
                 param2 = string_param (track->album);
         }
         if (param2 != NULL) {
@@ -262,14 +250,16 @@ recommend_track(const char *user, const char *password,
         const char *method = "recommendItem";
         xmlNode *artist, *title, *recomm_type, *recomm_to;
         xmlNode *recomm_body, *language;
-        artist = string_param(track->artist);
         if (type == REQUEST_ARTIST) {
+                artist = string_param(track->artist);
                 title = string_param("");
                 recomm_type = string_param("artist");
         } else if (type == REQUEST_TRACK) {
+                artist = string_param(track->artist);
                 title = string_param(track->title);
                 recomm_type = string_param("track");
         } else {
+                artist = string_param (track->album_artist);
                 title = string_param(track->album);
                 recomm_type = string_param("album");
         }
