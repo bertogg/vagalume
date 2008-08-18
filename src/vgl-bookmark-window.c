@@ -393,7 +393,7 @@ vgl_bookmark_window_close(VglBookmarkWindow *win)
         VglBookmarkWindowPrivate *priv;
         priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE (win);
 
-        vgl_bookmark_mgr_save_to_disk (priv->mgr);
+        vgl_bookmark_mgr_save_to_disk (priv->mgr, FALSE);
 
         gtk_widget_destroy(GTK_WIDGET(win));
 }

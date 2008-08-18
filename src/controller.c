@@ -958,6 +958,7 @@ void controller_add_bookmark(request_type type)
         if (ui_edit_bookmark_dialog(vgl_main_window_get_window(mainwin, FALSE),
                                     &name, &url, TRUE)) {
                 vgl_bookmark_mgr_add_bookmark(mgr, name, url);
+                vgl_bookmark_mgr_save_to_disk (mgr, TRUE);
                 controller_show_banner(banner);
         }
         g_free(name);
@@ -1659,6 +1660,7 @@ controller_run_app (const char *radio_url)
         }
         lastfm_audio_clear();
         lastfm_dbus_close();
+        vgl_bookmark_mgr_save_to_disk (vgl_bookmark_mgr_get_instance (), FALSE);
 
 #ifdef MAEMO
         /* Cleanup OSSO context */

@@ -1,3 +1,25 @@
+2008-08-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-bookmark-mgr.h
+	* src/vgl-bookmark-window.c (vgl_bookmark_window_close)
+	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_load_from_disk)
+	(vgl_bookmark_mgr_save_to_disk, vgl_bookmark_mgr_init)
+	(vgl_bookmark_mgr_finalize, vgl_bookmark_mgr_add_bookmark)
+	(vgl_bookmark_mgr_remove_bookmark)
+	(vgl_bookmark_mgr_change_bookmark, vgl_bookmark_mgr_reorder):
+	New 'dirty' flag: don't save the bookmark file unless it has been
+	modified.
+
+	* src/vgl-main-window.c (create_main_menu)
+	(vgl_main_window_set_state): Disable the whole bookmarks menu when
+	the UI is in connecting state.
+
+	* src/controller.c
+	(controller_add_bookmark): Save bookmark file after adding a new
+	bookmark from the menu.
+	(controller_run_app): Save bookmark file before closing the app,
+	if necessary.
+
 2008-08-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c

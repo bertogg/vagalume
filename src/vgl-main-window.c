@@ -56,7 +56,7 @@ struct _VglMainWindowPrivate {
         GtkWidget *dloadbutton, *tagbutton, *addplbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
-        GtkWidget *addtopls, *stopafter, *bmkartist, *bmktrack;
+        GtkWidget *addtopls, *stopafter, *bmkmenu, *bmkartist, *bmktrack;
         GtkWidget *album_cover;
         GtkProgressBar *progressbar;
         GString *progressbar_text;
@@ -463,6 +463,7 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_show (priv->stopbutton);
                 menu_enable_all_items (priv->actionsmenu, FALSE);
                 menu_enable_all_items (priv->radiomenu, FALSE);
+                menu_enable_all_items (priv->bmkmenu, FALSE);
                 gtk_widget_set_sensitive (priv->stopbutton, FALSE);
                 gtk_widget_set_sensitive (priv->skipbutton, FALSE);
                 gtk_widget_set_sensitive (priv->lovebutton, FALSE);
@@ -472,8 +473,6 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_set_sensitive (priv->tagbutton, FALSE);
                 gtk_widget_set_sensitive (priv->addplbutton, FALSE);
                 gtk_widget_set_sensitive (priv->settings, FALSE);
-                gtk_widget_set_sensitive (priv->bmkartist, FALSE);
-                gtk_widget_set_sensitive (priv->bmktrack, FALSE);
                 gtk_window_set_title(GTK_WINDOW(w), APP_NAME);
                 gtk_widget_set_sensitive(priv->album_cover, FALSE);
                 gtk_check_menu_item_set_active(
@@ -994,6 +993,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         priv->love = love;
         priv->addtopls = addtopls;
         priv->stopafter = stopafter;
+        priv->bmkmenu = GTK_WIDGET (bmksub);
         priv->bmkartist = bmkartist;
         priv->bmktrack = bmktrack;
         return GTK_WIDGET(bar);

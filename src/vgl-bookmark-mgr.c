@@ -33,6 +33,7 @@ typedef struct _VglBookmarkMgrPrivate VglBookmarkMgrPrivate;
 struct _VglBookmarkMgrPrivate {
         GList *bookmarks;
         int min_unused_id;
+        gboolean dirty;
 };
 
 static VglBookmark *
@@ -130,8 +131,11 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
         xmlDoc *doc = NULL;
         xmlNode *node = NULL;
+        VglBookmarkMgrPrivate *priv;
 
         g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr) && cfgfile != NULL);
+
+        priv = VGL_BOOKMARK_MGR_GET_PRIVATE (mgr);
 
         /* Load bookmark file */
         if (file_exists (cfgfile)) {
@@ -174,10 +178,12 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
         }
 
         if (doc != NULL) xmlFreeDoc(doc);
+
+        priv->dirty = FALSE;
 }
 
 void
-vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr)
+vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
 {
         const GList *l;
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
@@ -187,6 +193,9 @@ vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr)
 
         g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr) && cfgfile != NULL);
         priv = VGL_BOOKMARK_MGR_GET_PRIVATE (mgr);
+
+        if (!priv->dirty && !force)
+                return;
 
         doc = xmlNewDoc ((xmlChar *) "1.0");;
         root = xmlNewNode (NULL, (xmlChar *) "bookmarks");
@@ -215,7 +224,9 @@ vgl_bookmark_mgr_save_to_disk(VglBookmarkMgr *mgr)
                 xmlAddChild (bmknode, url);
         }
 
-        if (xmlSaveFormatFileEnc (cfgfile, doc, "UTF-8", 1) == -1) {
+        if (xmlSaveFormatFileEnc (cfgfile, doc, "UTF-8", 1) != -1) {
+                priv->dirty = FALSE;
+        } else {
                 g_critical ("Unable to open %s", cfgfile);
         }
 
@@ -234,6 +245,7 @@ vgl_bookmark_mgr_init(VglBookmarkMgr *self)
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(self);
         priv->bookmarks = NULL;
         priv->min_unused_id = 0;
+        priv->dirty = FALSE;
         vgl_bookmark_mgr_load_from_disk (self);
 }
 
@@ -242,7 +254,7 @@ vgl_bookmark_mgr_finalize(GObject *object)
 {
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(object);
 
-        vgl_bookmark_mgr_save_to_disk (VGL_BOOKMARK_MGR (object));
+        vgl_bookmark_mgr_save_to_disk (VGL_BOOKMARK_MGR (object), FALSE);
 
         g_list_foreach(priv->bookmarks, (GFunc) vgl_bookmark_destroy, NULL);
         g_list_free(priv->bookmarks);
@@ -312,6 +324,7 @@ vgl_bookmark_mgr_add_bookmark(VglBookmarkMgr *mgr,
         bmk = vgl_bookmark_new(priv->min_unused_id, name, url);
         priv->bookmarks = g_list_append(priv->bookmarks, bmk);
         priv->min_unused_id++;
+        priv->dirty = TRUE;
         g_signal_emit(mgr, mgr_signals[ADDED], 0, bmk);
         return bmk->id;
 }
@@ -327,6 +340,7 @@ vgl_bookmark_mgr_remove_bookmark(VglBookmarkMgr *mgr, int id)
                 vgl_bookmark_destroy(bmk);
                 priv->bookmarks = g_list_delete_link(
                         priv->bookmarks, l);
+                priv->dirty = TRUE;
                 g_signal_emit(mgr, mgr_signals[REMOVED], 0, id);
         } else {
                 g_warning("%s: bookmark %d does not exist", __FUNCTION__, id);
@@ -340,8 +354,10 @@ vgl_bookmark_mgr_change_bookmark(VglBookmarkMgr *mgr,
         g_return_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0);
         GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
         if (l != NULL) {
+                VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
                 VglBookmark *bmk = (VglBookmark *) l->data;
                 vgl_bookmark_change(bmk, newname, newurl);
+                priv->dirty = TRUE;
                 g_signal_emit(mgr, mgr_signals[CHANGED], 0, bmk);
         } else {
                 g_warning("%s: bookmark %d does not exist", __FUNCTION__, id);
@@ -393,5 +409,6 @@ vgl_bookmark_mgr_reorder (VglBookmarkMgr *mgr, const int *ids)
                         l->data = bmk;
                 }
         }
+        priv->dirty = TRUE;
         g_return_if_fail (ids [pos] == -1);
 }
