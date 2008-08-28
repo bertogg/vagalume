@@ -1,5 +1,11 @@
 2008-08-29  Alberto Garcia  <agarcia@igalia.com>
 
+	* Makefile.am
+	* data/vagalume.desktop.in (X-Window-Icon): Use PIXMAPDIR instead
+	of ICONDIR, which is no longer used.
+
+2008-08-29  Alberto Garcia  <agarcia@igalia.com>
+
 	* data/vagalume.desktop.in
 	* data/vagalume.desktop.maemo
 	* data/vagalume.desktop.moblin

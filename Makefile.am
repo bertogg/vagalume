@@ -67,7 +67,7 @@ themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg
 man1_MANS = $(manpages)
 endif
 
-edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@ICONDIR\@,$(icondir),g'
+edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
 
 data/vagalume.service: Makefile data/vagalume.service.in
 	rm -f data/vagalume.service data/vagalume.service.tmp
