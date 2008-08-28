@@ -78,6 +78,9 @@ data/vagalume.desktop: Makefile data/vagalume.desktop.in
 	rm -f data/vagalume.desktop data/vagalume.desktop.tmp
 	$(edit) data/vagalume.desktop.in > data/vagalume.desktop.tmp
 	mv data/vagalume.desktop.tmp data/vagalume.desktop
+	if test -f "data/vagalume.desktop.$(PLATFORM)" ; then \
+	   cat "data/vagalume.desktop.$(PLATFORM)" >> data/vagalume.desktop ; \
+	fi
 
 install-exec-hook:
 	if test "$(PLATFORM)" = "maemo"; then \

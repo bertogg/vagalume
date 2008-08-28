@@ -1,5 +1,13 @@
 2008-08-29  Alberto Garcia  <agarcia@igalia.com>
 
+	* data/vagalume.desktop.in
+	* data/vagalume.desktop.maemo
+	* data/vagalume.desktop.moblin
+	* Makefile.am (data/vagalume.desktop): Create a different .desktop
+	file in each platform.
+
+2008-08-29  Alberto Garcia  <agarcia@igalia.com>
+
 	* INSTALL
 	* Makefile.am
 	* configure.ac

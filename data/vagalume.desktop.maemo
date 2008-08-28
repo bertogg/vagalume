@@ -1,0 +1,9 @@
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Service=com.igalia.vagalume
+X-Osso-Type=application/x-executable
+X-Osso-URI-Actions=lastfm;
+
+[X-Osso-URI-Action Handler lastfm]
+Method=PlayUrl
+Name=uri_link_play
+TranslationDomain=osso-uri
