@@ -112,11 +112,15 @@ Target platform:
   --with-platform=detect  detect target platform (default)
   --with-platform=gnome   compile for Gnome
   --with-platform=maemo   compile for Maemo
-  --with-platform=moblin  compile for Moblin (experimental)],
+  --with-platform=moblin  compile for Moblin (1024x600),
+  --with-platform=moblin2 compile for Moblin (800x480)],
   PLATFORM=$withval, PLATFORM=detect)
 
 if test "$PLATFORM" = "detect"; then
    PLATFORM=$DETECTED_PLATFORM
+elif test "$PLATFORM" = "moblin2"; then
+   PLATFORM=moblin
+   scr_resolution=800x480
 fi
 PLATFORMVERS=""
 
@@ -185,6 +189,9 @@ AC_ARG_ENABLE(tray-icon, [
 ### Platform dependent checks ###
 #################################
 if test "$PLATFORM" = "maemo"; then
+
+   # Maemo screen resolution
+   scr_resolution=800x480
 
    # Disable tray icon support on Maemo
    have_tray_icon="no"
@@ -294,6 +301,9 @@ elif test "$PLATFORM" = "gnome"; then
 
    echo "Compiling for Gnome"
 
+   # Desktop screen resolution
+   scr_resolution=desktop
+
    if test "$have_dbus_glib" = "yes"; then
       serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
       AC_DEFINE([HAVE_GSD_MEDIA_PLAYER_KEYS], [1],
@@ -315,6 +325,10 @@ elif test "$PLATFORM" = "gnome"; then
    fi
 
 elif test "$PLATFORM" = "moblin"; then
+
+   if test "x$scr_resolution" = "x"; then
+      scr_resolution=1024x600
+   fi
 
    # Disable tray icon support on Moblin
    have_tray_icon="no"
@@ -354,6 +368,17 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 ### Everything has been checked, now define Automake variables ###
 ##################################################################
 AM_CONDITIONAL(MAEMO_PLATFORM, test "$PLATFORM" = "maemo")
+
+if test "$scr_resolution" = "desktop"; then
+   AC_DEFINE([SCR_RESOLUTION_DESKTOP], [1], [Compiled for a desktop system])
+elif test "$scr_resolution" = "800x480"; then
+   AC_DEFINE([SCR_RESOLUTION_800X480], [1], [Compiled for 800x480])
+elif test "$scr_resolution" = "1024x600"; then
+   AC_DEFINE([SCR_RESOLUTION_1024X600], [1], [Compiled for 1024x600])
+else
+   AC_MSG_ERROR([Unknown screen resolution in the target platform])
+fi
+AC_SUBST(SCR_RESOLUTION, "$scr_resolution")
 
 AM_CONDITIONAL(HAVE_DBUS_SUPPORT, test -n "$serviceentrydir")
 if test -n "$serviceentrydir"; then
@@ -420,6 +445,7 @@ elif test "$PLATFORM" = "maemo"; then
    echo "Libconic support: $have_conic"
 fi
 echo "D-Bus Support enabled:" $have_dbus_glib
+echo "Target display: $scr_resolution"
 echo ""
 echo "Type 'make' to compile Vagalume"
 echo ""

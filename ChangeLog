@@ -1,3 +1,11 @@
+2008-08-29  Alberto Garcia  <agarcia@igalia.com>
+
+	* INSTALL
+	* Makefile.am
+	* configure.ac
+	* src/vgl-main-window.c: Add support for Moblin-based devices with
+	a resolution of 800x480
+
 2008-08-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c (controller_run_app): Use a weak pointer to set

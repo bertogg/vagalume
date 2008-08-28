@@ -18,12 +18,12 @@
 #include "xmlrpc.h"
 #include "util.h"
 
-#if defined(MAEMO)
+#if defined(SCR_RESOLUTION_800X480)
 #        define ALBUM_COVER_SIZE 200
 #        define COVER_FRAME_SIZE 230
 #        define BIGBUTTON_IMG_SIZE 64
 #        define SMALLBUTTON_IMG_SIZE 50
-#elif defined(MOBLIN)
+#elif defined(SCR_RESOLUTION_1024X600)
 #        define ALBUM_COVER_SIZE 230
 #        define COVER_FRAME_SIZE 250
 #        define BIGBUTTON_IMG_SIZE 98

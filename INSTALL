@@ -17,4 +17,5 @@ For rpm-based systems a vagalume.spec file is provided, thanks to
 the kind contribution of Tim Wegener. This file is known to work
 in the Fedora distribution.
 
-For the Moblin platform, run configure --with-platform=moblin
+For the Moblin platform, run configure --with-platform=moblin for
+1024x600 resolution or --with-platform=moblin2 for 800x480 resolution.

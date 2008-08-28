@@ -36,7 +36,7 @@ manpages = vagalume.1
 pixmap_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
 desktopentry_DATA = data/vagalume.desktop
-appdata_DATA = data/$(PLATFORM)/*
+appdata_DATA = data/cover/$(SCR_RESOLUTION)/cover.png
 
 if HAVE_DBUS_SUPPORT
 serviceentry_DATA = data/vagalume.service
