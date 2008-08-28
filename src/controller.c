@@ -1636,6 +1636,7 @@ controller_run_app (const char *radio_url)
         }
 
         mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());
+        g_object_add_weak_pointer (G_OBJECT (mainwin), (gpointer) &mainwin);
         vgl_main_window_show(mainwin, TRUE);
         vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
                                   NULL);
@@ -1696,7 +1697,6 @@ controller_run_app (const char *radio_url)
         rsp_sess = NULL;
         lastfm_pls_destroy(playlist);
         playlist = NULL;
-        mainwin = NULL;
         if (usercfg != NULL) {
                 set_user_tag_list(usercfg->username, NULL);
                 set_friend_list(usercfg->username, NULL);

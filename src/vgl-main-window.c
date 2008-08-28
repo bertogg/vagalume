@@ -169,7 +169,6 @@ vgl_main_window_destroy(VglMainWindow *w)
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         while (gtk_events_pending()) gtk_main_iteration();
         gtk_widget_destroy(GTK_WIDGET(w));
-        gtk_main_quit();
 }
 
 GtkWindow *
@@ -1145,7 +1144,7 @@ vgl_main_window_init(VglMainWindow *self)
         g_signal_connect(G_OBJECT(priv->addplbutton), "clicked",
                          G_CALLBACK(add_to_playlist_selected), NULL);
         g_signal_connect(G_OBJECT(win), "destroy",
-                         G_CALLBACK(close_app), NULL);
+                         G_CALLBACK(gtk_main_quit), NULL);
         g_signal_connect(G_OBJECT(win), "delete-event",
                          G_CALLBACK(delete_event), NULL);
 #ifdef MAEMO
