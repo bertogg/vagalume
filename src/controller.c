@@ -1676,6 +1676,7 @@ controller_run_app (const char *radio_url)
 #ifdef HAVE_TRAY_ICON
         /* Init Freedesktop tray icon */
         tray_icon = vgl_tray_icon_create ();
+        g_object_add_weak_pointer (G_OBJECT (tray_icon), (gpointer) &tray_icon);
         vgl_tray_icon_notify_playback (tray_icon, NULL);
         if (usercfg != NULL) {
                 vgl_tray_icon_show_notifications (
@@ -1685,11 +1686,12 @@ controller_run_app (const char *radio_url)
 
         vgl_main_window_run_app();
 
+        /* --- From here onwards the app shuts down --- */
+
         lastfm_dbus_notify_closing();
 
 #ifdef HAVE_TRAY_ICON
         g_object_unref(tray_icon);
-        tray_icon = NULL;
 #endif
         lastfm_session_destroy(session);
         session = NULL;

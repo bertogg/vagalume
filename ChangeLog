@@ -1,5 +1,10 @@
 2008-08-28  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (controller_run_app): Use a weak pointer to set
+	tray_icon to NULL.
+
+2008-08-28  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-main-window.c
 	(vgl_main_window_init)
 	(vgl_main_window_destroy): Don't call
