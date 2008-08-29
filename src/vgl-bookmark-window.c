@@ -57,10 +57,9 @@ drag_end_cb (GtkWidget *widget, GdkDragContext *ctx, VglBookmarkWindow *win)
         int *ids = g_new (int, length + 1); /* List of bookmark IDs */
         int pos = 0;
         while (valid) {
-                GValue val = { 0 };
-                gtk_tree_model_get_value (model, &iter, ID_COLUMN, &val);
-                ids [pos++] = g_value_get_int (&val);
-                g_value_unset (&val);
+                int val;
+                gtk_tree_model_get (model, &iter, ID_COLUMN, &val, -1);
+                ids [pos++] = val;
                 valid = gtk_tree_model_iter_next (model, &iter);
         }
         ids [pos] = -1; /* Terminate the list */
@@ -73,11 +72,8 @@ find_bookmark_by_id(GtkTreeModel *model, int id, GtkTreeIter *iter)
 {
         gboolean valid = gtk_tree_model_get_iter_first(model, iter);
         while (valid) {
-                GValue val = { 0 };
                 int this_id;
-                gtk_tree_model_get_value(model, iter, ID_COLUMN, &val);
-                this_id = g_value_get_int(&val);
-                g_value_unset(&val);
+                gtk_tree_model_get (model, iter, ID_COLUMN, &this_id, -1);
                 if (this_id == id) {
                         return TRUE;
                 }
@@ -144,10 +140,7 @@ play_selected_row(VglBookmarkWindow *win)
         VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
         sel = gtk_tree_view_get_selection(priv->treeview);
         if (gtk_tree_selection_get_selected(sel, &model, &iter)) {
-                GValue val = { 0, };
-                gtk_tree_model_get_value(model, &iter, URL_COLUMN, &val);
-                url = g_strdup(g_value_get_string(&val));
-                g_value_unset(&val);
+                gtk_tree_model_get (model, &iter, URL_COLUMN, &url, -1);
         } else {
                 g_critical("Play button clicked with no item selected!");
         }
@@ -187,15 +180,11 @@ edit_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
         if (gtk_tree_selection_get_selected(sel, &model, &iter)) {
                 int id;
                 char *name, *url;
-                GValue idval = { 0, };
-                GValue nameval = { 0, };
-                GValue urlval = { 0, };
-                gtk_tree_model_get_value(model, &iter, ID_COLUMN, &idval);
-                gtk_tree_model_get_value(model, &iter, NAME_COLUMN, &nameval);
-                gtk_tree_model_get_value(model, &iter, URL_COLUMN, &urlval);
-                id = g_value_get_int(&idval);
-                name = g_strdup(g_value_get_string(&nameval));
-                url = g_strdup(g_value_get_string(&urlval));
+                gtk_tree_model_get (model, &iter,
+                                    ID_COLUMN, &id,
+                                    NAME_COLUMN, &name,
+                                    URL_COLUMN, &url,
+                                    -1);
                 if (ui_edit_bookmark_dialog(GTK_WINDOW(win),
                                             &name, &url, FALSE)) {
                         vgl_bookmark_mgr_change_bookmark(priv->mgr,
@@ -203,9 +192,6 @@ edit_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
                 }
                 g_free(name);
                 g_free(url);
-                g_value_unset(&idval);
-                g_value_unset(&nameval);
-                g_value_unset(&urlval);
         } else {
                 g_critical("Edit button clicked with no item selected!");
         }
@@ -220,12 +206,9 @@ delete_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
         VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
         sel = gtk_tree_view_get_selection(priv->treeview);
         if (gtk_tree_selection_get_selected(sel, &model, &iter)) {
-                GValue val = { 0, };
                 int id;
-                gtk_tree_model_get_value(model, &iter, ID_COLUMN, &val);
-                id = g_value_get_int(&val);
+                gtk_tree_model_get (model, &iter, ID_COLUMN, &id, -1);
                 vgl_bookmark_mgr_remove_bookmark(priv->mgr, id);
-                g_value_unset(&val);
         } else {
                 g_critical("Delete button clicked with no item selected!");
         }
