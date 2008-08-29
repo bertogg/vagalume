@@ -1,5 +1,10 @@
 2008-08-29  Alberto Garcia  <agarcia@igalia.com>
 
+	* configure.ac: Enable dbus support for Moblin
+	* moblin/*: Remove unnecessary files.
+
+2008-08-29  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-bookmark-window.c (drag_end_cb, find_bookmark_by_id)
 	(play_selected_row, edit_button_clicked, delete_button_clicked):
 	Use gtk_tree_model_get() instead of gtk_tree_model_get_value()

@@ -333,6 +333,9 @@ elif test "$PLATFORM" = "moblin"; then
    # Disable tray icon support on Moblin
    have_tray_icon="no"
 
+   if test "$have_dbus_glib" = "yes"; then
+      serviceentrydir=`$PKG_CONFIG dbus-1 --variable=session_bus_services_dir`
+   fi
    desktopentrydir="\${datadir}/applications"
 
    echo "Compiling for Moblin"
