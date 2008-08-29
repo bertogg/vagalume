@@ -9,14 +9,8 @@
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
-ifeq ($(ENABLE_MAEMO),yes)
-	PLATFORM=maemo
-else
-    ifeq ($(ENABLE_GNOME),yes)
-	PLATFORM=gnome
-    else
-	PLATFORM=detect
-    endif
+ifeq (,$(DEB_TARGET_PLATFORM))
+	DEB_TARGET_PLATFORM=detect
 endif
 
 CFLAGS = -Wall -g
@@ -35,7 +29,7 @@ config.status: configure
 	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr --mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" \
-		--with-platform=$(PLATFORM)
+		--with-platform=$(DEB_TARGET_PLATFORM)
 
 build: build-stamp
 
