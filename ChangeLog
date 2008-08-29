@@ -1,3 +1,11 @@
+2008-08-30  Alberto Garcia  <agarcia@igalia.com>
+
+	* build-package.sh
+	* debian/control.maemo2
+	* debian/control.maemo3
+	* debian/control.maemo4: Different control files for each Maemo
+	version.
+
 2008-08-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/rules: Change the variable used to choose the target
