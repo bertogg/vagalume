@@ -1,5 +1,11 @@
 2008-08-29  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (controller_stop_playing)
+	(controller_quit_app): Don't update the window when the app is
+	about to be shut down. This fixes a crash in Moblin.
+
+2008-08-29  Alberto Garcia  <agarcia@igalia.com>
+
 	* configure.ac: Enable dbus support for Moblin
 	* moblin/*: Remove unnecessary files.
 

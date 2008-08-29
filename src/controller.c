@@ -49,6 +49,7 @@ static time_t nowplaying_since = 0;
 static RspRating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
 static gboolean stopping_after_track = FALSE;
+static gboolean shutting_down = FALSE;
 
 #ifdef HAVE_TRAY_ICON
 static VglTrayIcon *tray_icon = NULL;
@@ -889,7 +890,12 @@ controller_stop_playing(void)
         VglMainWindowState new_state = session != NULL ?
                 VGL_MAIN_WINDOW_STATE_STOPPED :
                 VGL_MAIN_WINDOW_STATE_DISCONNECTED;
-        vgl_main_window_set_state(mainwin, new_state, NULL);
+
+        /* Updating the window title just before destroying the window
+         * causes a crash, at least in the Moblin platform */
+        if (!shutting_down)
+                vgl_main_window_set_state (mainwin, new_state, NULL);
+
         finish_playing_track();
         stopping_after_track = FALSE;
         im_clear_status();
@@ -1602,6 +1608,7 @@ void
 controller_quit_app(void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
+        shutting_down = TRUE;
         controller_stop_playing();
         vgl_main_window_destroy(mainwin);
 }
