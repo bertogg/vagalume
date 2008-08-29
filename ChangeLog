@@ -1,5 +1,9 @@
 2008-08-29  Alberto Garcia  <agarcia@igalia.com>
 
+	* vagalumectl.1: Minor updates to the man page.
+
+2008-08-29  Alberto Garcia  <agarcia@igalia.com>
+
 	* Makefile.am
 	* data/vagalume.desktop.in (X-Window-Icon): Use PIXMAPDIR instead
 	of ICONDIR, which is no longer used.
