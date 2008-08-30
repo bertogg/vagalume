@@ -1,5 +1,10 @@
 2008-08-30  Alberto Garcia  <agarcia@igalia.com>
 
+	* vagalume.1
+	* src/userconfig.c (get_cfg_filename): config renamed to config.xml
+
+2008-08-30  Alberto Garcia  <agarcia@igalia.com>
+
 	* NEWS
 	* configure.ac: Updated for the 0.7 release
 

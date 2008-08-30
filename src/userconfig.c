@@ -90,7 +90,7 @@ get_cfg_filename(void)
 
         if (cfgfile == NULL) {
                 const char *cfgdir = vgl_user_cfg_get_cfgdir ();
-                cfgfile = g_strconcat (cfgdir, "/config" , NULL);
+                cfgfile = g_strconcat (cfgdir, "/config.xml" , NULL);
         }
         return cfgfile;
 }
