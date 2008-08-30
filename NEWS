@@ -1,3 +1,22 @@
+0.7 (30 Aug 2008)
+  * Bookmarks support
+  * Support for the Moblin platform
+  * D-BUS support for the desktop version (including vagalumectl)
+  * vagalumectl: renamed 'tag' to 'globaltag' and 'personal radio' to
+    'library'.
+  * Added manpage for vagalumectl
+  * Detect if Vagalume is already running when trying to run it
+  * Tag correctly albums by various artists (bug #2741)
+  * Allow removing all tags from a song (bug #2655)
+  * Automatically renew expired sessions (bug #2554)
+  * Added lastfm:// URL handler for the desktop
+  * Fixed problem when tagging tracks with special chars in their names.
+  * New Latvian and French translations (see TRANSLATORS for details)
+  * Merged es and es_MX translations
+  * Support for the multimedia keys in some keyboards
+  * Configurations file moved to ~/.vagalume and converted to XML
+  * Use threads when changing radio stations to avoid UI freezes
+
 0.6 (15 May 2008)
   * Freedesktop tray icon (Gnome only, thanks Mario Sanchez)
   * Notifications support via libnotify (Gnome only, thanks Mario Sanchez)

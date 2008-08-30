@@ -1,5 +1,10 @@
 2008-08-30  Alberto Garcia  <agarcia@igalia.com>
 
+	* NEWS
+	* configure.ac: Updated for the 0.7 release
+
+2008-08-30  Alberto Garcia  <agarcia@igalia.com>
+
 	* build-package.sh
 	* debian/control.maemo2
 	* debian/control.maemo3
