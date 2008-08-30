@@ -1,5 +1,15 @@
 2008-08-30  Alberto Garcia  <agarcia@igalia.com>
 
+	* debian/changelog: Added entry for Vagalume 0.7
+
+	* debian/rules: Removed extra comments.
+
+	* README: Updated README file.
+
+	* INSTALL: Updated installation instructions
+
+2008-08-30  Alberto Garcia  <agarcia@igalia.com>
+
 	* vagalume.1
 	* src/userconfig.c (get_cfg_filename): config renamed to config.xml
 

@@ -19,8 +19,7 @@ in any Unix-like system that meets the following requirements:
    * Gnome libxml2
    * libcurl
 
-There is also experimental support for the Moblin platform. hildon-1
-is required to compile Vagalume for Moblin.
+There is also support for Intel's Moblin platform.
 
 Vagalume has the following features:
 
@@ -35,6 +34,7 @@ Vagalume has the following features:
       * Love/Ban ratings
    * It displays the album cover of the track being played
    * Tray icon and desktop notifications
+   * Bookmarks
    * Gettext support
    * D-BUS services and a script to control them from the command line
    * The user can tag artists, tracks and albums

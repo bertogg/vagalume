@@ -1,8 +1,21 @@
 
-The easiest way to install Vagalume is to create a Debian package. A
-script to generate one is provided, just run
+The easiest way to install Vagalume is to create a Debian
+package. There are several ways to do it:
 
-./build-package.sh
+   * If compiling for a PC or for a Nokia Internet Tablet, just run:
+
+     ./build-package.sh
+
+   * Alternatively, you can run
+
+     fakeroot debian/rules binary DEB_TARGET_PLATFORM=myplatform
+
+     Where 'myplatform' is one of:
+
+     - gnome: A standard PC with the Gnome desktop
+     - maemo: A Nokia Internet Tablet
+     - moblin: A Moblin-based device with a resolution of 1024x600
+     - moblin2: A Moblin-based device with a resolution of 800x480
 
 If you prefer to compile it by hand or if you're compiling it in a
 non-Debian system then run:
@@ -11,11 +24,9 @@ non-Debian system then run:
 
 In both cases the system should detect automatically if it's compiling
 for Maemo or for a standard computer. Type './configure --help' to see
-a list of configuration options.
+a list of configuration options. For Moblin you have to specify the
+platform name by hand (either 'moblin' or 'moblin2', see above).
 
 For rpm-based systems a vagalume.spec file is provided, thanks to
 the kind contribution of Tim Wegener. This file is known to work
 in the Fedora distribution.
-
-For the Moblin platform, run configure --with-platform=moblin for
-1024x600 resolution or --with-platform=moblin2 for 800x480 resolution.
