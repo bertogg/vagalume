@@ -1,3 +1,9 @@
+2008-09-01  Alberto Garcia  <agarcia@igalia.com>
+
+	* vagalume.spec: Updated for Vagalume 0.7
+
+	* NEWS: Fixed typo
+
 2008-08-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/changelog: Added entry for Vagalume 0.7
