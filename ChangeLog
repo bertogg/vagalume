@@ -1,3 +1,7 @@
+2008-09-01  Tim Wegener  <twegener@fastmail.fm>
+
+	* vagalume.spec: Added 'libtool' to BuildRequires
+
 2008-09-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.spec: Updated for Vagalume 0.7

@@ -8,7 +8,7 @@ Group: Applications/Multimedia
 URL: http://vagalume.igalia.com/
 Source0: %{name}_%{version}-1.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc, gtk2-devel >= 2.10, gstreamer-devel >= 0.10, curl-devel, libxml2-devel >= 2.0, libnotify-devel, dbus-glib-devel
+BuildRequires: gcc, gtk2-devel >= 2.10, gstreamer-devel >= 0.10, curl-devel, libxml2-devel >= 2.0, libnotify-devel, dbus-glib-devel, libtool
 Requires: gtk2 >= 2.10, gstreamer >= 0.10, curl, libxml2 >= 2.0, libnotify, dbus-glib
 
 %description
