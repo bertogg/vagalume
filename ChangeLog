@@ -1,3 +1,9 @@
+2008-09-02  Alberto Garcia  <agarcia@igalia.com>
+
+	* debian/watch: Added debian/watch file
+
+	* debian/control (Standards-Version): Updated to 3.8.0
+
 2008-09-01  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.7 ===
