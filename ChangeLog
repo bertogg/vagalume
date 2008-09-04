@@ -1,3 +1,11 @@
+2008-09-04  Alberto Garcia  <agarcia@igalia.com>
+
+	* scripts/vagalumectl: Use pgrep if pidof is not available.
+
+	* configure.ac: Add configure setting to disable D-BUS support.
+
+	(thanks, Bernhard Fröhlich)
+
 2008-09-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/watch: Added debian/watch file
