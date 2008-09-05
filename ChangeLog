@@ -1,3 +1,9 @@
+2008-09-05  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/imstatus.c (im_set_status_idle)
+	* src/uimisc.c (usercfg_add_imstatus_settings):
+	Add {station} keyword to the IM status template.
+
 2008-09-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* scripts/vagalumectl: Use pgrep if pidof is not available.

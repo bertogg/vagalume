@@ -529,6 +529,7 @@ usercfg_add_imstatus_settings(usercfgwin *win, VglUserCfg *cfg)
                  "following keywords:\n\n"
                  "{artist}: Name of the artist\n"
                  "{title}: Song title\n"
+                 "{station}: Radio station\n"
                  "{version}: Vagalume version");
         g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 #endif

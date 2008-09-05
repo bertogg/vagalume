@@ -311,6 +311,7 @@ im_set_status_idle(gpointer data)
         /* Modify the template */
         string_replace_gstr(d->msg, "{artist}", d->track->artist);
         string_replace_gstr(d->msg, "{title}", d->track->title);
+        string_replace_gstr(d->msg, "{station}", d->track->pls_title);
         string_replace_gstr(d->msg, "{version}", APP_VERSION);
 
         /* Set the status */
