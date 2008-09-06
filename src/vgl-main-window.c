@@ -56,7 +56,7 @@ struct _VglMainWindowPrivate {
         GtkWidget *dloadbutton, *tagbutton, *addplbutton;
         GtkWidget *playlist, *artist, *track, *album;
         GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
-        GtkWidget *addtopls, *stopafter, *bmkmenu, *bmkartist, *bmktrack;
+        GtkWidget *addtopls, *bmkmenu, *bmkartist, *bmktrack;
         GtkWidget *album_cover;
         GtkProgressBar *progressbar;
         GString *progressbar_text;
@@ -476,8 +476,6 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                 gtk_widget_set_sensitive (priv->settings, FALSE);
                 gtk_window_set_title(GTK_WINDOW(w), APP_NAME);
                 gtk_widget_set_sensitive(priv->album_cover, FALSE);
-                gtk_check_menu_item_set_active(
-                        GTK_CHECK_MENU_ITEM(priv->stopafter), FALSE);
                 break;
         default:
                 g_critical("Unknown ui state received: %d", state);
@@ -625,11 +623,9 @@ url_radio_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
-stop_after_selected(GtkWidget *widget, gpointer data)
+stop_after_selected (GtkWidget *widget, gpointer data)
 {
-        GtkCheckMenuItem *item = GTK_CHECK_MENU_ITEM(widget);
-        gboolean stop = gtk_check_menu_item_get_active(item);
-        controller_set_stop_after(stop);
+        controller_set_stop_after ();
 }
 
 static void
@@ -888,8 +884,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         skip = gtk_menu_item_new_with_label(_("Skip"));
         separ1 = gtk_separator_menu_item_new();
         separ2 = gtk_separator_menu_item_new();
-        stopafter =
-                gtk_check_menu_item_new_with_label(_("Stop after this track"));
+        stopafter = gtk_menu_item_new_with_label (_("Stop after ..."));
         love = gtk_menu_item_new_with_label(_("Love this track"));
         ban = gtk_menu_item_new_with_label(_("Ban this track"));
         addtopls = gtk_menu_item_new_with_label(_("Add to playlist"));
@@ -910,7 +905,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         gtk_menu_shell_append(actionssub, dorecomm);
         gtk_menu_shell_append(actionssub, separ2);
         gtk_menu_shell_append(actionssub, stopafter);
-        g_signal_connect(G_OBJECT(stopafter), "toggled",
+        g_signal_connect(G_OBJECT(stopafter), "activate",
                          G_CALLBACK(stop_after_selected), NULL);
         g_signal_connect(G_OBJECT(play), "activate",
                          G_CALLBACK(play_selected), NULL);
@@ -993,7 +988,6 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         priv->dload = dload;
         priv->love = love;
         priv->addtopls = addtopls;
-        priv->stopafter = stopafter;
         priv->bmkmenu = GTK_WIDGET (bmksub);
         priv->bmkartist = bmkartist;
         priv->bmktrack = bmktrack;

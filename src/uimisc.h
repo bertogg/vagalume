@@ -13,6 +13,7 @@
 #include <gtk/gtk.h>
 #include "userconfig.h"
 #include "playlist.h"
+#include "controller.h"
 
 GtkWidget *compat_gtk_button_new(void);
 gboolean tagwin_run(GtkWindow *parent, const char *user, char **newtags,
@@ -27,6 +28,8 @@ void ui_warning_dialog(GtkWindow *parent, const char *text);
 void ui_error_dialog(GtkWindow *parent, const char *text);
 char *ui_input_dialog(GtkWindow *parent, const char *title,
                       const char *text, const char *value);
+gboolean ui_stop_after_dialog (GtkWindow *parent, StopAfterType *stopafter,
+                               int *minutes);
 char *ui_input_dialog_with_list(GtkWindow *parent, const char *title,
                                 const char *text, const GList *elems,
                                 const char *value);

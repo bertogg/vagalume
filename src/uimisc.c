@@ -75,6 +75,13 @@ typedef struct {
 } usercfgwin;
 
 typedef struct {
+        GtkDialog *dialog;
+        GtkWidget *combo;
+        GtkEntry *entry;
+        GtkToggleButton *radio3;
+} StopAfterDialog;
+
+typedef struct {
         tagwin *w;
         request_type type;
 } get_track_tags_data;
@@ -702,6 +709,152 @@ ui_create_options_list(const GList *elems)
                 gtk_list_store_set(store, &iter, 0, current->data, -1);
         }
         return GTK_TREE_MODEL(store);
+}
+
+static void
+stop_after_dialog_update_sensitivity (StopAfterDialog *win)
+{
+        gboolean radio3_active = gtk_toggle_button_get_active (win->radio3);
+        gboolean ok_button_sensitive = TRUE;
+        if (radio3_active) {
+                const char *text = gtk_entry_get_text (win->entry);
+                guint64 value = g_ascii_strtoull (text, NULL, 10);
+                ok_button_sensitive = (value > 0 && value < 10080);
+        }
+        gtk_widget_set_sensitive (win->combo, radio3_active);
+        gtk_dialog_set_response_sensitive (win->dialog,
+                                           GTK_RESPONSE_ACCEPT,
+                                           ok_button_sensitive);
+}
+
+static void
+stop_after_entry_changed (GtkWidget *w, GParamSpec *arg, StopAfterDialog *win)
+{
+        stop_after_dialog_update_sensitivity (win);
+}
+
+static void
+stop_after_radio_button_toggled (GtkWidget *button, StopAfterDialog *win)
+{
+        stop_after_dialog_update_sensitivity (win);
+}
+
+gboolean
+ui_stop_after_dialog (GtkWindow *parent, StopAfterType *stopafter,
+                      int *minutes)
+{
+        GtkDialog *dialog;
+        GtkWidget *alignment;
+        GtkWidget *hbox, *vbox;
+        GtkWidget *descrlabel, *minuteslabel;
+        GtkWidget *combo;
+        GtkEntry *entry;
+        GtkListStore *model;
+        GtkWidget *radio1, *radio2, *radio3;
+        StopAfterDialog win;
+        int default_times[] = { 5, 15, 30, 45, 60, 90, 120, 240, -1 };
+        int i;
+        gboolean retvalue = FALSE;
+
+        g_return_val_if_fail (minutes != NULL && stopafter != NULL, FALSE);
+
+        /* Create all widgets */
+        dialog = ui_base_dialog (parent, _("Stop automatically"));
+        descrlabel = gtk_label_new (_("When do you want to stop playback?"));
+        minuteslabel = gtk_label_new (_("minutes"));
+        alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
+        hbox = gtk_hbox_new (FALSE, 5);
+        vbox = gtk_vbox_new (TRUE, 5);
+        radio1 = gtk_radio_button_new (NULL);
+        radio2 = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (radio1));
+        radio3 = gtk_radio_button_new_from_widget (GTK_RADIO_BUTTON (radio1));
+
+        gtk_button_set_label (GTK_BUTTON (radio1), _("Don't stop"));
+        gtk_button_set_label (GTK_BUTTON (radio2), _("Stop after this track"));
+        /* Translators: the full text is "Stop after ____ minutes" */
+        gtk_button_set_label (GTK_BUTTON (radio3), _("Stop after"));
+
+        /* Create and fill model */
+        model = gtk_list_store_new (1, G_TYPE_STRING);
+        for (i = 0; default_times[i] != -1; i++) {
+                GtkTreeIter iter;
+                char str[4];
+                g_snprintf (str, 4, "%d", default_times[i]);
+                gtk_list_store_append (model, &iter);
+                gtk_list_store_set (model, &iter, 0, str, -1);
+        }
+
+        /* Create combo box */
+        combo = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (model), 0);
+        g_object_unref (model);
+        entry = GTK_ENTRY (GTK_BIN (combo)->child);
+        gtk_entry_set_width_chars (entry, 4);
+
+        /* Set default values */
+        if (*stopafter == STOP_AFTER_DONT_STOP) {
+                gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio1),
+                                              TRUE);
+        } else if (*stopafter == STOP_AFTER_THIS_TRACK) {
+                gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio2),
+                                              TRUE);
+        } else if (*stopafter == STOP_AFTER_N_MINUTES) {
+                char *str;
+                gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio3),
+                                              TRUE);
+                if (*minutes > 0) {
+                        str = g_strdup_printf ("%d", *minutes);
+                        gtk_entry_set_text (entry, str);
+                        g_free (str);
+                }
+        } else {
+                g_return_val_if_reached (FALSE);
+        }
+
+        /* Pack widgets */
+        gtk_box_pack_start (GTK_BOX (hbox), radio3, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), combo, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), minuteslabel, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), descrlabel, FALSE, FALSE, 5);
+        gtk_box_pack_start (GTK_BOX (vbox), radio1, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), radio2, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+        gtk_container_add (GTK_CONTAINER (alignment), vbox);
+        gtk_box_pack_start (GTK_BOX (dialog->vbox), alignment, TRUE, TRUE, 10);
+
+        /* Fill StopAfterDialog struct */
+        win.dialog = dialog;
+        win.combo = combo;
+        win.entry = entry;
+        win.radio3 = GTK_TOGGLE_BUTTON (radio3);
+
+        /* Set sensitivity of combo box and OK button */
+        stop_after_dialog_update_sensitivity (&win);
+
+        /* Connect signals */
+        g_signal_connect (radio3, "toggled",
+                          G_CALLBACK (stop_after_radio_button_toggled), &win);
+        g_signal_connect (entry, "notify::text",
+                          G_CALLBACK (stop_after_entry_changed), &win);
+
+        /* Run dialog */
+        gtk_widget_show_all (GTK_WIDGET (dialog));
+        if (gtk_dialog_run (dialog) == GTK_RESPONSE_ACCEPT) {
+                if (gtk_toggle_button_get_active (
+                            GTK_TOGGLE_BUTTON (radio1))) {
+                        *stopafter = STOP_AFTER_DONT_STOP;
+                } else if (gtk_toggle_button_get_active (
+                                   GTK_TOGGLE_BUTTON (radio2))) {
+                        *stopafter = STOP_AFTER_THIS_TRACK;
+                } else {
+                        const char *str = gtk_entry_get_text (entry);
+                        *minutes = g_ascii_strtoull (str, NULL, 10);
+                        *stopafter = STOP_AFTER_N_MINUTES;
+                }
+                retvalue = TRUE;
+        }
+        gtk_widget_destroy (GTK_WIDGET (dialog));
+
+        return retvalue;
 }
 
 char *

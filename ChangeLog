@@ -1,3 +1,30 @@
+2008-09-06  Alberto Garcia  <agarcia@igalia.com>
+
+	New "Stop playback after ..." feature based on the previous "Stop
+	after this track" and a patch by Claudio Saavedra to add sleep
+	timer support.
+
+	This closes feature request #2377
+
+	* src/controller.h
+	* src/controller.c:
+	stopping_after_track renamed to stop_after_this_track.
+	(stop_after_timeout, controller_set_stop_after):
+	Ask the user when to stop, and create a g_timeout if necessary.
+
+	* src/uimisc.h
+	* src/uimisc.c
+	(stop_after_radio_button_toggled, stop_after_entry_changed)
+	(ui_stop_after_dialog, stop_after_dialog_update_sensitivity):
+	New dialog to ask the user when to stop playback.
+
+	* src/vgl-main-window.c
+	(VglMainWindowPrivate): Don't store the "Stop after..." menu entry
+	anymore.
+	(vgl_main_window_set_state, stop_after_selected)
+	(create_main_menu): Replace the old "Stop after this track" menu
+	entry with "Stop after ...", which opens a dialog.
+
 2008-09-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c (im_set_status_idle)

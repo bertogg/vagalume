@@ -48,7 +48,7 @@ static LastfmTrack *nowplaying = NULL;
 static time_t nowplaying_since = 0;
 static RspRating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
-static gboolean stopping_after_track = FALSE;
+static gboolean stop_after_this_track = FALSE;
 static gboolean shutting_down = FALSE;
 
 #ifdef HAVE_TRAY_ICON
@@ -855,7 +855,7 @@ controller_start_playing_cb(gpointer userdata)
 void
 controller_start_playing(void)
 {
-        if (stopping_after_track) {
+        if (stop_after_this_track) {
                 controller_stop_playing();
         } else {
                 check_session_cb cb;
@@ -897,7 +897,7 @@ controller_stop_playing(void)
                 vgl_main_window_set_state (mainwin, new_state, NULL);
 
         finish_playing_track();
-        stopping_after_track = FALSE;
+        stop_after_this_track = FALSE;
         im_clear_status();
 
         /* Notify the playback status */
@@ -1017,13 +1017,64 @@ void controller_add_bookmark(request_type type)
 }
 
 /**
- * Tells Vagalume to stop (or not) after the current track
- * @param stop Whether to stop or not
+ * Stops playing a song after a given timeout. This function is called
+ * from controller_set_stop_after().
+ */
+static gboolean
+stop_after_timeout (gpointer data)
+{
+        guint *source_id = (guint *) data;
+        controller_stop_playing();
+        *source_id = 0;
+        return FALSE;
+}
+
+/**
+ * Asks the user whether to stop playback after this track of a given
+ * time.
  */
 void
-controller_set_stop_after(gboolean stop)
+controller_set_stop_after (void)
 {
-        stopping_after_track = stop;
+        /* If source_id != 0, playback will stop at source_stop_at (approx) */
+        static guint source_id = 0;
+        static time_t source_stop_at;
+        int minutes;
+        StopAfterType stopafter;
+
+        /* Get current values */
+        if (stop_after_this_track) {
+                stopafter = STOP_AFTER_THIS_TRACK;
+        } else if (source_id != 0) {
+                stopafter = STOP_AFTER_N_MINUTES;
+                minutes = (source_stop_at - time (NULL) + 59) / 60;
+                if (minutes <= 0) minutes = 1;
+        } else {
+                stopafter = STOP_AFTER_DONT_STOP;
+        }
+
+        if (ui_stop_after_dialog (
+                    vgl_main_window_get_window (mainwin, FALSE),
+                    &stopafter, &minutes)) {
+                /* Clear previous values */
+                if (source_id != 0) {
+                        g_source_remove (source_id);
+                        source_id = 0;
+                }
+                stop_after_this_track = FALSE;
+
+                /* Set new values */
+                if (stopafter == STOP_AFTER_N_MINUTES) {
+                        g_return_if_fail (minutes > 0);
+                        source_id = g_timeout_add_seconds
+                                (minutes * 60, stop_after_timeout, &source_id);
+                        source_stop_at = time (NULL) + minutes * 60;
+                } else if (stopafter == STOP_AFTER_THIS_TRACK) {
+                        stop_after_this_track = TRUE;
+                } else if (stopafter != STOP_AFTER_DONT_STOP) {
+                        g_return_if_reached ();
+                }
+        }
 }
 
 /**

@@ -13,11 +13,17 @@
 #include "radio.h"
 #include "xmlrpc.h"
 
+typedef enum {
+        STOP_AFTER_DONT_STOP,
+        STOP_AFTER_THIS_TRACK,
+        STOP_AFTER_N_MINUTES
+} StopAfterType;
+
 void controller_stop_playing(void);
 void controller_disconnect(void);
 void controller_start_playing(void);
 void controller_skip_track(void);
-void controller_set_stop_after(gboolean stop);
+void controller_set_stop_after(void);
 void controller_love_track(gboolean interactive);
 void controller_ban_track(gboolean interactive);
 void controller_play_radio_by_url(const char *url);
