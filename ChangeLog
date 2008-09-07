@@ -1,3 +1,8 @@
+2008-09-07  Alberto Garcia  <agarcia@igalia.com>
+
+	* scripts/vagalumectl: Hide error message if 'pidof' or 'pgrep'
+	don't exist.
+
 2008-09-06  Alberto Garcia  <agarcia@igalia.com>
 
 	New "Stop playback after ..." feature based on the previous "Stop

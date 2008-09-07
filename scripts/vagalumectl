@@ -151,7 +151,8 @@ else
 fi
 
 # Check whether vagalume is or not already running
-if pidof vagalume > /dev/null 2>&1 || pgrep -x vagalume > /dev/null 2>&1; then
+if { { which pidof && pidof vagalume    ; }   || \
+     { which pgrep && pgrep -x vagalume ; } } > /dev/null 2>&1; then
     if [ ${COMMAND} = "start" ]; then
         echo "Vagalume already running."
         exit 0
