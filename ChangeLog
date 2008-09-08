@@ -1,3 +1,7 @@
+2008-09-09  Alberto Garcia  <agarcia@igalia.com>
+
+	* debian/control: Move Homepage field to the source paragraph.
+
 2008-09-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* scripts/vagalumectl: Hide error message if 'pidof' or 'pgrep'
