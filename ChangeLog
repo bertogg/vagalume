@@ -488,7 +488,7 @@
 	* configure.ac: Don't enable media player keys if there's no D-BUS
 	support.
 
-2008-06-25  Mario Sanchez Prada <msanchez@igalia.com>
+2008-06-25  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* configure.ac:
 	* src/dbus.c:
@@ -503,35 +503,35 @@
 
 	* ChangeLog: added ChangeLog file
 
-2008-06-18  Mario Sanchez Prada <msanchez@igalia.com>
+2008-06-18  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* Makefile.am
 	* vagalume.1
 	* vagalumectl.1
 	Add manpage for vagalumectl
 
-2008-06-18  Alberto Garcia <agarcia@igalia.com>
+2008-06-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-window.c
 	Make the treeview in the bookmark window reorderable
 
-2008-06-18  Alberto Garcia <agarcia@igalia.com>
+2008-06-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* INSTALL
 	Instructions to compile Vagalume for Moblin
 
-2008-06-18  Alberto Garcia <agarcia@igalia.com>
+2008-06-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Test whether to install vagalume.service in Gnome
 
-2008-06-18  Alberto Garcia <agarcia@igalia.com>
+2008-06-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/gconf-defaults
 	* debian/rules
 	Install lastfm:// URL handler
 
-2008-06-18  Mario Sanchez Prada <msanchez@igalia.com>
+2008-06-18  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* src/dbus.c
 	* src/dbus.h
@@ -542,19 +542,19 @@
 
 	Fix interactive mode in love/ban dbus handlers
 
-2008-06-18  Alberto Garcia <agarcia@igalia.com>
+2008-06-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* data/moblin
 	* data/moblin/cover.png
 	Added Moblin version of cover.png
 
-2008-06-18  Alberto Garcia <agarcia@igalia.com>
+2008-06-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Fix compilation problem with dbus < 1.0
 
-2008-06-18  Alberto Garcia <agarcia@igalia.com>
+2008-06-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* README
@@ -568,18 +568,18 @@
 	* src/vgl-main-window.h
 	Experimental Moblin support (thanks to Costas Stylianou)
 
-2008-06-17  Alberto Garcia <agarcia@igalia.com>
+2008-06-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-mgr.c
 	Bookmarks file renamed to bookmarks.xml
 
-2008-06-16  Alberto Garcia <agarcia@igalia.com>
+2008-06-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/dbus.c
 	* src/dbus.h
 	Fix includes in dbus.{ch}
 
-2008-06-15  Mario Sanchez Prada <msanchez@igalia.com>
+2008-06-15  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* configure.ac
 	* contrib/vagalumectl
@@ -588,12 +588,12 @@
 	* src/dbus.h
 	D-BUS support for the Desktop version
 
-2008-06-12  Mario Sanchez Prada <msanchez@igalia.com>
+2008-06-12  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* contrib/vagalumectl
 	vagalumectl: Fix playurl call
 
-2008-06-12  Alberto Garcia <agarcia@igalia.com>
+2008-06-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/POTFILES.in
 	* src/Makefile.am
@@ -605,18 +605,18 @@
 	* src/vgl-tray-icon.h
 	Rename vagalume-sb-plugin and vagalume-tray-icon to vgl-*
 
-2008-06-11  Alberto Garcia <agarcia@igalia.com>
+2008-06-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-window.c
 	Bookmarks: play selected row when double clicking on it
 
-2008-06-06  Alberto Garcia <agarcia@igalia.com>
+2008-06-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	* src/vgl-bookmark-mgr.c
 	Create cfg directory if it doesn't exist
 
-2008-06-06  Alberto Garcia <agarcia@igalia.com>
+2008-06-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/userconfig.c
@@ -633,12 +633,12 @@
 
 	VglBookmarkMgr: load and save bookmarks to disk
 
-2008-06-02  Alberto Garcia <agarcia@igalia.com>
+2008-06-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/POTFILES.in
 	Fix typo in POTFILES.in
 
-2008-05-25  Alberto Garcia <agarcia@igalia.com>
+2008-05-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -646,7 +646,7 @@
 	* src/vgl-main-window.c
 	Added French translation (by Julien Duponchelle)
 
-2008-05-23  Alberto Garcia <agarcia@igalia.com>
+2008-05-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -655,7 +655,7 @@
 	Show the 'edit bookmark' dialog when adding a bookmark from the
 	main menu
 
-2008-05-22  Alberto Garcia <agarcia@igalia.com>
+2008-05-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -664,14 +664,14 @@
 	* src/vgl-main-window.c
 	New menu option to bookmark the current artist
 
-2008-05-22  Alberto Garcia <agarcia@igalia.com>
+2008-05-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
 	* src/vgl-main-window.c
 	New menu option to bookmark the current track
 
-2008-05-22  Alberto Garcia <agarcia@igalia.com>
+2008-05-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-mgr.c
 	* src/vgl-bookmark-window.c
@@ -683,58 +683,58 @@
 
 	Maintain order when adding elements to the bookmark manager
 
-2008-05-22  Alberto Garcia <agarcia@igalia.com>
+2008-05-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-window.c
 	Manage bookmarks through the bookmark manager
 
-2008-05-21  Alberto Garcia <agarcia@igalia.com>
+2008-05-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	Updated TODO
 
-2008-05-21  Alberto Garcia <agarcia@igalia.com>
+2008-05-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-mgr.c
 	* src/vgl-bookmark-mgr.h
 	Added new method (and signal) to change a bookmark in the bookmark
 	manager
 
-2008-05-21  Alberto Garcia <agarcia@igalia.com>
+2008-05-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-bookmark-mgr.c
 	* src/vgl-bookmark-mgr.h
 	Added bookmark-removed and bookmark-added signals to the bookmark
 	manager
 
-2008-05-21  Alberto Garcia <agarcia@igalia.com>
+2008-05-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	* src/vgl-bookmark-mgr.c
 	* src/vgl-bookmark-mgr.h
 	New bookmark manager (basic version)
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-main-window.c
 	Move GTK_WINDOW_TOPLEVEL to the vgl_main_window_init()
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Stop playing the current track before setting another radio
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	When setting a new radio URL, use a thread
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/POTFILES.in
 	Update POTFILES.in
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	* src/controller.h
@@ -743,7 +743,7 @@
 	* src/vgl-main-window.h
 	mainwin.[ch] renamed to vgl-main-window.[ch]
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -753,12 +753,12 @@
 	lastfm_mainwin renamed to VglMainWindow and turned into a
 	GtkWindow
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es.po
 	Update Spanish translation (by Oscar Mata)
 
-2008-05-18  Alberto Garcia <agarcia@igalia.com>
+2008-05-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/POTFILES.in
 	* src/Makefile.am
@@ -769,22 +769,22 @@
 	* src/vgl-bookmark-window.h
 	New bookmark window (basic version)
 
-2008-05-17  Alberto Garcia <agarcia@igalia.com>
+2008-05-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Minor changes in configure.ac
 
-2008-05-17  Alberto Garcia <agarcia@igalia.com>
+2008-05-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Don't enable libgcrypt by default in Maemo
 
-2008-05-17  Alberto Garcia <agarcia@igalia.com>
+2008-05-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	Remove .a and .la files from the sbplugin
 
-2008-05-17  Alberto Garcia <agarcia@igalia.com>
+2008-05-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* TRANSLATORS
@@ -796,17 +796,17 @@
 
 	Remove the vagalume.debhelper.log in the maintainer-clean target
 
-2008-05-16  Alberto Garcia <agarcia@igalia.com>
+2008-05-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/rules
 	Remove unneeded debhelper lines
 
-2008-05-16  Alberto Garcia <agarcia@igalia.com>
+2008-05-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* contrib/vagalumectl
 	Fix typo in vagalumectl
 
-2008-05-16  Alberto Garcia <agarcia@igalia.com>
+2008-05-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -814,54 +814,54 @@
 	* src/mainwin.c
 	Added Latvian translation (by Peteris Caune)
 
-2008-05-15  Alberto Garcia <agarcia@igalia.com>
+2008-05-15  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.6 ===
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* debian/changelog
 	Update release date
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Make the tag dialog narrower, to fit some translations
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	Init DBUS thread system at startup
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	imstatus: Use the global GDK lock instead of a static GMutex, as
 	it seems that we cannot use dbus-glib from different threads at
 	the same time
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es.po
 	Fixed Spanish (Venezuela) translation
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	imstatus: better clenaup when an error happens
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es_MX.po
 	Corrected Spanish (Mexico) translation
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es_MX.po
 	Updated Spanish (Mexico) translation (by Eduardo Rubio)
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po
 	* po/es.po
@@ -874,7 +874,7 @@
 	* po/vagalume.pot
 	Update vagalume.pot and all .po files
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* configure.ac
@@ -885,19 +885,19 @@
 
 	Update vagalume.spec
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* configure.ac
 	Create vagalume-cud.sh symlink using automake, not dh_link
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es_VE.po
 	* po/pt.po
 	Updated es_VE and pt translations
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* README
@@ -905,7 +905,7 @@
 	* vagalume.1
 	Update NEWS, TODO, README and manpage
 
-2008-05-14  Alberto Garcia <agarcia@igalia.com>
+2008-05-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.h
 	* src/vagalume-tray-icon.c
@@ -915,24 +915,24 @@
 	Remove redundant check in the tray icon, track->album can never be
 	NULL
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* po/gl.po
 	* src/mainwin.c
 	Updated Galician translation (by Amador Loureiro)
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/gl.po
 	Updated Galician translation (by Amador Loureiro)
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po
 	Updated German translation (by Oskar Welzl)
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* src/mainwin.c
@@ -941,7 +941,7 @@
 
 	Deleted extra space in translatable string "retrieving ..."
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/util.c (string_replace_gstr):
 	Don't call strlen() in each iteration, compute it just once
@@ -949,47 +949,47 @@
 	Don't rely on str->str being the same after an erase/insert, as it
 	might change if a realloc happens, leading to memory corruption
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/it.po
 	Updated Italian translation
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/gl.po
 	* po/it.po
 	* po/pt_BR.po
 	Updated gl, pt_BR and it translations
 
-2008-05-13  Alberto Garcia <agarcia@igalia.com>
+2008-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po
 	* po/es_VE.po
 	* po/pt_BR.po
 	Updated de, pt_BR and es_VE translations
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/vagalume-tray-icon.c
 	Destroy the tray icon on shutdown
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Fix leak in menu_enable_all_items()
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es_MX.po
 	Updated Spanish (Mexico) translation
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/fi.po
 	Updated Finnish translation
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po
 	* po/es_MX.po
@@ -1004,12 +1004,12 @@
 	Changed translators string and updated vagalume.pot and all
 	translation files
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/fi.po
 	Updated Finnish translation
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po
 	* po/es_MX.po
@@ -1022,12 +1022,12 @@
 	* po/vagalume.pot
 	Updated vagalume.pot and all translation files
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/fi.po
 	Update Finnish translation
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -1035,12 +1035,12 @@
 	* src/mainwin.c
 	Added Finnish translation (by Janne Mäkinen)
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/pt.po
 	Updated Portuguese translation
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po
 	* src/protocol.c
@@ -1048,7 +1048,7 @@
 
 	Use the current language code to set the radio station
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/imstatus.c
@@ -1057,22 +1057,22 @@
 	clients that have a saved status message, no matter if it's
 	currently active in the configuration or not.
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Tray icon: lock the call to get_pixbuf_from_image()
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/util.c
 	get_pixbuf_from_image(): removed redundant code
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/metadata.c
 	lastfm_get_track_cover_image(): Use the static mutex just once
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* build-package.sh
 	* debian/rules
@@ -1081,7 +1081,7 @@
 	Don't call autogen.sh from build-package.sh, debian/rules will do
 	it
 
-2008-05-12  Alberto Garcia <agarcia@igalia.com>
+2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/metadata.c
@@ -1093,12 +1093,12 @@
 	lastfm_get_track_cover_image(), which prevents the cover of the
 	same track from being downloaded twice.
 
-2008-05-11  Alberto Garcia <agarcia@igalia.com>
+2008-05-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	Updated NEWS file with the pt and pt_BR translations
 
-2008-05-11  Alberto Garcia <agarcia@igalia.com>
+2008-05-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -1106,7 +1106,7 @@
 	* src/mainwin.c
 	Added Portuguese translation (by Marcos Garcia)
 
-2008-05-11  Alberto Garcia <agarcia@igalia.com>
+2008-05-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -1114,18 +1114,18 @@
 	* src/mainwin.c
 	Added Portuguese (Brazil) translation (by Rodrigo Flores)
 
-2008-05-10  Alberto Garcia <agarcia@igalia.com>
+2008-05-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	controller_show_cover(): pass the whole track instead of
 	getcover_data
 
-2008-05-10  Alberto Garcia <agarcia@igalia.com>
+2008-05-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/util.c
 	Documented get_pixbuf_from_image()
 
-2008-05-10  Alberto Garcia <agarcia@igalia.com>
+2008-05-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -1135,103 +1135,103 @@
 	* src/vagalume-tray-icon.c
 	Refactored code using new function get_pixbuf_from_image()
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Clear the IM status only when stopping playing, not when skipping
 
 	Don't set the IM status until the audio has started
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	Better fix for the password problem
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	Fix a problem when trying to store empty passwords
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/rules
 	Fix debian/rules
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/rules
 	Create the configure script in debian/rules if it doesn't exist
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	* src/userconfig.h
 	No string in lastfm_usercfg can be NULL, so disable those checks
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	When disconnecting, don't destroy the playlist, just clear it
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Settings dialog: set the initial state of the OK button
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Settings dialog: disable the OK button if there's no user or
 	password
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Fix crash when Vagalume is started with no configuration file
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Add reference before returning the default cover icon
 
-2008-05-09  Tim Wegener <twegener@fastmail.fm>
+2008-05-09  Tim Wegener  <twegener@fastmail.fm>
 
 	* vagalume.spec
 	Updated vagalume.spec for 0.6
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Fix leak in the tray icon: unref the GdkPixbuf after setting the
 	notification
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Tray icon: get a ref to the GdkPixbuf
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Don't use an idle function to show notifications, just use the
 	existing thread
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es_VE.po
 	Updated Spanish (Venezuela) translation (by Oscar A. Mata T.)
 
-2008-05-09  Alberto Garcia <agarcia@igalia.com>
+2008-05-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Tray icon: download the album cover using a thread
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/it.po
 	Updated Italian translation (by Andrea Grandi)
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/de.po
 	* po/es_MX.po
@@ -1241,41 +1241,41 @@
 	* po/vagalume.pot
 	Update vagalume.pot and all .po files
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	Updated NEWS file for 0.6 release
 
-2008-05-08  Mario Sanchez Prada <msanchez@igalia.com>
+2008-05-08  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	If an album has no cover, set an empty icon in the notification popup
 
 	Change icon size from 40x40 to 48x48
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* debian/changelog
 	Change version number to 0.6
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/POTFILES.in
 	Added sbplugin and tray icon to POTFILES.in
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/uimisc.c
 	Marked a couple of strings as translatable
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	Fix sbplugin compilation
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* configure.ac
@@ -1285,7 +1285,7 @@
 
 	Don't create 26x26 and scalable directories on Gnome
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* configure.ac
@@ -1299,7 +1299,7 @@
 
 	Install 26x26 and scalable incons in Maemo
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* data/icons/vagalume.png
@@ -1310,12 +1310,12 @@
 	Remove the 26x26 png icon and update icon cache after
 	installing/removing
 
-2008-05-08  Alberto Garcia <agarcia@igalia.com>
+2008-05-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Modify help text so it fits better on the Internet Tablet screen
 
-2008-05-07  Alberto Garcia <agarcia@igalia.com>
+2008-05-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	* src/uimisc.c
@@ -1326,7 +1326,7 @@
 
 	Added a help button to the settings dialog
 
-2008-05-07  Alberto Garcia <agarcia@igalia.com>
+2008-05-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* contrib/vagalumectl
 	* src/audio.c
@@ -1334,30 +1334,30 @@
 
 	Fix detection of GST_MESSAGE_ASYNC_DONE
 
-2008-05-07  Alberto Garcia <agarcia@igalia.com>
+2008-05-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	Add dependency against librsvg2-common
 
-2008-05-07  Alberto Garcia <agarcia@igalia.com>
+2008-05-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/util.c
 	Shorter way of using GChecksum
 
-2008-05-07  Alberto Garcia <agarcia@igalia.com>
+2008-05-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/util.c
 	Add support for GChecksum to compute MD5 sums
 
-2008-05-06  Alberto Garcia <agarcia@igalia.com>
+2008-05-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* po/de.po
 	* src/mainwin.c
 	Updated German translation (by Oskar Welzl)
 
-2008-05-05  Alberto Garcia <agarcia@igalia.com>
+2008-05-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -1368,7 +1368,7 @@
 
 	Fixed Galician translation
 
-2008-05-05  Alberto Garcia <agarcia@igalia.com>
+2008-05-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -1383,7 +1383,7 @@
 
 	Update some labels in the tray icon menu.
 
-2008-05-05  Alberto Garcia <agarcia@igalia.com>
+2008-05-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	* src/protocol.c
@@ -1395,12 +1395,12 @@
 
 	Use string_replace_gstr() to modify the template of the IM status
 
-2008-05-05  Alberto Garcia <agarcia@igalia.com>
+2008-05-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/gl.po
 	Fixed and updated Galician translation
 
-2008-05-05  Alberto Garcia <agarcia@igalia.com>
+2008-05-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -1408,17 +1408,17 @@
 	* src/mainwin.c
 	Added Galician translation (by Ignacio Casal)
 
-2008-05-05  Alberto Garcia <agarcia@igalia.com>
+2008-05-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.spec
 	vagalume.spec: updated description
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-sb-plugin.c
 	Maemo sb plugin: use the Vagalume domain in gettext
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* AUTHORS
 	* configure.ac
@@ -1431,7 +1431,7 @@
 
 	Ignore GST_MESSAGE_ASYNC_DONE message
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	* src/imstatus.c
@@ -1446,17 +1446,17 @@
 
 	Tray icon: Protect the notify idle function with the gdk lock
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Display notifications using an idle function
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	Update IM status using idle functions rather than threads
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Save window position when minimizing
@@ -1464,23 +1464,23 @@
 	Move the code from mainwin_toggle_visibility() to
 	mainwin_show_window(), where it belongs ;)
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Use gtk_window_present() to show the main window
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Only try to close to systray if HAVE_TRAY_ICON is defined
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	Don't try to close mainwin to systray in Maemo
 
-2008-05-04  Mario Sanchez Prada <msanchez@igalia.com>
+2008-05-04  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* configure.ac
 	* src/controller.c
@@ -1490,7 +1490,7 @@
 	* src/userconfig.h
 	New setting to disable confirmation dialogs
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/audio.c
@@ -1498,19 +1498,19 @@
 	* src/main.c
 	Command line switches to change GStramer elements
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	Environment variable to change or disable the audioconvert GST
 	plugin
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Use mainwin_toggle_visibility() to show/hide the window in
 	mainwin_show_window()
 
-2008-05-04  Mario Sanchez Prada <msanchez@igalia.com>
+2008-05-04  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -1520,20 +1520,20 @@
 	* src/userconfig.h
 	New setting to close to systray
 
-2008-05-04  Alberto Garcia <agarcia@igalia.com>
+2008-05-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	* src/imstatus.h
 	Make IM status calls asynchronous
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
 	* src/uimisc.h
 	Refactored usercfg dialog
 
-2008-05-03  Mario Sanchez Prada <msanchez@igalia.com>
+2008-05-03  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* src/dbus.c
 	* src/vagalume-sb-plugin.c
@@ -1543,17 +1543,17 @@
 
 	Don't show the album description if there is no album
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* contrib/vagalumectl
 	vagalumectl: call dbus-send with --print-reply
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Minor cosmetic changes
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -1561,18 +1561,18 @@
 	New mainwin_get_window() function to access w->window from the
 	controller
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	Fix indentation and typos
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/dbus.c
 	Fix compilation error
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* contrib/vagalumectl
 	* src/controller.c
@@ -1583,55 +1583,55 @@
 
 	New options for vagalumectl to change the volume
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Disable tray icon support on Maemo
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Simplified show_notification()
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Fix memory leak in the tray icon
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
 	Remove is_iconified attribute from lastfm_mainwin. It's no longer
 	needed.
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Call iconify() before deiconify(). Fixes a problem with some
 	window managers.
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Display summary after configure
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Simplified configure.ac
 
-2008-05-03  Alberto Garcia <agarcia@igalia.com>
+2008-05-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Configure option to enable/disable tray icon support
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.1
 	Updated manpage
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* data/vagalume.desktop.in
@@ -1639,17 +1639,17 @@
 	Don't hardcode paths in .desktop and .service files, use values
 	from configure instead
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Untabify vagalume-tray-icon.c, remove unused variables
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-tray-icon.c
 	Don't mark icon names as translatable in the tray icon
 
-2008-05-02  Mario Sanchez Prada <msanchez@igalia.com>
+2008-05-02  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* AUTHORS
 	* configure.ac
@@ -1665,7 +1665,7 @@
 	* src/vagalume-tray-icon.h
 	Freedesktop tray icon and libnotify support
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -1673,7 +1673,7 @@
 	* src/mainwin.c
 	Added German translation (by Stephan Reichholf)
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* TRANSLATORS
 	* configure.ac
@@ -1681,17 +1681,17 @@
 	* src/mainwin.c
 	Added Spanish (Venelueza) translation (by Oscar A. Mata T.)
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/it.po
 	Updated Italian translation
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Add missing call to gettext()
 
-2008-05-02  Alberto Garcia <agarcia@igalia.com>
+2008-05-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* TRANSLATORS
@@ -1701,7 +1701,7 @@
 	* src/mainwin.c
 	Added Italian translation (by Andrea Grandi)
 
-2008-05-02  Alejandro Pinheiro <apinheiro@igalia.com>
+2008-05-02  Alejandro Pinheiro  <apinheiro@igalia.com>
 
 	* AUTHORS
 	* Makefile.am
@@ -1719,35 +1719,35 @@
 	* src/uimisc.c
 	Gettext support
 
-2008-04-28  Alberto Garcia <agarcia@igalia.com>
+2008-04-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-sb-plugin.c
 	Fix for the Maemo SB plugin
 
-2008-04-28  Alberto Garcia <agarcia@igalia.com>
+2008-04-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	Added gstreamer0.10-plugins-base to the dependencies, and
 	gstreamer0.10-fluendo-mp3 as an alternative to
 	gstreamer0.10-plugins-ugly
 
-2008-04-25  Alberto Garcia <agarcia@igalia.com>
+2008-04-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vagalume-sb-plugin.c
 	* src/vagalume-sb-plugin.h
 	Minor improvements in the Maemo statusbar plugin
 
-2008-04-25  Alberto Garcia <agarcia@igalia.com>
+2008-04-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	When destroying the session, clear also the playlist
 
-2008-04-25  Alberto Garcia <agarcia@igalia.com>
+2008-04-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Maemo: load the cover image once the window is topmost
 
-2008-04-25  Alberto Garcia <agarcia@igalia.com>
+2008-04-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
@@ -1755,27 +1755,27 @@
 
 	Enable/disable menu entries instead of whole menus
 
-2008-04-24  Alberto Garcia <agarcia@igalia.com>
+2008-04-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Increase the HTTP timeout, and set a timeout in all HTTP calls
 
-2008-04-24  Alberto Garcia <agarcia@igalia.com>
+2008-04-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	Save the original status message in Gossip
 
-2008-04-24  Alberto Garcia <agarcia@igalia.com>
+2008-04-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	Save the original status message in Gajim
 
-2008-04-24  Alberto Garcia <agarcia@igalia.com>
+2008-04-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	Save the original status message in Telepathy
 
-2008-04-24  Alberto Garcia <agarcia@igalia.com>
+2008-04-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* src/controller.c
@@ -1784,14 +1784,14 @@
 	* src/mainwin.c
 	Don't show confirmation dialogs on DBUS callbacks
 
-2008-04-24  Mario Sanchez Prada <msanchez@igalia.com>
+2008-04-24  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* Makefile.am
 	* contrib
 	* contrib/vagalumectl
 	New vagalumectl script to control vagalume from the command line
 
-2008-04-24  Xabier Rodriguez Calvar <xrcalvar@igalia.com>
+2008-04-24  Xabier Rodriguez Calvar  <xrcalvar@igalia.com>
 
 	* AUTHORS
 	* Makefile.am
@@ -1802,23 +1802,23 @@
 	* src/userconfig.c
 	Add support for osso-backup, cud and rfs (Maemo only)
 
-2008-04-24  Alberto Garcia <agarcia@igalia.com>
+2008-04-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	Updated TODO
 
-2008-04-24  Alberto Garcia <agarcia@igalia.com>
+2008-04-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Maemo: update win->is_hidden when the "is-topmost" property is
 	modified
 
-2008-04-22  Alberto Garcia <agarcia@igalia.com>
+2008-04-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	imstatus: refactored code, fixed memory leak and added checks
 
-2008-04-20  Alberto Garcia <agarcia@igalia.com>
+2008-04-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* src/imstatus.c
@@ -1827,13 +1827,13 @@
 	Save the original Pidgin status message and restore it when
 	finished
 
-2008-04-20  Alberto Garcia <agarcia@igalia.com>
+2008-04-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* src/uimisc.c
 	Disable the autocap mode in the password entry
 
-2008-04-20  Alberto Garcia <agarcia@igalia.com>
+2008-04-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -1842,12 +1842,12 @@
 	* src/mainwin.c
 	New DBUS methods to increase and decrease the volume
 
-2008-04-16  Alberto Garcia <agarcia@igalia.com>
+2008-04-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	TODO updated
 
-2008-04-02  Tim Wegener <twegener@fastmail.fm>
+2008-04-02  Tim Wegener  <twegener@fastmail.fm>
 
 	* src/imstatus.c
 	* src/uimisc.c
@@ -1855,12 +1855,12 @@
 	* src/userconfig.h
 	New setting to change the template of the IM status message
 
-2008-03-25  Alberto Garcia <agarcia@igalia.com>
+2008-03-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	Updated TODO file
 
-2008-03-07  Alberto Garcia <agarcia@igalia.com>
+2008-03-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c
 	* src/imstatus.h
@@ -1872,14 +1872,14 @@
 
 	check_result() renamed to error_happened()
 
-2008-03-07  Alberto Garcia <agarcia@igalia.com>
+2008-03-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/imstatus.c
 	* src/imstatus.h
 	Don't store config settings in imstatus.c
 
-2008-03-06  Alberto Garcia <agarcia@igalia.com>
+2008-03-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	* src/controller.c
@@ -1887,7 +1887,7 @@
 	* src/imstatus.h
 	Moved all imstatus code to a single file
 
-2008-03-06  Alberto Garcia <agarcia@igalia.com>
+2008-03-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/controller.c
@@ -1898,7 +1898,7 @@
 	* src/userconfig.c
 	Replaced all g_new() with g_slice_new()
 
-2008-03-06  Alberto Garcia <agarcia@igalia.com>
+2008-03-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/playlist.c
@@ -1908,20 +1908,20 @@
 	* src/uimisc.h
 	Use a reference counter to avoid copying lastfm_track objects
 
-2008-03-06  Alberto Garcia <agarcia@igalia.com>
+2008-03-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Use GString instead of char * to display track info in the main
 	window
 
-2008-03-05  Alberto Garcia <agarcia@igalia.com>
+2008-03-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* README
 	* src/mainwin.c
 	* vagalume.spec
 	Updated home page
 
-2008-03-05  Tim Wegener <twegener@fastmail.fm>
+2008-03-05  Tim Wegener  <twegener@fastmail.fm>
 
 	* AUTHORS
 	* configure.ac
@@ -1944,39 +1944,39 @@
 	New feature to set the status of IM clients displaying the current
 	song
 
-2008-02-27  Alberto Garcia <agarcia@igalia.com>
+2008-02-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	Updated TODO
 
-2008-02-27  Xabier Rodriguez Calvar <xrcalvar@igalia.com>
+2008-02-27  Xabier Rodriguez Calvar  <xrcalvar@igalia.com>
 
 	* AUTHORS
 	* src/dbus.c
 	Disconnect Vagalume when the machine is being shut down
 
-2008-02-26  Alberto Garcia <agarcia@igalia.com>
+2008-02-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/changelog
 	First official Debian release of Vagalume. Updated changelog
 
-2008-02-21  Alberto Garcia <agarcia@igalia.com>
+2008-02-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* README
 	* debian/copyright
 	Updated README and copyright files
 
-2008-02-21  Alberto Garcia <agarcia@igalia.com>
+2008-02-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/copyright
 	Fixed typo
 
-2008-02-21  Alberto Garcia <agarcia@igalia.com>
+2008-02-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/copyright
 	Included copyright of MD5 implementation in debian/copyright
 
-2008-02-21  Alberto Garcia <agarcia@igalia.com>
+2008-02-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* data/vagalume.desktop
 	* debian/rules
@@ -1987,13 +1987,13 @@
 
 	Remove unnecesary "Encoding" entry in .desktop file
 
-2008-02-19  Alberto Garcia <agarcia@igalia.com>
+2008-02-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	* debian/control.maemo
 	Update standards-version
 
-2008-02-19  Alberto Garcia <agarcia@igalia.com>
+2008-02-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* data/icons/vagalume.xpm
@@ -2003,12 +2003,12 @@
 	* debian/rules
 	Fix more lintian warnings, add icon in .xpm format
 
-2008-02-19  Alberto Garcia <agarcia@igalia.com>
+2008-02-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/rules
 	Fix debian-rules-ignores-make-clean-error lintian error
 
-2008-02-19  Alberto Garcia <agarcia@igalia.com>
+2008-02-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/changelog
 	* debian/control
@@ -2020,18 +2020,18 @@
 
 	Don't include the GPL in the Debian package
 
-2008-02-19  Alberto Garcia <agarcia@igalia.com>
+2008-02-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/copyright
 	Updated Debian copyright file
 
-2008-02-19  Alberto Garcia <agarcia@igalia.com>
+2008-02-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	* debian/control.maemo
 	Full name in debian/control
 
-2008-02-19  Alberto Garcia <agarcia@igalia.com>
+2008-02-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* autogen.sh
 	* debian/control
@@ -2039,17 +2039,17 @@
 
 	Update debian/control for Debian lenny
 
-2008-02-18  Alberto Garcia <agarcia@igalia.com>
+2008-02-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	Don't install the man page in Maemo
 
-2008-02-17  Alberto Garcia <agarcia@igalia.com>
+2008-02-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.spec
 	Added manpage to vagalume.spec
 
-2008-02-16  Alberto Garcia <agarcia@igalia.com>
+2008-02-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	* debian/control.maemo
@@ -2060,11 +2060,11 @@
 
 	Add reference to /usr/share/common-licenses/GPL-3
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.5.1 ===
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* NEWS
@@ -2074,18 +2074,18 @@
 
 	Fixed a compilation warning
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/rules
 	Cleaning up a bit debian/rules
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	More verbose info note if there's a problem setting a Last.fm
 	radio
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* AUTHORS
 	* INSTALL
@@ -2095,7 +2095,7 @@
 	* debian/control.maemo
 	Updated description, control files, README, etc
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* README
@@ -2140,43 +2140,43 @@
 	* src/xmlrpc.h
 	Updated README and copyrights
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.spec
 	Update version number in vagalume.spec file as well
 
-2008-02-15  Alberto Garcia <agarcia@igalia.com>
+2008-02-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* debian/changelog
 	Update version number to 0.5.1
 
-2008-02-13  Alberto Garcia <agarcia@igalia.com>
+2008-02-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	A better method to detect if compiling for Maemo
 
-2008-02-13  Alberto Garcia <agarcia@igalia.com>
+2008-02-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Use sb-conf instead of libosso to detect if compiling for Maemo
 
-2008-02-11  Alberto Garcia <agarcia@igalia.com>
+2008-02-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	Don't add version information to the plugin
 
-2008-02-11  Alberto Garcia <agarcia@igalia.com>
+2008-02-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.spec
 	Updated vagalume.spec to reflect icon changes
 
-2008-02-11  Alberto Garcia <agarcia@igalia.com>
+2008-02-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Added tooltips to all buttons
 
-2008-02-11  Alberto Garcia <agarcia@igalia.com>
+2008-02-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* README
@@ -2206,54 +2206,54 @@
 	* src/mainwin.c
 	Replace custom buttons with GTK+ themeable icons
 
-2008-02-10  Alberto Garcia <agarcia@igalia.com>
+2008-02-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	Add the 'audioconvert' GstElement to the pipeline. Solves the
 	"Internal data flow error" with some sinks (thanks, Robert-André
 	Mauchin!)
 
-2008-02-08  Alberto Garcia <agarcia@igalia.com>
+2008-02-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Don't show the MD5 password in log output
 
-2008-02-08  Alberto Garcia <agarcia@igalia.com>
+2008-02-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	Use a list of default audio decoders and sinks instead of using
 	just one
 
-2008-02-07  Alberto Garcia <agarcia@igalia.com>
+2008-02-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	Updated TODO
 
-2008-02-01  Alberto Garcia <agarcia@igalia.com>
+2008-02-01  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.5 ===
 
-2008-02-01  Alberto Garcia <agarcia@igalia.com>
+2008-02-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	Updated TODO file
 
-2008-02-01  Alberto Garcia <agarcia@igalia.com>
+2008-02-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/dlwin.c
 	Small hack to make the download window less ugly on Maemo
 
-2008-02-01  Alberto Garcia <agarcia@igalia.com>
+2008-02-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* THANKS
 	Updated THANKS file
 
-2008-02-01  Alberto Garcia <agarcia@igalia.com>
+2008-02-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Changed order of buttons
 
-2008-02-01  Alberto Garcia <agarcia@igalia.com>
+2008-02-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* AUTHORS
 	* NEWS
@@ -2262,7 +2262,7 @@
 	* debian/copyright
 	Update version number, NEWS, etc., for the 0.5 release
 
-2008-02-01  Tim Wegener <twegener@fastmail.fm>
+2008-02-01  Tim Wegener  <twegener@fastmail.fm>
 
 	* src/controller.c
 	* src/controller.h
@@ -2270,23 +2270,23 @@
 	* src/mainwin.h
 	New "Stop after this track" menu entry
 
-2008-01-31  Tim Wegener <twegener@fastmail.fm>
+2008-01-31  Tim Wegener  <twegener@fastmail.fm>
 
 	* src/audio.c
 	New VAGALUME_GST_DECODER environment variable to select an
 	alternate GStreamer decoder to use
 
-2008-01-31  Alberto Garcia <agarcia@igalia.com>
+2008-01-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.spec
 	More fixes for vagalume.spec
 
-2008-01-31  Alberto Garcia <agarcia@igalia.com>
+2008-01-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* vagalume.spec
 	Add libxml dependencies to vagalume.spec
 
-2008-01-31  Alberto Garcia <agarcia@igalia.com>
+2008-01-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* INSTALL
 	* THANKS
@@ -2294,7 +2294,7 @@
 	vagalume.spec file for rpm-based distros, contributed by Tim
 	Wegener
 
-2008-01-31  Alberto Garcia <agarcia@igalia.com>
+2008-01-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* data/buttons/gnome/addplist.png
 	* data/buttons/gnome/addplist_pressed.png
@@ -2302,7 +2302,7 @@
 	* data/buttons/maemo/addplist_pressed.png
 	New "Add to playlist" buttons, by Felipe Erias
 
-2008-01-30  Mario Sanchez Prada <msanchez@igalia.com>
+2008-01-30  Mario Sanchez Prada  <msanchez@igalia.com>
 
 	* AUTHORS
 	* Makefile.am
@@ -2323,17 +2323,17 @@
 
 	Updated copyrights, etc
 
-2008-01-28  Alberto Garcia <agarcia@igalia.com>
+2008-01-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Minor UI updates
 
-2008-01-28  Alberto Garcia <agarcia@igalia.com>
+2008-01-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	Updated MAINTAINERCLEANFILES in Makefile.am
 
-2008-01-28  Alberto Garcia <agarcia@igalia.com>
+2008-01-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* data/buttons/gnome/addplist.png
 	* data/buttons/gnome/addplist_pressed.png
@@ -2349,14 +2349,14 @@
 	* data/buttons/gnome/tag_pressed.png
 	Better icons for the Gnome version
 
-2008-01-27  Alberto Garcia <agarcia@igalia.com>
+2008-01-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/dlwin.c
 	* src/globaldefs.h
 	* src/mainwin.c
 	Download window: set border with, app icon and window title
 
-2008-01-27  Alberto Garcia <agarcia@igalia.com>
+2008-01-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	* src/controller.c
@@ -2373,20 +2373,20 @@
 	New download window to view the progress of downloads and/or
 	cancel them
 
-2008-01-27  Alberto Garcia <agarcia@igalia.com>
+2008-01-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/http.c
 	* src/http.h
 	Added a progress callback to http_download_file()
 
-2008-01-24  Alberto Garcia <agarcia@igalia.com>
+2008-01-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	If the user moves the pointer off the button before releasing the
 	mouse button, don't emit a "clicked" event.
 
-2008-01-22  Alberto Garcia <agarcia@igalia.com>
+2008-01-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* configure.ac
@@ -2434,26 +2434,26 @@
 	* src/mainwin.h
 	New buttons and UI improvements by Felipe Erias
 
-2008-01-17  Alberto Garcia <agarcia@igalia.com>
+2008-01-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Don't use lastfm_audio_get_running_time() when scrobbling a track
 
-2008-01-16  Alberto Garcia <agarcia@igalia.com>
+2008-01-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/audio.h
 	* src/controller.c
 	Check whether lastfm_audio_get_running_time() returns an error
 
-2008-01-16  Alberto Garcia <agarcia@igalia.com>
+2008-01-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	When scrobbling a track, don't calculate the running time using
 	lastfm_audio_get_running_time(). It might be 0 at the end of the
 	file.
 
-2008-01-10  Alberto Garcia <agarcia@igalia.com>
+2008-01-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/uimisc.c
@@ -2462,12 +2462,12 @@
 
 	Fix wrong initialization of origcfg in the settings dialog
 
-2008-01-08  Alberto Garcia <agarcia@igalia.com>
+2008-01-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	Updated TODO
 
-2007-12-21  Alberto Garcia <agarcia@igalia.com>
+2007-12-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/uimisc.c
@@ -2478,7 +2478,7 @@
 	Create button for choosing download dir using
 	compat_gtk_button_new()
 
-2007-12-21  Alberto Garcia <agarcia@igalia.com>
+2007-12-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/uimisc.c
@@ -2490,24 +2490,24 @@
 
 	Use the Hildon file chooser dialog in Maemo instead of the Gtk one
 
-2007-12-21  Alberto Garcia <agarcia@igalia.com>
+2007-12-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
 	When setting a status msg in the progress bar, store the current
 	text for later
 
-2007-12-19  Alberto Garcia <agarcia@igalia.com>
+2007-12-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* data/vagalume.desktop
 	Fix translation string for lastfm:// play handler
 
-2007-12-19  Alberto Garcia <agarcia@igalia.com>
+2007-12-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Updated the 'Download this track?' confirmation message
 
-2007-12-19  Alberto Garcia <agarcia@igalia.com>
+2007-12-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	* src/userconfig.c
@@ -2518,7 +2518,7 @@
 
 	New download dir selector in the settings dialog
 
-2007-12-19  Alberto Garcia <agarcia@igalia.com>
+2007-12-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -2526,30 +2526,30 @@
 	* src/uimisc.c
 	Gnome only: show info banners in the progress bar
 
-2007-12-18  Alberto Garcia <agarcia@igalia.com>
+2007-12-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
 	Store the progressbar widget as a GtkProgressBar and not as a
 	GtkWidget
 
-2007-12-18  Alberto Garcia <agarcia@igalia.com>
+2007-12-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Keyboard shortcuts for love, ban, recommend, tag and add to
 	playlist
 
-2007-12-15  Alberto Garcia <agarcia@igalia.com>
+2007-12-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* AUTHORS
 	* THANKS
 	Convert files to UTF-8
 
-2007-12-14  Alberto Garcia <agarcia@igalia.com>
+2007-12-14  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.4 ===
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* README
@@ -2559,12 +2559,12 @@
 
 	Add Audio category to .desktop file
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Pressing enter in all dialogs activates the OK button
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -2572,12 +2572,12 @@
 	* src/userconfig.h
 	New config setting to enable/disable HTTP proxy
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Use a GtkNotebook in the settings dialog
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* build-package.sh
 	* src/audio.c
@@ -2585,7 +2585,7 @@
 
 	Use set -e instead of set -x in build-package.sh
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	* debian/control.maemo
@@ -2593,12 +2593,12 @@
 
 	Replace Vagalume icon in debian/control.maemo
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Apply proxy settings at startup
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* data/icons/48x48/vagalume.png
 	* data/icons/vagalume.png
@@ -2607,7 +2607,7 @@
 
 	New Vagalume icon by Felipe
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* AUTHORS
 	* Makefile.am
@@ -2621,12 +2621,12 @@
 
 	Remove unused EXTRA_DIST variable from Makefile.am
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	New layout for the tag window using a table instead
 
-2007-12-13  Alberto Garcia <agarcia@igalia.com>
+2007-12-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -2635,12 +2635,12 @@
 
 	Replace "Tag set correctly" banner with "Tags set correctly"
 
-2007-12-12  Alberto Garcia <agarcia@igalia.com>
+2007-12-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Set the width of the combos in pixels rather than chars
 
-2007-12-12  Alberto Garcia <agarcia@igalia.com>
+2007-12-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Tag window: set a maximum width in combo boxes to prevent them
@@ -2651,33 +2651,33 @@
 
 	Tag window: Don't make labels insensitive if their combos are empty
 
-2007-12-11  Alberto Garcia <agarcia@igalia.com>
+2007-12-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	Cosmetic changes in configure.ac
 
-2007-12-11  Alberto Garcia <agarcia@igalia.com>
+2007-12-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	When tagging and recommending, remember the value of the
 	artist/track/album combo
 
-2007-12-11  Alberto Garcia <agarcia@igalia.com>
+2007-12-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Added check for fdopen()
 
-2007-12-11  Alberto Garcia <agarcia@igalia.com>
+2007-12-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* build-package.sh
 	build-package.sh: restore original control file after compiling
 
-2007-12-11  Alberto Garcia <agarcia@igalia.com>
+2007-12-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/connection.c
 	Fix typo
 
-2007-12-11  Xabier Rodriguez Calculate <xrcalvar@igalia.com>
+2007-12-11  Xabier Rodriguez Calvar  <xrcalvar@igalia.com>
 
 	* TODO
 	* configure.ac
@@ -2687,25 +2687,25 @@
 	* src/controller.c
 	ConIc support
 
-2007-12-11  Alberto Garcia <agarcia@igalia.com>
+2007-12-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
 	New function controller_disconnect()
 
-2007-12-10  Alberto Garcia <agarcia@igalia.com>
+2007-12-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Better handling of tag combos
 
 	Tagging combos: display a '(none)' message if there are no tags
 
-2007-12-10  Alberto Garcia <agarcia@igalia.com>
+2007-12-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Disable the User Tags combo if the user hasn't set any tags yet
 
-2007-12-08  Alberto Garcia <agarcia@igalia.com>
+2007-12-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -2713,7 +2713,7 @@
 	Return a boolean in tagwin_run() to make it work like
 	recommwin_run()
 
-2007-12-08  Alberto Garcia <agarcia@igalia.com>
+2007-12-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -2730,25 +2730,25 @@
 	artist_track_album_selection_combo now returns a GtkComboBox
 	instead of a GtkWidget
 
-2007-12-08  Alberto Garcia <agarcia@igalia.com>
+2007-12-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	* src/uimisc.h
 	Replaced some GList * with const GList *
 
-2007-12-08  Alberto Garcia <agarcia@igalia.com>
+2007-12-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/xmlrpc.c
 	Use "set" rather than "append" when setting tags. With this, the
 	user can remove previous tags
 
-2007-12-08  Alberto Garcia <agarcia@igalia.com>
+2007-12-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	* debian/control.maemo
 	Corrected the description in debian/control
 
-2007-12-07  Alberto Garcia <agarcia@igalia.com>
+2007-12-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -2760,7 +2760,7 @@
 
 	New util function str_glist_join()
 
-2007-12-07  Alberto Garcia <agarcia@igalia.com>
+2007-12-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -2771,14 +2771,14 @@
 
 	Make tagwin_* functions static
 
-2007-12-07  Alberto Garcia <agarcia@igalia.com>
+2007-12-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	* src/uimisc.h
 	Tagging window: fill the 'popular tags' combo for the selected
 	artist, track or album
 
-2007-12-06  Alberto Garcia <agarcia@igalia.com>
+2007-12-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/controller.c
@@ -2786,41 +2786,41 @@
 	* src/mainwin.h
 	Code reorganization
 
-2007-12-06  Alberto Garcia <agarcia@igalia.com>
+2007-12-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	unref the GMainLoop in lastfm_audio_clear()
 
-2007-12-06  Alberto Garcia <agarcia@igalia.com>
+2007-12-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
 	Fixed small leak, free all memory when exiting
 
-2007-12-06  Alberto Garcia <agarcia@igalia.com>
+2007-12-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Fix memory leaks
 
-2007-12-06  Alberto Garcia <agarcia@igalia.com>
+2007-12-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Use a combo box instead of radio buttons to select what to tag in
 	the tagging dialog
 
-2007-12-05  Alberto Garcia <agarcia@igalia.com>
+2007-12-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	check_session(): use two different callbacks for success and
 	failure
 
-2007-12-05  Alberto Garcia <agarcia@igalia.com>
+2007-12-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	check_session() is now an asynchronous function that receives a
 	callback.
 
-2007-12-04  Alberto Garcia <agarcia@igalia.com>
+2007-12-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -2837,12 +2837,12 @@
 	When tagging and recommending, store a copy of the nowplaying
 	track before asking the user
 
-2007-12-01  Alberto Garcia <agarcia@igalia.com>
+2007-12-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/metadata.c
 	Fix memory leak when obtaining tag names
 
-2007-12-01  Alberto Garcia <agarcia@igalia.com>
+2007-12-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	* src/controller.c
@@ -2853,7 +2853,7 @@
 	Moved all functions to get friends and tags to the new file
 	metadata.c
 
-2007-12-01  Alberto Garcia <agarcia@igalia.com>
+2007-12-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.h
 	* src/protocol.c
@@ -2863,30 +2863,30 @@
 
 	Refactored lastfm_get_*_tags() functions
 
-2007-12-01  Alberto Garcia <agarcia@igalia.com>
+2007-12-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
 	* src/protocol.h
 	New functions to obtain tags from an artist, album or track
 
-2007-12-01  Alberto Garcia <agarcia@igalia.com>
+2007-12-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
 	Dim tag/recommend album menu entries if the track has no album
 
-2007-12-01  Alberto Garcia <agarcia@igalia.com>
+2007-12-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Read the list of tags using the XML document instead of the .txt
 
-2007-11-30  Alberto Garcia <agarcia@igalia.com>
+2007-11-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Use glib to set and unset environment variables
 
-2007-11-29  Alberto Garcia <agarcia@igalia.com>
+2007-11-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
@@ -2894,12 +2894,12 @@
 	Get user's list of tags and display it in both "Play music
 	tagged..." dialogs using a combo box
 
-2007-11-28  Alberto Garcia <agarcia@igalia.com>
+2007-11-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Fixed bug setting rsp session
 
-2007-11-28  Alberto Garcia <agarcia@igalia.com>
+2007-11-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	If an error happens obtaining the RSP session or getting the
@@ -2907,19 +2907,19 @@
 
 	list, retry each minute until everything is OK
 
-2007-11-28  Alberto Garcia <agarcia@igalia.com>
+2007-11-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	After changing user settings in the settings dialog, delete the
 	previous RSP session and friend list if necessary
 
-2007-11-28  Alberto Garcia <agarcia@igalia.com>
+2007-11-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	If not compiling for Maemo 2, use gtk_button_new() instead of
 	gtk_button_new_with_label()
 
-2007-11-28  Alberto Garcia <agarcia@igalia.com>
+2007-11-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/Makefile.am
@@ -2929,7 +2929,7 @@
 	* src/util.c
 	Add support to use libgcrypt instead of internal MD5 functions
 
-2007-11-27  Alberto Garcia <agarcia@igalia.com>
+2007-11-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -2937,7 +2937,7 @@
 	Disable the love button and menu entry after setting a track as
 	loved
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* configure.ac
@@ -2954,13 +2954,13 @@
 	* src/mainwin.c
 	Changes in configure scripts
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Allow calls to controller_show_cover() while no track is being
 	played
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -2968,7 +2968,7 @@
 	* src/mainwin.h
 	Only download and show the album cover if the window is not hidden
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -2976,7 +2976,7 @@
 	* src/uimisc.c
 	Removed unused headers and other compilation fixes
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -2984,13 +2984,13 @@
 	* src/mainwin.h
 	Remove all Gtk code from the controller
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	Use mainwin_show_window() to show the main window at the beginning
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/dbus.c
@@ -3000,12 +3000,12 @@
 
 	When showing the main window, raise it too.
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Fixed typo
 
-2007-11-25  Alberto Garcia <agarcia@igalia.com>
+2007-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* configure.ac
@@ -3044,31 +3044,31 @@
 	D-BUS handlers for play, stop, skip, love, ban, show/hide window
 	and close app.
 
-2007-11-23  Alberto Garcia <agarcia@igalia.com>
+2007-11-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Scrobble track before stopping audio, to get the actual running
 	time
 
-2007-11-23  Alberto Garcia <agarcia@igalia.com>
+2007-11-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/globaldefs.h
 	* src/protocol.c
 	* src/scrobbler.c
 	Now Vagalume has an official Last.fm ID for scrobbling
 
-2007-11-22  Alberto Garcia <agarcia@igalia.com>
+2007-11-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/audio.h
 	* src/controller.c
 	Ask gstreamer the current running time instead of calculating it
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.3a ===
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* configure.ac
@@ -3077,49 +3077,49 @@
 	Create buttons with gtk_button_new_with_label(). This fixes a bug
 	in Gtk from Maemo 2 that made the buttons appear with no images.
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Use the big logo for the about dialog
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.3 ===
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/changelog
 	Fix e-mail address in debian changelog
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Check in http_copy_buffer()
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* data/pixmaps/love.png
 	New love button
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* data/pixmaps/vagalume_48x48.png
 	* src/mainwin.c
 	Show a 48x48 icon in the About dialog
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Get album cover after playback has started
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Add logo to the about dialog
 
 	Add new 'artists' section to the about dialog
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* README
@@ -3128,7 +3128,7 @@
 	* debian/changelog
 	Updating README, etc, for the 0.3 release
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -3149,7 +3149,7 @@
 
 	Add confirmation dialog to download tracks.
 
-2007-11-21  Alberto Garcia <agarcia@igalia.com>
+2007-11-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* AUTHORS
 	* Makefile.am
@@ -3173,33 +3173,33 @@
 
 	Simplified Makefile.am
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	controller_start_playing() is now asynchronous, so don't call
 	flush_ui_events().
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Don't set the cover image if there's no mainwin
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Set ellipsize style in gtk labels
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Avoid using gtk_image_clear (for backwards compatibility)
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Reorganized the UI a bit
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -3209,24 +3209,24 @@
 
 	Surround the cover image with a square
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Set format for the labels in the main window
 
-2007-11-20  Alberto Garcia <agarcia@igalia.com>
+2007-11-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	* src/mainwin.h
 	Show the album cover in the main window
 
-2007-11-19  Alberto Garcia <agarcia@igalia.com>
+2007-11-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	Add terminator to g_strconcat()
 
-2007-11-19  Alberto Garcia <agarcia@igalia.com>
+2007-11-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/rules
 	* maemo/vagalume.desktop
@@ -3234,13 +3234,13 @@
 	* src/globaldefs.h
 	Open lastfm:// uris from the browser
 
-2007-11-19  Alberto Garcia <agarcia@igalia.com>
+2007-11-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
 	Minor fixes
 
-2007-11-18  Alberto Garcia <agarcia@igalia.com>
+2007-11-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
@@ -3248,13 +3248,13 @@
 	lastfm_get_friends() now differentiaties between an user with no
 	friends and an unsuccessful request
 
-2007-11-18  Alberto Garcia <agarcia@igalia.com>
+2007-11-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	* src/http.h
 	http_get_buffer() and http_post_buffer() now return a boolean
 
-2007-11-18  Alberto Garcia <agarcia@igalia.com>
+2007-11-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/controller.c
@@ -3266,18 +3266,18 @@
 
 	Compilation fixes.
 
-2007-11-17  Alberto Garcia <agarcia@igalia.com>
+2007-11-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/Makefile.am
 	Minor changes in configure scripts
 
-2007-11-17  Alberto Garcia <agarcia@igalia.com>
+2007-11-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Protect info banners with gdk_threads_*()
 
-2007-11-17  Alberto Garcia <agarcia@igalia.com>
+2007-11-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3300,12 +3300,12 @@
 
 	New "download_dir" setting (fixed value by now).
 
-2007-11-16  Alberto Garcia <agarcia@igalia.com>
+2007-11-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Print a warning if http_get_to_fd() fails
 
-2007-11-15  Alberto Garcia <agarcia@igalia.com>
+2007-11-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/mainwin.c
@@ -3313,35 +3313,35 @@
 
 	When stopping audio, stop gstreamer before closing the pipe
 
-2007-11-15  Alberto Garcia <agarcia@igalia.com>
+2007-11-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	When playing audio, wait for the previous thread before anything
 	else
 
-2007-11-14  Alberto Garcia <agarcia@igalia.com>
+2007-11-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Fix assertion
 
-2007-11-14  Alberto Garcia <agarcia@igalia.com>
+2007-11-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	Don't wait for the HTTP thread whenever stopping playback, it's
 	enough to do it only before creating a new thread.
 
-2007-11-14  Alberto Garcia <agarcia@igalia.com>
+2007-11-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	If the HTTP request finishes before playback has started, treat it
 	as a connection error
 
-2007-11-14  Alberto Garcia <agarcia@igalia.com>
+2007-11-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Abort stalled transfers
 
-2007-11-14  Alberto Garcia <agarcia@igalia.com>
+2007-11-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* README
 	* src/audio.c
@@ -3358,13 +3358,13 @@
 
 	Include e-mail address and homepage in README file
 
-2007-11-13  Alberto Garcia <agarcia@igalia.com>
+2007-11-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	When updating the counter on the progress bar use a static buffer
 	instead of allocating and freeing memory each time
 
-2007-11-13  Alberto Garcia <agarcia@igalia.com>
+2007-11-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* src/audio.c
@@ -3379,7 +3379,7 @@
 	Proper support for lastfm://play/ URLs: now lastfm_audio_play()
 	accepts a session ID to set the cookie needed to play those tracks
 
-2007-11-13  Alberto Garcia <agarcia@igalia.com>
+2007-11-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* debian/control
@@ -3396,7 +3396,7 @@
 	The controller now waits for gstreamer to confirm that playback
 	has begun, so the progressbar is more accurate.
 
-2007-11-12  Alberto Garcia <agarcia@igalia.com>
+2007-11-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.h
 	* src/protocol.c
@@ -3406,31 +3406,31 @@
 	New attribute custom_pls to tell if a track is from a custom
 	(lastfm://play/) playlist. It'll be needed in the future
 
-2007-11-12  Alberto Garcia <agarcia@igalia.com>
+2007-11-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Code refactoring
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* configure.ac
 	* src/http.c
 	Updated TODO, minor changes
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Put the name of the track in the main window's title
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
 	* src/mainwin.c
 	New option to play a group member's radio
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/playlist.c
@@ -3438,13 +3438,13 @@
 	* src/protocol.c
 	Store the title of the playlist in each track, not in lastfm_pls
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.c
 	* src/playlist.h
 	Use a GQueue instead of a GSList to store tracks in the playlist
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.c
 	* src/playlist.h
@@ -3452,13 +3452,13 @@
 	If a track can be downloaded for free, add its url to the
 	lastfm_track
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* TODO
 	* debian/docs
 	TODO file
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3466,12 +3466,12 @@
 	* src/uimisc.h
 	A bit of code reorganization
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Documented some functions
 
-2007-11-11  Alberto Garcia <agarcia@igalia.com>
+2007-11-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	* src/protocol.h
@@ -3479,21 +3479,21 @@
 	* src/radio.h
 	Add code to request 'custom' playlists (lastfm://play/...)
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.2 ===
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	Start with a default volume level of 80 instead of 50
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Added missing includes
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* configure.ac
@@ -3501,33 +3501,33 @@
 	* maemo/vagalume.desktop
 	Updated NEWS, changelog, etc., for vagalume 0.2
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	Workaround for a problem with the volume setting of the dspmp3sink
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* build-package.sh
 	Run autogen.sh if necessary
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Added '...' to Others' radios menu entries
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	Changes in some strings
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Menu reorganization
 
-2007-11-08  Alberto Garcia <agarcia@igalia.com>
+2007-11-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/audio.h
@@ -3536,7 +3536,7 @@
 
 	Display a banner when the user changes the volume
 
-2007-11-07  Alberto Garcia <agarcia@igalia.com>
+2007-11-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/audio.c
@@ -3544,19 +3544,19 @@
 	* src/controller.c
 	Added volume control for Maemo (using Nokia HW keys)
 
-2007-11-06  Alberto Garcia <agarcia@igalia.com>
+2007-11-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/globaldefs.h
 	* src/protocol.c
 	Send just the kernel name (in lowercase) during the handshake
 
-2007-11-06  Alberto Garcia <agarcia@igalia.com>
+2007-11-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/xmlrpc.c
 	Encode special chars in xmlrpc
 
-2007-11-06  Alberto Garcia <agarcia@igalia.com>
+2007-11-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -3564,7 +3564,7 @@
 
 	Disabled info banner for Gnome (it should be non-blocking)
 
-2007-11-06  Alberto Garcia <agarcia@igalia.com>
+2007-11-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -3573,7 +3573,7 @@
 
 	Don't show an info banner when loving/banning tracks
 
-2007-11-06  Alberto Garcia <agarcia@igalia.com>
+2007-11-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/uimisc.c
@@ -3585,59 +3585,59 @@
 
 	Show an info banner after calling a XMLRPC function
 
-2007-11-03  Alberto Garcia <agarcia@igalia.com>
+2007-11-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Avoid a crash when pressing Cancel in the user settings dialog
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/xmlrpc.c
 	Fix missing include
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* INSTALL
 	* Makefile.am
 	* README
 	Updates in INSTALL and README files
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/xmlrpc.c
 	Code refactoring
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/xmlrpc.c
 	Build all the XMLRPC requests using libxml2
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/globaldefs.h
 	Use uname to find out kernel name. Change User-Agent header to
 	include arch
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
 	* src/http.c
 	* src/mainwin.c
 	Added support for Maemo 2 (Nokia 770)
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	After successfully connecting for the first time, set ui state to
 	STOPPED
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Ask for a recommendation message
 
-2007-11-02  Alberto Garcia <agarcia@igalia.com>
+2007-11-02  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
@@ -3648,14 +3648,14 @@
 
 	New user selection dialog with a combo box to choose friends
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
 	* src/protocol.h
 	Get and store the list of friends
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3665,7 +3665,7 @@
 
 	Fixed a couple of memory leaks
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3674,21 +3674,21 @@
 	* src/xmlrpc.h
 	Basic support for recommending tracks
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.1 ===
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control
 	Set Build-Depends for Debian
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c
 	Enable scrobbling by default if unconfigured
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* INSTALL
 	* build-gnome-package.sh
@@ -3700,7 +3700,7 @@
 	* src/mainwin.c
 	Autodetect Gnome, Maemo 3 or Maemo 4
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* NEWS
 	* README
@@ -3708,7 +3708,7 @@
 	* debian/changelog
 	Preparing files (README, NEWS, ...) for 0.1 release
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	* src/controller.c
@@ -3725,7 +3725,7 @@
 	* src/xmlrpc.h
 	Code restructuring
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3735,24 +3735,24 @@
 	* src/uimisc.c
 	Added Similar artists radio to the menu
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Tag tracks using a thread to prevent the UI from freezing
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
 	Allow a list of tags separated by commas
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.h
 	Support for the fullscreen key in Maemo
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/tags.c
@@ -3762,7 +3762,7 @@
 
 	Refactorized tags.c to support both tags and love/hates
 
-2007-11-01  Alberto Garcia <agarcia@igalia.com>
+2007-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am
 	* src/controller.c
@@ -3783,7 +3783,7 @@
 	HTTP: Now you can send custom headers, by default User-Agent:
 	Vagalume
 
-2007-10-31  Alberto Garcia <agarcia@igalia.com>
+2007-10-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3792,16 +3792,16 @@
 	New menu entries for playing other users' radios, global tags and
 	personal tags
 
-2007-10-31  Alberto Garcia <agarcia@igalia.com>
+2007-10-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Fix a bug caused by a free() on a const string
 
-2007-10-31  Alberto Garcia <agarcia@igalia.com>
+2007-10-31  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.0.20071031 ===
 
-2007-10-31  Alberto Garcia <agarcia@igalia.com>
+2007-10-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* INSTALL
 	* build-gnome-package.sh
@@ -3819,7 +3819,7 @@
 
 	Include config.h in all source files that need it
 
-2007-10-31  Alberto Garcia <agarcia@igalia.com>
+2007-10-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am
 	* NEWS
@@ -3843,7 +3843,7 @@
 
 	Included config.h from the files that need it
 
-2007-10-31  Alberto Garcia <agarcia@igalia.com>
+2007-10-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile
 	* Makefile.am
@@ -3853,7 +3853,7 @@
 	* src/Makefile.am
 	Compiled using autotools
 
-2007-10-30  Alberto Garcia <agarcia@igalia.com>
+2007-10-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* AUTHORS
 	* COPYING
@@ -3871,17 +3871,17 @@
 
 	Confirmation dialog before loving/banning tracks
 
-2007-10-30  Alberto Garcia <agarcia@igalia.com>
+2007-10-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Documented all function from controller.c
 
-2007-10-30  Alberto Garcia <agarcia@igalia.com>
+2007-10-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Add website to the About dialog
 
-2007-10-30  Alberto Garcia <agarcia@igalia.com>
+2007-10-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3889,12 +3889,12 @@
 	Tracks that have been played for at least half of its duration
 	should not be marked as skipped in any case
 
-2007-10-30  Alberto Garcia <agarcia@igalia.com>
+2007-10-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Show the license in the About dialog
 
-2007-10-30  Alberto Garcia <agarcia@igalia.com>
+2007-10-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
@@ -3904,7 +3904,7 @@
 	* src/userconfig.h
 	Implemented the 'Enable scrobbling' and 'Discovery mode' settings
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -3914,37 +3914,37 @@
 	* src/scrobbler.h
 	Implemented the RSP rating (love/ban/skip)
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Don't clear the artist/track/album labels when skipping, just dim
 	them
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	=== Released Vagalume 0.0.20071028 ===
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	Project renamed to Vagalume
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Don't expand the progress bar, looks ugly on Maemo
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	In Maemo, put the Quit meny entry in the toplevel menu
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Set version number in the About dialog
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.h
@@ -3952,14 +3952,14 @@
 	* src/uimisc.h
 	Update playlist using a thread. Prevents the UI from freezing
 
-2007-10-29  Alberto Garcia <agarcia@igalia.com>
+2007-10-29  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/protocol.c
 	* src/protocol.h
 	Take the playlist out of the session. Make sessions copyable
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/playlist.c
@@ -3972,14 +3972,14 @@
 
 	lastfm_pls_merge(), new function to merge playlists
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	Only call controller_show_progress() when actually playing
 	something
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/audio.h
@@ -4005,7 +4005,7 @@
 	* src/userconfig.h
 	Included license and copyright in all source files
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile
 	* debian/changelog
@@ -4023,7 +4023,7 @@
 
 	Call osso_initialize() in Maemo
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile
 	* debian
@@ -4038,30 +4038,30 @@
 	* src/Makefile
 	First basic debian scripts for Maemo
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Center the text in the progressbar (for Maemo)
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
 	* src/mainwin.h
 	Added progressbar
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	* src/scrobbler.c
 	Skip tracks with no title or artist name in the playlist
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/scrobbler.c
 	Use the right URL for scrobbling
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/controller.c
@@ -4084,18 +4084,18 @@
 
 	New function lastfm_track_copy()
 
-2007-10-28  Alberto Garcia <agarcia@igalia.com>
+2007-10-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	If the program is unconfigured, don't show the settings dialog
 	until the users tries to play a radio
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Don't set the window title, the app name is already set in main.c
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/globaldefs.h
 	* src/main.c
@@ -4103,53 +4103,53 @@
 	* src/protocol.c
 	New file globaldefs.h with some constants
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/controller.c
 	* src/controller.h
 	Don't skip automatically more than 3 failed tracks in a row
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	Don't use base64 for storing the password in Maemo (for
 	compilation in Maemo bora)
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Use strtoll() instead of g_ascii_strtoll() (for Maemo bora)
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	Compile for Maemo if arch is arm
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/main.c
 	* src/mainwin.c
 	Use the hildon menu in Maemo
 
-2007-10-27  Alberto Garcia <agarcia@igalia.com>
+2007-10-27  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	Fix memory leak
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	Show unusual GStreamer messages
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Ask for username and password if there is no config file on
 	startup
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Show a different error message if the user refuses to enter their
@@ -4157,12 +4157,12 @@
 
 	Set the UI state when connecting
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	Minor changes in the UI
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -4171,7 +4171,7 @@
 
 	Added copyright to the about dialog
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/main.c
@@ -4181,7 +4181,7 @@
 
 	Initialize HTTP and sound in the controller, not in main
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -4197,7 +4197,7 @@
 
 	Check if there are problems initializing gstreamer
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -4207,7 +4207,7 @@
 
 	gtk_main() is called from the controller now
 
-2007-10-26  Alberto Garcia <agarcia@igalia.com>
+2007-10-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -4222,13 +4222,13 @@
 
 	The controller automatically inits a session if there is none
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
 	Disable the "Play radio" menu when in "connecting" state
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/controller.c
@@ -4242,25 +4242,25 @@
 
 	Show an error message when trying to play an invalid radio
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
 	* src/main.c
 	New function controller_play_audio_by_url()
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
 	Initialize curl just once at the beginning of the program
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
 	New UI state: disconnected
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -4270,13 +4270,13 @@
 	Created usercfg object and stopped using global variables in
 	userconfig.c
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	Set the UI as stopped before showing the 'No more content to play'
 	dialog
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c
 	* src/mainwin.c
@@ -4286,13 +4286,13 @@
 
 	Skip to the next song if an error appears, instead of stopping
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/mainwin.c
 	* src/mainwin.h
 	UI: don't store pointers to widgets that we won't need later
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/mainwin.c
@@ -4304,7 +4304,7 @@
 
 	Show an info dialog when the playlist is empty
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
 	* src/controller.h
@@ -4323,14 +4323,14 @@
 
 	Controller: flush gtk events while skipping a song
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	* src/userconfig.c
 	* src/userconfig.h
 	Fixed typo
 
-2007-10-25  Alberto Garcia <agarcia@igalia.com>
+2007-10-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/audio.c
@@ -4345,7 +4345,7 @@
 	Code in main.c has been reorganized in mainwin, audio and
 	controller
 
-2007-10-24  Alberto Garcia <agarcia@igalia.com>
+2007-10-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/http.c
@@ -4353,12 +4353,12 @@
 	* src/protocol.c
 	Moved all curl-related functions to another file
 
-2007-10-24  Alberto Garcia <agarcia@igalia.com>
+2007-10-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	Add gstreamer support for the N800
 
-2007-10-24  Alberto Garcia <agarcia@igalia.com>
+2007-10-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/md5.c
@@ -4366,41 +4366,41 @@
 	* src/protocol.c
 	Removed gcrypt dependency for an internal implementation of MD5
 
-2007-10-23  Alberto Garcia <agarcia@igalia.com>
+2007-10-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Don't check a failure in the handshake with an assertion
 
-2007-10-23  Alberto Garcia <agarcia@igalia.com>
+2007-10-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	Skip to next song when the current one finishes
 
 	Let the user set the radio station from the command line
 
-2007-10-23  Alberto Garcia <agarcia@igalia.com>
+2007-10-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Sanity checks when building Last.fm session
 
-2007-10-23  Alberto Garcia <agarcia@igalia.com>
+2007-10-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	Store the password in the config file encoded in base64
 
-2007-10-23  Alberto Garcia <agarcia@igalia.com>
+2007-10-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/userconfig.c
 	Warn if trying to write a null user config
 
-2007-10-23  Alberto Garcia <agarcia@igalia.com>
+2007-10-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.c
 	* src/userconfig.c
 	* src/userconfig.h
 	New function write_user_cfg() to save user data to the config file
 
-2007-10-23  Alberto Garcia <agarcia@igalia.com>
+2007-10-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/main.c
@@ -4414,14 +4414,14 @@
 
 	Set the neighbours radio by default at startup
 
-2007-10-22  Alberto Garcia <agarcia@igalia.com>
+2007-10-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	* src/protocol.c
 	* src/protocol.h
 	lastfm_handshake() renamed to lastfm_session_new(user,pw)
 
-2007-10-22  Alberto Garcia <agarcia@igalia.com>
+2007-10-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.c
 	* src/playlist.h
@@ -4434,23 +4434,23 @@
 	New function lastfm_pls_clear() to remove all tracks from a
 	playlist without destroying the playlist object
 
-2007-10-22  Alberto Garcia <agarcia@igalia.com>
+2007-10-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Do all HTTP processing in memory instead of using temporary files
 
-2007-10-22  Alberto Garcia <agarcia@igalia.com>
+2007-10-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/playlist.c
 	Documented all functions in playlist.c
 
-2007-10-22  Alberto Garcia <agarcia@igalia.com>
+2007-10-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	* src/protocol.c
 	Show playlist name in the main window
 
-2007-10-22  Alberto Garcia <agarcia@igalia.com>
+2007-10-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	* src/playlist.c
@@ -4463,7 +4463,7 @@
 	playlist is no longer a static variable, but a member of
 	lastfm_session
 
-2007-10-21  Alberto Garcia <agarcia@igalia.com>
+2007-10-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/protocol.c
@@ -4471,12 +4471,12 @@
 	* src/userconfig.h
 	Read the username and password from a config file
 
-2007-10-21  Alberto Garcia <agarcia@igalia.com>
+2007-10-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Make lastfm_parse_handshake() and lastfm_request_xsfp() static
 
-2007-10-21  Alberto Garcia <agarcia@igalia.com>
+2007-10-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/main.c
@@ -4492,12 +4492,12 @@
 
 	Show track info in the main window
 
-2007-10-20  Alberto Garcia <agarcia@igalia.com>
+2007-10-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c
 	Skip lines from last.fm handshake if they're too small
 
-2007-10-20  Alberto Garcia <agarcia@igalia.com>
+2007-10-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c
 	* src/protocol.c
@@ -4510,7 +4510,7 @@
 
 	curl_global_init() is guaranteed to be called only once
 
-2007-10-20  Alberto Garcia <agarcia@igalia.com>
+2007-10-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/main.c
@@ -4518,7 +4518,7 @@
 	* src/protocol.h
 	Basic implementation of the handshake
 
-2007-10-19  Alberto Garcia <agarcia@igalia.com>
+2007-10-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile
 	* src/main.c
