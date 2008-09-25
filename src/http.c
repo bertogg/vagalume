@@ -148,7 +148,7 @@ http_download_file(const char *url, const char *filename,
         CURL *handle = NULL;
         FILE *f = NULL;
         if (!file_exists(filename)) {
-                f = fopen(filename, "w");
+                f = fopen(filename, "wb");
         } else {
                 g_warning("File %s already exists", filename);
         }

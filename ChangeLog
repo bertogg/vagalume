@@ -1,3 +1,8 @@
+2008-09-25  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/http.c (http_download_file): Open output file in binary
+	mode to avoid problems on non-POSIX systems.
+
 2008-09-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/control: Move Homepage field to the source paragraph.
