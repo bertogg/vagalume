@@ -1,3 +1,17 @@
+2008-09-28  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-main-window.h
+	* src/vgl-main-window.c (vgl_main_window_set_state)
+	(add_bookmark_selected, create_main_menu, vgl_main_window_init)
+	* src/controller.h
+	* src/controller.c (check_session_thread, check_session)
+	(controller_audio_started_cb, controller_start_playing_cb)
+	(controller_stop_playing, controller_add_bookmark)
+	(controller_play_radio_by_url_thread)
+	(controller_play_radio_by_url, controller_run_app):
+	New "Add bookmark" and "Bookmark this radio" menu entries.
+	Store current radio's URL to add it to bookmarks.
+
 2008-09-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c (http_download_file): Open output file in binary

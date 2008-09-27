@@ -78,7 +78,7 @@ void vgl_main_window_destroy(VglMainWindow *w);
 void vgl_main_window_show(VglMainWindow *w, gboolean show);
 void vgl_main_window_toggle_visibility(VglMainWindow *w);
 void vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState s,
-                               const LastfmTrack *t);
+                               const LastfmTrack *t, const char *radio_url);
 void vgl_main_window_show_progress(VglMainWindow *w,
                                    guint length, guint played);
 void vgl_main_window_show_status_msg(VglMainWindow *w, const char *text);

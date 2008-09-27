@@ -46,6 +46,7 @@ static GList *friends = NULL;
 static GList *usertags = NULL;
 static LastfmTrack *nowplaying = NULL;
 static time_t nowplaying_since = 0;
+static char *current_radio_url = NULL;
 static RspRating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
 static gboolean stop_after_this_track = FALSE;
@@ -632,8 +633,9 @@ check_session_thread(gpointer userdata)
         } else {
                 gdk_threads_enter();
                 session = s;
-                vgl_main_window_set_state(mainwin,
-                                          VGL_MAIN_WINDOW_STATE_STOPPED,NULL);
+                vgl_main_window_set_state (mainwin,
+                                           VGL_MAIN_WINDOW_STATE_STOPPED,
+                                           NULL, NULL);
                 gdk_threads_leave();
                 connected = TRUE;
         }
@@ -694,9 +696,9 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
                         data->failure_cb = failure_cb;
                         data->cbdata = cbdata;
                         connection_go_online(check_session_conn_cb, data);
-                        vgl_main_window_set_state(mainwin,
-                                             VGL_MAIN_WINDOW_STATE_CONNECTING,
-                                             NULL);
+                        vgl_main_window_set_state (
+                                mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
+                                NULL, NULL);
                 } else {
                         controller_disconnect();
                         controller_show_warning(_("You need to enter your "
@@ -793,8 +795,8 @@ controller_audio_started_cb(void)
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && nowplaying);
         LastfmTrack *track;
         nowplaying_since = time(NULL);
-        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_PLAYING,
-                                  nowplaying);
+        vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_PLAYING,
+                                   nowplaying, current_radio_url);
         track = lastfm_track_ref(nowplaying);
         controller_show_progress(track);
         im_set_status(usercfg, track);
@@ -816,8 +818,8 @@ controller_start_playing_cb(gpointer userdata)
 {
         LastfmTrack *track = NULL;
         g_return_if_fail(mainwin && playlist && nowplaying == NULL);
-        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
-                                  NULL);
+        vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
+                                   NULL, NULL);
         if (lastfm_pls_size(playlist) == 0) {
                 LastfmSession *s = lastfm_session_copy(session);
                 g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
@@ -894,7 +896,7 @@ controller_stop_playing(void)
         /* Updating the window title just before destroying the window
          * causes a crash, at least in the Moblin platform */
         if (!shutting_down)
-                vgl_main_window_set_state (mainwin, new_state, NULL);
+                vgl_main_window_set_state (mainwin, new_state, NULL, NULL);
 
         finish_playing_track();
         stop_after_this_track = FALSE;
@@ -983,25 +985,35 @@ controller_manage_bookmarks(void)
 /*
  * Bookmark the current track
  */
-void controller_add_bookmark(request_type type)
+void controller_add_bookmark (BookmarkType type)
 {
-        g_return_if_fail(nowplaying != NULL && VGL_IS_MAIN_WINDOW(mainwin));
+        g_return_if_fail (VGL_IS_MAIN_WINDOW (mainwin));
+        g_return_if_fail (nowplaying != NULL || (type == BOOKMARK_TYPE_EMPTY));
         char *name, *url;
         const char *banner;
         VglBookmarkMgr *mgr = vgl_bookmark_mgr_get_instance();
-        if (type == REQUEST_ARTIST) {
+        if (type == BOOKMARK_TYPE_ARTIST) {
                 g_return_if_fail(nowplaying->artistid != 0);
                 name = g_strdup(nowplaying->artist);
                 url = g_strdup_printf("lastfm://play/artists/%u",
                                       nowplaying->artistid);
                 banner = _("Artist added to bookmarks");
-        } else if (type == REQUEST_TRACK) {
+        } else if (type == BOOKMARK_TYPE_TRACK) {
                 g_return_if_fail(nowplaying->id != 0);
                 name = g_strdup_printf("%s - '%s'", nowplaying->artist,
                                        nowplaying->title);
                 url = g_strdup_printf("lastfm://play/tracks/%u",
                                       nowplaying->id);
                 banner = _("Track added to bookmarks");
+        } else if (type == BOOKMARK_TYPE_CURRENT_RADIO) {
+                g_return_if_fail (nowplaying->pls_title != NULL &&
+                                  current_radio_url != NULL);
+                name = g_strdup (nowplaying->pls_title);
+                url = g_strdup (current_radio_url);
+                banner = _("Current radio added to bookmarks");
+        } else if (type == BOOKMARK_TYPE_EMPTY) {
+                name = url = NULL;
+                banner = _("Bookmark added");
         } else {
                 g_critical("Bookmark request not supported");
                 return;
@@ -1365,6 +1377,8 @@ controller_play_radio_by_url_thread(gpointer data)
                 if (pls != NULL) {
                         lastfm_pls_destroy(playlist);
                         playlist = pls;
+                        g_free (current_radio_url);
+                        current_radio_url = g_strdup (url);
                         controller_skip_track();
                 } else {
                         controller_stop_playing();
@@ -1376,6 +1390,8 @@ controller_play_radio_by_url_thread(gpointer data)
                 radio_set = lastfm_set_radio(sess, url);
                 gdk_threads_enter();
                 if (radio_set) {
+                        g_free (current_radio_url);
+                        current_radio_url = g_strdup (url);
                         lastfm_pls_clear(playlist);
                         controller_skip_track();
                 } else {
@@ -1421,8 +1437,8 @@ controller_play_radio_by_url(const char *url)
 {
         check_session_cb cb;
         finish_playing_track();
-        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
-                                  NULL);
+        vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
+                                   NULL, NULL);
         cb = (check_session_cb) controller_play_radio_by_url_cb;
         check_session(cb, (check_session_cb) g_free, g_strdup(url));
 }
@@ -1696,8 +1712,8 @@ controller_run_app (const char *radio_url)
         mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());
         g_object_add_weak_pointer (G_OBJECT (mainwin), (gpointer) &mainwin);
         vgl_main_window_show(mainwin, TRUE);
-        vgl_main_window_set_state(mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
-                                  NULL);
+        vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
+                                   NULL, NULL);
 
         http_init();
         check_usercfg(FALSE);

@@ -19,6 +19,13 @@ typedef enum {
         STOP_AFTER_N_MINUTES
 } StopAfterType;
 
+typedef enum {
+        BOOKMARK_TYPE_EMPTY,
+        BOOKMARK_TYPE_ARTIST,
+        BOOKMARK_TYPE_TRACK,
+        BOOKMARK_TYPE_CURRENT_RADIO
+} BookmarkType;
+
 void controller_stop_playing(void);
 void controller_disconnect(void);
 void controller_start_playing(void);
@@ -38,7 +45,7 @@ void controller_recomm_track(void);
 void controller_add_to_playlist(void);
 void controller_download_track(void);
 void controller_manage_bookmarks(void);
-void controller_add_bookmark(request_type type);
+void controller_add_bookmark(BookmarkType type);
 void controller_open_usercfg(void);
 void controller_quit_app(void);
 void controller_run_app(const char *radio_url);
