@@ -1,5 +1,17 @@
 2008-10-06  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/playlist.h
+	* src/controller.c (download_track_thread)
+	(download_track_dlwin_cb, controller_download_track): Don't
+	download a track if it's already being downloaded.
+
+	* src/dlwin.h
+	* src/dlwin.c (dlwin_download_file, dlwin_download_file_thread):
+	Now dlwin accepts a callback to call after a download has been
+	finished.
+
+2008-10-06  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-main-window.c (download_track_selected)
 	* src/controller.c (controller_download_track)
 	(download_track_thread): Allow downloading tracks in background

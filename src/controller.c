@@ -972,6 +972,8 @@ download_track_thread (gpointer userdata)
                                         d->track->artist, d->track->title);
         }
 
+        d->track->dl_in_progress = FALSE;
+
         gdk_threads_enter ();
         controller_show_banner (text);
         gdk_threads_leave ();
@@ -985,6 +987,17 @@ download_track_thread (gpointer userdata)
 }
 
 /**
+ * Callback executed when dlwin_download_file() finishes
+ */
+static void
+download_track_dlwin_cb (gboolean success, gpointer userdata)
+{
+        LastfmTrack *track = (LastfmTrack *) userdata;
+        track->dl_in_progress = FALSE;
+        lastfm_track_unref (track);
+}
+
+/**
  * Download the current track (if it's free)
  *
  * @param background If TRUE, start immediately in the background,
@@ -995,8 +1008,15 @@ controller_download_track (gboolean background)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
         LastfmTrack *t = lastfm_track_ref(nowplaying);
-        if (background ||
-            controller_confirm_dialog(_("Download this track?"), FALSE)) {
+
+        if (t->dl_in_progress) {
+                const char *msg = _("Track already being downloaded");
+                if (!background) {
+                        controller_show_info (msg);
+                }
+        } else if (background ||
+                   controller_confirm_dialog (_("Download this track?"),
+                                              FALSE)) {
                 char *filename, *dstpath;
                 gboolean download = TRUE;
                 filename = g_strconcat(t->artist, " - ", t->title, ".mp3",
@@ -1014,6 +1034,7 @@ controller_download_track (gboolean background)
                 if (download) {
                         g_debug ("Downloading %s to file %s",
                                  t->free_track_url, dstpath);
+                        t->dl_in_progress = TRUE;
                         if (background) {
                                 char *banner;
                                 DownloadData *dldata;
@@ -1029,7 +1050,9 @@ controller_download_track (gboolean background)
                                 g_free (banner);
                         } else {
                                 dlwin_download_file (t->free_track_url,
-                                                     filename, dstpath);
+                                                     filename, dstpath,
+                                                     download_track_dlwin_cb,
+                                                     lastfm_track_ref (t));
                         }
                 }
                 g_free(filename);

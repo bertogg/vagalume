@@ -23,6 +23,8 @@ typedef struct {
         char *url;
         char *dstpath;
         gboolean cancelled;
+        dlwin_cb callback;
+        gpointer cbdata;
 } dlwin;
 
 static gboolean
@@ -113,12 +115,16 @@ dlwin_download_file_thread(gpointer data)
         }
         gdk_threads_leave();
 
+        if (w->callback) {
+                w->callback (success, w->cbdata);
+        }
+
         return NULL;
 }
 
 void
 dlwin_download_file(const char *url, const char *filename,
-                    const char *dstpath)
+                    const char *dstpath, dlwin_cb cb, gpointer cbdata)
 {
         GtkWidget *label;
         const int textsize = 100;
@@ -128,6 +134,8 @@ dlwin_download_file(const char *url, const char *filename,
         w->cancelled = FALSE;
         w->url = g_strdup(url);
         w->dstpath = g_strdup(dstpath);
+        w->callback = cb;
+        w->cbdata = cbdata;
 
         /* Widget creation */
         w->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);

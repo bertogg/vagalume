@@ -34,6 +34,7 @@ typedef struct {
         gboolean image_data_available;
         const char *trackauth;
         const char *free_track_url;
+        gboolean dl_in_progress;
         gboolean custom_pls;
         /* Private */
         int refcount;
