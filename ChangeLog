@@ -1,5 +1,12 @@
 2008-10-06  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/uimisc.c (usercfg_add_account_settings)
+	(usercfg_add_connection_settings, usercfg_add_download_settings)
+	(usercfg_add_imstatus_settings, usercfg_add_misc_settings):
+	Don't make tables homogeneous in the settings dialog.
+
+2008-10-06  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/playlist.h
 	* src/controller.c (download_track_thread)
 	(download_track_dlwin_cb, controller_download_track): Don't

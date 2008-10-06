@@ -348,7 +348,7 @@ usercfg_add_account_settings(usercfgwin *win, VglUserCfg *cfg)
         const char *help;
 
         /* Create widgets */
-        table = GTK_TABLE(gtk_table_new(4, 2, TRUE));
+        table = GTK_TABLE (gtk_table_new (4, 2, FALSE));
         userlabel = gtk_label_new(_("Username:"));
         pwlabel = gtk_label_new(_("Password:"));
         scroblabel = gtk_label_new(_("Enable scrobbling:"));
@@ -415,7 +415,7 @@ usercfg_add_connection_settings(usercfgwin *win, VglUserCfg *cfg)
         const char *help;
 
         /* Create widgets */
-        table = GTK_TABLE(gtk_table_new(2, 2, FALSE));
+        table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
         useproxylabel = gtk_label_new(_("Use HTTP proxy"));
         proxylabel = gtk_label_new(_("Proxy address:"));
         win->proxy = GTK_ENTRY(gtk_entry_new());
@@ -454,7 +454,7 @@ usercfg_add_download_settings(usercfgwin *win, VglUserCfg *cfg)
         const char *help;
 
         /* Create widgets */
-        table = GTK_TABLE(gtk_table_new(3, 3, TRUE));
+        table = GTK_TABLE (gtk_table_new (3, 3, FALSE));
         dllabel = gtk_label_new(_("Select download directory"));
         autodllabel = gtk_label_new (_("Automatically download free tracks"));
         win->dlbutton = compat_gtk_button_new();
@@ -499,7 +499,7 @@ usercfg_add_imstatus_settings(usercfgwin *win, VglUserCfg *cfg)
         const char *help;
 
         /* Create widgets */
-        table = GTK_TABLE(gtk_table_new(5, 2, TRUE));
+        table = GTK_TABLE (gtk_table_new (5, 2, FALSE));
         imtemplatelabel = gtk_label_new(_("IM message template:"));
         impidginlabel = gtk_label_new(_("Update Pidgin status:"));
         imgajimlabel = gtk_label_new(_("Update Gajim status:"));
@@ -560,9 +560,9 @@ usercfg_add_misc_settings(usercfgwin *win, VglUserCfg *cfg)
         GtkWidget *shownotificationslabel;
         GtkWidget *closetosystraylabel;
 
-        table = GTK_TABLE(gtk_table_new(3, 2, TRUE));
+        table = GTK_TABLE (gtk_table_new (3, 2, FALSE));
 #else
-        table = GTK_TABLE(gtk_table_new(1, 2, TRUE));
+        table = GTK_TABLE (gtk_table_new (1, 2, FALSE));
 #endif
 
         /* Disable confirm dialogs */
