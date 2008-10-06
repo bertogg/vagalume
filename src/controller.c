@@ -10,6 +10,7 @@
 
 #include <glib/gi18n.h>
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <string.h>
 #include <time.h>
 
@@ -74,6 +75,11 @@ typedef struct {
         char *text;                  /* text of the recommendation */
         request_type type;
 } recomm_data;
+
+typedef struct {
+        LastfmTrack *track;
+        char *dstpath;
+} DownloadData;
 
 /*
  * Callback called after check_session() in all cases.
@@ -828,6 +834,10 @@ controller_start_playing_cb(gpointer userdata)
         track = lastfm_pls_get_track(playlist);
         controller_set_nowplaying(track);
 
+        if (usercfg->autodl_free_tracks) {
+                controller_download_track (TRUE);
+        }
+
         /* Notify the playback status */
         lastfm_dbus_notify_playback(track);
 
@@ -942,14 +952,51 @@ controller_disconnect(void)
 }
 
 /**
- * Download the currently play track (if it's free)
+ * Download a file in background. Must be called using g_thread_create()
+ */
+static gpointer
+download_track_thread (gpointer userdata)
+{
+        DownloadData *d = (DownloadData *) userdata;
+        gboolean success;
+        char *text;
+
+        success = http_download_file (d->track->free_track_url, d->dstpath,
+                                      NULL, NULL);
+        if (success) {
+                text = g_strdup_printf (_("Downloaded %s - %s"),
+                                        d->track->artist, d->track->title);
+        } else {
+                g_unlink (d->dstpath);
+                text = g_strdup_printf (_("Error downloading %s - %s"),
+                                        d->track->artist, d->track->title);
+        }
+
+        gdk_threads_enter ();
+        controller_show_banner (text);
+        gdk_threads_leave ();
+
+        g_free (text);
+        lastfm_track_unref (d->track);
+        g_free (d->dstpath);
+        g_slice_free (DownloadData, d);
+
+        return NULL;
+}
+
+/**
+ * Download the current track (if it's free)
+ *
+ * @param background If TRUE, start immediately in the background,
+ *                   without using a download window
  */
 void
-controller_download_track(void)
+controller_download_track (gboolean background)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
         LastfmTrack *t = lastfm_track_ref(nowplaying);
-        if (controller_confirm_dialog(_("Download this track?"), FALSE)) {
+        if (background ||
+            controller_confirm_dialog(_("Download this track?"), FALSE)) {
                 char *filename, *dstpath;
                 gboolean download = TRUE;
                 filename = g_strconcat(t->artist, " - ", t->title, ".mp3",
@@ -957,19 +1004,38 @@ controller_download_track(void)
                 dstpath = g_strconcat(usercfg->download_dir, "/", filename,
                                        NULL);
                 if (file_exists(dstpath)) {
-                        download = controller_confirm_dialog(_("File exists. "
-                                                               "Overwrite?"),
-                                                             TRUE);
+                        if (background) {
+                                download = FALSE;
+                        } else {
+                                download = controller_confirm_dialog (
+                                        _("File exists. " "Overwrite?"), TRUE);
+                        }
                 }
                 if (download) {
-                        dlwin_download_file(t->free_track_url, filename,
-                                            dstpath);
+                        g_debug ("Downloading %s to file %s",
+                                 t->free_track_url, dstpath);
+                        if (background) {
+                                char *banner;
+                                DownloadData *dldata;
+                                dldata = g_slice_new (DownloadData);
+                                dldata->track = lastfm_track_ref (t);
+                                dldata->dstpath = g_strdup (dstpath);
+                                g_thread_create (download_track_thread,
+                                                 dldata, FALSE, NULL);
+                                banner = g_strdup_printf (
+                                        _("Downloading %s - %s"),
+                                        t->artist, t->title);
+                                controller_show_banner (banner);
+                                g_free (banner);
+                        } else {
+                                dlwin_download_file (t->free_track_url,
+                                                     filename, dstpath);
+                        }
                 }
                 g_free(filename);
                 g_free(dstpath);
-        } else {
-                lastfm_track_unref(t);
         }
+        lastfm_track_unref(t);
 }
 
 /**

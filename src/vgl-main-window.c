@@ -663,7 +663,7 @@ add_to_playlist_selected(GtkWidget *widget, gpointer data)
 static void
 download_track_selected(GtkWidget *widget, gpointer data)
 {
-        controller_download_track();
+        controller_download_track (FALSE);
 }
 
 static void

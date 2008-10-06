@@ -43,7 +43,7 @@ void controller_play_similarartist_radio(void);
 void controller_tag_track(void);
 void controller_recomm_track(void);
 void controller_add_to_playlist(void);
-void controller_download_track(void);
+void controller_download_track (gboolean background);
 void controller_manage_bookmarks(void);
 void controller_add_bookmark(BookmarkType type);
 void controller_open_usercfg(void);

@@ -62,6 +62,7 @@ typedef struct {
         GtkNotebook *nb;
         GtkEntry *user, *pw, *proxy, *dlentry;
         GtkWidget *dlbutton, *scrobble, *discovery, *useproxy;
+        GtkWidget *dlfreetracks;
         GtkWidget *disableconfdiags;
         GtkWidget *helpbtn;
 #ifdef SET_IM_STATUS
@@ -449,14 +450,16 @@ usercfg_add_download_settings(usercfgwin *win, VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
-        GtkWidget *dllabel;
+        GtkWidget *dllabel, *autodllabel;
         const char *help;
 
         /* Create widgets */
-        table = GTK_TABLE(gtk_table_new(2, 2, FALSE));
+        table = GTK_TABLE(gtk_table_new(3, 3, TRUE));
         dllabel = gtk_label_new(_("Select download directory"));
+        autodllabel = gtk_label_new (_("Automatically download free tracks"));
         win->dlbutton = compat_gtk_button_new();
         win->dlentry = GTK_ENTRY(gtk_entry_new());
+        win->dlfreetracks = gtk_check_button_new ();
 
         /* Set widget properties */
         gtk_button_set_image(GTK_BUTTON(win->dlbutton),
@@ -465,12 +468,16 @@ usercfg_add_download_settings(usercfgwin *win, VglUserCfg *cfg)
 
         /* Set initial values */
         gtk_entry_set_text(win->dlentry, cfg->download_dir);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (win->dlfreetracks),
+                                      cfg->autodl_free_tracks);
 
         /* Pack widgets */
-        gtk_table_attach(table, dllabel, 0, 2, 0, 1, 0, 0, 5, 5);
-        gtk_table_attach(table, GTK_WIDGET(win->dlentry), 0, 1, 1, 2,
-                         GTK_EXPAND | GTK_FILL, 0, 5, 5);
-        gtk_table_attach(table, win->dlbutton, 1, 2, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach (table, dllabel, 0, 3, 0, 1, 0, 0, 5, 5);
+        gtk_table_attach (table, GTK_WIDGET (win->dlentry), 0, 2, 1, 2,
+                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
+        gtk_table_attach (table, win->dlbutton, 2, 3, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach (table, autodllabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach (table, win->dlfreetracks, 1, 3, 2, 3, 0, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Download")));
 
@@ -665,6 +672,8 @@ ui_usercfg_window(GtkWindow *parent, VglUserCfg **cfg)
                         GTK_TOGGLE_BUTTON(win.discovery));
                 (*cfg)->use_proxy = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.useproxy));
+                (*cfg)->autodl_free_tracks = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(win.dlfreetracks));
 #ifdef SET_IM_STATUS
                 vgl_user_cfg_set_imstatus_template(*cfg,
                                                      gtk_entry_get_text(win.imtemplateentry));

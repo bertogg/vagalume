@@ -154,6 +154,7 @@ vgl_user_cfg_new(void)
         cfg->disable_confirm_dialogs = FALSE;
         cfg->show_notifications = TRUE;
         cfg->close_to_systray = TRUE;
+        cfg->autodl_free_tracks = FALSE;
         return cfg;
 }
 
@@ -369,6 +370,8 @@ vgl_user_cfg_read (void)
                               &(cfg->show_notifications));
                 xml_get_bool (doc, node, "close-to-systray",
                               &(cfg->close_to_systray));
+                xml_get_bool (doc, node, "autodownload-free-tracks",
+                              &(cfg->autodl_free_tracks));
         }
 
         if (doc != NULL) xmlFreeDoc (doc);
@@ -390,7 +393,7 @@ vgl_user_cfg_write (VglUserCfg *cfg)
         doc = xmlNewDoc ((xmlChar *) "1.0");
         root = xmlNewNode (NULL, (xmlChar *) "config");
         xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
-        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "1");
+        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "2");
         xmlDocSetRootElement (doc, root);
 
         xml_add_string (root, "username", cfg->username);
@@ -410,6 +413,8 @@ vgl_user_cfg_write (VglUserCfg *cfg)
                       cfg->disable_confirm_dialogs);
         xml_add_bool (root, "show-notifications", cfg->show_notifications);
         xml_add_bool (root, "close-to-systray", cfg->close_to_systray);
+        xml_add_bool (root, "autodownload-free-tracks",
+                      cfg->autodl_free_tracks);
 
         if (xmlSaveFormatFileEnc (cfgfile, doc, "UTF-8", 1) == -1) {
                 g_critical ("Unable to open %s", cfgfile);

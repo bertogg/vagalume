@@ -28,6 +28,7 @@ typedef struct {
         gboolean disable_confirm_dialogs;
         gboolean show_notifications;
         gboolean close_to_systray;
+        gboolean autodl_free_tracks;
 } VglUserCfg;
 
 VglUserCfg *vgl_user_cfg_new(void);

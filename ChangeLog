@@ -1,3 +1,22 @@
+2008-10-06  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-main-window.c (download_track_selected)
+	* src/controller.c (controller_download_track)
+	(download_track_thread): Allow downloading tracks in background
+	without using the download window.
+	Fix leak of the LastfmTrack object when downloading a track.
+
+	* TODO
+	* src/controller.c
+	(controller_start_playing_cb)
+	* src/uimisc.c
+	(ui_usercfg_window, usercfg_add_download_settings):
+	* src/userconfig.h
+	* src/userconfig.c
+	(vgl_user_cfg_new, vgl_user_cfg_read, vgl_user_cfg_write):
+	New configuration setting to download automatically all free
+	tracks.
+
 2008-09-28  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-main-window.h
