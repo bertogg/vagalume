@@ -17,12 +17,11 @@
 
 typedef struct {
         GtkWidget *window;
-        GtkWidget *cancelbutton;
-        GtkWidget *closebutton;
+        GtkWidget *button;
         GtkProgressBar *progressbar;
         char *url;
         char *dstpath;
-        gboolean cancelled;
+        gboolean finished;
         dlwin_cb callback;
         gpointer cbdata;
 } dlwin;
@@ -31,10 +30,10 @@ static gboolean
 dlwin_progress_cb(gpointer data, double dltotal, double dlnow)
 {
         dlwin *w = (dlwin *) data;
-        g_return_val_if_fail(w && w->window && w->progressbar, FALSE);
-        const int bufsize = 30;
-        char text[bufsize];
-        if (!w->cancelled) {
+        g_return_val_if_fail (w != NULL, FALSE);
+        if (!w->finished && w->window) {
+                const int bufsize = 30;
+                char text[bufsize];
                 guint now = dlnow / 1024;
                 guint total = dltotal / 1024;
                 double fraction = dlnow / dltotal;
@@ -46,78 +45,58 @@ dlwin_progress_cb(gpointer data, double dltotal, double dlnow)
                 gtk_progress_bar_set_fraction(w->progressbar, fraction);
                 gdk_threads_leave();
         }
-        return !w->cancelled;
+        return !w->finished;
 }
 
 static void
-cancel_clicked(GtkWidget *widget, gpointer data)
+dlwin_cleanup (dlwin *w)
 {
-        dlwin *w = (dlwin *) data;
-        g_return_if_fail(w != NULL);
-        w->cancelled = TRUE;
-        gtk_widget_hide(w->window);
+        g_free (w->url);
+        g_free (w->dstpath);
+        g_slice_free (dlwin, w);
 }
 
 static void
-close_clicked(GtkWidget *widget, gpointer data)
+dlwin_destroyed_cb (GtkObject *object, dlwin *w)
 {
-        dlwin *w = (dlwin *) data;
-        g_return_if_fail(w != NULL);
-        gtk_widget_destroy(w->window);
-        /* Cleanup */
-        g_free(w->url);
-        g_free(w->dstpath);
-        g_slice_free(dlwin, w);
-}
-
-static gboolean
-delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-        dlwin *w = (dlwin *) data;
-        g_return_val_if_fail(w != NULL, FALSE);
-        if (GTK_WIDGET_VISIBLE(w->closebutton)) {
-                close_clicked(w->closebutton, w);
+        if (w->finished) {
+                dlwin_cleanup (w);
         } else {
-                cancel_clicked(w->cancelbutton, w);
+                w->window = NULL;
+                w->finished = TRUE;
         }
-        return TRUE;
 }
 
 static gpointer
 dlwin_download_file_thread(gpointer data)
 {
-        dlwin *w = (dlwin *) data;
-        g_return_val_if_fail(w && w->window && w->progressbar &&
-                             w->url && w->dstpath, NULL);
         gboolean success;
+        dlwin *w = (dlwin *) data;
 
         /* Remove the file if it exists and then download it */
         unlink(w->dstpath);
         success = http_download_file(w->url, w->dstpath, dlwin_progress_cb, w);
 
-        gdk_threads_enter();
-        if (success) {
-                gtk_widget_set_sensitive(w->cancelbutton, FALSE);
-                gtk_progress_bar_set_text(w->progressbar,
-                                          _("Download complete!"));
-                gtk_widget_hide(w->cancelbutton);
-                gtk_widget_show(w->closebutton);
-        } else if (w->cancelled) {
-                unlink(w->dstpath);
-                close_clicked(w->closebutton, w);
-        } else {
-                unlink(w->dstpath);
-                gtk_widget_set_sensitive(w->cancelbutton, FALSE);
-                gtk_progress_bar_set_text(w->progressbar,
-                                          _("Download error!"));
-                gtk_widget_hide(w->cancelbutton);
-                gtk_widget_show(w->closebutton);
-        }
-        gdk_threads_leave();
+        /* Remove if the download was unsuccessful */
+        if (!success)
+                unlink (w->dstpath);
 
         if (w->callback) {
                 w->callback (success, w->cbdata);
         }
+
+        gdk_threads_enter();
+        if (w->window) {
+                gtk_progress_bar_set_text (w->progressbar,
+                                           success ?
+                                           _("Download complete!") :
+                                           _("Download error!"));
+                gtk_button_set_label (GTK_BUTTON (w->button), _("C_lose"));
+                w->finished = TRUE;
+        } else {
+                dlwin_cleanup (w);
+        }
+        gdk_threads_leave();
 
         return NULL;
 }
@@ -129,9 +108,13 @@ dlwin_download_file(const char *url, const char *filename,
         GtkWidget *label;
         const int textsize = 100;
         char text[textsize];
-        GtkBox *box, *butbox;
-        dlwin *w = g_slice_new(dlwin);
-        w->cancelled = FALSE;
+        GtkBox *box;
+        dlwin *w;
+
+        g_return_if_fail (url && filename && dstpath);
+
+        w = g_slice_new(dlwin);
+        w->finished = FALSE;
         w->url = g_strdup(url);
         w->dstpath = g_strdup(dstpath);
         w->callback = cb;
@@ -147,33 +130,25 @@ dlwin_download_file(const char *url, const char *filename,
         label = gtk_label_new(text);
         gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
         w->progressbar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
-        w->cancelbutton = gtk_button_new_with_mnemonic(_("_Cancel"));
-        w->closebutton = gtk_button_new_with_mnemonic(_("C_lose"));
+        w->button = gtk_button_new_with_mnemonic(_("_Cancel"));
         box = GTK_BOX(gtk_vbox_new(TRUE, 5));
-        butbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
 
         /* Widget packing */
         gtk_container_add(GTK_CONTAINER(w->window), GTK_WIDGET(box));
         gtk_box_pack_start(box, label, FALSE, FALSE, 0);
         gtk_box_pack_start(box, GTK_WIDGET(w->progressbar), FALSE, FALSE, 0);
-        gtk_box_pack_start(box, GTK_WIDGET(butbox), FALSE, FALSE, 0);
-        gtk_box_pack_start(butbox, w->cancelbutton, TRUE, FALSE, 0);
-        gtk_box_pack_start(butbox, w->closebutton, TRUE, FALSE, 0);
+        gtk_box_pack_start(box, w->button, FALSE, FALSE, 0);
 
 #ifdef MAEMO
         /* Small hack to make this window a bit less ugly */
-        gtk_widget_set_size_request(GTK_WIDGET(w->cancelbutton), 300, 80);
-        gtk_widget_set_size_request(GTK_WIDGET(w->closebutton), 300, 80);
+        gtk_widget_set_size_request (w->button, 300, 80);
 #endif
 
-        g_signal_connect(G_OBJECT(w->cancelbutton), "clicked",
-                         G_CALLBACK(cancel_clicked), w);
-        g_signal_connect(G_OBJECT(w->closebutton), "clicked",
-                         G_CALLBACK(close_clicked), w);
-        g_signal_connect(G_OBJECT(w->window), "delete-event",
-                         G_CALLBACK(delete_event), w);
+        g_signal_connect_swapped (G_OBJECT (w->button), "clicked",
+                                  G_CALLBACK (gtk_widget_destroy), w->window);
+        g_signal_connect (G_OBJECT (w->window), "destroy",
+                          G_CALLBACK (dlwin_destroyed_cb), w);
 
         gtk_widget_show_all(w->window);
-        gtk_widget_hide(w->closebutton);
         g_thread_create(dlwin_download_file_thread, w, FALSE, NULL);
 }

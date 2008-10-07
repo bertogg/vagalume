@@ -1,3 +1,8 @@
+2008-10-07  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/dlwin.c: Code is simpler now. Use a single button for
+	Cancel/Close instead of two.
+
 2008-10-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c (usercfg_add_account_settings)
