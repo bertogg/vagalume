@@ -44,7 +44,6 @@
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
                                       VGL_SB_PLUGIN_TYPE, VglSbPluginPrivate))
 
-typedef struct _VglSbPluginPrivate VglSbPluginPrivate;
 struct _VglSbPluginPrivate
 {
         osso_context_t *osso_context;
@@ -145,6 +144,7 @@ vgl_sb_plugin_init (VglSbPlugin *vsbp)
         GdkPixbuf *icon_pixbuf;
 
         /* Init private attributes to their default values */
+        vsbp->priv = priv;
         priv->osso_context = NULL;
         priv->dbus_connection = NULL;
         priv->dbus_filter_added = FALSE;
@@ -216,7 +216,7 @@ static void
 vgl_sb_plugin_dispose (GObject *object)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (object);
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
 
         /* Ensure dispose is called only once */
         if (priv->dispose_has_run) {
@@ -275,7 +275,7 @@ vgl_sb_plugin_dispose (GObject *object)
 static gboolean
 dbus_init(VglSbPlugin *vsbp)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
 
 
         /* Get the D-Bus connection to the session bus */
@@ -306,7 +306,7 @@ dbus_init(VglSbPlugin *vsbp)
 
 static void dbus_cleanup (VglSbPlugin *vsbp)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
 
         /* Remove filter and matching rules */
         if (priv->dbus_filter_added) {
@@ -348,7 +348,7 @@ dbus_send_request (VglSbPlugin *vsbp, const gchar *request)
 static void
 dbus_send_request_with_params (VglSbPlugin *vsbp, const char *request, int first_type, ...)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
         DBusMessage *dbus_msg = NULL;
         va_list ap;
 
@@ -371,7 +371,7 @@ dbus_send_request_with_params (VglSbPlugin *vsbp, const char *request, int first
 static void
 notify_handler (VglSbPlugin *vsbp, DBusMessage *message)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
         DBusMessageIter iter;
         gchar *type = NULL;
         gboolean msg_handled = FALSE;
@@ -470,14 +470,13 @@ notify_handler (VglSbPlugin *vsbp, DBusMessage *message)
 static void
 set_visibility (VglSbPlugin *vsbp, gboolean visible)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         gboolean old_condition;
 
         g_object_get (vsbp, "condition", &old_condition, NULL);
         if (old_condition != visible)
                 g_object_set (vsbp, "condition", visible, NULL);
 
-        priv->is_visible = visible;
+        vsbp->priv->is_visible = visible;
 
         g_debug ("Setting visibility to '%s'",
                  (visible ? "visible" : "hidden"));
@@ -521,7 +520,7 @@ set_track_info (VglSbPlugin *vsbp,
 {
         g_return_if_fail(VGL_IS_SB_PLUGIN(vsbp));
 
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
 
         /* Call to set_field (), always with valid data */
         set_field (&priv->artist_string,
@@ -560,7 +559,7 @@ get_small_font (GtkWidget *widget)
 static void
 main_panel_create (VglSbPlugin *vsbp)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
         GtkWidget *label;
 
         /* Create main_panel and main_panel items */
@@ -654,7 +653,7 @@ main_panel_create (VglSbPlugin *vsbp)
 static void
 main_panel_update (VglSbPlugin *vsbp)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
         GtkWidget *label;
 
         if (!priv->running_app) {
@@ -716,7 +715,7 @@ main_panel_position_func (GtkMenu   *main_panel,
                           gboolean  *push_in,
                           gpointer   data)
 {
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (data);
+        VglSbPluginPrivate *priv = VGL_SB_PLUGIN (data)->priv;
 
         GtkRequisition req;
 
@@ -733,14 +732,13 @@ static void
 plugin_btn_toggled (GtkWidget *button, gpointer data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
 
         if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (button)))
                 return;
 
         g_debug ("Plugin button toggled");
 
-        gtk_menu_popup (GTK_MENU (priv->main_panel),
+        gtk_menu_popup (GTK_MENU (vsbp->priv->main_panel),
                         NULL, NULL,
                         main_panel_position_func, vsbp,
                         1,
@@ -751,7 +749,7 @@ static void
 main_panel_item_activated (GtkWidget *item, gpointer data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
         const gboolean interactive = TRUE;
 
         if (item == priv->play_item) {
@@ -792,7 +790,7 @@ static void
 main_panel_hidden (GtkWidget *main_panel, gpointer data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
-        VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
+        VglSbPluginPrivate *priv = vsbp->priv;
 
         g_debug ("Main panel hidden");
 

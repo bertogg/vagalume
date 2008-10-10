@@ -23,10 +23,12 @@ G_BEGIN_DECLS
 
 typedef struct _VglTrayIcon VglTrayIcon;
 typedef struct _VglTrayIconClass VglTrayIconClass;
+typedef struct _VglTrayIconPrivate VglTrayIconPrivate;
 
 struct _VglTrayIcon
 {
 	GObject parent_instance;
+        VglTrayIconPrivate *priv;
 };
 
 struct _VglTrayIconClass

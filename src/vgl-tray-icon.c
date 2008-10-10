@@ -57,7 +57,6 @@
 G_DEFINE_TYPE (VglTrayIcon, vgl_tray_icon, G_TYPE_OBJECT);
 
 /* Private struct */
-typedef struct _VglTrayIconPrivate VglTrayIconPrivate;
 struct _VglTrayIconPrivate
 {
         GtkStatusIcon *tray_icon;
@@ -139,6 +138,7 @@ vgl_tray_icon_init (VglTrayIcon *vti)
         VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         /* Init private attributes */
+        vti->priv = priv;
         priv->tray_icon = gtk_status_icon_new ();
 
         priv->now_playing = FALSE;
@@ -186,7 +186,7 @@ static void
 vgl_tray_icon_finalize (GObject* object)
 {
         VglTrayIcon *vti = VGL_TRAY_ICON (object);
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = vti->priv;
 
         /* Cleanup libnotify */
         cleanup_libnotify (vti);
@@ -246,7 +246,7 @@ setup_libnotify  (VglTrayIcon *vti)
 static void
 cleanup_libnotify  (VglTrayIcon *vti)
 {
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = vti->priv;
 
         if (notify_is_initted ()) {
                 if (priv->notification) {
@@ -282,7 +282,7 @@ ctxt_menu_item_create (const gchar *icon_name, const gchar *label)
 static void
 ctxt_menu_create (VglTrayIcon *vti)
 {
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = vti->priv;
 
         /* Create ctxt_menu and ctxt_menu items */
         priv->ctxt_menu = gtk_menu_new ();
@@ -368,7 +368,7 @@ ctxt_menu_create (VglTrayIcon *vti)
 static void
 ctxt_menu_update (VglTrayIcon *vti)
 {
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = vti->priv;
 
         /* Adjust sentitiveness for ctxt_menu items and show/hide buttons */
         if (priv->now_playing) {
@@ -413,7 +413,7 @@ tray_icon_popup_menu (GtkStatusIcon *status_icon, guint button,
                       guint activate_time, gpointer data)
 {
         VglTrayIcon *vti = VGL_TRAY_ICON (data);
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = vti->priv;
 
         gtk_menu_popup (GTK_MENU (priv->ctxt_menu),
                         NULL, NULL,
@@ -427,7 +427,7 @@ static void
 ctxt_menu_item_activated (GtkWidget *item, gpointer data)
 {
         VglTrayIcon *vti = VGL_TRAY_ICON (data);
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = vti->priv;
 
         if (item == priv->show_app_item) {
                 controller_show_mainwin(TRUE);
@@ -509,7 +509,7 @@ static void
 show_notification (VglTrayIcon *vti, LastfmTrack *track)
 {
         g_return_if_fail(VGL_IS_TRAY_ICON(vti) && track != NULL);
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
+        VglTrayIconPrivate *priv = vti->priv;
 
         GdkPixbuf *icon = NULL;
         gchar *notification_summary = NULL;
@@ -590,7 +590,7 @@ notify_playback_thread (VglTrayIconPlaybackData *d)
 
         gdk_threads_enter();
         /* Set the now_playing private attribute and update panel */
-        priv = VGL_TRAY_ICON_GET_PRIVATE (d->vti);
+        priv = d->vti->priv;
         priv->now_playing = (d->track != NULL);
         ctxt_menu_update (d->vti);
 
@@ -637,6 +637,5 @@ vgl_tray_icon_notify_playback (VglTrayIcon *vti, LastfmTrack *track)
 void
 vgl_tray_icon_show_notifications (VglTrayIcon *vti, gboolean show_notifications)
 {
-        VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
-        priv->show_notifications = show_notifications;
+        vti->priv->show_notifications = show_notifications;
 }

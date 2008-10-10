@@ -48,7 +48,6 @@
                                       VglMainWindowPrivate))
 G_DEFINE_TYPE (VglMainWindow, vgl_main_window, PARENT_CLASS_TYPE);
 
-typedef struct _VglMainWindowPrivate VglMainWindowPrivate;
 struct _VglMainWindowPrivate {
         GtkWidget *play, *stop;
         GtkWidget *playbutton, *stopbutton, *skipbutton;
@@ -175,8 +174,7 @@ GtkWindow *
 vgl_main_window_get_window(VglMainWindow *w, gboolean get_if_hidden)
 {
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(w), NULL);
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
-        if (!priv->is_hidden || get_if_hidden) {
+        if (!(w->priv->is_hidden) || get_if_hidden) {
                 return GTK_WINDOW(w);
         } else {
                 return NULL;
@@ -188,7 +186,7 @@ vgl_main_window_show(VglMainWindow *w, gboolean show)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         GtkWindow *win = GTK_WINDOW(w);
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
+        VglMainWindowPrivate *priv = w->priv;
         if (show) {
                 /* Move window to its right place (not needed in Maemo) */
                 gtk_window_move (win, priv->x_pos, priv->y_pos);
@@ -204,26 +202,23 @@ void
 vgl_main_window_toggle_visibility(VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
-        vgl_main_window_show(w, priv->is_hidden);
+        vgl_main_window_show (w, w->priv->is_hidden);
 }
 
 gboolean
 vgl_main_window_is_hidden(VglMainWindow *w)
 {
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(w), TRUE);
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
-        return priv->is_hidden;
+        return w->priv->is_hidden;
 }
 
 void
 vgl_main_window_set_album_cover(VglMainWindow *w, const char *data, int size)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
         GdkPixbuf *pixbuf = get_pixbuf_from_image(data, size, ALBUM_COVER_SIZE);
-        gtk_image_set_from_pixbuf(GTK_IMAGE(priv->album_cover), pixbuf);
-        gtk_widget_set_sensitive(priv->album_cover, TRUE);
+        gtk_image_set_from_pixbuf (GTK_IMAGE (w->priv->album_cover), pixbuf);
+        gtk_widget_set_sensitive (w->priv->album_cover, TRUE);
         if (pixbuf != NULL) g_object_unref(pixbuf);
 }
 
@@ -231,7 +226,7 @@ static void
 vgl_main_window_update_track_info(VglMainWindow *w, const LastfmTrack *t)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w) && t != NULL);
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
+        VglMainWindowPrivate *priv = w->priv;
         GString *text = g_string_sized_new(50);
         char *markup;
 
@@ -276,12 +271,11 @@ static void
 set_progress_bar_text(VglMainWindow *w, const char *text)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
-        if (priv->showing_msg) {
+        if (w->priv->showing_msg) {
                 /* If showing a status message, save text for later */
-                g_string_assign(priv->progressbar_text, text);
+                g_string_assign (w->priv->progressbar_text, text);
         } else {
-                gtk_progress_bar_set_text(priv->progressbar, text);
+                gtk_progress_bar_set_text (w->priv->progressbar, text);
         }
 }
 
@@ -289,7 +283,6 @@ void
 vgl_main_window_show_progress(VglMainWindow *w, guint length, guint played)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
         const int bufsize = 16;
         char count[bufsize];
         gdouble fraction = 0;
@@ -302,7 +295,7 @@ vgl_main_window_show_progress(VglMainWindow *w, guint length, guint played)
                 snprintf(count, bufsize, "%u:%02u / ??:??",
                          played/60, played%60);
         }
-        gtk_progress_bar_set_fraction(priv->progressbar, fraction);
+        gtk_progress_bar_set_fraction (w->priv->progressbar, fraction);
         set_progress_bar_text(w, count);
 }
 
@@ -316,7 +309,7 @@ remove_status_msg(gpointer data)
 {
         g_return_val_if_fail(data != NULL, FALSE);
         remove_status_msg_data *d = (remove_status_msg_data *) data;
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(d->win);
+        VglMainWindowPrivate *priv = d->win->priv;
         if (priv->lastmsg_id == d->msgid) {
                 priv->showing_msg = FALSE;
                 /* Restore saved text */
@@ -332,7 +325,7 @@ vgl_main_window_show_status_msg(VglMainWindow *w, const char *text)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w) && text != NULL);
         remove_status_msg_data *d;
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
+        VglMainWindowPrivate *priv = w->priv;
         priv->lastmsg_id++;
         if (!(priv->showing_msg)) {
                 const char *old;
@@ -352,18 +345,16 @@ void
 vgl_main_window_set_track_as_loved(VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
-        gtk_widget_set_sensitive (priv->lovebutton, FALSE);
-        gtk_widget_set_sensitive (priv->love, FALSE);
+        gtk_widget_set_sensitive (w->priv->lovebutton, FALSE);
+        gtk_widget_set_sensitive (w->priv->love, FALSE);
 }
 
 void
 vgl_main_window_set_track_as_added_to_playlist(VglMainWindow *w,gboolean added)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
-        gtk_widget_set_sensitive (priv->addplbutton, !added);
-        gtk_widget_set_sensitive (priv->addtopls, !added);
+        gtk_widget_set_sensitive (w->priv->addplbutton, !added);
+        gtk_widget_set_sensitive (w->priv->addtopls, !added);
 }
 
 static void
@@ -390,7 +381,7 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
                           const LastfmTrack *t, const char *radio_url)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
+        VglMainWindowPrivate *priv = w->priv;
         gboolean dim_labels = FALSE;
         switch (state) {
         case VGL_MAIN_WINDOW_STATE_DISCONNECTED:
@@ -497,7 +488,7 @@ window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
                 VglMainWindow *win)
 {
         GdkWindowState st = event->new_window_state;
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(win);
+        VglMainWindowPrivate *priv = win->priv;
         /* Save the old position if the window has been minimized */
         if (st == GDK_WINDOW_STATE_ICONIFIED && event->changed_mask == st) {
                 gtk_window_get_position(
@@ -517,10 +508,9 @@ static void
 is_topmost_cb(GObject *obj, GParamSpec *arg, VglMainWindow *win)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(win));
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(win);
         HildonWindow *hildonwin = HILDON_WINDOW(win);
-        priv->is_hidden = !hildon_window_get_is_topmost(hildonwin);
-        if (!priv->is_hidden) {
+        win->priv->is_hidden = !hildon_window_get_is_topmost(hildonwin);
+        if (!(win->priv->is_hidden)) {
                 controller_show_cover();
         }
 }
@@ -528,11 +518,10 @@ is_topmost_cb(GObject *obj, GParamSpec *arg, VglMainWindow *win)
 static gboolean
 key_press_cb(GtkWidget *widget, GdkEventKey *event, VglMainWindow *win)
 {
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(win);
         int volchange = 0;
         switch (event->keyval) {
         case GDK_F6:
-                if (priv->is_fullscreen) {
+                if (win->priv->is_fullscreen) {
                         gtk_window_unfullscreen(GTK_WINDOW(win));
                 } else {
                         gtk_window_fullscreen(GTK_WINDOW(win));
@@ -758,7 +747,7 @@ image_button_new(const button_data *data)
 static GtkWidget *
 create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
 {
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(w);
+        VglMainWindowPrivate *priv = w->priv;
         GtkMenuItem *lastfm, *radio, *actions, *bookmarks, *help;
         GtkMenuItem *user, *others;
         GtkWidget *group, *globaltag, *similarartist, *urlradio;
@@ -1020,6 +1009,7 @@ vgl_main_window_init(VglMainWindow *self)
         GtkRcStyle* image_box_style;
         char *image_box_bg;
         GtkAccelGroup *accel = gtk_accel_group_new();
+        self->priv = priv;
         priv->progressbar_text = g_string_sized_new(30);
         g_string_assign(priv->progressbar_text, " ");
         /* Window */
@@ -1171,8 +1161,7 @@ vgl_main_window_init(VglMainWindow *self)
 static void
 vgl_main_window_finalize(GObject *object)
 {
-        VglMainWindow *win = VGL_MAIN_WINDOW(object);
-        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(win);
+        VglMainWindowPrivate *priv = VGL_MAIN_WINDOW (object)->priv;
         g_debug("Destroying main window ...");
         g_string_free(priv->progressbar_text, TRUE);
         g_signal_handlers_destroy(object);

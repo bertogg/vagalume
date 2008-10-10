@@ -34,8 +34,9 @@ G_BEGIN_DECLS
                                VGL_TYPE_BOOKMARK_WINDOW,                \
                                VglBookmarkWindowClass))
 
-typedef struct _VglBookmarkWindow      VglBookmarkWindow;
-typedef struct _VglBookmarkWindowClass VglBookmarkWindowClass;
+typedef struct _VglBookmarkWindow        VglBookmarkWindow;
+typedef struct _VglBookmarkWindowClass   VglBookmarkWindowClass;
+typedef struct _VglBookmarkWindowPrivate VglBookmarkWindowPrivate;
 
 struct _VglBookmarkWindowClass
 {
@@ -45,6 +46,7 @@ struct _VglBookmarkWindowClass
 struct _VglBookmarkWindow
 {
     GtkDialog parent;
+    VglBookmarkWindowPrivate *priv;
 };
 
 GType vgl_bookmark_window_get_type (void) G_GNUC_CONST;

@@ -33,7 +33,6 @@ enum {
                                       VglBookmarkWindowPrivate))
 G_DEFINE_TYPE (VglBookmarkWindow, vgl_bookmark_window, GTK_TYPE_DIALOG);
 
-typedef struct _VglBookmarkWindowPrivate VglBookmarkWindowPrivate;
 struct _VglBookmarkWindowPrivate {
         GtkTreeView *treeview;
         VglBookmarkMgr *mgr;
@@ -49,9 +48,8 @@ static void
 drag_end_cb (GtkWidget *widget, GdkDragContext *ctx, VglBookmarkWindow *win)
 {
         g_return_if_fail (VGL_IS_BOOKMARK_WINDOW (win));
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE (win);
         GtkTreeIter iter;
-        GtkTreeModel *model = gtk_tree_view_get_model (priv->treeview);
+        GtkTreeModel *model = gtk_tree_view_get_model (win->priv->treeview);
         gboolean valid = gtk_tree_model_get_iter_first (model, &iter);
         int length = gtk_tree_model_iter_n_children (model, NULL);
         int *ids = g_new (int, length + 1); /* List of bookmark IDs */
@@ -63,7 +61,7 @@ drag_end_cb (GtkWidget *widget, GdkDragContext *ctx, VglBookmarkWindow *win)
                 valid = gtk_tree_model_iter_next (model, &iter);
         }
         ids [pos] = -1; /* Terminate the list */
-        vgl_bookmark_mgr_reorder (priv->mgr, ids);
+        vgl_bookmark_mgr_reorder (win->priv->mgr, ids);
         g_free (ids);
 }
 
@@ -87,10 +85,9 @@ bookmark_added_cb(VglBookmarkMgr *mgr, VglBookmark *bmk,
                   VglBookmarkWindow *win)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_WINDOW(win) && bmk != NULL);
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
         GtkTreeIter iter;
         GtkListStore *st;
-        st = GTK_LIST_STORE(gtk_tree_view_get_model(priv->treeview));
+        st = GTK_LIST_STORE (gtk_tree_view_get_model (win->priv->treeview));
         gtk_list_store_append(st, &iter);
         gtk_list_store_set(st, &iter, ID_COLUMN, bmk->id, -1);
         gtk_list_store_set(st, &iter, NAME_COLUMN, bmk->name, -1);
@@ -102,9 +99,8 @@ bookmark_changed_cb(VglBookmarkMgr *mgr, VglBookmark *bmk,
                     VglBookmarkWindow *win)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_WINDOW(win) && bmk != NULL);
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
         GtkTreeIter iter;
-        GtkTreeModel *model = gtk_tree_view_get_model(priv->treeview);
+        GtkTreeModel *model = gtk_tree_view_get_model (win->priv->treeview);
         GtkListStore *st = GTK_LIST_STORE(model);
         if (find_bookmark_by_id(model, bmk->id, &iter)) {
                 gtk_list_store_set(st, &iter, NAME_COLUMN, bmk->name, -1);
@@ -119,9 +115,8 @@ static void
 bookmark_removed_cb(VglBookmarkMgr *mgr, int id, VglBookmarkWindow *win)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_WINDOW(win) && id >= 0);
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
         GtkTreeIter iter;
-        GtkTreeModel *model = gtk_tree_view_get_model(priv->treeview);
+        GtkTreeModel *model = gtk_tree_view_get_model (win->priv->treeview);
         if (find_bookmark_by_id(model, id, &iter)) {
                 gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
         } else {
@@ -137,8 +132,7 @@ play_selected_row(VglBookmarkWindow *win)
         GtkTreeIter iter;
         GtkTreeModel *model;
         char *url = NULL;
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
-        sel = gtk_tree_view_get_selection(priv->treeview);
+        sel = gtk_tree_view_get_selection (win->priv->treeview);
         if (gtk_tree_selection_get_selected(sel, &model, &iter)) {
                 gtk_tree_model_get (model, &iter, URL_COLUMN, &url, -1);
         } else {
@@ -161,9 +155,8 @@ static void
 add_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 {
         char *name = NULL, *url = NULL;
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
         if (ui_edit_bookmark_dialog(GTK_WINDOW(win), &name, &url, TRUE)) {
-                vgl_bookmark_mgr_add_bookmark(priv->mgr, name, url);
+                vgl_bookmark_mgr_add_bookmark (win->priv->mgr, name, url);
                 g_free(name);
                 g_free(url);
         }
@@ -175,8 +168,7 @@ edit_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
         GtkTreeSelection *sel;
         GtkTreeIter iter;
         GtkTreeModel *model;
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
-        sel = gtk_tree_view_get_selection(priv->treeview);
+        sel = gtk_tree_view_get_selection (win->priv->treeview);
         if (gtk_tree_selection_get_selected(sel, &model, &iter)) {
                 int id;
                 char *name, *url;
@@ -187,8 +179,8 @@ edit_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
                                     -1);
                 if (ui_edit_bookmark_dialog(GTK_WINDOW(win),
                                             &name, &url, FALSE)) {
-                        vgl_bookmark_mgr_change_bookmark(priv->mgr,
-                                                         id, name, url);
+                        vgl_bookmark_mgr_change_bookmark (win->priv->mgr,
+                                                          id, name, url);
                 }
                 g_free(name);
                 g_free(url);
@@ -203,12 +195,11 @@ delete_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
         GtkTreeSelection *sel;
         GtkTreeIter iter;
         GtkTreeModel *model;
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
-        sel = gtk_tree_view_get_selection(priv->treeview);
+        sel = gtk_tree_view_get_selection (win->priv->treeview);
         if (gtk_tree_selection_get_selected(sel, &model, &iter)) {
                 int id;
                 gtk_tree_model_get (model, &iter, ID_COLUMN, &id, -1);
-                vgl_bookmark_mgr_remove_bookmark(priv->mgr, id);
+                vgl_bookmark_mgr_remove_bookmark (win->priv->mgr, id);
         } else {
                 g_critical("Delete button clicked with no item selected!");
         }
@@ -224,7 +215,7 @@ static void
 selection_changed(GtkTreeSelection *sel, VglBookmarkWindow *win)
 {
         gboolean selected;
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
+        VglBookmarkWindowPrivate *priv = win->priv;
         selected = gtk_tree_selection_get_selected(sel, NULL, NULL);
         gtk_widget_set_sensitive(priv->playbtn, selected);
         gtk_widget_set_sensitive(priv->editbtn, selected);
@@ -242,7 +233,7 @@ static void
 vgl_bookmark_window_finalize (GObject *object)
 {
         VglBookmarkWindow *win = VGL_BOOKMARK_WINDOW(object);
-        VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(win);
+        VglBookmarkWindowPrivate *priv = win->priv;
         g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_ADDED]);
         g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_CHANGED]);
         g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_REMOVED]);
@@ -269,6 +260,8 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
         GtkListStore *store;
         const GList *bookmarks;
         VglBookmarkWindowPrivate *priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE(self);
+
+        self->priv = priv;
 
         /* Create widgets and private data */
         store = gtk_list_store_new(N_COLUMNS, G_TYPE_INT, G_TYPE_STRING,
@@ -373,10 +366,7 @@ vgl_bookmark_window_new(GtkWindow *parent)
 static void
 vgl_bookmark_window_close(VglBookmarkWindow *win)
 {
-        VglBookmarkWindowPrivate *priv;
-        priv = VGL_BOOKMARK_WINDOW_GET_PRIVATE (win);
-
-        vgl_bookmark_mgr_save_to_disk (priv->mgr, FALSE);
+        vgl_bookmark_mgr_save_to_disk (win->priv->mgr, FALSE);
 
         gtk_widget_destroy(GTK_WIDGET(win));
 }

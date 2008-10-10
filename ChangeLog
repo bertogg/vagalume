@@ -1,3 +1,12 @@
+2008-10-10  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-bookmark-mgr.[ch]
+	* src/vgl-bookmark-window.[ch]
+	* src/vgl-main-window.[ch]
+	* src/vgl-sb-plugin.[ch]
+	* src/vgl-tray-icon.[ch]:
+	Add priv field to object structures.
+
 2008-10-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/dlwin.c: Code is simpler now. Use a single button for

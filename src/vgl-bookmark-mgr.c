@@ -29,7 +29,6 @@ G_DEFINE_TYPE (VglBookmarkMgr, vgl_bookmark_mgr, G_TYPE_OBJECT);
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), VGL_TYPE_BOOKMARK_MGR, \
                                       VglBookmarkMgrPrivate))
 
-typedef struct _VglBookmarkMgrPrivate VglBookmarkMgrPrivate;
 struct _VglBookmarkMgrPrivate {
         GList *bookmarks;
         int min_unused_id;
@@ -131,11 +130,8 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
         xmlDoc *doc = NULL;
         xmlNode *node = NULL;
-        VglBookmarkMgrPrivate *priv;
 
         g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr) && cfgfile != NULL);
-
-        priv = VGL_BOOKMARK_MGR_GET_PRIVATE (mgr);
 
         /* Load bookmark file */
         if (file_exists (cfgfile)) {
@@ -179,7 +175,7 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
 
         if (doc != NULL) xmlFreeDoc(doc);
 
-        priv->dirty = FALSE;
+        mgr->priv->dirty = FALSE;
 }
 
 void
@@ -187,14 +183,12 @@ vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
 {
         const GList *l;
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
-        VglBookmarkMgrPrivate *priv;
         xmlDoc *doc;
         xmlNode *root;
 
         g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr) && cfgfile != NULL);
-        priv = VGL_BOOKMARK_MGR_GET_PRIVATE (mgr);
 
-        if (!priv->dirty && !force)
+        if (!(mgr->priv->dirty) && !force)
                 return;
 
         doc = xmlNewDoc ((xmlChar *) "1.0");;
@@ -203,7 +197,7 @@ vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
         xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "1");
         xmlDocSetRootElement (doc, root);
 
-        for (l = priv->bookmarks; l != NULL; l = l->next) {
+        for (l = mgr->priv->bookmarks; l != NULL; l = l->next) {
                 xmlNode *bmknode, *name, *url;
                 xmlChar *enc;
                 const VglBookmark *bmk = (const VglBookmark *) l->data;
@@ -225,7 +219,7 @@ vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
         }
 
         if (xmlSaveFormatFileEnc (cfgfile, doc, "UTF-8", 1) != -1) {
-                priv->dirty = FALSE;
+                mgr->priv->dirty = FALSE;
         } else {
                 g_critical ("Unable to open %s", cfgfile);
         }
@@ -243,6 +237,7 @@ static void
 vgl_bookmark_mgr_init(VglBookmarkMgr *self)
 {
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(self);
+        self->priv = priv;
         priv->bookmarks = NULL;
         priv->min_unused_id = 0;
         priv->dirty = FALSE;
@@ -252,7 +247,7 @@ vgl_bookmark_mgr_init(VglBookmarkMgr *self)
 static void
 vgl_bookmark_mgr_finalize(GObject *object)
 {
-        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(object);
+        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR (object)->priv;
 
         vgl_bookmark_mgr_save_to_disk (VGL_BOOKMARK_MGR (object), FALSE);
 
@@ -308,8 +303,7 @@ static GList *
 vgl_bookmark_mgr_find_bookmark_node(VglBookmarkMgr *mgr, int id)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0, NULL);
-        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
-        return g_list_find_custom (priv->bookmarks, GINT_TO_POINTER (id),
+        return g_list_find_custom (mgr->priv->bookmarks, GINT_TO_POINTER (id),
                                    vgl_bookmark_compare);
 }
 
@@ -319,7 +313,7 @@ vgl_bookmark_mgr_add_bookmark(VglBookmarkMgr *mgr,
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && name && url, -1);
         VglBookmark *bmk;
-        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
+        VglBookmarkMgrPrivate *priv = mgr->priv;
 
         bmk = vgl_bookmark_new(priv->min_unused_id, name, url);
         priv->bookmarks = g_list_append(priv->bookmarks, bmk);
@@ -333,7 +327,7 @@ void
 vgl_bookmark_mgr_remove_bookmark(VglBookmarkMgr *mgr, int id)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0);
-        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
+        VglBookmarkMgrPrivate *priv = mgr->priv;
         GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
         if (l != NULL) {
                 VglBookmark *bmk = (VglBookmark *) l->data;
@@ -354,10 +348,9 @@ vgl_bookmark_mgr_change_bookmark(VglBookmarkMgr *mgr,
         g_return_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0);
         GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
         if (l != NULL) {
-                VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
                 VglBookmark *bmk = (VglBookmark *) l->data;
                 vgl_bookmark_change(bmk, newname, newurl);
-                priv->dirty = TRUE;
+                mgr->priv->dirty = TRUE;
                 g_signal_emit(mgr, mgr_signals[CHANGED], 0, bmk);
         } else {
                 g_warning("%s: bookmark %d does not exist", __FUNCTION__, id);
@@ -379,8 +372,7 @@ const GList *
 vgl_bookmark_mgr_get_bookmark_list(VglBookmarkMgr *mgr)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr), NULL);
-        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(mgr);
-        return priv->bookmarks;
+        return mgr->priv->bookmarks;
 }
 
 /**
@@ -393,7 +385,7 @@ void
 vgl_bookmark_mgr_reorder (VglBookmarkMgr *mgr, const int *ids)
 {
         g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr));
-        VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE (mgr);
+        VglBookmarkMgrPrivate *priv = mgr->priv;
         GList *iter;
         int pos = 0;
         for (iter = priv->bookmarks; iter != NULL; iter = iter->next, pos++) {

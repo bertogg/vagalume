@@ -18,8 +18,9 @@
 #define VGL_IS_SB_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  VGL_SB_PLUGIN_TYPE))
 #define VGL_SB_PLUGIN_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  VGL_SB_PLUGIN_TYPE, VglSbPluginClass))
 
-typedef struct _VglSbPlugin      VglSbPlugin;
-typedef struct _VglSbPluginClass VglSbPluginClass;
+typedef struct _VglSbPlugin        VglSbPlugin;
+typedef struct _VglSbPluginClass   VglSbPluginClass;
+typedef struct _VglSbPluginPrivate VglSbPluginPrivate;
 
 struct _VglSbPlugin
 {
@@ -29,6 +30,7 @@ struct _VglSbPlugin
 struct _VglSbPluginClass
 {
   StatusbarItemClass parent_class;
+  VglSbPluginPrivate *priv;
 };
 
 GType vgl_sb_plugin_get_type(void);

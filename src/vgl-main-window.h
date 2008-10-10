@@ -42,8 +42,9 @@ G_BEGIN_DECLS
                                VGL_TYPE_MAIN_WINDOW,                    \
                                VglMainWindowClass))
 
-typedef struct _VglMainWindow      VglMainWindow;
-typedef struct _VglMainWindowClass VglMainWindowClass;
+typedef struct _VglMainWindow        VglMainWindow;
+typedef struct _VglMainWindowClass   VglMainWindowClass;
+typedef struct _VglMainWindowPrivate VglMainWindowPrivate;
 
 struct _VglMainWindowClass
 {
@@ -61,6 +62,7 @@ struct _VglMainWindow
 #else
     GtkWindow parent;
 #endif
+    VglMainWindowPrivate *priv;
 };
 
 /* UI state */

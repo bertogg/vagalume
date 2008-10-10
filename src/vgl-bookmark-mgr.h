@@ -28,8 +28,9 @@ G_BEGIN_DECLS
    (G_TYPE_INSTANCE_GET_CLASS ((obj),                                \
    VGL_TYPE_BOOKMARK_MGR, VglBookmarkMgrClass))
 
-typedef struct _VglBookmarkMgr      VglBookmarkMgr;
-typedef struct _VglBookmarkMgrClass VglBookmarkMgrClass;
+typedef struct _VglBookmarkMgr        VglBookmarkMgr;
+typedef struct _VglBookmarkMgrClass   VglBookmarkMgrClass;
+typedef struct _VglBookmarkMgrPrivate VglBookmarkMgrPrivate;
 
 typedef struct {
         int id;
@@ -45,6 +46,7 @@ struct _VglBookmarkMgrClass
 struct _VglBookmarkMgr
 {
         GObject parent;
+        VglBookmarkMgrPrivate *priv;
 };
 
 GType vgl_bookmark_mgr_get_type (void) G_GNUC_CONST;
