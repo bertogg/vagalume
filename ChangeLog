@@ -1,5 +1,9 @@
 2008-10-10  Alberto Garcia  <agarcia@igalia.com>
 
+	* Makefile.am (MAINTAINERCLEANFILES): Remove vagalume.desktop.in
+
+2008-10-10  Alberto Garcia  <agarcia@igalia.com>
+
 	* debian/control.*
 	* Makefile.am
 	* autogen.sh

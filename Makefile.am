@@ -17,6 +17,7 @@ MAINTAINERCLEANFILES = \
 	config.sub \
 	configure \
 	data/vagalume.desktop \
+	data/vagalume.desktop.in \
 	data/vagalume.service \
 	debian/files \
 	debian/vagalume.debhelper.log \
