@@ -1,5 +1,9 @@
 2008-10-10  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-sb-plugin.h: Fix compilation error
+
+2008-10-10  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-bookmark-mgr.[ch]
 	* src/vgl-bookmark-window.[ch]
 	* src/vgl-main-window.[ch]

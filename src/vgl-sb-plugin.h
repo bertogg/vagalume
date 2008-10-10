@@ -25,12 +25,12 @@ typedef struct _VglSbPluginPrivate VglSbPluginPrivate;
 struct _VglSbPlugin
 {
   StatusbarItem parent;
+  VglSbPluginPrivate *priv;
 };
 
 struct _VglSbPluginClass
 {
   StatusbarItemClass parent_class;
-  VglSbPluginPrivate *priv;
 };
 
 GType vgl_sb_plugin_get_type(void);
