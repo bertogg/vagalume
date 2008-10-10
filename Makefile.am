@@ -35,8 +35,10 @@ manpages = vagalume.1
 
 pixmap_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
-desktopentry_DATA = data/vagalume.desktop
 appdata_DATA = data/cover/$(SCR_RESOLUTION)/cover.png
+
+desktopentry_DATA = data/vagalume.desktop
+@INTLTOOL_DESKTOP_RULE@
 
 if HAVE_DBUS_SUPPORT
 serviceentry_DATA = data/vagalume.service
@@ -70,16 +72,14 @@ endif
 edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
 
 data/vagalume.service: Makefile data/vagalume.service.in
-	rm -f data/vagalume.service data/vagalume.service.tmp
-	$(edit) data/vagalume.service.in > data/vagalume.service.tmp
-	mv data/vagalume.service.tmp data/vagalume.service
+	rm -f data/vagalume.service
+	$(edit) data/vagalume.service.in > data/vagalume.service
 
-data/vagalume.desktop: Makefile data/vagalume.desktop.in
-	rm -f data/vagalume.desktop data/vagalume.desktop.tmp
-	$(edit) data/vagalume.desktop.in > data/vagalume.desktop.tmp
-	mv data/vagalume.desktop.tmp data/vagalume.desktop
+data/vagalume.desktop.in: Makefile data/vagalume.desktop.in.in
+	rm -f data/vagalume.desktop.in
+	$(edit) data/vagalume.desktop.in.in > data/vagalume.desktop.in
 	if test -f "data/vagalume.desktop.$(PLATFORM)" ; then \
-	   cat "data/vagalume.desktop.$(PLATFORM)" >> data/vagalume.desktop ; \
+	   cat "data/vagalume.desktop.$(PLATFORM)" >> data/vagalume.desktop.in ; \
 	fi
 
 install-exec-hook:

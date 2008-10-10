@@ -11,6 +11,7 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 AC_PROG_LN_S
 AC_HEADER_STDC
+IT_PROG_INTLTOOL([0.35.0], [no-xml])
 
 # Some variables
 VAGALUME_CONFIG_DIR=".vagalume"
@@ -379,8 +380,6 @@ fi
 ####################
 ### Translations ###
 ####################
-ALL_LINGUAS="de es fi fr gl it lv pt pt_BR"
-
 VAGALUME_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
 AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
 AM_GLIB_GNU_GETTEXT
@@ -442,15 +441,14 @@ AC_SUBST(PLATFORM)
 ############################
 ### Produce output files ###
 ############################
-AC_OUTPUT(
-	  Makefile \
-	  src/Makefile
-	  po/Makefile.in
-)
-
-if test "$PLATFORM" = "maemo"; then
-   AC_OUTPUT(data/vagalume.conf data/vagalume-rfs.sh)
-fi
+AC_CONFIG_FILES([
+   Makefile
+   po/Makefile.in
+   src/Makefile
+   data/vagalume-rfs.sh
+   data/vagalume.conf
+])
+AC_OUTPUT
 
 ######################
 ### Status summary ###

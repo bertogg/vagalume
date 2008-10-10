@@ -1,3 +1,4 @@
+data/vagalume.desktop.in.in
 src/connection.c
 src/controller.c
 src/dbus.c

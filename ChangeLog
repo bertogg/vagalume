@@ -1,5 +1,17 @@
 2008-10-10  Alberto Garcia  <agarcia@igalia.com>
 
+	* debian/control.*
+	* Makefile.am
+	* autogen.sh
+	* configure.ac
+	* data/vagalume.desktop.in.in
+	* po/LINGUAS
+	* po/POTFILES.in:
+	Use intltool.
+	Add translation support for the vagalume.desktop file.
+
+2008-10-10  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/globaldefs.h
 	* configure.ac:
 	Add compatibility for GLib versions without

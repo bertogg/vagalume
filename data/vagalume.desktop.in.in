@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Categories=Audio;AudioVideo;GNOME;GTK;Application;Player;
-Name=Vagalume Last.fm Client
+_Name=Vagalume Last.fm Client
 Exec=@BINDIR@/vagalume
 Icon=vagalume
 X-Icon-path=@PIXMAPDIR@
