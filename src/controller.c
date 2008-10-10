@@ -808,7 +808,7 @@ controller_audio_started_cb(void)
         im_set_status(usercfg, track);
         showing_cover = FALSE;
         controller_show_cover();
-        g_timeout_add(1000, controller_show_progress, track);
+        g_timeout_add_seconds (1, controller_show_progress, track);
 }
 
 /**

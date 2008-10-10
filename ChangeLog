@@ -1,5 +1,15 @@
 2008-10-10  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/globaldefs.h
+	* configure.ac:
+	Add compatibility for GLib versions without
+	g_timeout_add_seconds()
+
+	* src/controller.c (controller_audio_started_cb):
+	Use g_timeout_add_seconds()
+
+2008-10-10  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-sb-plugin.h: Fix compilation error
 
 2008-10-10  Alberto Garcia  <agarcia@igalia.com>

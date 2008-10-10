@@ -73,6 +73,17 @@ if test "$have_libnotify" = "yes"; then
    echo $have_tray_icon
 fi
 
+# g_timeout_add_seconds requires glib 2.14
+echo -n "checking for glib >= 2.14... "
+if $PKG_CONFIG --atleast-version=2.14 glib-2.0; then
+   have_timeout_seconds="yes"
+   AC_DEFINE([HAVE_G_TIMEOUT_ADD_SECONDS],[1],
+             [Defined if g_timeout_add_seconds() exists])
+else
+   have_timeout_seconds="no"
+fi
+echo $have_timeout_seconds
+
 # GChecksum requires glib 2.16
 echo -n "checking for glib >= 2.16... "
 if $PKG_CONFIG --atleast-version=2.16 glib-2.0; then
