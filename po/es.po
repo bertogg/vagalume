@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-25 01:03+0200\n"
-"PO-Revision-Date: 2008-07-25 01:04+0200\n"
+"PO-Revision-Date: 2008-10-17 13:47+0200\n"
 "Last-Translator: Oscar A. Mata T. <omata_mac@yahoo.com>\n"
 "Language-Team: es_VE\n"
 "MIME-Version: 1.0\n"
@@ -585,7 +585,7 @@ msgstr "<b>Álbum:</b>\n"
 
 #: src/vgl-main-window.c:262
 msgid "<b>Listening to <i>"
-msgstr "<b>Escuchando a <i>"
+msgstr "<b>Escuchando <i>"
 
 #: src/vgl-main-window.c:400 src/vgl-main-window.c:401
 msgid "Stopped"

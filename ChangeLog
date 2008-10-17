@@ -1,3 +1,7 @@
+2008-10-17  Alberto Garcia  <agarcia@igalia.com>
+
+	* po/es.po: Fixed Spanish translation
+
 2008-10-10  Alberto Garcia  <agarcia@igalia.com>
 
 	* Makefile.am (MAINTAINERCLEANFILES): Remove vagalume.desktop.in
