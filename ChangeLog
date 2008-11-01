@@ -1,5 +1,11 @@
 2008-11-01  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-main-window.c
+	(vgl_main_window_init, vgl_main_window_new): Set window type using
+	a constructor property.
+
+2008-11-01  Alberto Garcia  <agarcia@igalia.com>
+
 	* Makefile.am (MAINTAINERCLEANFILES)
 	* debian/control*
 	* debian/rules:
