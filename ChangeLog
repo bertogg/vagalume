@@ -1,3 +1,13 @@
+2008-11-01  Alberto Garcia  <agarcia@igalia.com>
+
+	* Makefile.am (MAINTAINERCLEANFILES)
+	* debian/control*
+	* debian/rules:
+	Switched to cdbs.
+
+	* debian/changelog:
+	Update with latest changes.
+
 2008-10-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* po/es.po: Fixed Spanish translation

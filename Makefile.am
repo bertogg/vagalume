@@ -9,17 +9,20 @@
 MAINTAINERCLEANFILES = \
 	Makefile.in \
 	aclocal.m4 \
-	build-stamp \
 	compile \
 	config.guess \
+	config.guess.cdbs-orig \
 	config.h.in \
 	config.h.in~ \
 	config.sub \
+	config.sub.cdbs-orig \
 	configure \
 	data/vagalume.desktop \
 	data/vagalume.desktop.in \
 	data/vagalume.service \
 	debian/files \
+	debian/stamp-autotools-files \
+	debian/stamp-makefile-build \
 	debian/vagalume.debhelper.log \
 	debian/vagalume.postinst.debhelper \
 	debian/vagalume.postrm.debhelper \
@@ -28,8 +31,7 @@ MAINTAINERCLEANFILES = \
 	install-sh \
 	ltmain.sh \
 	missing \
-	mkinstalldirs \
-	po/Makefile.in.in
+	mkinstalldirs
 
 SUBDIRS = src po
 manpages = vagalume.1

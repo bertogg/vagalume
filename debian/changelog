@@ -1,3 +1,13 @@
+vagalume (0.7-2) UNRELEASED; urgency=low
+
+  * Switched to cdbs
+  * Added watch file
+  * Added intltool to Build-Depends
+  * Updated Standards-Version to 3.8.0
+  * Moved 'Homepage' field to source paragraph
+
+ -- Alberto Garcia <agarcia@igalia.com>  Sat, 01 Nov 2008 02:05:28 +0100
+
 vagalume (0.7-1) unstable; urgency=low
 
   * New upstream release
