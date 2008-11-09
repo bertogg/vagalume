@@ -113,49 +113,6 @@ static const button_data addpl_button = {
 
 static const char *cover_background = APP_DATA_DIR "/cover.png";
 
-static const char *authors[] = {
-        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>\n",
-        "Mario Sanchez Prada\n<msanchez@igalia.com>",
-        NULL
-};
-static const char *artists[] = {
-        "Felipe Erias Morandeira\n<femorandeira@igalia.com>",
-        NULL
-};
-
-static const char *appdescr = N_("A Last.fm client for Gnome and Maemo");
-static const char *copyright = "(c) 2007, 2008 Alberto Garcia Gonzalez";
-static const char *website = "http://vagalume.igalia.com/";
-static const char *license =
-"Vagalume is free software: you can redistribute\n"
-"it and/or modify it under the terms of the GNU\n"
-"General Public License version 3 as published by\n"
-"the Free Software Foundation.\n"
-"\n"
-"Vagalume is distributed in the hope that it will\n"
-"be useful, but WITHOUT ANY WARRANTY; without even\n"
-"the implied warranty of MERCHANTABILITY or FITNESS\n"
-"FOR A PARTICULAR PURPOSE. See the GNU General\n"
-"Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General\n"
-"Public License along with Vagalume. If not, see\n"
-"http://www.gnu.org/licenses/\n";
-static const char *translators_tpl =
-"%s (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
-         "* Oskar Welzl <mail@welzl.info>\n\n"
-"%s (es)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
-"%s (fi)\n* Janne Mäkinen <janne.makinen@surffi.fi>\n"
-         "* Mika Tapojärvi <mika.tapojarvi@sse.fi>\n"
-         "* Tommi Franttila <tommif@gmail.com>\n\n"
-"%s (fr)\n* Julien Duponchelle <julien@duponchelle.info>\n\n"
-"%s (gl)\n* Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
-         "* Amador Loureiro Blanco <dorfun@adorfunteca.org>\n\n"
-"%s (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
-"%s (lv)\n* Pēteris Caune <cuu508@gmail.com>\n\n"
-"%s (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
-"%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
-
 void
 vgl_main_window_run_app(void)
 {
@@ -668,40 +625,10 @@ add_bookmark_selected(GtkWidget *widget, gpointer data)
         controller_add_bookmark(type);
 }
 
-#ifdef HAVE_GIO
-static void
-about_dialog_uri_hook (GtkAboutDialog *about, const gchar *link, gpointer data)
-{
-        gchar *uri = g_strconcat (data, link, NULL);
-        launch_url (uri, NULL);
-        g_free (uri);
-}
-#endif
-
 static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
-        GtkWindow *win = GTK_WINDOW(data);
-        GdkPixbuf *logo = gdk_pixbuf_new_from_file(APP_ICON_BIG, NULL);
-        char *translators = g_strdup_printf(translators_tpl, _("German"),
-                                            _("Spanish"), _("Finnish"),
-                                            _("French"),
-                                            _("Galician"), _("Italian"),
-                                            _("Latvian"), _("Portuguese"),
-                                            _("Portuguese"));
-#ifdef HAVE_GIO
-        gtk_about_dialog_set_url_hook (about_dialog_uri_hook, "", NULL);
-        gtk_about_dialog_set_email_hook (about_dialog_uri_hook, "mailto:",
-                                         NULL);
-#endif
-        gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
-                              "comments", _(appdescr), "copyright", copyright,
-                              "license", license, "version", APP_VERSION,
-                              "website", website, "artists", artists,
-                              "translator-credits", translators,
-                              "logo", logo, NULL);
-        g_object_unref(G_OBJECT(logo));
-        g_free(translators);
+        controller_show_about ();
 }
 
 static void
@@ -990,7 +917,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         gtk_menu_item_set_submenu(help, GTK_WIDGET(helpsub));
         gtk_menu_shell_append(helpsub, about);
         g_signal_connect(G_OBJECT(about), "activate",
-                         G_CALLBACK(show_about_dialog), w);
+                         G_CALLBACK(show_about_dialog), NULL);
 #ifdef USE_HILDON_WINDOW
         gtk_menu_shell_append(bar, quit);
 #endif

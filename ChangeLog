@@ -1,3 +1,22 @@
+2008-11-09  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-tray-icon.c
+	(vgl_tray_icon_init, vgl_tray_icon_finalize, ctxt_menu_create)
+	(ctxt_menu_item_activated): Added "About" to tray icon menu.
+
+	* src/vgl-main-window.c
+	* src/uimisc.h
+	* src/uimisc.c
+	(ui_about_dialog): Moved about dialog code from
+	vgl-main-window.c to uimisc.c
+
+	* src/controller.h
+	* src/controller.c
+	(controller_show_about): Generic function to show the about
+	dialog.
+
+	Fixes bug #3003 (along with Luca's previous changes)
+
 2008-11-08  Luca Bruno  <lethalman88@gmail.com>
 
 	* src/vgl-main-window.c (apply_icon_theme): parameter must be

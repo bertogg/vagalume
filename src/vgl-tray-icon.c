@@ -42,6 +42,7 @@ struct _VglTrayIconPrivate
         GtkWidget *ctxt_menu;
 
         GtkWidget *settings_item;
+        GtkWidget *about_item;
         GtkWidget *recommend_item;
         GtkWidget *tag_item;
         GtkWidget *add_to_pls_item;
@@ -58,6 +59,7 @@ struct _VglTrayIconPrivate
         gint tray_icon_clicked_handler_id;
         gint tray_icon_popup_menu_handler_id;
         gint settings_item_handler_id;
+        gint about_item_handler_id;
         gint recommend_item_handler_id;
         gint tag_item_handler_id;
         gint add_to_pls_item_handler_id;
@@ -118,6 +120,7 @@ vgl_tray_icon_init (VglTrayIcon *vti)
         priv->now_playing = FALSE;
 
         priv->settings_item = NULL;
+        priv->about_item = NULL;
         priv->recommend_item = NULL;
         priv->tag_item = NULL;
         priv->add_to_pls_item = NULL;
@@ -167,6 +170,8 @@ vgl_tray_icon_finalize (GObject* object)
         /* Disconnect handlers */
         g_signal_handler_disconnect (priv->settings_item,
                                      priv->settings_item_handler_id);
+        g_signal_handler_disconnect (priv->about_item,
+                                     priv->about_item_handler_id);
         g_signal_handler_disconnect (priv->recommend_item,
                                      priv->recommend_item_handler_id);
         g_signal_handler_disconnect (priv->tag_item,
@@ -240,6 +245,8 @@ ctxt_menu_create (VglTrayIcon *vti)
         priv->settings_item =
                 ui_menu_item_create_from_icon (SETTINGS_ITEM_ICON_NAME,
                                                SETTINGS_ITEM_STRING);
+        priv->about_item =
+                gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, NULL);
         priv->recommend_item =
                 ui_menu_item_create_from_icon (RECOMMEND_ITEM_ICON_NAME,
                                                RECOMMEND_ITEM_STRING);
@@ -268,8 +275,6 @@ ctxt_menu_create (VglTrayIcon *vti)
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 
         /* Add items to ctxt_menu */
-        gtk_menu_append (priv->ctxt_menu, priv->settings_item);
-        gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
         gtk_menu_append (priv->ctxt_menu, priv->recommend_item);
         gtk_menu_append (priv->ctxt_menu, priv->tag_item);
         gtk_menu_append (priv->ctxt_menu, priv->add_to_pls_item);
@@ -281,11 +286,17 @@ ctxt_menu_create (VglTrayIcon *vti)
         gtk_menu_append (priv->ctxt_menu, priv->stop_item);
         gtk_menu_append (priv->ctxt_menu, priv->next_item);
         gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
+        gtk_menu_append (priv->ctxt_menu, priv->settings_item);
+        gtk_menu_append (priv->ctxt_menu, priv->about_item);
+        gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
         gtk_menu_append (priv->ctxt_menu, priv->close_vagalume_item);
 
         /* Connect signals */
         priv->settings_item_handler_id =
                 g_signal_connect(priv->settings_item, "activate",
+                                 G_CALLBACK (ctxt_menu_item_activated), vti);
+        priv->about_item_handler_id =
+                g_signal_connect(priv->about_item, "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
         priv->recommend_item_handler_id =
                 g_signal_connect(priv->recommend_item, "activate",
@@ -385,6 +396,8 @@ ctxt_menu_item_activated (GtkWidget *item, gpointer data)
 
         if (item == priv->settings_item) {
                 controller_open_usercfg();
+        } else if (item == priv->about_item) {
+                controller_show_about();
         } else if (item == priv->recommend_item) {
                 controller_recomm_track();
         } else if (item == priv->tag_item) {

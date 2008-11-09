@@ -148,6 +148,15 @@ controller_show_banner(const char *text)
 }
 
 /**
+ * Show the about dialog
+ */
+void
+controller_show_about (void)
+{
+        ui_about_dialog (vgl_main_window_get_window (mainwin, FALSE));
+}
+
+/**
  * Show an OK/cancel dialog to request confirmation from the user
  *
  * @param text The text to show

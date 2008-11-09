@@ -46,6 +46,7 @@ void ui_info_banner(GtkWindow *parent, const char *text);
 void ui_info_dialog(GtkWindow *parent, const char *text);
 void ui_warning_dialog(GtkWindow *parent, const char *text);
 void ui_error_dialog(GtkWindow *parent, const char *text);
+void ui_about_dialog (GtkWindow *parent);
 char *ui_input_dialog(GtkWindow *parent, const char *title,
                       const char *text, const char *value);
 gboolean ui_stop_after_dialog (GtkWindow *parent, StopAfterType *stopafter,
