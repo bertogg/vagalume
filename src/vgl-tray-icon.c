@@ -16,6 +16,7 @@
 #include "playlist.h"
 #include "metadata.h"
 #include "util.h"
+#include "uimisc.h"
 
 #define TOOLTIP_DEFAULT_STRING _(" Stopped ")
 #define TOOLTIP_FORMAT_STRING  _(" Now playing: \n %s \n   by  %s ")
@@ -23,32 +24,7 @@
 #define NOTIFICATION_BODY_NO_ALBUM _(" by <i>%s</i>")
 #define NOTIFICATION_BODY_WITH_ALBUM _(" by <i>%s</i>\n from <i>%s</i>")
 
-#define SHOW_APP_ITEM_STRING _("Show main window")
-#define SETTINGS_ITEM_STRING _("Settings...")
-#define RECOMMEND_ITEM_STRING _("Recommend...")
-#define TAG_ITEM_STRING _("Tags...")
-#define ADD_TO_PLS_ITEM_STRING _("Add to playlist")
-#define LOVE_ITEM_STRING _("Love this track")
-#define BAN_ITEM_STRING _("Ban this track")
-#define PLAY_ITEM_STRING _("Play")
-#define STOP_ITEM_STRING _("Stop")
-#define SKIP_ITEM_STRING _("Skip")
-#define CLOSE_APP_ITEM_STRING _("Close Vagalume")
-
-#define MENU_ITEM_ICON_SIZE 18
 #define NOTIFICATION_ICON_SIZE 48
-
-#define SHOW_APP_ITEM_ICON_NAME "view-restore"
-#define SETTINGS_ITEM_ICON_NAME "preferences-other"
-#define RECOMMEND_ITEM_ICON_NAME "mail-message-new"
-#define TAG_ITEM_ICON_NAME "accessories-text-editor"
-#define ADD_TO_PLS_ITEM_ICON_NAME "list-add"
-#define LOVE_ITEM_ICON_NAME "emblem-favorite"
-#define BAN_ITEM_ICON_NAME "process-stop"
-#define PLAY_ITEM_ICON_NAME "media-playback-start"
-#define STOP_ITEM_ICON_NAME "media-playback-stop"
-#define SKIP_ITEM_ICON_NAME "media-skip-forward"
-#define CLOSE_APP_ITEM_ICON_NAME "window-close"
 
 #define VGL_TRAY_ICON_GET_PRIVATE(object)      \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
@@ -65,7 +41,6 @@ struct _VglTrayIconPrivate
 
         GtkWidget *ctxt_menu;
 
-        GtkWidget *show_app_item;
         GtkWidget *settings_item;
         GtkWidget *recommend_item;
         GtkWidget *tag_item;
@@ -82,7 +57,6 @@ struct _VglTrayIconPrivate
 
         gint tray_icon_clicked_handler_id;
         gint tray_icon_popup_menu_handler_id;
-        gint show_app_item_handler_id;
         gint settings_item_handler_id;
         gint recommend_item_handler_id;
         gint tag_item_handler_id;
@@ -143,7 +117,6 @@ vgl_tray_icon_init (VglTrayIcon *vti)
 
         priv->now_playing = FALSE;
 
-        priv->show_app_item = NULL;
         priv->settings_item = NULL;
         priv->recommend_item = NULL;
         priv->tag_item = NULL;
@@ -192,8 +165,6 @@ vgl_tray_icon_finalize (GObject* object)
         cleanup_libnotify (vti);
 
         /* Disconnect handlers */
-        g_signal_handler_disconnect (priv->show_app_item,
-                                     priv->show_app_item_handler_id);
         g_signal_handler_disconnect (priv->settings_item,
                                      priv->settings_item_handler_id);
         g_signal_handler_disconnect (priv->recommend_item,
@@ -259,26 +230,6 @@ cleanup_libnotify  (VglTrayIcon *vti)
 
 /* Panel update functions */
 
-static GtkWidget *
-ctxt_menu_item_create (const gchar *icon_name, const gchar *label)
-{
-        g_return_val_if_fail (icon_name != NULL && label != NULL, NULL);
-
-        GtkWidget *item = gtk_image_menu_item_new_with_label (label);
-        GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
-        GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
-                                                     MENU_ITEM_ICON_SIZE, 0, NULL);
-
-        if (pixbuf != NULL) {
-                GtkWidget *image = gtk_image_new_from_pixbuf(pixbuf);
-                gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
-                                               image);
-                g_object_unref (pixbuf);
-        }
-
-        return item;
-}
-
 static void
 ctxt_menu_create (VglTrayIcon *vti)
 {
@@ -286,31 +237,37 @@ ctxt_menu_create (VglTrayIcon *vti)
 
         /* Create ctxt_menu and ctxt_menu items */
         priv->ctxt_menu = gtk_menu_new ();
-        priv->show_app_item =
-                ctxt_menu_item_create (SHOW_APP_ITEM_ICON_NAME, SHOW_APP_ITEM_STRING);
         priv->settings_item =
-                ctxt_menu_item_create (SETTINGS_ITEM_ICON_NAME, SETTINGS_ITEM_STRING);
+                ui_menu_item_create_from_icon (SETTINGS_ITEM_ICON_NAME,
+                                               SETTINGS_ITEM_STRING);
         priv->recommend_item =
-                ctxt_menu_item_create (RECOMMEND_ITEM_ICON_NAME, RECOMMEND_ITEM_STRING);
+                ui_menu_item_create_from_icon (RECOMMEND_ITEM_ICON_NAME,
+                                               RECOMMEND_ITEM_STRING);
         priv->tag_item =
-                ctxt_menu_item_create (TAG_ITEM_ICON_NAME, TAG_ITEM_STRING);
+                ui_menu_item_create_from_icon (TAG_ITEM_ICON_NAME,
+                                               TAG_ITEM_STRING);
         priv->add_to_pls_item =
-                ctxt_menu_item_create (ADD_TO_PLS_ITEM_ICON_NAME, ADD_TO_PLS_ITEM_STRING);
+                ui_menu_item_create_from_icon (ADD_TO_PLS_ITEM_ICON_NAME,
+                                               ADD_TO_PLS_ITEM_STRING);
         priv->love_item =
-                ctxt_menu_item_create (LOVE_ITEM_ICON_NAME, LOVE_ITEM_STRING);
+                ui_menu_item_create_from_icon (LOVE_ITEM_ICON_NAME,
+                                               LOVE_ITEM_STRING);
         priv->ban_item =
-                ctxt_menu_item_create (BAN_ITEM_ICON_NAME, BAN_ITEM_STRING);
+                ui_menu_item_create_from_icon (BAN_ITEM_ICON_NAME,
+                                               BAN_ITEM_STRING);
         priv->play_item =
-                ctxt_menu_item_create (PLAY_ITEM_ICON_NAME, PLAY_ITEM_STRING);
+                ui_menu_item_create_from_icon (PLAY_ITEM_ICON_NAME,
+                                               PLAY_ITEM_STRING);
         priv->stop_item =
-                ctxt_menu_item_create (STOP_ITEM_ICON_NAME, STOP_ITEM_STRING);
+                ui_menu_item_create_from_icon (STOP_ITEM_ICON_NAME,
+                                               STOP_ITEM_STRING);
         priv->next_item =
-                ctxt_menu_item_create (SKIP_ITEM_ICON_NAME, SKIP_ITEM_STRING);
+                ui_menu_item_create_from_icon (SKIP_ITEM_ICON_NAME,
+                                               SKIP_ITEM_STRING);
         priv->close_vagalume_item =
-                ctxt_menu_item_create (CLOSE_APP_ITEM_ICON_NAME, CLOSE_APP_ITEM_STRING);
+                gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 
         /* Add items to ctxt_menu */
-        gtk_menu_append (priv->ctxt_menu, priv->show_app_item);
         gtk_menu_append (priv->ctxt_menu, priv->settings_item);
         gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
         gtk_menu_append (priv->ctxt_menu, priv->recommend_item);
@@ -327,9 +284,6 @@ ctxt_menu_create (VglTrayIcon *vti)
         gtk_menu_append (priv->ctxt_menu, priv->close_vagalume_item);
 
         /* Connect signals */
-        priv->show_app_item_handler_id =
-                g_signal_connect(priv->show_app_item, "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
         priv->settings_item_handler_id =
                 g_signal_connect(priv->settings_item, "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
@@ -429,9 +383,7 @@ ctxt_menu_item_activated (GtkWidget *item, gpointer data)
         VglTrayIcon *vti = VGL_TRAY_ICON (data);
         VglTrayIconPrivate *priv = vti->priv;
 
-        if (item == priv->show_app_item) {
-                controller_show_mainwin(TRUE);
-        } else if (item == priv->settings_item) {
+        if (item == priv->settings_item) {
                 controller_open_usercfg();
         } else if (item == priv->recommend_item) {
                 controller_recomm_track();

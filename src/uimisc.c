@@ -30,6 +30,8 @@
 #        include <hildon/hildon-file-chooser-dialog.h>
 #endif
 
+#define MENU_ITEM_ICON_SIZE 16
+
 static void tagwin_selcombo_changed(GtkComboBox *combo, gpointer data);
 
 typedef enum {
@@ -270,6 +272,27 @@ ui_edit_bookmark_dialog(GtkWindow *parent, char **name, char **url,
         }
         gtk_widget_destroy(GTK_WIDGET(dialog));
         return retvalue;
+}
+
+GtkWidget *
+ui_menu_item_create_from_icon (const gchar *icon_name, const gchar *label)
+{
+        g_return_val_if_fail (icon_name != NULL && label != NULL, NULL);
+
+        GtkWidget *item = gtk_image_menu_item_new_with_mnemonic (label);
+        GtkIconTheme *icon_theme = gtk_icon_theme_get_default ();
+        GdkPixbuf *pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name,
+                                                      MENU_ITEM_ICON_SIZE, 0,
+                                                      NULL);
+
+        if (pixbuf != NULL) {
+                GtkWidget *image = gtk_image_new_from_pixbuf (pixbuf);
+                gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
+                                               image);
+                g_object_unref (pixbuf);
+        }
+
+        return item;
 }
 
 static char *
