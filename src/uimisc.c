@@ -663,6 +663,8 @@ ui_usercfg_window(GtkWindow *parent, VglUserCfg **cfg)
         win.helpbtn = gtk_button_new_from_stock(GTK_STOCK_HELP);
         gtk_box_pack_start(GTK_BOX(win.dialog->action_area), win.helpbtn,
                            FALSE, FALSE, 0);
+        gtk_button_box_set_child_secondary (
+                GTK_BUTTON_BOX (win.dialog->action_area), win.helpbtn, TRUE);
 
         usercfg_add_account_settings(&win, *cfg);
         usercfg_add_connection_settings(&win, *cfg);
