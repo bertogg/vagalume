@@ -711,14 +711,15 @@ open_user_settings(GtkWidget *widget, gpointer data)
 }
 
 static void
-apply_icon_theme(GtkIconTheme *icon_theme, GObject* button)
+apply_icon_theme(GtkIconTheme *icon_theme, GtkButton *button)
 {
         g_return_if_fail(button != NULL);
         const button_data *data;
         GdkPixbuf *pixbuf = NULL;
         GtkWidget *image;
 
-        data = (const button_data *) g_object_get_data(button, "button_data");
+        data = (const button_data *) g_object_get_data (G_OBJECT (button),
+                                                        "button_data");
 
         g_return_if_fail(data && data->icon_name && data->icon_size > 0);
 
@@ -727,7 +728,7 @@ apply_icon_theme(GtkIconTheme *icon_theme, GObject* button)
 
         if (pixbuf != NULL) {
                 image = gtk_image_new_from_pixbuf(pixbuf);
-                gtk_button_set_image(GTK_BUTTON(button), image);
+                gtk_button_set_image (button, image);
                 g_object_unref (pixbuf);
         }
 }
@@ -742,7 +743,7 @@ image_button_new(const button_data *data)
 
         g_object_set_data(G_OBJECT(button), "button_data", (gpointer)data);
 
-        apply_icon_theme(icon_theme, G_OBJECT(button));
+        apply_icon_theme (icon_theme, GTK_BUTTON (button));
 
         g_signal_connect(G_OBJECT(icon_theme), "changed",
                          G_CALLBACK(apply_icon_theme), button);
