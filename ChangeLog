@@ -1,5 +1,9 @@
 2008-11-09  Alberto Garcia  <agarcia@igalia.com>
 
+	* po/POTFILES.in: Added uimisc.h, removed dbus.c
+
+2008-11-09  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/uimisc.h
 	* src/vgl-tray-icon.c
 	(ctxt_menu_create)

@@ -1,10 +1,10 @@
 data/vagalume.desktop.in.in
 src/connection.c
 src/controller.c
-src/dbus.c
 src/dlwin.c
 src/main.c
 src/uimisc.c
+src/uimisc.h
 src/vgl-bookmark-window.c
 src/vgl-main-window.c
 src/vgl-sb-plugin.c
