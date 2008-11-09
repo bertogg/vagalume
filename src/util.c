@@ -6,7 +6,6 @@
  * See the README file for more details.
  */
 
-#include "config.h"
 #include "util.h"
 #include "http.h"
 
@@ -287,3 +286,28 @@ lastfm_url_encode (const char *str)
         g_string_free (gstr, TRUE);
         return retvalue;
 }
+
+/**
+ * Launch an URL using GIO library.
+ * This function is available only if Vagalume has been compiled with
+ * GIO support.
+ * @param url The URL to show
+ */
+#ifdef HAVE_GIO
+void
+launch_url (const char *url, GAppLaunchContext *context)
+{
+        GError *error = NULL;
+
+        /* FIXME: check for gtk 2.14 and use GdkAppLaunchContext */
+        if (!context)
+                context = g_app_launch_context_new();
+        else
+                g_object_ref(context);
+
+        if (!g_app_info_launch_default_for_uri (url, context, &error))
+                g_warning ("Launching failed: %s\n", error->message);
+
+        g_object_unref(context);
+}
+#endif

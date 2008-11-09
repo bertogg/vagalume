@@ -50,6 +50,8 @@ EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
 #####################################
 ### Other dependencies - Optional ###
 #####################################
+PKG_CHECK_MODULES(GIO, gio-2.0, [have_gio="yes"], [have_gio="no"])
+
 PKG_CHECK_MODULES(dbus_glib, dbus-glib-1, [have_dbus_glib="yes"],
                   [have_dbus_glib="no"])
 
@@ -62,6 +64,10 @@ if test "$have_dbus_glib" = "yes"; then
       dbus_glib_CFLAGS="$dbus_glib_CFLAGS -DDBUS_API_SUBJECT_TO_CHANGE"
    fi
 fi
+
+# Keep GIO optional until it's heavily used
+EXTRA_CFLAGS="$EXTRA_CFLAGS $GIO_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $GIO_LIBS"
 
 # Tray icon support requires Gtk 2.10 and libnotify
 if test "$have_libnotify" = "yes"; then
@@ -422,6 +428,11 @@ if test "$have_sb_plugin" = "yes"; then
    AC_SUBST(SBPLUGIN_CFLAGS)
    AC_SUBST(sbplugindesktopentrydir)
    AC_SUBST(sbplugindir)
+fi
+
+AM_CONDITIONAL(HAVE_GIO, test "$have_gio" = "yes")
+if test "$have_gio" = "yes"; then
+   AC_DEFINE([HAVE_GIO], [1], [Defined if building with GIO support])
 fi
 
 AM_CONDITIONAL(HAVE_TRAY_ICON, test "$have_tray_icon" = "yes")
