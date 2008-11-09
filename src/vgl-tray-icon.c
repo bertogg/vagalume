@@ -32,6 +32,21 @@
 
 G_DEFINE_TYPE (VglTrayIcon, vgl_tray_icon, G_TYPE_OBJECT);
 
+enum {
+        SETTINGS_ITEM,
+        ABOUT_ITEM,
+        RECOMMEND_ITEM,
+        TAG_ITEM,
+        ADD_TO_PLS_ITEM,
+        LOVE_ITEM,
+        BAN_ITEM,
+        PLAY_ITEM,
+        STOP_ITEM,
+        NEXT_ITEM,
+        QUIT_ITEM,
+        N_MENU_ITEMS
+};
+
 /* Private struct */
 struct _VglTrayIconPrivate
 {
@@ -41,34 +56,14 @@ struct _VglTrayIconPrivate
 
         GtkWidget *ctxt_menu;
 
-        GtkWidget *settings_item;
-        GtkWidget *about_item;
-        GtkWidget *recommend_item;
-        GtkWidget *tag_item;
-        GtkWidget *add_to_pls_item;
-        GtkWidget *love_item;
-        GtkWidget *ban_item;
-        GtkWidget *play_item;
-        GtkWidget *stop_item;
-        GtkWidget *next_item;
-        GtkWidget *close_vagalume_item;
+        GtkWidget *menu_item[N_MENU_ITEMS];
+        gulong menu_handler_id[N_MENU_ITEMS];
 
         gboolean show_notifications;
         NotifyNotification *notification;
 
-        gint tray_icon_clicked_handler_id;
-        gint tray_icon_popup_menu_handler_id;
-        gint settings_item_handler_id;
-        gint about_item_handler_id;
-        gint recommend_item_handler_id;
-        gint tag_item_handler_id;
-        gint add_to_pls_item_handler_id;
-        gint love_item_handler_id;
-        gint ban_item_handler_id;
-        gint play_item_handler_id;
-        gint stop_item_handler_id;
-        gint next_item_handler_id;
-        gint close_vagalume_item_handler_id;
+        gulong tray_icon_clicked_handler_id;
+        gulong tray_icon_popup_menu_handler_id;
 };
 
 /* Private */
@@ -111,6 +106,7 @@ vgl_tray_icon_class_init(VglTrayIconClass *klass)
 static void
 vgl_tray_icon_init (VglTrayIcon *vti)
 {
+        int i;
         VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
 
         /* Init private attributes */
@@ -119,17 +115,10 @@ vgl_tray_icon_init (VglTrayIcon *vti)
 
         priv->now_playing = FALSE;
 
-        priv->settings_item = NULL;
-        priv->about_item = NULL;
-        priv->recommend_item = NULL;
-        priv->tag_item = NULL;
-        priv->add_to_pls_item = NULL;
-        priv->love_item = NULL;
-        priv->ban_item = NULL;
-        priv->play_item = NULL;
-        priv->stop_item = NULL;
-        priv->next_item = NULL;
-        priv->close_vagalume_item = NULL;
+        for (i = 0; i < N_MENU_ITEMS; i++) {
+                priv->menu_item[i] = NULL;
+                priv->menu_handler_id[i] = 0;
+        }
 
         priv->notification = NULL;
         priv->show_notifications = FALSE;
@@ -161,6 +150,7 @@ vgl_tray_icon_init (VglTrayIcon *vti)
 static void
 vgl_tray_icon_finalize (GObject* object)
 {
+        int i;
         VglTrayIcon *vti = VGL_TRAY_ICON (object);
         VglTrayIconPrivate *priv = vti->priv;
 
@@ -168,28 +158,10 @@ vgl_tray_icon_finalize (GObject* object)
         cleanup_libnotify (vti);
 
         /* Disconnect handlers */
-        g_signal_handler_disconnect (priv->settings_item,
-                                     priv->settings_item_handler_id);
-        g_signal_handler_disconnect (priv->about_item,
-                                     priv->about_item_handler_id);
-        g_signal_handler_disconnect (priv->recommend_item,
-                                     priv->recommend_item_handler_id);
-        g_signal_handler_disconnect (priv->tag_item,
-                                     priv->tag_item_handler_id);
-        g_signal_handler_disconnect (priv->add_to_pls_item,
-                                     priv->add_to_pls_item_handler_id);
-        g_signal_handler_disconnect (priv->love_item,
-                                     priv->love_item_handler_id);
-        g_signal_handler_disconnect (priv->ban_item,
-                                     priv->ban_item_handler_id);
-        g_signal_handler_disconnect (priv->play_item,
-                                     priv->play_item_handler_id);
-        g_signal_handler_disconnect (priv->stop_item,
-                                     priv->stop_item_handler_id);
-        g_signal_handler_disconnect (priv->next_item,
-                                     priv->next_item_handler_id);
-        g_signal_handler_disconnect (priv->close_vagalume_item,
-                                     priv->close_vagalume_item_handler_id);
+        for (i = 0; i < N_MENU_ITEMS; i++) {
+                g_signal_handler_disconnect (priv->menu_item[i],
+                                             priv->menu_handler_id[i]);
+        }
         g_signal_handler_disconnect (priv->tray_icon,
                                      priv->tray_icon_clicked_handler_id);
         g_signal_handler_disconnect (priv->tray_icon,
@@ -242,85 +214,85 @@ ctxt_menu_create (VglTrayIcon *vti)
 
         /* Create ctxt_menu and ctxt_menu items */
         priv->ctxt_menu = gtk_menu_new ();
-        priv->settings_item =
+        priv->menu_item[SETTINGS_ITEM] =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES,
                                                     NULL);
-        priv->about_item =
+        priv->menu_item[ABOUT_ITEM] =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, NULL);
-        priv->recommend_item =
+        priv->menu_item[RECOMMEND_ITEM] =
                 ui_menu_item_create_from_icon (RECOMMEND_ITEM_ICON_NAME,
                                                RECOMMEND_ITEM_STRING);
-        priv->tag_item =
+        priv->menu_item[TAG_ITEM] =
                 ui_menu_item_create_from_icon (TAG_ITEM_ICON_NAME,
                                                TAG_ITEM_STRING);
-        priv->add_to_pls_item =
+        priv->menu_item[ADD_TO_PLS_ITEM] =
                 ui_menu_item_create_from_icon (ADD_TO_PLS_ITEM_ICON_NAME,
                                                ADD_TO_PLS_ITEM_STRING);
-        priv->love_item =
+        priv->menu_item[LOVE_ITEM] =
                 ui_menu_item_create_from_icon (LOVE_ITEM_ICON_NAME,
                                                LOVE_ITEM_STRING);
-        priv->ban_item =
+        priv->menu_item[BAN_ITEM] =
                 ui_menu_item_create_from_icon (BAN_ITEM_ICON_NAME,
                                                BAN_ITEM_STRING);
-        priv->play_item =
+        priv->menu_item[PLAY_ITEM] =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_PLAY,NULL);
-        priv->stop_item =
+        priv->menu_item[STOP_ITEM] =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_STOP,NULL);
-        priv->next_item =
+        priv->menu_item[NEXT_ITEM] =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_NEXT,NULL);
-        priv->close_vagalume_item =
+        priv->menu_item[QUIT_ITEM] =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 
         /* Add items to ctxt_menu */
-        gtk_menu_append (priv->ctxt_menu, priv->recommend_item);
-        gtk_menu_append (priv->ctxt_menu, priv->tag_item);
-        gtk_menu_append (priv->ctxt_menu, priv->add_to_pls_item);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[RECOMMEND_ITEM]);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[TAG_ITEM]);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[ADD_TO_PLS_ITEM]);
         gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->love_item);
-        gtk_menu_append (priv->ctxt_menu, priv->ban_item);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[LOVE_ITEM]);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[BAN_ITEM]);
         gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->play_item);
-        gtk_menu_append (priv->ctxt_menu, priv->stop_item);
-        gtk_menu_append (priv->ctxt_menu, priv->next_item);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[PLAY_ITEM]);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[STOP_ITEM]);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[NEXT_ITEM]);
         gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->settings_item);
-        gtk_menu_append (priv->ctxt_menu, priv->about_item);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[SETTINGS_ITEM]);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[ABOUT_ITEM]);
         gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->close_vagalume_item);
+        gtk_menu_append (priv->ctxt_menu, priv->menu_item[QUIT_ITEM]);
 
         /* Connect signals */
-        priv->settings_item_handler_id =
-                g_signal_connect(priv->settings_item, "activate",
+        priv->menu_handler_id[SETTINGS_ITEM] =
+                g_signal_connect(priv->menu_item[SETTINGS_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->about_item_handler_id =
-                g_signal_connect(priv->about_item, "activate",
+        priv->menu_handler_id[ABOUT_ITEM] =
+                g_signal_connect(priv->menu_item[ABOUT_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->recommend_item_handler_id =
-                g_signal_connect(priv->recommend_item, "activate",
+        priv->menu_handler_id[RECOMMEND_ITEM] =
+                g_signal_connect(priv->menu_item[RECOMMEND_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->tag_item_handler_id =
-                g_signal_connect(priv->tag_item, "activate",
+        priv->menu_handler_id[TAG_ITEM] =
+                g_signal_connect(priv->menu_item[TAG_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->add_to_pls_item_handler_id =
-                g_signal_connect(priv->add_to_pls_item, "activate",
+        priv->menu_handler_id[ADD_TO_PLS_ITEM] =
+                g_signal_connect(priv->menu_item[ADD_TO_PLS_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->love_item_handler_id =
-                g_signal_connect(priv->love_item, "activate",
+        priv->menu_handler_id[LOVE_ITEM] =
+                g_signal_connect(priv->menu_item[LOVE_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->ban_item_handler_id =
-                g_signal_connect(priv->ban_item, "activate",
+        priv->menu_handler_id[BAN_ITEM] =
+                g_signal_connect(priv->menu_item[BAN_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->play_item_handler_id =
-                g_signal_connect(priv->play_item, "activate",
+        priv->menu_handler_id[PLAY_ITEM] =
+                g_signal_connect(priv->menu_item[PLAY_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->stop_item_handler_id =
-                g_signal_connect(priv->stop_item, "activate",
+        priv->menu_handler_id[STOP_ITEM] =
+                g_signal_connect(priv->menu_item[STOP_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->next_item_handler_id =
-                g_signal_connect(priv->next_item, "activate",
+        priv->menu_handler_id[NEXT_ITEM] =
+                g_signal_connect(priv->menu_item[NEXT_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->close_vagalume_item_handler_id =
-                g_signal_connect(priv->close_vagalume_item, "activate",
+        priv->menu_handler_id[QUIT_ITEM] =
+                g_signal_connect(priv->menu_item[QUIT_ITEM], "activate",
                                  G_CALLBACK (ctxt_menu_item_activated), vti);
 
         /* Show widgets */
@@ -331,34 +303,25 @@ static void
 ctxt_menu_update (VglTrayIcon *vti)
 {
         VglTrayIconPrivate *priv = vti->priv;
+        gboolean np = priv->now_playing;
 
         /* Adjust sentitiveness for ctxt_menu items and show/hide buttons */
-        if (priv->now_playing) {
-                gtk_widget_set_sensitive (priv->recommend_item, TRUE);
-                gtk_widget_set_sensitive (priv->tag_item, TRUE);
-                gtk_widget_set_sensitive (priv->add_to_pls_item, TRUE);
-                gtk_widget_set_sensitive (priv->love_item, TRUE);
-                gtk_widget_set_sensitive (priv->ban_item, TRUE);
-                gtk_widget_set_sensitive (priv->play_item, FALSE);
-                gtk_widget_set_sensitive (priv->stop_item, TRUE);
-                gtk_widget_set_sensitive (priv->next_item, TRUE);
+        gtk_widget_set_sensitive (priv->menu_item[RECOMMEND_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[TAG_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[ADD_TO_PLS_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[LOVE_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[BAN_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[PLAY_ITEM], !np);
+        gtk_widget_set_sensitive (priv->menu_item[STOP_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[NEXT_ITEM], np);
 
-                gtk_widget_hide (priv->play_item);
-                gtk_widget_show (priv->stop_item);
+        if (np) {
+                gtk_widget_hide (priv->menu_item[PLAY_ITEM]);
+                gtk_widget_show (priv->menu_item[STOP_ITEM]);
         } else {
-                gtk_widget_set_sensitive (priv->recommend_item, FALSE);
-                gtk_widget_set_sensitive (priv->tag_item, FALSE);
-                gtk_widget_set_sensitive (priv->add_to_pls_item, FALSE);
-                gtk_widget_set_sensitive (priv->love_item, FALSE);
-                gtk_widget_set_sensitive (priv->ban_item, FALSE);
-                gtk_widget_set_sensitive (priv->play_item, TRUE);
-                gtk_widget_set_sensitive (priv->stop_item, FALSE);
-                gtk_widget_set_sensitive (priv->next_item, FALSE);
-
-                gtk_widget_show (priv->play_item);
-                gtk_widget_hide (priv->stop_item);
+                gtk_widget_show (priv->menu_item[PLAY_ITEM]);
+                gtk_widget_hide (priv->menu_item[STOP_ITEM]);
         }
-        gtk_widget_show (priv->close_vagalume_item);
 }
 
 
@@ -391,27 +354,27 @@ ctxt_menu_item_activated (GtkWidget *item, gpointer data)
         VglTrayIcon *vti = VGL_TRAY_ICON (data);
         VglTrayIconPrivate *priv = vti->priv;
 
-        if (item == priv->settings_item) {
+        if (item == priv->menu_item[SETTINGS_ITEM]) {
                 controller_open_usercfg();
-        } else if (item == priv->about_item) {
+        } else if (item == priv->menu_item[ABOUT_ITEM]) {
                 controller_show_about();
-        } else if (item == priv->recommend_item) {
+        } else if (item == priv->menu_item[RECOMMEND_ITEM]) {
                 controller_recomm_track();
-        } else if (item == priv->tag_item) {
+        } else if (item == priv->menu_item[TAG_ITEM]) {
                 controller_tag_track();
-        } else if (item == priv->add_to_pls_item) {
+        } else if (item == priv->menu_item[ADD_TO_PLS_ITEM]) {
                 controller_add_to_playlist();
-        } else if (item == priv->love_item) {
+        } else if (item == priv->menu_item[LOVE_ITEM]) {
                 controller_love_track (TRUE);
-        } else if (item == priv->ban_item) {
+        } else if (item == priv->menu_item[BAN_ITEM]) {
                 controller_ban_track (TRUE);
-        } else if (item == priv->play_item) {
+        } else if (item == priv->menu_item[PLAY_ITEM]) {
                 controller_start_playing ();
-        } else if (item == priv->stop_item) {
+        } else if (item == priv->menu_item[STOP_ITEM]) {
                 controller_stop_playing ();
-        } else if (item == priv->next_item) {
+        } else if (item == priv->menu_item[NEXT_ITEM]) {
                 controller_skip_track ();
-        } else if (item == priv->close_vagalume_item) {
+        } else if (item == priv->menu_item[QUIT_ITEM]) {
                 controller_quit_app ();
         } else {
                 g_warning ("[TRAY ICON] :: Unknown action");

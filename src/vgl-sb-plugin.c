@@ -44,6 +44,20 @@
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
                                       VGL_SB_PLUGIN_TYPE, VglSbPluginPrivate))
 
+enum {
+        ARTIST_ITEM,
+        TRACK_ITEM,
+        ALBUM_ITEM,
+        PLAY_ITEM,
+        STOP_ITEM,
+        NEXT_ITEM,
+        LOVE_ITEM,
+        BAN_ITEM,
+        SHOW_WIN_ITEM,
+        QUIT_ITEM,
+        N_MENU_ITEMS
+};
+
 struct _VglSbPluginPrivate
 {
         osso_context_t *osso_context;
@@ -61,26 +75,11 @@ struct _VglSbPluginPrivate
         GtkWidget *button;
         GtkWidget *icon;
         GtkWidget *main_panel;
-        GtkWidget *artist_item;
-        GtkWidget *track_item;
-        GtkWidget *album_item;
-        GtkWidget *play_item;
-        GtkWidget *stop_item;
-        GtkWidget *next_item;
-        GtkWidget *love_item;
-        GtkWidget *ban_item;
-        GtkWidget *open_vagalume_item;
-        GtkWidget *close_vagalume_item;
+        GtkWidget *menu_item[N_MENU_ITEMS];
 
-        gint plugin_btn_handler_id;
-        gint main_panel_handler_id;
-        gint play_item_handler_id;
-        gint stop_item_handler_id;
-        gint next_item_handler_id;
-        gint love_item_handler_id;
-        gint ban_item_handler_id;
-        gint open_vagalume_item_handler_id;
-        gint close_vagalume_item_handler_id;
+        gulong plugin_btn_handler_id;
+        gulong main_panel_handler_id;
+        gulong menu_handler_id[N_MENU_ITEMS];
 
         gboolean dispose_has_run;
 };
@@ -140,6 +139,7 @@ vgl_sb_plugin_class_init (VglSbPluginClass *klass)
 static void
 vgl_sb_plugin_init (VglSbPlugin *vsbp)
 {
+        int i;
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
         GdkPixbuf *icon_pixbuf;
 
@@ -157,16 +157,10 @@ vgl_sb_plugin_init (VglSbPlugin *vsbp)
         priv->button = NULL;
         priv->icon = NULL;
         priv->main_panel = NULL;
-        priv->artist_item = NULL;
-        priv->track_item = NULL;
-        priv->album_item = NULL;
-        priv->play_item = NULL;
-        priv->stop_item = NULL;
-        priv->next_item = NULL;
-        priv->love_item = NULL;
-        priv->ban_item = NULL;
-        priv->open_vagalume_item = NULL;
-        priv->close_vagalume_item = NULL;
+        for (i = 0; i < N_MENU_ITEMS; i++) {
+                priv->menu_item[i] = NULL;
+                priv->menu_handler_id[i] = 0;
+        }
         priv->dispose_has_run = FALSE;
 
         /* Setup libosso */
@@ -215,6 +209,7 @@ vgl_sb_plugin_init (VglSbPlugin *vsbp)
 static void
 vgl_sb_plugin_dispose (GObject *object)
 {
+        int i;
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (object);
         VglSbPluginPrivate *priv = vsbp->priv;
 
@@ -235,20 +230,12 @@ vgl_sb_plugin_dispose (GObject *object)
                                      priv->plugin_btn_handler_id);
         g_signal_handler_disconnect (priv->main_panel,
                                      priv->main_panel_handler_id);
-        g_signal_handler_disconnect (priv->play_item,
-                                     priv->play_item_handler_id);
-        g_signal_handler_disconnect (priv->stop_item,
-                                     priv->stop_item_handler_id);
-        g_signal_handler_disconnect (priv->next_item,
-                                     priv->next_item_handler_id);
-        g_signal_handler_disconnect (priv->love_item,
-                                     priv->love_item_handler_id);
-        g_signal_handler_disconnect (priv->ban_item,
-                                     priv->ban_item_handler_id);
-        g_signal_handler_disconnect (priv->open_vagalume_item,
-                                     priv->open_vagalume_item_handler_id);
-        g_signal_handler_disconnect (priv->close_vagalume_item,
-                                     priv->close_vagalume_item_handler_id);
+        for (i = 0; i < N_MENU_ITEMS; i++) {
+                if (priv->menu_handler_id[ARTIST_ITEM] != 0) {
+                        g_signal_handler_disconnect (priv->menu_item[i],
+                                                     priv->menu_handler_id[i]);
+                }
+        }
 
         /* Destroy local widgets */
         if (priv->main_panel) {
@@ -567,83 +554,88 @@ main_panel_create (VglSbPlugin *vsbp)
         gtk_widget_set_size_request (priv->main_panel, MAIN_PANEL_WIDTH, -1);
 
         /* Insensitive items */
-        priv->artist_item = gtk_menu_item_new ();
+        priv->menu_item[ARTIST_ITEM] = gtk_menu_item_new ();
         label = gtk_label_new (NULL);
         gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
         gtk_widget_modify_font (label, get_small_font (label));
         gtk_misc_set_alignment (GTK_MISC(label), 0.0, 0.5);
-        gtk_container_add (GTK_CONTAINER (priv->artist_item), label);
-        gtk_widget_set_sensitive (priv->artist_item, FALSE);
+        gtk_container_add (GTK_CONTAINER (priv->menu_item[ARTIST_ITEM]), label);
+        gtk_widget_set_sensitive (priv->menu_item[ARTIST_ITEM], FALSE);
         label->state = GTK_STATE_NORMAL;
 
-        priv->track_item = gtk_menu_item_new ();
+        priv->menu_item[TRACK_ITEM] = gtk_menu_item_new ();
         label = gtk_label_new (NULL);
         gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
         gtk_widget_modify_font (label, get_small_font (label));
         gtk_misc_set_alignment (GTK_MISC(label), 0.0, 0.5);
-        gtk_container_add (GTK_CONTAINER (priv->track_item), label);
-        gtk_widget_set_sensitive (priv->track_item, FALSE);
+        gtk_container_add (GTK_CONTAINER (priv->menu_item[TRACK_ITEM]), label);
+        gtk_widget_set_sensitive (priv->menu_item[TRACK_ITEM], FALSE);
         label->state = GTK_STATE_NORMAL;
 
-        priv->album_item = gtk_menu_item_new ();
+        priv->menu_item[ALBUM_ITEM] = gtk_menu_item_new ();
         label = gtk_label_new (NULL);
         gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
         gtk_widget_modify_font (label, get_small_font (label));
         gtk_misc_set_alignment (GTK_MISC(label), 0.0, 0.5);
-        gtk_container_add (GTK_CONTAINER (priv->album_item), label);
-        gtk_widget_set_sensitive (priv->album_item, FALSE);
+        gtk_container_add (GTK_CONTAINER (priv->menu_item[ALBUM_ITEM]), label);
+        gtk_widget_set_sensitive (priv->menu_item[ALBUM_ITEM], FALSE);
         label->state = GTK_STATE_NORMAL;
 
         /* Active items */
-        priv->play_item = gtk_menu_item_new_with_label (PLAY_ITEM_STRING);
-        priv->stop_item = gtk_menu_item_new_with_label (STOP_ITEM_STRING);
-        priv->next_item = gtk_menu_item_new_with_label (SKIP_ITEM_STRING);
-        priv->love_item = gtk_menu_item_new_with_label (LOVE_ITEM_STRING);
-        priv->ban_item = gtk_menu_item_new_with_label (BAN_ITEM_STRING);
-        priv->open_vagalume_item =
+        priv->menu_item[PLAY_ITEM] =
+                gtk_menu_item_new_with_label (PLAY_ITEM_STRING);
+        priv->menu_item[STOP_ITEM] =
+                gtk_menu_item_new_with_label (STOP_ITEM_STRING);
+        priv->menu_item[NEXT_ITEM] =
+                gtk_menu_item_new_with_label (SKIP_ITEM_STRING);
+        priv->menu_item[LOVE_ITEM] =
+                gtk_menu_item_new_with_label (LOVE_ITEM_STRING);
+        priv->menu_item[BAN_ITEM] =
+                gtk_menu_item_new_with_label (BAN_ITEM_STRING);
+        priv->menu_item[SHOW_WIN_ITEM] =
                 gtk_menu_item_new_with_label (SHOW_APP_ITEM_STRING);
-        priv->close_vagalume_item =
+        priv->menu_item[QUIT_ITEM] =
                 gtk_menu_item_new_with_label (CLOSE_APP_ITEM_STRING);
 
         /* Add items to main_panel */
-        gtk_menu_append (priv->main_panel, priv->artist_item);
-        gtk_menu_append (priv->main_panel, priv->track_item);
-        gtk_menu_append (priv->main_panel, priv->album_item);
+        gtk_menu_append (priv->main_panel, priv->menu_item[ARTIST_ITEM]);
+        gtk_menu_append (priv->main_panel, priv->menu_item[TRACK_ITEM]);
+        gtk_menu_append (priv->main_panel, priv->menu_item[ALBUM_ITEM]);
         gtk_menu_append (priv->main_panel, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->main_panel, priv->play_item);
-        gtk_menu_append (priv->main_panel, priv->stop_item);
-        gtk_menu_append (priv->main_panel, priv->next_item);
-        gtk_menu_append (priv->main_panel, priv->love_item);
-        gtk_menu_append (priv->main_panel, priv->ban_item);
+        gtk_menu_append (priv->main_panel, priv->menu_item[PLAY_ITEM]);
+        gtk_menu_append (priv->main_panel, priv->menu_item[STOP_ITEM]);
+        gtk_menu_append (priv->main_panel, priv->menu_item[NEXT_ITEM]);
+        gtk_menu_append (priv->main_panel, priv->menu_item[LOVE_ITEM]);
+        gtk_menu_append (priv->main_panel, priv->menu_item[BAN_ITEM]);
         gtk_menu_append (priv->main_panel, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->main_panel, priv->open_vagalume_item);
-        gtk_menu_append (priv->main_panel, priv->close_vagalume_item);
+        gtk_menu_append (priv->main_panel, priv->menu_item[SHOW_WIN_ITEM]);
+        gtk_menu_append (priv->main_panel, priv->menu_item[QUIT_ITEM]);
 
         /* Connect signals */
         priv->main_panel_handler_id =
                 g_signal_connect(priv->main_panel,
                                  "selection-done",
                                  G_CALLBACK(main_panel_hidden), vsbp);
-        priv->play_item_handler_id =
-                g_signal_connect(priv->play_item, "activate",
+        priv->menu_handler_id[PLAY_ITEM] =
+                g_signal_connect(priv->menu_item[PLAY_ITEM], "activate",
                                  G_CALLBACK (main_panel_item_activated), vsbp);
-        priv->stop_item_handler_id =
-                g_signal_connect(priv->stop_item, "activate",
+        priv->menu_handler_id[STOP_ITEM] =
+                g_signal_connect(priv->menu_item[STOP_ITEM], "activate",
                                  G_CALLBACK (main_panel_item_activated), vsbp);
-        priv->next_item_handler_id =
-                g_signal_connect(priv->next_item, "activate",
+        priv->menu_handler_id[NEXT_ITEM] =
+                g_signal_connect(priv->menu_item[NEXT_ITEM], "activate",
                                  G_CALLBACK (main_panel_item_activated), vsbp);
-        priv->love_item_handler_id =
-                g_signal_connect(priv->love_item, "activate",
+        priv->menu_handler_id[LOVE_ITEM] =
+                g_signal_connect(priv->menu_item[LOVE_ITEM], "activate",
                                  G_CALLBACK (main_panel_item_activated), vsbp);
-        priv->ban_item_handler_id =
-                g_signal_connect(priv->ban_item, "activate",
+        priv->menu_handler_id[BAN_ITEM] =
+                g_signal_connect(priv->menu_item[BAN_ITEM], "activate",
                                  G_CALLBACK (main_panel_item_activated), vsbp);
-        priv->open_vagalume_item_handler_id =
-                g_signal_connect(priv->open_vagalume_item, "activate",
+        priv->menu_handler_id[SHOW_WIN_ITEM] =
+                g_signal_connect(priv->menu_item[SHOW_WIN_ITEM], "activate",
                                  G_CALLBACK (main_panel_item_activated), vsbp);
-        priv->close_vagalume_item_handler_id =
-                g_signal_connect(priv->close_vagalume_item, "activate",
+        priv->menu_handler_id[QUIT_ITEM] =
+                g_signal_connect(priv->menu_item[QUIT_ITEM], "activate",
                                  G_CALLBACK (main_panel_item_activated), vsbp);
 
         /* Show widgets */
@@ -654,6 +646,7 @@ static void
 main_panel_update (VglSbPlugin *vsbp)
 {
         VglSbPluginPrivate *priv = vsbp->priv;
+        gboolean np = priv->now_playing;
         GtkWidget *label;
 
         if (!priv->running_app) {
@@ -663,45 +656,38 @@ main_panel_update (VglSbPlugin *vsbp)
         }
 
         /* Adjust sentitiveness for main_panel items and show/hide buttons */
-        if (priv->now_playing) {
-                gtk_widget_set_sensitive (priv->play_item, FALSE);
-                gtk_widget_set_sensitive (priv->stop_item, TRUE);
-                gtk_widget_set_sensitive (priv->next_item, TRUE);
-                gtk_widget_set_sensitive (priv->love_item, TRUE);
-                gtk_widget_set_sensitive (priv->ban_item, TRUE);
+        gtk_widget_set_sensitive (priv->menu_item[PLAY_ITEM], !np);
+        gtk_widget_set_sensitive (priv->menu_item[STOP_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[NEXT_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[LOVE_ITEM], np);
+        gtk_widget_set_sensitive (priv->menu_item[BAN_ITEM], np);
 
-                gtk_widget_hide (priv->play_item);
-                gtk_widget_show (priv->stop_item);
+        if (np) {
+                gtk_widget_hide (priv->menu_item[PLAY_ITEM]);
+                gtk_widget_show (priv->menu_item[STOP_ITEM]);
         } else {
                 /* Not playing: set default strings */
                 set_track_info (vsbp, NULL, NULL, NULL);
 
-                gtk_widget_set_sensitive (priv->play_item, TRUE);
-                gtk_widget_set_sensitive (priv->stop_item, FALSE);
-                gtk_widget_set_sensitive (priv->next_item, FALSE);
-                gtk_widget_set_sensitive (priv->love_item, FALSE);
-                gtk_widget_set_sensitive (priv->ban_item, FALSE);
-
-                gtk_widget_show (priv->play_item);
-                gtk_widget_hide (priv->stop_item);
+                gtk_widget_show (priv->menu_item[PLAY_ITEM]);
+                gtk_widget_hide (priv->menu_item[STOP_ITEM]);
         }
-        gtk_widget_show (priv->open_vagalume_item);
-        gtk_widget_show (priv->close_vagalume_item);
 
         /* Detail labels */
-        label = gtk_bin_get_child (GTK_BIN (priv->artist_item));
+        label = gtk_bin_get_child (GTK_BIN (priv->menu_item[ARTIST_ITEM]));
         gtk_label_set_markup (GTK_LABEL (label), priv->artist_string);
 
-        label = gtk_bin_get_child (GTK_BIN (priv->track_item));
+        label = gtk_bin_get_child (GTK_BIN (priv->menu_item[TRACK_ITEM]));
         gtk_label_set_markup (GTK_LABEL (label), priv->track_string);
 
         /* Show / hide the album label depending on its availability */
         if (priv->album_string != NULL) {
-                label = gtk_bin_get_child (GTK_BIN (priv->album_item));
+                label = gtk_bin_get_child (
+                        GTK_BIN (priv->menu_item[ALBUM_ITEM]));
                 gtk_label_set_markup (GTK_LABEL (label), priv->album_string);
-                gtk_widget_show (priv->album_item);
+                gtk_widget_show (priv->menu_item[ALBUM_ITEM]);
         } else {
-                gtk_widget_hide (priv->album_item);
+                gtk_widget_hide (priv->menu_item[ALBUM_ITEM]);
         }
 }
 
@@ -752,33 +738,33 @@ main_panel_item_activated (GtkWidget *item, gpointer data)
         VglSbPluginPrivate *priv = vsbp->priv;
         const gboolean interactive = TRUE;
 
-        if (item == priv->play_item) {
+        if (item == priv->menu_item[PLAY_ITEM]) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_PLAY);
                 g_debug ("DBUS request sent: Play");
-        } else if (item == priv->stop_item) {
+        } else if (item == priv->menu_item[STOP_ITEM]) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_STOP);
                 g_debug ("DBUS request sent: Stop");
-        } else if (item == priv->next_item) {
+        } else if (item == priv->menu_item[NEXT_ITEM]) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_SKIP);
                 g_debug ("DBUS request sent: Skip");
-        } else if (item == priv->love_item) {
+        } else if (item == priv->menu_item[LOVE_ITEM]) {
                 dbus_send_request_with_params (vsbp,
                                                APP_DBUS_METHOD_LOVETRACK,
                                                DBUS_TYPE_BOOLEAN,
                                                &interactive,
                                                DBUS_TYPE_INVALID);
                 g_debug ("DBUS request sent: LoveTrack");
-        } else if (item == priv->ban_item) {
+        } else if (item == priv->menu_item[BAN_ITEM]) {
                 dbus_send_request_with_params (vsbp,
                                                APP_DBUS_METHOD_BANTRACK,
                                                DBUS_TYPE_BOOLEAN,
                                                &interactive,
                                                DBUS_TYPE_INVALID);
                 g_debug ("DBUS request sent: BanTrack");
-        } else if (item == priv->open_vagalume_item) {
+        } else if (item == priv->menu_item[SHOW_WIN_ITEM]) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_SHOWWINDOW);
                 g_debug ("DBUS request sent: Show application");
-        } else if (item == priv->close_vagalume_item) {
+        } else if (item == priv->menu_item[QUIT_ITEM]) {
                 dbus_send_request (vsbp, APP_DBUS_METHOD_CLOSEAPP);
                 g_debug ("DBUS request sent: Close application");
         } else {
