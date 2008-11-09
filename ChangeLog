@@ -1,5 +1,14 @@
 2008-11-09  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/uimisc.h
+	* src/vgl-tray-icon.c
+	(ctxt_menu_create)
+	* src/vgl-main-window.c
+	(create_main_menu):
+	Use stock menu items for settings, stop, play and next.
+
+2008-11-09  Alberto Garcia  <agarcia@igalia.com>
+
 	* AUTHORS: Added Luca Bruno to AUTHORS file
 
 2008-11-09  Alberto Garcia  <agarcia@igalia.com>

@@ -15,25 +15,17 @@
 #include "playlist.h"
 #include "controller.h"
 
-#define SETTINGS_ITEM_STRING _("_Preferences")
 #define RECOMMEND_ITEM_STRING _("_Recommend to...")
 #define TAG_ITEM_STRING _("_Tags...")
 #define ADD_TO_PLS_ITEM_STRING _("_Add to playlist")
 #define LOVE_ITEM_STRING _("_Love this track")
 #define BAN_ITEM_STRING _("_Ban this track")
-#define PLAY_ITEM_STRING _("Play")
-#define STOP_ITEM_STRING _("Stop")
-#define SKIP_ITEM_STRING _("Skip")
 
-#define SETTINGS_ITEM_ICON_NAME "gtk-preferences"
 #define RECOMMEND_ITEM_ICON_NAME "mail-message-new"
 #define TAG_ITEM_ICON_NAME "accessories-text-editor"
 #define ADD_TO_PLS_ITEM_ICON_NAME "list-add"
 #define LOVE_ITEM_ICON_NAME "emblem-favorite"
 #define BAN_ITEM_ICON_NAME "process-stop"
-#define PLAY_ITEM_ICON_NAME "media-playback-start"
-#define STOP_ITEM_ICON_NAME "media-playback-stop"
-#define SKIP_ITEM_ICON_NAME "media-skip-forward"
 
 GtkWidget *compat_gtk_button_new(void);
 gboolean tagwin_run(GtkWindow *parent, const char *user, char **newtags,

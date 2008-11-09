@@ -243,8 +243,8 @@ ctxt_menu_create (VglTrayIcon *vti)
         /* Create ctxt_menu and ctxt_menu items */
         priv->ctxt_menu = gtk_menu_new ();
         priv->settings_item =
-                ui_menu_item_create_from_icon (SETTINGS_ITEM_ICON_NAME,
-                                               SETTINGS_ITEM_STRING);
+                gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES,
+                                                    NULL);
         priv->about_item =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, NULL);
         priv->recommend_item =
@@ -263,14 +263,11 @@ ctxt_menu_create (VglTrayIcon *vti)
                 ui_menu_item_create_from_icon (BAN_ITEM_ICON_NAME,
                                                BAN_ITEM_STRING);
         priv->play_item =
-                ui_menu_item_create_from_icon (PLAY_ITEM_ICON_NAME,
-                                               PLAY_ITEM_STRING);
+                gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_PLAY,NULL);
         priv->stop_item =
-                ui_menu_item_create_from_icon (STOP_ITEM_ICON_NAME,
-                                               STOP_ITEM_STRING);
+                gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_STOP,NULL);
         priv->next_item =
-                ui_menu_item_create_from_icon (SKIP_ITEM_ICON_NAME,
-                                               SKIP_ITEM_STRING);
+                gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_NEXT,NULL);
         priv->close_vagalume_item =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 

@@ -712,8 +712,8 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         /* Last.fm */
         lastfm = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Last.fm")));
         lastfmsub = GTK_MENU_SHELL(gtk_menu_new());
-        settings = ui_menu_item_create_from_icon (SETTINGS_ITEM_ICON_NAME,
-                                                  SETTINGS_ITEM_STRING);
+        settings = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES,
+                                                       NULL);
         quit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel);
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
@@ -816,12 +816,9 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         /* Actions */
         actions = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Actions")));
         actionssub = GTK_MENU_SHELL(gtk_menu_new());
-        play = ui_menu_item_create_from_icon (PLAY_ITEM_ICON_NAME,
-                                              PLAY_ITEM_STRING);
-        stop = ui_menu_item_create_from_icon (STOP_ITEM_ICON_NAME,
-                                              STOP_ITEM_STRING);
-        skip = ui_menu_item_create_from_icon (SKIP_ITEM_ICON_NAME,
-                                              SKIP_ITEM_STRING);
+        play = gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_PLAY, NULL);
+        stop = gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_STOP, NULL);
+        skip = gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_NEXT, NULL);
         separ1 = gtk_separator_menu_item_new();
         separ2 = gtk_separator_menu_item_new();
         separ3 = gtk_separator_menu_item_new();
