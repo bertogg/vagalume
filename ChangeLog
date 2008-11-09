@@ -3,6 +3,7 @@
 	* src/vgl-main-window.c (create_main_menu):
 	Use ui_menu_item_create_from_icon
 	Reorganize Actions menu items
+	(vgl_main_window_toggle_visibility): present() when not is_active()
 
 	* src/vgl-tray-icon.c
 	Removed the show_app menu item

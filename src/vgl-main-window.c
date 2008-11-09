@@ -202,7 +202,7 @@ void
 vgl_main_window_toggle_visibility(VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
-        vgl_main_window_show (w, w->priv->is_hidden);
+        vgl_main_window_show (w, !gtk_window_is_active (GTK_WINDOW (w)));
 }
 
 gboolean
