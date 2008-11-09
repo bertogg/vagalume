@@ -668,6 +668,16 @@ add_bookmark_selected(GtkWidget *widget, gpointer data)
         controller_add_bookmark(type);
 }
 
+#ifdef HAVE_GIO
+static void
+about_dialog_uri_hook (GtkAboutDialog *about, const gchar *link, gpointer data)
+{
+        gchar *uri = g_strconcat (data, link, NULL);
+        launch_url (uri, NULL);
+        g_free (uri);
+}
+#endif
+
 static void
 show_about_dialog(GtkWidget *widget, gpointer data)
 {
@@ -679,6 +689,11 @@ show_about_dialog(GtkWidget *widget, gpointer data)
                                             _("Galician"), _("Italian"),
                                             _("Latvian"), _("Portuguese"),
                                             _("Portuguese"));
+#ifdef HAVE_GIO
+        gtk_about_dialog_set_url_hook (about_dialog_uri_hook, "", NULL);
+        gtk_about_dialog_set_email_hook (about_dialog_uri_hook, "mailto:",
+                                         NULL);
+#endif
         gtk_show_about_dialog(win, "name", APP_NAME, "authors", authors,
                               "comments", _(appdescr), "copyright", copyright,
                               "license", license, "version", APP_VERSION,
