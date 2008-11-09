@@ -754,7 +754,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         GtkMenuShell *lastfmsub, *radiosub, *actionssub, *bmksub, *helpsub;
         GtkMenuShell *usersub, *othersub;
         GtkWidget *settings, *quit;
-        GtkWidget *play, *stop, *skip, *separ1, *separ2;
+        GtkWidget *play, *stop, *skip, *separ1, *separ2, *separ3;
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkWidget *library, *neigh, *loved, *playlist, *recomm, *usertag;
         GtkWidget *library2, *neigh2, *loved2, *playlist2;
@@ -769,12 +769,15 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         /* Last.fm */
         lastfm = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Last.fm")));
         lastfmsub = GTK_MENU_SHELL(gtk_menu_new());
-        settings = gtk_menu_item_new_with_label(_("Settings..."));
-        quit = gtk_menu_item_new_with_label(_("Quit"));
+        settings = ui_menu_item_create_from_icon (SETTINGS_ITEM_ICON_NAME,
+                                                  SETTINGS_ITEM_STRING);
+        quit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel);
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);
 #ifndef USE_HILDON_WINDOW
+        separ1 = gtk_separator_menu_item_new();
+        gtk_menu_shell_append(lastfmsub, separ1);
         gtk_menu_shell_append(lastfmsub, quit);
 #endif
         g_signal_connect(G_OBJECT(settings), "activate",
@@ -870,31 +873,42 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         /* Actions */
         actions = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Actions")));
         actionssub = GTK_MENU_SHELL(gtk_menu_new());
-        play = gtk_menu_item_new_with_label(_("Play"));
-        stop = gtk_menu_item_new_with_label(_("Stop"));
-        skip = gtk_menu_item_new_with_label(_("Skip"));
+        play = ui_menu_item_create_from_icon (PLAY_ITEM_ICON_NAME,
+                                              PLAY_ITEM_STRING);
+        stop = ui_menu_item_create_from_icon (STOP_ITEM_ICON_NAME,
+                                              STOP_ITEM_STRING);
+        skip = ui_menu_item_create_from_icon (SKIP_ITEM_ICON_NAME,
+                                              SKIP_ITEM_STRING);
         separ1 = gtk_separator_menu_item_new();
         separ2 = gtk_separator_menu_item_new();
+        separ3 = gtk_separator_menu_item_new();
         stopafter = gtk_menu_item_new_with_label (_("Stop after ..."));
-        love = gtk_menu_item_new_with_label(_("Love this track"));
-        ban = gtk_menu_item_new_with_label(_("Ban this track"));
-        addtopls = gtk_menu_item_new_with_label(_("Add to playlist"));
-        dload = gtk_menu_item_new_with_label(_("Download this track"));
-        tag = gtk_menu_item_new_with_label(_("Tag..."));
-        dorecomm = gtk_menu_item_new_with_label(_("Recommend..."));
+        love = ui_menu_item_create_from_icon (LOVE_ITEM_ICON_NAME,
+                                              LOVE_ITEM_STRING);
+        ban = ui_menu_item_create_from_icon (BAN_ITEM_ICON_NAME,
+                                             BAN_ITEM_STRING);
+        addtopls = ui_menu_item_create_from_icon (ADD_TO_PLS_ITEM_ICON_NAME,
+                                                  ADD_TO_PLS_ITEM_STRING);
+        dload = ui_menu_item_create_from_icon ("document-save",
+                                               _("Download this track"));
+        tag = ui_menu_item_create_from_icon (TAG_ITEM_ICON_NAME,
+                                             TAG_ITEM_STRING);
+        dorecomm = ui_menu_item_create_from_icon (RECOMMEND_ITEM_ICON_NAME,
+                                                  RECOMMEND_ITEM_STRING);
         gtk_menu_shell_append(bar, GTK_WIDGET(actions));
         gtk_menu_item_set_submenu(actions, GTK_WIDGET(actionssub));
         gtk_menu_shell_append(actionssub, play);
         gtk_menu_shell_append(actionssub, stop);
         gtk_menu_shell_append(actionssub, skip);
         gtk_menu_shell_append(actionssub, separ1);
+        gtk_menu_shell_append(actionssub, dorecomm);
+        gtk_menu_shell_append(actionssub, tag);
+        gtk_menu_shell_append(actionssub, addtopls);
+        gtk_menu_shell_append(actionssub, separ2);
         gtk_menu_shell_append(actionssub, love);
         gtk_menu_shell_append(actionssub, ban);
-        gtk_menu_shell_append(actionssub, addtopls);
+        gtk_menu_shell_append(actionssub, separ3);
         gtk_menu_shell_append(actionssub, dload);
-        gtk_menu_shell_append(actionssub, tag);
-        gtk_menu_shell_append(actionssub, dorecomm);
-        gtk_menu_shell_append(actionssub, separ2);
         gtk_menu_shell_append(actionssub, stopafter);
         g_signal_connect(G_OBJECT(stopafter), "activate",
                          G_CALLBACK(stop_after_selected), NULL);
@@ -921,15 +935,19 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         bookmarks = GTK_MENU_ITEM(
                 gtk_menu_item_new_with_mnemonic(_("_Bookmarks")));
         bmksub = GTK_MENU_SHELL(gtk_menu_new());
-        managebmk = gtk_menu_item_new_with_label(_("Manage bookmarks..."));
-        addbmk = gtk_menu_item_new_with_label(_("Add bookmark..."));
+        addbmk = ui_menu_item_create_from_icon ("gtk-new",
+                                                _("Add bookmark..."));
+        managebmk = ui_menu_item_create_from_icon ("gtk-edit",
+                                                   _("Manage bookmarks"));
         bmkartist = gtk_menu_item_new_with_label(_("Bookmark this artist..."));
         bmktrack = gtk_menu_item_new_with_label(_("Bookmark this track..."));
         bmkradio = gtk_menu_item_new_with_label(_("Bookmark this radio..."));
+        separ1 = gtk_separator_menu_item_new();
         gtk_menu_shell_append(bar, GTK_WIDGET(bookmarks));
         gtk_menu_item_set_submenu(bookmarks, GTK_WIDGET(bmksub));
-        gtk_menu_shell_append(bmksub, managebmk);
         gtk_menu_shell_append(bmksub, addbmk);
+        gtk_menu_shell_append(bmksub, managebmk);
+        gtk_menu_shell_append(bmksub, separ1);
         gtk_menu_shell_append(bmksub, bmkartist);
         gtk_menu_shell_append(bmksub, bmktrack);
         gtk_menu_shell_append(bmksub, bmkradio);
@@ -951,7 +969,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         /* Help */
         help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Help")));
         helpsub = GTK_MENU_SHELL(gtk_menu_new());
-        about = gtk_menu_item_new_with_label(_("About..."));
+        about = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, accel);
         gtk_menu_shell_append(bar, GTK_WIDGET(help));
         gtk_menu_item_set_submenu(help, GTK_WIDGET(helpsub));
         gtk_menu_shell_append(helpsub, about);
@@ -976,7 +994,9 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
         gtk_widget_add_accelerator(tag, "activate", accel, GDK_t,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(addtopls, "activate", accel, GDK_p,
+        gtk_widget_add_accelerator(addtopls, "activate", accel, GDK_a,
+                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+        gtk_widget_add_accelerator(settings, "activate", accel, GDK_p,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
         gtk_widget_add_accelerator(quit, "activate", accel, GDK_q,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
