@@ -162,10 +162,10 @@ ui_base_dialog(GtkWindow *parent, const char *title)
         dialog = gtk_dialog_new_with_buttons(title, parent,
                                              GTK_DIALOG_MODAL |
                                              GTK_DIALOG_DESTROY_WITH_PARENT,
-                                             GTK_STOCK_OK,
-                                             GTK_RESPONSE_ACCEPT,
                                              GTK_STOCK_CANCEL,
                                              GTK_RESPONSE_REJECT,
+                                             GTK_STOCK_OK,
+                                             GTK_RESPONSE_ACCEPT,
                                              NULL);
         gtk_dialog_set_default_response(GTK_DIALOG(dialog),
                                         GTK_RESPONSE_ACCEPT);
