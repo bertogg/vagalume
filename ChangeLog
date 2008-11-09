@@ -1,5 +1,9 @@
 2008-11-09  Alberto Garcia  <agarcia@igalia.com>
 
+	* AUTHORS: Added Luca Bruno to AUTHORS file
+
+2008-11-09  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-tray-icon.c
 	(vgl_tray_icon_init, vgl_tray_icon_finalize, ctxt_menu_create)
 	(ctxt_menu_item_activated): Added "About" to tray icon menu.
