@@ -1,5 +1,9 @@
 2008-11-09  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-main-window.c (create_main_menu): Fix translation string
+
+2008-11-09  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-sb-plugin.c
 	(VglSbPluginPrivate)
 	(vgl_sb_plugin_init, vgl_sb_plugin_dispose, main_panel_create)

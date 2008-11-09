@@ -878,7 +878,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
         addbmk = ui_menu_item_create_from_icon ("gtk-new",
                                                 _("Add bookmark..."));
         managebmk = ui_menu_item_create_from_icon ("gtk-edit",
-                                                   _("Manage bookmarks"));
+                                                   _("Manage bookmarks..."));
         bmkartist = gtk_menu_item_new_with_label(_("Bookmark this artist..."));
         bmktrack = gtk_menu_item_new_with_label(_("Bookmark this track..."));
         bmkradio = gtk_menu_item_new_with_label(_("Bookmark this radio..."));
