@@ -25,9 +25,12 @@
 #include "http.h"
 #include "globaldefs.h"
 #include "util.h"
-#include "imstatus.h"
 #include "vgl-bookmark-mgr.h"
 #include "vgl-bookmark-window.h"
+
+#ifdef SET_IM_STATUS
+#include "imstatus.h"
+#endif
 
 #ifdef HAVE_DBUS_SUPPORT
 #include "dbus.h"
@@ -561,10 +564,6 @@ apply_usercfg(void)
         } else {
                 http_set_proxy(NULL);
         }
-        im_clear_status();
-        if (nowplaying != NULL) {
-                im_set_status(usercfg, nowplaying);
-        }
         g_signal_emit (vgl_controller, signals[USERCFG_CHANGED], 0, usercfg);
 }
 
@@ -825,7 +824,6 @@ controller_audio_started_cb(void)
                                    nowplaying, current_radio_url);
         track = lastfm_track_ref(nowplaying);
         controller_show_progress(track);
-        im_set_status(usercfg, track);
         showing_cover = FALSE;
         controller_show_cover();
         g_timeout_add_seconds (1, controller_show_progress, track);
@@ -923,7 +921,6 @@ controller_stop_playing(void)
 
         finish_playing_track();
         stop_after_this_track = FALSE;
-        im_clear_status();
 
         g_signal_emit (vgl_controller, signals[PLAYER_STOPPED], 0);
 }
@@ -1813,6 +1810,9 @@ controller_run_app (const char *radio_url)
         default:
                 break;
         }
+#endif
+#ifdef SET_IM_STATUS
+        im_status_init (vgl_controller);
 #endif
 
         mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());

@@ -1,5 +1,18 @@
 2008-11-22  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/imstatus.h
+	* src/imstatus.c (im_set_status_idle, usercfg_changed_cb)
+	(player_stopped_cb, track_started_cb, controller_destroyed_cb)
+	(im_status_init)
+	* src/controller.c (apply_usercfg, controller_audio_started_cb)
+	(controller_stop_playing, controller_run_app):
+	Manage "Set IM status" using signals.
+
+	* src/Makefile.am: Use imstatus.h only when compiling with "Set IM
+	status" support.
+
+2008-11-22  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c (controller_start_playing_cb)
 	(controller_stop_playing, controller_run_app)
 	* src/dbus.h

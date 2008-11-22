@@ -23,7 +23,6 @@ vagalume_SOURCES = \
 	dlwin.c dlwin.h \
 	globaldefs.h \
 	http.c http.h \
-	imstatus.h \
 	main.c \
 	metadata.c metadata.h \
 	playlist.c playlist.h \
@@ -39,7 +38,7 @@ vagalume_SOURCES = \
 	xmlrpc.c xmlrpc.h
 
 if SET_IM_STATUS
-vagalume_SOURCES += imstatus.c
+vagalume_SOURCES += imstatus.c imstatus.h
 endif
 
 if USE_INTERNAL_MD5

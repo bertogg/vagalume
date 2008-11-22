@@ -9,20 +9,8 @@
 #ifndef IMSTATUS_H
 #define IMSTATUS_H
 
-#include "config.h"
-#include "playlist.h"
-#include "userconfig.h"
+#include "controller.h"
 
-#ifdef SET_IM_STATUS
-
-void im_set_status(const VglUserCfg *cfg, LastfmTrack *track);
-void im_clear_status(void);
-
-#else
-
-void im_set_status(const VglUserCfg *cfg, LastfmTrack *track) { }
-void im_clear_status(void) { }
-
-#endif /* SET_IM_STATUS */
+void im_status_init (VglController *controller);
 
 #endif

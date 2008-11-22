@@ -15,17 +15,20 @@
 #include <string.h>
 #include "imstatus.h"
 #include "util.h"
+#include "playlist.h"
+#include "userconfig.h"
 
 static char *saved_pidgin_status = NULL;
 static char *saved_telepathy_status = NULL;
 static char *saved_gajim_status = NULL;
 static char *saved_gossip_status = NULL;
 
-typedef struct {
-        gboolean im_pidgin, im_gajim, im_gossip, im_telepathy;
-        GString *msg;
-        LastfmTrack *track;
-} ImStatusData;
+static gboolean im_pidgin = FALSE;
+static gboolean im_telepathy = FALSE;
+static gboolean im_gajim = FALSE;
+static gboolean im_gossip = FALSE;
+
+static GString *im_status_template = NULL;
 
 static gboolean
 error_happened(gboolean code, GError *error)
@@ -305,27 +308,31 @@ cleanup:
 static gboolean
 im_set_status_idle(gpointer data)
 {
-        g_return_val_if_fail(data != NULL, FALSE);
-        ImStatusData *d = (ImStatusData *) data;
+        LastfmTrack *track = (LastfmTrack *) data;
+        GString *msg;
+
+        g_return_val_if_fail (data != NULL, FALSE);
+
+        msg = g_string_sized_new (200);
+        g_string_assign (msg, im_status_template->str);
 
         /* Modify the template */
-        string_replace_gstr(d->msg, "{artist}", d->track->artist);
-        string_replace_gstr(d->msg, "{title}", d->track->title);
-        string_replace_gstr(d->msg, "{station}", d->track->pls_title);
-        string_replace_gstr(d->msg, "{version}", APP_VERSION);
+        string_replace_gstr(msg, "{artist}", track->artist);
+        string_replace_gstr(msg, "{title}", track->title);
+        string_replace_gstr(msg, "{station}", track->pls_title);
+        string_replace_gstr(msg, "{version}", APP_VERSION);
 
         /* Set the status */
         gdk_threads_enter();
-        if (d->im_pidgin) pidgin_set_status(d->msg->str);
-        if (d->im_gajim) gajim_set_status(d->msg->str);
-        if (d->im_gossip) gossip_set_status(d->msg->str);
-        if (d->im_telepathy) telepathy_set_status(d->msg->str);
+        if (im_pidgin) pidgin_set_status (msg->str);
+        if (im_gajim) gajim_set_status (msg->str);
+        if (im_gossip) gossip_set_status (msg->str);
+        if (im_telepathy) telepathy_set_status (msg->str);
         gdk_threads_leave();
 
         /* Cleanup */
-        g_string_free(d->msg, TRUE);
-        lastfm_track_unref(d->track);
-        g_slice_free(ImStatusData, d);
+        g_string_free (msg, TRUE);
+        lastfm_track_unref (track);
 
         return FALSE;
 }
@@ -362,23 +369,63 @@ im_clear_status_idle(gpointer data)
         return FALSE;
 }
 
-void
-im_set_status(const VglUserCfg *cfg, LastfmTrack *track)
+static void
+usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg)
 {
-        g_return_if_fail(cfg != NULL && track != NULL);
-        ImStatusData *data = g_slice_new(ImStatusData);
-        data->im_pidgin = cfg->im_pidgin;
-        data->im_gossip = cfg->im_gossip;
-        data->im_telepathy = cfg->im_telepathy;
-        data->im_gajim = cfg->im_gajim;
-        data->msg = g_string_new(cfg->imstatus_template);
-        data->track = lastfm_track_ref(track);
-        g_idle_add(im_set_status_idle,data);
+        gboolean cfg_changed;
+        LastfmTrack *np = controller_get_current_track ();
 
+        cfg_changed = (im_pidgin    != cfg->im_pidgin    ||
+                       im_telepathy != cfg->im_telepathy ||
+                       im_gajim     != cfg->im_gajim     ||
+                       im_gossip    != cfg->im_gossip    ||
+                       !g_str_equal (im_status_template->str,
+                                     cfg->imstatus_template));
+
+        im_pidgin    = cfg->im_pidgin;
+        im_telepathy = cfg->im_telepathy;
+        im_gajim     = cfg->im_gajim;
+        im_gossip    = cfg->im_gossip;
+        g_string_assign (im_status_template, cfg->imstatus_template);
+
+        if (cfg_changed) {
+                g_idle_add (im_clear_status_idle, NULL);
+                if (np != NULL) {
+                        g_idle_add (im_set_status_idle, lastfm_track_ref (np));
+                }
+        }
+}
+
+static void
+player_stopped_cb (VglController *ctrl, gpointer data)
+{
+        g_idle_add (im_clear_status_idle, NULL);
+}
+
+static void
+track_started_cb (VglController *ctrl, LastfmTrack *track, gpointer data)
+{
+        g_idle_add (im_set_status_idle, lastfm_track_ref (track));
+}
+
+static void
+controller_destroyed_cb (gpointer data, GObject *controller)
+{
+        g_string_free (im_status_template, TRUE);
+        im_status_template = NULL;
 }
 
 void
-im_clear_status(void)
+im_status_init (VglController *controller)
 {
-        g_idle_add(im_clear_status_idle, NULL);
+        g_return_if_fail (VGL_IS_CONTROLLER (controller));
+        im_status_template = g_string_sized_new (80);
+        g_signal_connect (controller, "usercfg-changed",
+                          G_CALLBACK (usercfg_changed_cb), NULL);
+        g_signal_connect (controller, "player-stopped",
+                          G_CALLBACK (player_stopped_cb), NULL);
+        g_signal_connect (controller, "track-started",
+                          G_CALLBACK (track_started_cb), NULL);
+        g_object_weak_ref (G_OBJECT (controller),
+                           controller_destroyed_cb, NULL);
 }
