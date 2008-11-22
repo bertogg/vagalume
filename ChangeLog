@@ -1,5 +1,10 @@
 2008-11-22  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/imstatus.c (usercfg_changed_cb): Don't do anything if the IM
+	configuration hasn't changed.
+
+2008-11-22  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/imstatus.h
 	* src/imstatus.c (im_set_status_idle, usercfg_changed_cb)
 	(player_stopped_cb, track_started_cb, controller_destroyed_cb)

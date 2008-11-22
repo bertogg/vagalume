@@ -372,23 +372,20 @@ im_clear_status_idle(gpointer data)
 static void
 usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg)
 {
-        gboolean cfg_changed;
-        LastfmTrack *np = controller_get_current_track ();
+        if (im_pidgin    != cfg->im_pidgin    ||
+            im_telepathy != cfg->im_telepathy ||
+            im_gajim     != cfg->im_gajim     ||
+            im_gossip    != cfg->im_gossip    ||
+            !g_str_equal (im_status_template->str,
+                          cfg->imstatus_template)) {
 
-        cfg_changed = (im_pidgin    != cfg->im_pidgin    ||
-                       im_telepathy != cfg->im_telepathy ||
-                       im_gajim     != cfg->im_gajim     ||
-                       im_gossip    != cfg->im_gossip    ||
-                       !g_str_equal (im_status_template->str,
-                                     cfg->imstatus_template));
+                LastfmTrack *np = controller_get_current_track ();
+                im_pidgin    = cfg->im_pidgin;
+                im_telepathy = cfg->im_telepathy;
+                im_gajim     = cfg->im_gajim;
+                im_gossip    = cfg->im_gossip;
+                g_string_assign (im_status_template, cfg->imstatus_template);
 
-        im_pidgin    = cfg->im_pidgin;
-        im_telepathy = cfg->im_telepathy;
-        im_gajim     = cfg->im_gajim;
-        im_gossip    = cfg->im_gossip;
-        g_string_assign (im_status_template, cfg->imstatus_template);
-
-        if (cfg_changed) {
                 g_idle_add (im_clear_status_idle, NULL);
                 if (np != NULL) {
                         g_idle_add (im_set_status_idle, lastfm_track_ref (np));
