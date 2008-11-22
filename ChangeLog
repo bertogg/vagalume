@@ -1,5 +1,18 @@
 2008-11-22  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (controller_start_playing_cb)
+	(controller_stop_playing, controller_run_app)
+	* src/dbus.h
+	* src/dbus.c (player_stopped_cb, track_started_cb)
+	(controller_destroyed_cb, lastfm_dbus_init):
+	Manage DBUS status notifications using signals.
+	(lastfm_dbus_close): Set dbus_connection to NULL after unref
+
+	* src/Makefile.am: Use only dbus.h when compiling with DBUS
+	support.
+
+2008-11-22  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-tray-icon.h
 	* src/vgl-tray-icon.c (usercfg_changed_cb, track_stopped_cb)
 	(track_started_cb, icon_destroyed_cb, vgl_tray_icon_create)

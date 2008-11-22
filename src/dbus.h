@@ -11,6 +11,7 @@
 
 #include "globaldefs.h"
 #include "playlist.h"
+#include "controller.h"
 
 #define APP_DBUS_SERVICE "com.igalia." APP_NAME_LC
 #define APP_DBUS_OBJECT "/com/igalia/" APP_NAME_LC
@@ -62,24 +63,11 @@ typedef enum {
         DBUS_INIT_ALREADY_RUNNING
 } DbusInitReturnCode;
 
-#ifdef HAVE_DBUS_SUPPORT
-
-DbusInitReturnCode lastfm_dbus_init(void);
+DbusInitReturnCode lastfm_dbus_init(VglController *controller);
 void lastfm_dbus_close(void);
 void lastfm_dbus_notify_playback(LastfmTrack *track);
 void lastfm_dbus_notify_started(void);
 void lastfm_dbus_notify_closing(void);
 void lastfm_dbus_play_radio_url(const char *url);
-
-#else
-
-DbusInitReturnCode lastfm_dbus_init(void) { return DBUS_INIT_OK; }
-void lastfm_dbus_close(void) { }
-void lastfm_dbus_notify_playback(LastfmTrack *track) { }
-void lastfm_dbus_notify_started(void) { }
-void lastfm_dbus_notify_closing(void) { }
-void lastfm_dbus_play_radio_url(const char *url) { }
-
-#endif /* HAVE_DBUS_SUPPORT */
 
 #endif

@@ -24,11 +24,14 @@
 #include "dlwin.h"
 #include "http.h"
 #include "globaldefs.h"
-#include "dbus.h"
 #include "util.h"
 #include "imstatus.h"
 #include "vgl-bookmark-mgr.h"
 #include "vgl-bookmark-window.h"
+
+#ifdef HAVE_DBUS_SUPPORT
+#include "dbus.h"
+#endif
 
 #ifdef HAVE_TRAY_ICON
 #include "vgl-tray-icon.h"
@@ -856,9 +859,6 @@ controller_start_playing_cb(gpointer userdata)
                 controller_download_track (TRUE);
         }
 
-        /* Notify the playback status */
-        lastfm_dbus_notify_playback(track);
-
         if (track->custom_pls) {
                 lastfm_audio_play(track->stream_url,
                                   (GCallback) controller_audio_started_cb,
@@ -924,9 +924,6 @@ controller_stop_playing(void)
         finish_playing_track();
         stop_after_this_track = FALSE;
         im_clear_status();
-
-        /* Notify the playback status */
-        lastfm_dbus_notify_playback(NULL);
 
         g_signal_emit (vgl_controller, signals[PLAYER_STOPPED], 0);
 }
@@ -1796,21 +1793,27 @@ controller_run_app (const char *radio_url)
 #ifdef MAEMO
         osso_context_t *osso_context = NULL;
 #endif
-        DbusInitReturnCode dbuscode = lastfm_dbus_init ();
-        if (dbuscode == DBUS_INIT_ERROR) {
+
+        vgl_controller = g_object_new (VGL_TYPE_CONTROLLER, NULL);
+        g_object_add_weak_pointer (G_OBJECT (vgl_controller),
+                                   (gpointer) &vgl_controller);
+
+#ifdef HAVE_DBUS_SUPPORT
+        switch (lastfm_dbus_init (vgl_controller)) {
+        case DBUS_INIT_ERROR:
                 errmsg = _("Unable to initialize DBUS");
-        } else if (dbuscode == DBUS_INIT_ALREADY_RUNNING) {
+                break;
+        case DBUS_INIT_ALREADY_RUNNING:
                 if (radio_url) {
                         g_debug ("Playing radio URL %s in running instance",
                                  radio_url);
                         lastfm_dbus_play_radio_url (radio_url);
                 }
                 return;
+        default:
+                break;
         }
-
-        vgl_controller = g_object_new (VGL_TYPE_CONTROLLER, NULL);
-        g_object_add_weak_pointer (G_OBJECT (vgl_controller),
-                                   (gpointer) &vgl_controller);
+#endif
 
         mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());
         g_object_add_weak_pointer (G_OBJECT (mainwin), (gpointer) &mainwin);
@@ -1853,13 +1856,13 @@ controller_run_app (const char *radio_url)
                 controller_play_radio_by_url(radio_url);
         }
 
+#ifdef HAVE_DBUS_SUPPORT
         lastfm_dbus_notify_started();
+#endif
 
         vgl_main_window_run_app();
 
         /* --- From here onwards the app shuts down --- */
-
-        lastfm_dbus_notify_closing();
 
         lastfm_session_destroy(session);
         session = NULL;
@@ -1874,15 +1877,14 @@ controller_run_app (const char *radio_url)
                 usercfg = NULL;
         }
         lastfm_audio_clear();
-        lastfm_dbus_close();
         vgl_bookmark_mgr_save_to_disk (vgl_bookmark_mgr_get_instance (), FALSE);
+
+        g_object_unref (vgl_controller);
 
 #ifdef MAEMO
         /* Cleanup OSSO context */
         osso_deinitialize(osso_context);
 #endif
-
-        g_object_unref (vgl_controller);
 }
 
 /**

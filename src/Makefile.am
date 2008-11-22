@@ -20,7 +20,6 @@ vagalume_SOURCES = \
 	audio.c audio.h \
 	connection.h \
 	controller.c controller.h \
-	dbus.h \
 	dlwin.c dlwin.h \
 	globaldefs.h \
 	http.c http.h \
@@ -56,7 +55,7 @@ vagalume_SOURCES += connection.c
 endif
 
 if HAVE_DBUS_SUPPORT
-vagalume_SOURCES += dbus.c
+vagalume_SOURCES += dbus.c dbus.h
 endif
 
 if HAVE_MAEMO_SB_PLUGIN

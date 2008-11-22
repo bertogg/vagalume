@@ -8,7 +8,6 @@
  */
 
 #include "dbus.h"
-#include "controller.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -18,6 +17,25 @@
 
 static DBusConnection *dbus_connection = NULL;
 static gboolean dbus_filter_added = FALSE;
+
+static void
+player_stopped_cb (VglController *ctrl, gpointer data)
+{
+        lastfm_dbus_notify_playback (NULL);
+}
+
+static void
+track_started_cb (VglController *ctrl, LastfmTrack *track, gpointer data)
+{
+        lastfm_dbus_notify_playback (track);
+}
+
+static void
+controller_destroyed_cb (gpointer data, GObject *controller)
+{
+        lastfm_dbus_notify_closing();
+        lastfm_dbus_close();
+}
 
 static gboolean
 playurl_handler_idle(gpointer data)
@@ -425,10 +443,11 @@ dbus_req_handler(DBusConnection *connection, DBusMessage *message,
 }
 
 DbusInitReturnCode
-lastfm_dbus_init(void)
+lastfm_dbus_init (VglController *controller)
 {
         int result;
 
+        g_return_val_if_fail (VGL_IS_CONTROLLER (controller), DBUS_INIT_ERROR);
         g_debug("Initializing D-Bus...");
 
         /* Get D-Bus connection */
@@ -482,6 +501,13 @@ lastfm_dbus_init(void)
                 return DBUS_INIT_ALREADY_RUNNING;
         }
 
+        g_signal_connect (controller, "player-stopped",
+                          G_CALLBACK (player_stopped_cb), NULL);
+        g_signal_connect (controller, "track-started",
+                          G_CALLBACK (track_started_cb), NULL);
+        g_object_weak_ref (G_OBJECT (controller),
+                           controller_destroyed_cb, NULL);
+
         return DBUS_INIT_OK;
 }
 
@@ -509,5 +535,6 @@ lastfm_dbus_close(void)
         /* Unref the D-bus connection */
         if (dbus_connection) {
                 dbus_connection_unref (dbus_connection);
+                dbus_connection = NULL;
         }
 }
