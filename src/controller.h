@@ -13,6 +13,46 @@
 #include "radio.h"
 #include "xmlrpc.h"
 
+#include <glib-object.h>
+
+G_BEGIN_DECLS
+
+#define VGL_TYPE_CONTROLLER                                             \
+   (vgl_controller_get_type())
+#define VGL_CONTROLLER(obj)                                             \
+   (G_TYPE_CHECK_INSTANCE_CAST ((obj),                                  \
+                                VGL_TYPE_CONTROLLER,                    \
+                                VglController))
+#define VGL_CONTROLLER_CLASS(klass)                                     \
+   (G_TYPE_CHECK_CLASS_CAST ((klass),                                   \
+                             VGL_TYPE_CONTROLLER,                       \
+                             VglControllerClass))
+#define VGL_IS_CONTROLLER(obj)                                          \
+   (G_TYPE_CHECK_INSTANCE_TYPE ((obj),                                  \
+                                VGL_TYPE_CONTROLLER))
+#define VGL_IS_CONTROLLER_CLASS(klass)                                  \
+   (G_TYPE_CHECK_CLASS_TYPE ((klass),                                   \
+                             VGL_TYPE_CONTROLLER))
+#define VGL_CONTROLLER_GET_CLASS(obj)                                   \
+   (G_TYPE_INSTANCE_GET_CLASS ((obj),                                   \
+                               VGL_TYPE_CONTROLLER,                     \
+                               VglControllerClass))
+
+typedef struct _VglController      VglController;
+typedef struct _VglControllerClass VglControllerClass;
+
+struct _VglControllerClass
+{
+    GObjectClass parent_class;
+};
+
+struct _VglController
+{
+    GObject parent;
+};
+
+GType vgl_controller_get_type (void) G_GNUC_CONST;
+
 typedef enum {
         STOP_AFTER_DONT_STOP,
         STOP_AFTER_THIS_TRACK,
@@ -62,5 +102,7 @@ void controller_set_volume(int vol);
 void controller_show_cover(void);
 LastfmTrack *controller_get_current_track (void);
 void controller_close_mainwin(void);
+
+G_END_DECLS
 
 #endif

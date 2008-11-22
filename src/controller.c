@@ -38,6 +38,22 @@
 #include <libosso.h>
 #endif
 
+G_DEFINE_TYPE (VglController, vgl_controller, G_TYPE_OBJECT);
+
+static VglController *vgl_controller = NULL;
+
+enum {
+        CONNECTED,
+        DISCONNECTED,
+        TRACK_STARTED,
+        TRACK_STOPPED,
+        PLAYER_STOPPED,
+        USERCFG_CHANGED,
+        N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = { 0 };
+
 static LastfmSession *session = NULL;
 static LastfmPls *playlist = NULL;
 static RspSession *rsp_sess = NULL;
@@ -550,6 +566,7 @@ apply_usercfg(void)
         if (nowplaying != NULL) {
                 im_set_status(usercfg, nowplaying);
         }
+        g_signal_emit (vgl_controller, signals[USERCFG_CHANGED], 0, usercfg);
 #ifdef HAVE_TRAY_ICON
         if (tray_icon != NULL) {
                 vgl_tray_icon_show_notifications (
@@ -648,6 +665,7 @@ check_session_thread(gpointer userdata)
         } else {
                 gdk_threads_enter();
                 session = s;
+                g_signal_emit (vgl_controller, signals[CONNECTED], 0);
                 vgl_main_window_set_state (mainwin,
                                            VGL_MAIN_WINDOW_STATE_STOPPED,
                                            NULL, NULL);
@@ -818,6 +836,7 @@ controller_audio_started_cb(void)
         showing_cover = FALSE;
         controller_show_cover();
         g_timeout_add_seconds (1, controller_show_progress, track);
+        g_signal_emit (vgl_controller, signals[TRACK_STARTED], 0, nowplaying);
 }
 
 /**
@@ -899,6 +918,7 @@ finish_playing_track(void)
                 controller_set_nowplaying(NULL);
         }
         lastfm_audio_stop();
+        g_signal_emit (vgl_controller, signals[TRACK_STOPPED], 0);
 }
 
 /**
@@ -929,6 +949,7 @@ controller_stop_playing(void)
                 vgl_tray_icon_notify_playback (tray_icon, NULL);
         }
 #endif
+        g_signal_emit (vgl_controller, signals[PLAYER_STOPPED], 0);
 }
 
 /**
@@ -958,6 +979,7 @@ controller_disconnect(void)
         }
         lastfm_pls_clear(playlist);
         controller_stop_playing();
+        g_signal_emit (vgl_controller, signals[DISCONNECTED], 0);
 }
 
 /**
@@ -1807,6 +1829,10 @@ controller_run_app (const char *radio_url)
                 return;
         }
 
+        vgl_controller = g_object_new (VGL_TYPE_CONTROLLER, NULL);
+        g_object_add_weak_pointer (G_OBJECT (vgl_controller),
+                                   (gpointer) &vgl_controller);
+
         mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());
         g_object_add_weak_pointer (G_OBJECT (mainwin), (gpointer) &mainwin);
         vgl_main_window_show(mainwin, TRUE);
@@ -1885,6 +1911,8 @@ controller_run_app (const char *radio_url)
         /* Cleanup OSSO context */
         osso_deinitialize(osso_context);
 #endif
+
+        g_object_unref (vgl_controller);
 }
 
 /**
@@ -1899,4 +1927,61 @@ controller_close_mainwin(void)
         else
 #endif
                 controller_quit_app();
+}
+
+static void
+vgl_controller_class_init (VglControllerClass *klass)
+{
+        signals[CONNECTED] =
+                g_signal_new ("connected",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
+
+        signals[DISCONNECTED] =
+                g_signal_new ("disconnected",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
+
+        signals[TRACK_STARTED] =
+                g_signal_new ("track-started",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__POINTER,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+        signals[TRACK_STOPPED] =
+                g_signal_new ("track-stopped",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
+
+        signals[PLAYER_STOPPED] =
+                g_signal_new ("player-stopped",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
+
+        signals[USERCFG_CHANGED] =
+                g_signal_new ("usercfg-changed",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              g_cclosure_marshal_VOID__POINTER,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+}
+
+static void
+vgl_controller_init (VglController *self)
+{
 }

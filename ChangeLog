@@ -1,3 +1,17 @@
+2008-11-22  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.h
+	* src/controller.c
+	(controller_run_app, vgl_controller_class_init)
+	(vgl_controller_init):
+	Created new VglController object with the following signals:
+	"connected", "disconnected", "track-started", "track-stopped",
+	"player-stopped" and "usercfg-changed".
+	(apply_usercfg, check_session_thread)
+	(controller_audio_started_cb, finish_playing_track)
+	(controller_stop_playing, controller_disconnect):
+	Emit newly-defined signals in their respective functions.
+
 2008-11-09  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-main-window.c (create_main_menu): Fix translation string
