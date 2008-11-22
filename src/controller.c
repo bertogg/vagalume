@@ -69,10 +69,6 @@ static gboolean showing_cover = FALSE;
 static gboolean stop_after_this_track = FALSE;
 static gboolean shutting_down = FALSE;
 
-#ifdef HAVE_TRAY_ICON
-static VglTrayIcon *tray_icon = NULL;
-#endif
-
 typedef struct {
         LastfmTrack *track;
         RspRating rating;
@@ -567,12 +563,6 @@ apply_usercfg(void)
                 im_set_status(usercfg, nowplaying);
         }
         g_signal_emit (vgl_controller, signals[USERCFG_CHANGED], 0, usercfg);
-#ifdef HAVE_TRAY_ICON
-        if (tray_icon != NULL) {
-                vgl_tray_icon_show_notifications (
-                        tray_icon, usercfg->show_notifications);
-        }
-#endif
 }
 
 /**
@@ -869,12 +859,6 @@ controller_start_playing_cb(gpointer userdata)
         /* Notify the playback status */
         lastfm_dbus_notify_playback(track);
 
-#ifdef HAVE_TRAY_ICON
-        if (tray_icon) {
-                vgl_tray_icon_notify_playback (tray_icon, track);
-        }
-#endif
-
         if (track->custom_pls) {
                 lastfm_audio_play(track->stream_url,
                                   (GCallback) controller_audio_started_cb,
@@ -944,11 +928,6 @@ controller_stop_playing(void)
         /* Notify the playback status */
         lastfm_dbus_notify_playback(NULL);
 
-#ifdef HAVE_TRAY_ICON
-        if (tray_icon) {
-                vgl_tray_icon_notify_playback (tray_icon, NULL);
-        }
-#endif
         g_signal_emit (vgl_controller, signals[PLAYER_STOPPED], 0);
 }
 
@@ -1839,6 +1818,11 @@ controller_run_app (const char *radio_url)
         vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
                                    NULL, NULL);
 
+#ifdef HAVE_TRAY_ICON
+        /* Init Freedesktop tray icon */
+        vgl_tray_icon_create (vgl_controller);
+#endif
+
         http_init();
         check_usercfg(FALSE);
         playlist = lastfm_pls_new();
@@ -1871,26 +1855,12 @@ controller_run_app (const char *radio_url)
 
         lastfm_dbus_notify_started();
 
-#ifdef HAVE_TRAY_ICON
-        /* Init Freedesktop tray icon */
-        tray_icon = vgl_tray_icon_create ();
-        g_object_add_weak_pointer (G_OBJECT (tray_icon), (gpointer) &tray_icon);
-        vgl_tray_icon_notify_playback (tray_icon, NULL);
-        if (usercfg != NULL) {
-                vgl_tray_icon_show_notifications (
-                        tray_icon, usercfg->show_notifications);
-        }
-#endif
-
         vgl_main_window_run_app();
 
         /* --- From here onwards the app shuts down --- */
 
         lastfm_dbus_notify_closing();
 
-#ifdef HAVE_TRAY_ICON
-        g_object_unref(tray_icon);
-#endif
         lastfm_session_destroy(session);
         session = NULL;
         rsp_session_destroy(rsp_sess);

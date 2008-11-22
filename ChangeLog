@@ -1,5 +1,14 @@
 2008-11-22  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-tray-icon.h
+	* src/vgl-tray-icon.c (usercfg_changed_cb, track_stopped_cb)
+	(track_started_cb, icon_destroyed_cb, vgl_tray_icon_create)
+	* src/controller.c (apply_usercfg, controller_start_playing_cb)
+	(controller_stop_playing, controller_run_app):
+	Manage tray icon notifications using signals.
+
+2008-11-22  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.h
 	* src/controller.c
 	(controller_run_app, vgl_controller_class_init)
