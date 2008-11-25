@@ -27,7 +27,7 @@
 #include "globaldefs.h"
 #include "audio.h"
 
-#ifdef SET_IM_STATUS
+#ifdef HAVE_DBUS_SUPPORT
 #   include <dbus/dbus-glib.h>
 #endif
 
@@ -39,7 +39,7 @@ main (int argc, char **argv)
         signal(SIGPIPE, SIG_IGN);
         g_thread_init (NULL);
         gdk_threads_init ();
-#ifdef SET_IM_STATUS
+#ifdef HAVE_DBUS_SUPPORT
         dbus_g_thread_init ();
 #endif
         gdk_threads_enter ();

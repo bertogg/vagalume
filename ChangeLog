@@ -1,3 +1,8 @@
+2008-11-25  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/main.c (main): Call dbus_g_thread_init() if we have DBUS
+	support, even if the "Set IM status" feature is not enabled.
+
 2008-11-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/imstatus.c (usercfg_changed_cb): Don't do anything if the IM
