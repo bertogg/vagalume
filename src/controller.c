@@ -30,7 +30,11 @@
 #include "vgl-bookmark-window.h"
 
 #ifdef HAVE_TRAY_ICON
+#ifdef WINDOWS
+#include "vgl-tray-icon-win.h"
+#else
 #include "vgl-tray-icon.h"
+#endif
 #endif
 
 #ifdef MAEMO
@@ -662,7 +666,11 @@ check_session_thread(gpointer userdata)
 static void
 check_session_conn_cb(gpointer data)
 {
+#ifdef WINDOWS
+        gdk_threads_add_idle((GSourceFunc) check_session_thread, data);
+#else
         g_thread_create(check_session_thread, data, FALSE, NULL);
+#endif
 }
 
 /**
@@ -775,8 +783,13 @@ controller_show_cover(void)
             vgl_main_window_is_hidden(mainwin)) return;
         showing_cover = TRUE;
         if (nowplaying->image_url != NULL) {
-                g_thread_create(set_album_cover_thread,
+#ifdef WINDOWS
+                gdk_threads_add_idle((GSourceFunc)set_album_cover_thread,
+                                lastfm_track_ref(nowplaying));
+#else								
+				g_thread_create(set_album_cover_thread,
                                 lastfm_track_ref(nowplaying), FALSE, NULL);
+#endif
         } else {
                 vgl_main_window_set_album_cover(mainwin, NULL, 0);
         }
@@ -819,7 +832,11 @@ controller_start_playing_cb(gpointer userdata)
                                   NULL);
         if (lastfm_pls_size(playlist) == 0) {
                 LastfmSession *s = lastfm_session_copy(session);
-                g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
+#ifdef WINDOWS				
+                gdk_threads_add_idle((GSourceFunc)start_playing_get_pls_thread,s);
+#else				
+				g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
+#endif	
                 return;
         }
         track = lastfm_pls_get_track(playlist);
@@ -1132,7 +1149,11 @@ controller_tag_track()
                 d->track = track;
                 d->taglist = tags;
                 d->type = type;
-                g_thread_create(tag_track_thread,d,FALSE,NULL);
+#ifdef WINDOWS
+                gdk_threads_add_idle((GSourceFunc)tag_track_thread,d);
+#else
+				g_thread_create(tag_track_thread,d,FALSE,NULL);
+#endif
         } else {
                 if (accept) {
                         controller_show_info(_("You must type a list of tags"));
@@ -1209,7 +1230,11 @@ controller_recomm_track(void)
                 d->rcpt = rcpt;
                 d->text = body;
                 d->type = type;
-                g_thread_create(recomm_track_thread,d,FALSE,NULL);
+#ifdef WINDOWS				
+                gdk_threads_add_idle((GSourceFunc)recomm_track_thread,d);
+#else				
+				g_thread_create(recomm_track_thread,d,FALSE,NULL);
+#endif
         } else {
                 if (accept) {
                         controller_show_info(_("You must type a user name\n"
@@ -1272,7 +1297,11 @@ controller_add_to_playlist(void)
                     _("Really add this track to the playlist?"), FALSE)) {
                 LastfmTrack *track = lastfm_track_ref(nowplaying);
                 vgl_main_window_set_track_as_added_to_playlist(mainwin, TRUE);
-                g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
+#ifdef WINDOWS
+                gdk_threads_add_idle((GSourceFunc)add_to_playlist_thread,track);
+#else				
+				g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
+#endif
         }
 }
 
@@ -1348,7 +1377,11 @@ controller_play_radio_by_url_thread(gpointer data)
 static void
 controller_play_radio_by_url_cb(char *url)
 {
+#ifdef WINDOWS
+        gdk_threads_add_idle((GSourceFunc) controller_play_radio_by_url_thread, url);
+#else                                                                    
         g_thread_create(controller_play_radio_by_url_thread, url, FALSE, NULL);
+#endif
 }
 
 /**

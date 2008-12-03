@@ -63,7 +63,11 @@ restoresettingsexecscriptdir = @RESTORE_SETTINGS_SCRIPTS_DIR@
 restoresettingsexecscript_SCRIPTS = data/vagalume-rfs.sh
 else
 themeicondir = $(appdatadir)/icons/hicolor/scalable/actions
+if WINDOWS_PLATFORM
+themeicon_DATA = data/buttons/big/*.png data/buttons/small/*.png
+else
 themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg
+endif
 man1_MANS = $(manpages)
 endif
 

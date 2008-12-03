@@ -88,7 +88,11 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
         g_return_val_if_fail(url != NULL && fd > 0, FALSE);
         CURLcode retcode;
         CURL *handle = curl_easy_init();
-        FILE *f = fdopen(fd, "w");
+#ifdef WINDOWS
+        FILE *f = fdopen(fd, "wb");
+#else 
+		FILE *f = fdopen(fd, "w");
+#endif
         struct curl_slist *hdrs = NULL;
 
         if (f == NULL) {

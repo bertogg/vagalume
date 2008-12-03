@@ -28,6 +28,11 @@
 #        define COVER_FRAME_SIZE 250
 #        define BIGBUTTON_IMG_SIZE 98
 #        define SMALLBUTTON_IMG_SIZE 82
+#elif defined(WINDOWS)
+#        define ALBUM_COVER_SIZE 110
+#        define COVER_FRAME_SIZE 130
+#        define BIGBUTTON_IMG_SIZE 64
+#        define SMALLBUTTON_IMG_SIZE 48
 #else
 #        define ALBUM_COVER_SIZE 110
 #        define COVER_FRAME_SIZE 130
@@ -116,7 +121,11 @@ static const char *cover_background = APP_DATA_DIR "/cover.png";
 
 static const char *authors[] = {
         "Alberto Garcia Gonzalez\n<agarcia@igalia.com>\n",
-        "Mario Sanchez Prada\n<msanchez@igalia.com>",
+        "Mario Sanchez Prada\n<msanchez@igalia.com>\n",
+#ifdef WINDOWS
+        "Windows Port:\n",
+        "Luis Garcia Rio\n<lgarcia@igalia.com>",
+#endif
         NULL
 };
 static const char *artists[] = {
@@ -1004,6 +1013,10 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
 static void
 vgl_main_window_init(VglMainWindow *self)
 {
+#ifdef WINDOWS
+		GtkSettings *sett = gtk_settings_get_default();
+		gtk_settings_set_long_property(sett, "gtk-button-images", TRUE, "main");
+#endif
         VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(self);
         GtkWindow *win = GTK_WINDOW(self);
         GtkBox *vbox, *centralbox;

@@ -13,8 +13,13 @@ bin_PROGRAMS = vagalume
 
 vagalume_LDADD = $(EXTRA_LIBS)
 
+if WINDOWS_PLATFORM
+vagalume_CFLAGS= $(EXTRA_CFLAGS) -DAPP_DATA_DIR=\"../share/vagalume\" \
+	-DPIXMAP_DIR=\"../share/pixmaps\" -DICON48_DIR=\"../share/icons/hicolor/48x48/apps\"
+else
 vagalume_CFLAGS= $(EXTRA_CFLAGS) -DAPP_DATA_DIR=\"$(appdatadir)\" \
 	-DPIXMAP_DIR=\"$(pixmapdir)\" -DICON48_DIR=\"$(icon48dir)\"
+endif
 
 vagalume_SOURCES = \
 	audio.c audio.h \
@@ -39,6 +44,11 @@ vagalume_SOURCES = \
 	vgl-main-window.c vgl-main-window.h \
 	xmlrpc.c xmlrpc.h
 
+if WINDOWS_PLATFORM
+vagalume_SOURCES += windows/resource.rc
+vagalume_LDFLAGS = -mwindows
+endif
+	
 if SET_IM_STATUS
 vagalume_SOURCES += imstatus.c
 endif
@@ -48,7 +58,11 @@ vagalume_SOURCES += md5/md5.c md5/md5.h
 endif
 
 if HAVE_TRAY_ICON
+if WINDOWS_PLATFORM
+vagalume_SOURCES += vgl-tray-icon-win.c vgl-tray-icon-win.h
+else
 vagalume_SOURCES += vgl-tray-icon.h vgl-tray-icon.c
+endif
 endif
 
 if HAVE_CONIC
@@ -82,3 +96,8 @@ install-data-hook:
 	   rm -f "$(DESTDIR)/$(sbplugindir)/libvagalumesbplugin.a" ; \
 	   rm -f "$(DESTDIR)/$(sbplugindir)/libvagalumesbplugin.la" ; \
 	fi
+
+if WINDOWS_PLATFORM
+.rc.o:
+	windres -I windows $< $@
+endif

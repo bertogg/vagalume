@@ -27,6 +27,12 @@ static const char *default_sinks[] = { "autoaudiosink", "alsasink", NULL };
 static const char *default_converters[] = { "audioconvert", NULL };
 #endif
 
+#ifdef WINDOWS
+static const char *source_plugin = "souphttpsrc";
+#else
+static const chat *source_plugin = "fdsrc";
+#endif
+
 static GstElement *pipeline = NULL;
 static GstElement *source = NULL;
 static GstElement *decoder = NULL;
@@ -36,20 +42,27 @@ static GstElement *sink = NULL;
 static int failed_tracks = 0;
 static GMutex *failed_tracks_mutex = NULL;
 
+#ifndef WINDOWS
 static int http_pipe[2] = { -1, -1 };
 static GThread *http_thread = NULL;
+#endif
 static gboolean audio_started = FALSE;
 static GCallback audio_started_callback = NULL;
 static GMainLoop *loop = NULL;
 
 static void
 close_previous_playback(void)
-{
+#ifdef WINDOWS
+{}
+#else                        
+{                             
         if (http_pipe[0] != -1) close(http_pipe[0]);
         if (http_pipe[1] != -1) close(http_pipe[1]);
         http_pipe[0] = http_pipe[1] = -1;
 }
+#endif
 
+#ifndef WINDOWS
 typedef struct {
         char *url;
         char *session_id;
@@ -80,6 +93,7 @@ get_audio_thread(gpointer userdata)
         g_mutex_unlock(failed_tracks_mutex);
         return NULL;
 }
+#endif
 
 static gboolean
 bus_call (GstBus *bus, GstMessage *msg, gpointer data)
@@ -219,7 +233,7 @@ lastfm_audio_init(void)
 
         /* set up */
         pipeline = gst_pipeline_new (NULL);
-        source = gst_element_factory_make ("fdsrc", NULL);
+        source = gst_element_factory_make (source_plugin, NULL);
 #ifdef MAEMO
         decoder = source; /* Unused, this is only for the assertions */
 #else
@@ -259,18 +273,31 @@ lastfm_audio_play(const char *url, GCallback audio_started_cb,
                   const char *session_id)
 {
         g_return_val_if_fail(pipeline && source && url, FALSE);
+#ifndef WINDOWS
         get_audio_thread_data *data = NULL;
         close_previous_playback();
         if (http_thread != NULL) g_thread_join(http_thread);
         http_thread = NULL;
+#endif
         audio_started = FALSE;
         audio_started_callback = audio_started_cb;
+#ifndef WINDOWS
         pipe(http_pipe);
         data = g_slice_new(get_audio_thread_data);
         data->session_id = g_strdup(session_id);
         data->url = g_strdup(url);
         http_thread = g_thread_create(get_audio_thread, data, TRUE, NULL);
         g_object_set(G_OBJECT(source), "fd", http_pipe[0], NULL);
+#else
+        g_object_set(G_OBJECT(source), "location", url, NULL);
+		if (session_id != NULL) {
+			gchar* cookies[] = {(g_strconcat("Session=", session_id, NULL)), NULL};
+			g_object_set(G_OBJECT(source), "cookies", cookies, NULL);
+			// Avoids a race condition produced by gstreamer.
+			g_usleep(0.5 * G_USEC_PER_SEC);
+		}
+        g_object_set(G_OBJECT(source), "user-agent", APP_FULLNAME, NULL);
+#endif
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
 #ifdef MAEMO
         /* It seems that dspmp3sink ignores the previous volume level
@@ -300,7 +327,9 @@ lastfm_audio_clear(void)
         gst_object_unref (GST_OBJECT (pipeline));
         pipeline = NULL;
         close_previous_playback();
+#ifndef WINDOWS
         if (http_thread != NULL) g_thread_join(http_thread);
+#endif
         g_main_loop_unref(loop);
 }
 

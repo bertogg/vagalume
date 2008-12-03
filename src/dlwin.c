@@ -6,6 +6,8 @@
  * See the README file for more details.
  */
 
+#include "config.h"
+ 
 #include <glib/gi18n.h>
 #include "globaldefs.h"
 #include "dlwin.h"
@@ -93,7 +95,9 @@ dlwin_download_file_thread(gpointer data)
         unlink(w->dstpath);
         success = http_download_file(w->url, w->dstpath, dlwin_progress_cb, w);
 
+#ifndef WINDOWS
         gdk_threads_enter();
+#endif
         if (success) {
                 gtk_widget_set_sensitive(w->cancelbutton, FALSE);
                 gtk_progress_bar_set_text(w->progressbar,
@@ -111,8 +115,9 @@ dlwin_download_file_thread(gpointer data)
                 gtk_widget_hide(w->cancelbutton);
                 gtk_widget_show(w->closebutton);
         }
+#ifndef WINDOWS
         gdk_threads_leave();
-
+#endif
         return NULL;
 }
 

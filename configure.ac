@@ -112,7 +112,8 @@ Target platform:
   --with-platform=detect  detect target platform (default)
   --with-platform=gnome   compile for Gnome
   --with-platform=maemo   compile for Maemo
-  --with-platform=moblin  compile for Moblin (experimental)],
+  --with-platform=moblin  compile for Moblin (experimental)
+  --with-platform=windows compile for Windows (experimental)],
   PLATFORM=$withval, PLATFORM=detect)
 
 if test "$PLATFORM" = "detect"; then
@@ -331,6 +332,18 @@ elif test "$PLATFORM" = "moblin"; then
    AC_DEFINE([HILDON_1], [1], [Defined if using hildon-1])
    AC_DEFINE([USE_HILDON_WINDOW], [1], [Defined if using HildonWindow])
 
+elif test "$PLATFORM" = "windows"; then
+
+     echo "Compiling for windows"
+
+     desktopentrydir="\${datadir}/applications"
+     
+	 if test "$enable_tray_icon" = "yes"; then
+		have_tray_icon="yes"   
+	 fi
+
+     AC_DEFINE([WINDOWS], [], [Defined if building for windows])
+   
 else
 
    AC_MSG_ERROR([Unknown platform $PLATFORM selected])
@@ -354,6 +367,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 ### Everything has been checked, now define Automake variables ###
 ##################################################################
 AM_CONDITIONAL(MAEMO_PLATFORM, test "$PLATFORM" = "maemo")
+AM_CONDITIONAL(WINDOWS_PLATFORM, test "$PLATFORM" = "windows")
 
 AM_CONDITIONAL(HAVE_DBUS_SUPPORT, test -n "$serviceentrydir")
 if test -n "$serviceentrydir"; then

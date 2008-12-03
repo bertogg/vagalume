@@ -36,7 +36,9 @@ main (int argc, char **argv)
 {
         char *radio = NULL;
 
+#ifndef WINDOWS
         signal(SIGPIPE, SIG_IGN);
+#endif
         g_thread_init (NULL);
         gdk_threads_init ();
 #ifdef SET_IM_STATUS
