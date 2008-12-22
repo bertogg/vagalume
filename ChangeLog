@@ -1,3 +1,9 @@
+2008-12-23  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/uimisc.c (ui_input_dialog_with_list, ui_usertag_dialog)
+	(recommwin_run, ui_create_combo_box_entry): Autocompletion support
+	for combo box entries.
+
 2008-12-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.h

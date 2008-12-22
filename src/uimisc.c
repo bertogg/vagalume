@@ -823,6 +823,30 @@ ui_create_options_list(const GList *elems)
         return GTK_TREE_MODEL(store);
 }
 
+static GtkWidget *
+ui_create_combo_box_entry (const GList *elems)
+{
+        GtkWidget *combo;
+        GtkEntryCompletion *completion;
+        GtkTreeModel *model;
+
+        model = ui_create_options_list (elems);
+        combo = gtk_combo_box_entry_new_with_model (model, 0);
+
+        completion = gtk_entry_completion_new ();
+        gtk_entry_completion_set_model (completion, model);
+        gtk_entry_completion_set_text_column (completion, 0);
+        gtk_entry_completion_set_inline_selection (completion, TRUE);
+
+        gtk_entry_set_completion (
+                GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo))), completion);
+
+        g_object_unref (model);
+        g_object_unref (completion);
+
+        return combo;
+}
+
 static void
 stop_after_dialog_update_sensitivity (StopAfterDialog *win)
 {
@@ -977,13 +1001,10 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
         GtkDialog *dialog;
         GtkWidget *label;
         GtkWidget *combo;
-        GtkTreeModel *model;
         char *retvalue = NULL;
-        model = ui_create_options_list(elems);
         dialog = ui_base_dialog(parent, title);
         label = gtk_label_new(text);
-        combo = gtk_combo_box_entry_new_with_model(model, 0);
-        g_object_unref(G_OBJECT(model));
+        combo = ui_create_combo_box_entry(elems);
         gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
         gtk_box_pack_start(GTK_BOX(dialog->vbox), combo, FALSE, FALSE, 10);
         gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -1008,18 +1029,14 @@ ui_usertag_dialog (GtkWindow *parent, char **user, char **tag,
         GtkWidget *userlabel, *taglabel;
         GtkWidget *usercombo, *tagentry;
         GtkTable *table;
-        GtkTreeModel *model;
 
         g_return_if_fail (parent == NULL || GTK_IS_WINDOW (parent));
         g_return_if_fail (user != NULL && tag != NULL);
 
-        model = ui_create_options_list (userlist);
-
         dialog = ui_base_dialog (parent, _("User tag radio"));
         userlabel = gtk_label_new (_("Username:"));
         taglabel = gtk_label_new (_("Tag:"));
-        usercombo = gtk_combo_box_entry_new_with_model (model, 0);
-        g_object_unref (G_OBJECT (model));
+        usercombo = ui_create_combo_box_entry (userlist);
         tagentry = gtk_entry_new ();
         table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
 
@@ -1471,7 +1488,6 @@ recommwin_run(GtkWindow *parent, char **user, char **message,
         g_return_val_if_fail(user && message && track && type, FALSE);
         gboolean retval = FALSE;
         GtkDialog *dialog;
-        GtkTreeModel *usermodel;
         GtkBox *selbox, *userbox;
         GtkWidget *sellabel;
         GtkComboBox *selcombo;
@@ -1511,11 +1527,9 @@ recommwin_run(GtkWindow *parent, char **user, char **message,
         /* Combo to select the recipient of the recommendation */
         userbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         userlabel = gtk_label_new(_("Send recommendation to"));
-        usermodel = ui_create_options_list(friends);
-        usercombo = gtk_combo_box_entry_new_with_model(usermodel, 0);
+        usercombo = ui_create_combo_box_entry(friends);
         gtk_entry_set_activates_default(GTK_ENTRY(GTK_BIN(usercombo)->child),
                                         TRUE);
-        g_object_unref(usermodel);
         gtk_box_pack_start(userbox, userlabel, FALSE, FALSE, 0);
         gtk_box_pack_start(userbox, usercombo, TRUE, TRUE, 0);
 
