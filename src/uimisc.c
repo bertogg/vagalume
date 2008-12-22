@@ -1000,6 +1000,66 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
         return retvalue;
 }
 
+void
+ui_usertag_dialog (GtkWindow *parent, char **user, char **tag,
+                   const GList *userlist)
+{
+        GtkDialog *dialog;
+        GtkWidget *userlabel, *taglabel;
+        GtkWidget *usercombo, *tagentry;
+        GtkTable *table;
+        GtkTreeModel *model;
+
+        g_return_if_fail (parent == NULL || GTK_IS_WINDOW (parent));
+        g_return_if_fail (user != NULL && tag != NULL);
+
+        model = ui_create_options_list (userlist);
+
+        dialog = ui_base_dialog (parent, _("User tag radio"));
+        userlabel = gtk_label_new (_("Username:"));
+        taglabel = gtk_label_new (_("Tag:"));
+        usercombo = gtk_combo_box_entry_new_with_model (model, 0);
+        g_object_unref (G_OBJECT (model));
+        tagentry = gtk_entry_new ();
+        table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
+
+        gtk_table_attach_defaults (table, userlabel, 0, 1, 0, 1);
+        gtk_table_attach_defaults (table, taglabel, 0, 1, 1, 2);
+        gtk_table_attach_defaults (table, usercombo, 1, 2, 0, 1);
+        gtk_table_attach_defaults (table, tagentry, 1, 2, 1, 2);
+        gtk_container_add (GTK_CONTAINER (dialog->vbox), GTK_WIDGET (table));
+
+        gtk_entry_set_activates_default (
+                GTK_ENTRY (GTK_BIN (usercombo)->child), TRUE);
+        gtk_entry_set_activates_default (GTK_ENTRY (tagentry), TRUE);
+        gtk_misc_set_alignment (GTK_MISC (userlabel), 0, 0.5);
+        gtk_misc_set_alignment (GTK_MISC (taglabel), 0, 0.5);
+        gtk_table_set_col_spacing (table, 0, 10);
+        gtk_table_set_row_spacing (table, 0, 5);
+        gtk_container_set_border_width (GTK_CONTAINER (table), 10);
+
+        if (*user != NULL) {
+                gtk_entry_set_text (
+                        GTK_ENTRY (GTK_BIN (usercombo)->child), *user);
+                g_free (*user);
+        }
+        if (*tag != NULL) {
+                gtk_entry_set_text (GTK_ENTRY (tagentry), *tag);
+                g_free (*tag);
+        }
+        *user = *tag = NULL;
+
+        gtk_widget_show_all (GTK_WIDGET (dialog));
+
+        if (gtk_dialog_run (dialog) == GTK_RESPONSE_ACCEPT) {
+                GtkEntry *entry = GTK_ENTRY (GTK_BIN (usercombo)->child);
+                *user = g_strstrip (g_strdup (gtk_entry_get_text (entry)));
+                *tag = g_strstrip (g_strdup (gtk_entry_get_text (
+                                                     GTK_ENTRY (tagentry))));
+        }
+        gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
 static GtkComboBox *
 artist_track_album_selection_combo(const LastfmTrack *t)
 {

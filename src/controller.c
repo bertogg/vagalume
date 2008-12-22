@@ -1595,7 +1595,7 @@ controller_play_radio(lastfm_radio type)
  * Start playing other user's radio by its type. It will pop up a
  * dialog to ask the user whose radio is going to be played
  *
- * This is the success callback of controller_play_radio()
+ * This is a success callback of controller_play_radio()
  *
  * @param userdata The radio type (passed as a gpointer)
  */
@@ -1622,6 +1622,38 @@ controller_play_others_radio_cb(gpointer userdata)
 }
 
 /**
+ * Start playing other user's tag radio. It will pop up a dialog to
+ * ask the user and tag to select the radio to be played.
+ *
+ * This is a success callback of controller_play_radio()
+ *
+ * @param userdata Not used
+ **/
+static void
+controller_play_usertag_radio_cb (gpointer userdata)
+{
+        static char *previoususer = NULL;
+        static char *previoustag = NULL;
+        char *user = g_strdup (previoususer);
+        char *tag = g_strdup (previoustag);
+        ui_usertag_dialog (vgl_main_window_get_window (mainwin, TRUE),
+                           &user, &tag, friends);
+        if (user != NULL && tag != NULL) {
+                char *url = lastfm_usertag_radio_url (user, tag);
+                controller_play_radio_by_url (url);
+                g_free (url);
+                /* Store new values for later use */
+                g_free (previoususer);
+                g_free (previoustag);
+                previoususer = user;
+                previoustag = tag;
+        } else {
+                g_free (user);
+                g_free (tag);
+        }
+}
+
+/**
  * Start playing other user's radio by its type. It will pop up a
  * dialog to ask the user whose radio is going to be played
  *
@@ -1634,7 +1666,11 @@ void
 controller_play_others_radio(lastfm_radio type)
 {
         check_session_cb cb;
-        cb = (check_session_cb) controller_play_others_radio_cb;
+        if (type == LASTFM_USERTAG_RADIO) {
+                cb = (check_session_cb) controller_play_usertag_radio_cb;
+        } else {
+                cb = (check_session_cb) controller_play_others_radio_cb;
+        }
         check_session(cb, NULL, GINT_TO_POINTER(type));
 }
 

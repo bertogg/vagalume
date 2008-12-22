@@ -1,3 +1,12 @@
+2008-12-22  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/uimisc.h
+	* src/uimisc.c (ui_usertag_dialog)
+	* src/vgl-main-window.c (create_main_menu)
+	* src/controller.c (controller_play_usertag_radio_cb)
+	(controller_play_others_radio):
+	New menu option to play any user's tag radio.
+
 2008-11-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c (main): Call dbus_g_thread_init() if we have DBUS

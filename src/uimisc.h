@@ -46,6 +46,8 @@ gboolean ui_stop_after_dialog (GtkWindow *parent, StopAfterType *stopafter,
 char *ui_input_dialog_with_list(GtkWindow *parent, const char *title,
                                 const char *text, const GList *elems,
                                 const char *value);
+void ui_usertag_dialog(GtkWindow *parent, char **user, char **tag,
+                       const GList *userlist);
 gboolean ui_edit_bookmark_dialog(GtkWindow *parent, char **name,
                                  char **url, gboolean add);
 gboolean ui_usercfg_window(GtkWindow *parent, VglUserCfg **cfg);
