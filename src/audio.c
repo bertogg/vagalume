@@ -1,6 +1,6 @@
 /*
  * audio.c -- All the audio related stuff
- * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
+ * Copyright (C) 2007-2009 Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
  * See the README file for more details.
@@ -23,7 +23,7 @@ static const char *default_sinks[] = { "dspmp3sink", NULL };
 static const char *default_converters[] = { NULL };
 #else
 static const char *default_decoders[] = { "mad", "flump3dec", NULL };
-static const char *default_sinks[] = { "autoaudiosink", "alsasink", NULL };
+static const char *default_sinks[] = { "gconfaudiosink", NULL };
 static const char *default_converters[] = { "audioconvert", NULL };
 #endif
 

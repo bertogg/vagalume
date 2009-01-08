@@ -1,3 +1,9 @@
+2009-01-08  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/audio.c (default_sinks): Use gconfaudiosink in Gnome.
+
+	Fixes #2762 (gstreamer audiosinks)
+
 2008-12-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c (ui_input_dialog_with_list, ui_usertag_dialog)
