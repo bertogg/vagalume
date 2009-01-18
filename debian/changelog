@@ -5,6 +5,7 @@ vagalume (0.7-2) UNRELEASED; urgency=low
   * Added intltool to Build-Depends
   * Updated Standards-Version to 3.8.0
   * Moved 'Homepage' field to source paragraph
+  * Use DEB_INSTALL_* variables instead of 'dirs' and 'docs' files
 
  -- Alberto Garcia <agarcia@igalia.com>  Sat, 01 Nov 2008 02:05:28 +0100
 

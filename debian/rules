@@ -4,6 +4,9 @@
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 
+DEB_INSTALL_DIRS_ALL := usr/bin
+DEB_INSTALL_DOCS_ALL := README NEWS AUTHORS THANKS TODO TRANSLATORS
+
 ifneq (,$(DEB_TARGET_PLATFORM))
 	DEB_CONFIGURE_EXTRA_FLAGS := --with-platform=$(DEB_TARGET_PLATFORM)
 endif

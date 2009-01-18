@@ -1,3 +1,9 @@
+2009-01-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* debian/changelog
+	* debian/rules: Use DEB_INSTALL_* variables instead of 'dirs' and
+	'docs' files
+
 2009-01-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c (default_sinks): Use gconfaudiosink in Gnome.
