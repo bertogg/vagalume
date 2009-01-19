@@ -37,8 +37,7 @@ dlwin_progress_cb(gpointer data, double dltotal, double dlnow)
                 guint now = dlnow / 1024;
                 guint total = dltotal / 1024;
                 double fraction = dlnow / dltotal;
-                if (fraction > 1) fraction = 1;
-                if (fraction < 0) fraction = 0;
+                fraction = CLAMP (fraction, 0, 1);
                 snprintf(text, bufsize, "%u / %u KB", now, total);
                 gdk_threads_enter();
                 gtk_progress_bar_set_text(w->progressbar, text);

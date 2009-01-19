@@ -1,3 +1,9 @@
+2009-01-20  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/audio.c (lastfm_audio_get_volume, lastfm_audio_set_volume)
+	* src/dlwin.c (dlwin_progress_cb): Use CLAMP to ensure that a
+	variable is between two values.
+
 2009-01-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* debian/changelog
