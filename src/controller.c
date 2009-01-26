@@ -894,14 +894,13 @@ controller_start_playing(void)
 static void
 finish_playing_track(void)
 {
-        g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         if (nowplaying != NULL) {
                 controller_scrobble_track();
                 controller_set_nowplaying(NULL);
+                lastfm_audio_stop ();
+                g_signal_emit (vgl_controller, signals[TRACK_STOPPED], 0,
+                               nowplaying_rating);
         }
-        lastfm_audio_stop();
-        g_signal_emit (vgl_controller, signals[TRACK_STOPPED], 0,
-                       nowplaying_rating);
 }
 
 /**

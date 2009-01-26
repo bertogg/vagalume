@@ -7,6 +7,11 @@
 
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (finish_playing_track): Don't stop audio and
+	emit "track-stopped" if no track is being played.
+
+2009-01-26  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/userconfig.c (vgl_user_cfg_read): Fix memory leak
 
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>
