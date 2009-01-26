@@ -1,5 +1,24 @@
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/scrobbler.h
+	* src/scrobbler.c (+rsp_init, +controller_destroyed_cb)
+	(+track_started_cb, +track_stopped_cb, +usercfg_changed_cb)
+	(+set_nowplaying_thread, +rsp_scrobbler_thread)
+	(+rsp_scrobbler_thread_scrobble, +rsp_session_get_or_renew)
+	* src/controller.c (controller_run_app, controller_disconnect)
+	(finish_playing_track, controller_audio_started_cb)
+	(get_user_extradata, controller_set_nowplaying):
+	Use signals emitted by VglController to scrobble tracks and set
+	Now Playing status. Move all related code from controller.c to
+	scrobbler.c and remove now-private declarations from scrobbler.h
+
+	Keep in memory a queue of tracks not successfully scrobbled to be
+	able to retry them all.
+
+	Store username and password in the RspSession object.
+
+2009-01-26  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-tray-icon.c (track_stopped_cb)
 	* src/controller.c (finish_playing_track)
 	(vgl_controller_class_init):

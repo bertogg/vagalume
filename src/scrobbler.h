@@ -10,9 +10,7 @@
 #ifndef SCROBBLER_H
 #define SCROBBLER_H
 
-#include <time.h>
-#include "protocol.h"
-#include "playlist.h"
+#include "controller.h"
 
 typedef enum {
         RSP_RATING_NONE,
@@ -21,24 +19,6 @@ typedef enum {
         RSP_RATING_SKIP
 } RspRating;
 
-typedef enum {
-        RSP_RESPONSE_OK,
-        RSP_RESPONSE_BADSESSION,
-        RSP_RESPONSE_ERROR
-} RspResponse;
-
-typedef struct {
-        char *id;
-        char *np_url;
-        char *post_url;
-} RspSession;
-
-RspSession *rsp_session_new(const char *username, const char *password,
-                             LastfmErr *err);
-RspSession *rsp_session_copy(const RspSession *s);
-void rsp_session_destroy(RspSession *session);
-RspResponse rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t);
-RspResponse rsp_scrobble(const RspSession *rsp, const LastfmTrack *t,
-                         time_t start, RspRating rating);
+void rsp_init (VglController *controller);
 
 #endif

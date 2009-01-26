@@ -18,6 +18,7 @@
 #include "controller.h"
 #include "metadata.h"
 #include "scrobbler.h"
+#include "protocol.h"
 #include "playlist.h"
 #include "audio.h"
 #include "uimisc.h"
@@ -62,13 +63,11 @@ static guint signals[N_SIGNALS] = { 0 };
 
 static LastfmSession *session = NULL;
 static LastfmPls *playlist = NULL;
-static RspSession *rsp_sess = NULL;
 static VglMainWindow *mainwin = NULL;
 static VglUserCfg *usercfg = NULL;
 static GList *friends = NULL;
 static GList *usertags = NULL;
 static LastfmTrack *nowplaying = NULL;
-static time_t nowplaying_since = 0;
 static char *current_radio_url = NULL;
 static RspRating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
@@ -287,194 +286,18 @@ set_user_tag_list(const char *user, GList *list)
 }
 
 /**
- * Set a new RSP session, deleting the previous one.
- * @param user The user ID. If it's different from the active user,
- *             no changes will be made.
- * @param sess The new session (can be NULL)
- */
-static void
-set_rsp_session(const char *user, RspSession *sess)
-{
-        g_return_if_fail(user != NULL && usercfg != NULL);
-        if (!strcmp(user, usercfg->username)) {
-                if (rsp_sess != NULL) rsp_session_destroy(rsp_sess);
-                rsp_sess = sess;
-        }
-}
-
-/**
- * Renews the RSP session. Must be called from a thread.
- */
-static void
-renew_rsp_session (void)
-{
-        char *user, *pass;
-        RspSession *session;
-
-        g_return_if_fail (usercfg != NULL);
-
-        gdk_threads_enter ();
-        user = g_strdup (usercfg->username);
-        pass = g_strdup (usercfg->password);
-        gdk_threads_leave ();
-
-        g_debug ("Renewing RSP session ...");
-        session = rsp_session_new (user, pass, NULL);
-        if (session != NULL) {
-                gdk_threads_enter ();
-                set_rsp_session (user, session);
-                gdk_threads_leave ();
-        }
-
-        g_free (user);
-        g_free (pass);
-}
-
-/**
- * Scrobble a track using the Audioscrobbler Realtime Submission
- * Protocol. This can take some seconds, so it must be called using
- * g_thread_create() to avoid freezing the UI.
- *
- * @param data Pointer to rsp_data, with info about the track to be
- *             scrobbled. This data must be freed here
- * @return NULL (this value is not used)
- */
-static gpointer
-scrobble_track_thread(gpointer data)
-{
-        rsp_data *d = (rsp_data *) data;
-        RspSession *s = NULL;
-        g_return_val_if_fail(d != NULL && d->track != NULL && d->start > 0,
-                             NULL);
-        char *user = NULL, *pass = NULL;
-        gdk_threads_enter();
-        s = rsp_session_copy(rsp_sess);
-        if (usercfg != NULL) {
-                user = g_strdup(usercfg->username);
-                pass = g_strdup(usercfg->password);
-        }
-        gdk_threads_leave();
-        if (s != NULL) {
-                RspResponse ret;
-                ret = rsp_scrobble (s, d->track, d->start, d->rating);
-                if (ret == RSP_RESPONSE_BADSESSION) {
-                        rsp_session_destroy (s);
-                        renew_rsp_session ();
-                        gdk_threads_enter ();
-                        s = rsp_session_copy (rsp_sess);
-                        gdk_threads_leave ();
-                        rsp_scrobble (s, d->track, d->start, d->rating);
-                }
-                rsp_session_destroy (s);
-        }
-        /* This love_ban_track() call won't be needed anymore with
-         * Lastfm's new protocol v1.2 */
-        if (user && pass && d->rating == RSP_RATING_LOVE) {
-                love_ban_track(user, pass, d->track, TRUE);
-        } else if (user && pass && d->rating == RSP_RATING_BAN) {
-                love_ban_track(user, pass, d->track, FALSE);
-        }
-        g_free(user);
-        g_free(pass);
-        lastfm_track_unref(d->track);
-        g_slice_free(rsp_data, d);
-        return NULL;
-}
-
-/**
- * Scrobble the track that is currently playing. Only tracks that have
- * been playing for more than half its time (or 240 seconds) can be
- * scrobbled, see http://www.audioscrobbler.net/development/protocol/
- *
- * This function only does checks and prepares the data, the process
- * itself is done in another thread, see scrobble_track_thread()
- */
-static void
-controller_scrobble_track(void)
-{
-        g_return_if_fail(nowplaying != NULL && usercfg != NULL);
-        if (usercfg->enable_scrobbling && nowplaying_since > 0 &&
-            rsp_sess != NULL && nowplaying->duration > 30000) {
-                int played = time(NULL) - nowplaying_since;
-                /* If a track is unrated and hasn't been played for
-                   enough time, scrobble it as skipped */
-                if (nowplaying_rating == RSP_RATING_NONE &&
-                    played < nowplaying->duration/2000 && played < 240) {
-                        nowplaying_rating = RSP_RATING_SKIP;
-                }
-                rsp_data *d = g_slice_new0(rsp_data);
-                d->track = lastfm_track_ref(nowplaying);
-                d->start = nowplaying_since;
-                d->rating = nowplaying_rating;
-                g_thread_create(scrobble_track_thread,d,FALSE,NULL);
-        }
-}
-
-/**
- * Set the "Now Playing" information using the Audioscrobbler Realtime
- * Submission Protocol. This can take some seconds, so it must be
- * called using g_thread_create() to avoid freezing the UI.
- *
- * @param data Pointer to rsp_data, with info about the track to be
- *             processed. This data must be freed here
- * @return NULL (this value is not used)
- */
-static gpointer
-set_nowplaying_thread(gpointer data)
-{
-        rsp_data *d = (rsp_data *) data;
-        g_return_val_if_fail(d != NULL && d->track != NULL, FALSE);
-        RspSession *s = NULL;
-        gboolean set_np = FALSE;
-        g_usleep(10 * G_USEC_PER_SEC);
-        gdk_threads_enter();
-        if (nowplaying && nowplaying->id == d->track->id && rsp_sess) {
-                s = rsp_session_copy(rsp_sess);
-                set_np = TRUE;
-        }
-        gdk_threads_leave();
-        if (set_np) {
-                RspResponse ret = rsp_set_nowplaying (s, d->track);
-                if (ret == RSP_RESPONSE_BADSESSION) {
-                        rsp_session_destroy (s);
-                        renew_rsp_session ();
-                        gdk_threads_enter ();
-                        s = rsp_session_copy (rsp_sess);
-                        gdk_threads_leave ();
-                        rsp_set_nowplaying (s, d->track);
-                }
-                rsp_session_destroy (s);
-        }
-        lastfm_track_unref(d->track);
-        g_slice_free(rsp_data, d);
-        return NULL;
-}
-
-/**
- * Set a track as "Now Playing", eventually setting it in the Last.fm
- * server using the Audioscrobbler RSP (Realtime Submission Protocol).
- *
- * The actual RSP code is run in another thread to avoid freezing the
- * UI, see set_nowplaying_thread()
+ * Set a track as "Now Playing"
  *
  * @param track The track to be set as Now Playing
  */
 static void
 controller_set_nowplaying(LastfmTrack *track)
 {
-        g_return_if_fail(usercfg != NULL);
         if (nowplaying != NULL) {
                 lastfm_track_unref(nowplaying);
         }
         nowplaying = track;
-        nowplaying_since = 0;
         nowplaying_rating = RSP_RATING_NONE;
-        if (track != NULL && usercfg->enable_scrobbling) {
-                rsp_data *d = g_slice_new0(rsp_data);
-                d->track = lastfm_track_ref(track);
-                d->start = 0;
-                g_thread_create(set_nowplaying_thread,d,FALSE,NULL);
-        }
 }
 
 /**
@@ -487,12 +310,10 @@ controller_set_nowplaying(LastfmTrack *track)
 static void
 get_user_extradata(void)
 {
-        g_return_if_fail(usercfg != NULL && rsp_sess == NULL);
+        g_return_if_fail (usercfg != NULL);
         gboolean finished = FALSE;
-        gboolean rsp_ok = FALSE;
         gboolean friends_ok = FALSE;
         gboolean usertags_ok = FALSE;
-        RspSession *sess = NULL;
         GList *friends = NULL;
         GList *usertags = NULL;
         gdk_threads_enter();
@@ -503,18 +324,6 @@ get_user_extradata(void)
                 finished = TRUE;
         }
         while (!finished) {
-                if (!rsp_ok) {
-                        sess = rsp_session_new(user, pass, NULL);
-                        if (sess != NULL) {
-                                g_debug("RSP session ready");
-                                rsp_ok = TRUE;
-                                gdk_threads_enter();
-                                set_rsp_session(user, sess);
-                                gdk_threads_leave();
-                        } else {
-                                g_warning("Error creating RSP session");
-                        }
-                }
                 if (!friends_ok) {
                         friends_ok = lastfm_get_friends(user, &friends);
                         if (friends_ok) {
@@ -537,7 +346,7 @@ get_user_extradata(void)
                                 g_warning("Error getting tag list");
                         }
                 }
-                if (rsp_ok && friends_ok && usertags_ok) {
+                if (friends_ok && usertags_ok) {
                         finished = TRUE;
                 } else {
                         gdk_threads_enter();
@@ -624,7 +433,7 @@ check_usercfg(gboolean ask)
 
 /**
  * Check if there's a Last.fm session opened. If not, try to create
- * one (and an RSP session as well).
+ * one.
  * This is done in a thread to avoid freezing the UI. After this, the
  * callback supplied to check_session() will be called, see below for
  * details
@@ -695,7 +504,7 @@ check_session_conn_cb(gpointer data)
 
 /**
  * Check if there's a Last.fm session opened. If not, try to create
- * one (and an RSP session as well).
+ * one.
  * The actual connection is performed in check_session_thread() to
  * avoid freezing the UI
  *
@@ -819,7 +628,6 @@ controller_audio_started_cb(void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && nowplaying);
         LastfmTrack *track;
-        nowplaying_since = time(NULL);
         vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_PLAYING,
                                    nowplaying, current_radio_url);
         track = lastfm_track_ref(nowplaying);
@@ -895,7 +703,6 @@ static void
 finish_playing_track(void)
 {
         if (nowplaying != NULL) {
-                controller_scrobble_track();
                 controller_set_nowplaying(NULL);
                 lastfm_audio_stop ();
                 g_signal_emit (vgl_controller, signals[TRACK_STOPPED], 0,
@@ -946,9 +753,6 @@ controller_disconnect(void)
         if (session != NULL) {
                 lastfm_session_destroy(session);
                 session = NULL;
-        }
-        if (usercfg != NULL) {
-                set_rsp_session(usercfg->username, NULL);
         }
         lastfm_pls_clear(playlist);
         controller_stop_playing();
@@ -1865,6 +1669,7 @@ controller_run_app (const char *radio_url)
         http_init();
         check_usercfg(FALSE);
         playlist = lastfm_pls_new();
+        rsp_init (vgl_controller);
 
         if (!errmsg && !lastfm_audio_init()) {
                 controller_show_error(_("Error initializing audio system"));
@@ -1902,8 +1707,6 @@ controller_run_app (const char *radio_url)
 
         lastfm_session_destroy(session);
         session = NULL;
-        rsp_session_destroy(rsp_sess);
-        rsp_sess = NULL;
         lastfm_pls_destroy(playlist);
         playlist = NULL;
         if (usercfg != NULL) {
