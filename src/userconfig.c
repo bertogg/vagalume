@@ -341,6 +341,7 @@ vgl_user_cfg_read (void)
                 } else {
                         node = root->xmlChildrenNode;
                 }
+                if (version != NULL) xmlFree (version);
         }
 
         /* Parse the configuration */

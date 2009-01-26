@@ -1,5 +1,9 @@
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/userconfig.c (vgl_user_cfg_read): Fix memory leak
+
+2009-01-26  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/scrobbler.c (rsp_session_new): Make sure that we don't
 	return a pointer to a destroyed RspSession.
 
