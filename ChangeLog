@@ -1,3 +1,8 @@
+2009-01-26  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/scrobbler.c (rsp_session_new): Make sure that we don't
+	return a pointer to a destroyed RspSession.
+
 2009-01-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c (lastfm_audio_get_volume, lastfm_audio_set_volume)

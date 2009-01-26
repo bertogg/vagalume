@@ -77,7 +77,10 @@ rsp_session_new(const char *username, const char *password,
                 if (!s || !(s->id) || !(s->np_url) || !(s->post_url)) {
                         g_warning("Error building rsp session");
                         if (err != NULL) *err = LASTFM_ERR_LOGIN;
-                        rsp_session_destroy(s);
+                        if (s) {
+                                rsp_session_destroy (s);
+                                s = NULL;
+                        }
                 } else if (err != NULL) {
                         *err = LASTFM_ERR_NONE;
                 }
