@@ -900,7 +900,8 @@ finish_playing_track(void)
                 controller_set_nowplaying(NULL);
         }
         lastfm_audio_stop();
-        g_signal_emit (vgl_controller, signals[TRACK_STOPPED], 0);
+        g_signal_emit (vgl_controller, signals[TRACK_STOPPED], 0,
+                       nowplaying_rating);
 }
 
 /**
@@ -1969,8 +1970,8 @@ vgl_controller_class_init (VglControllerClass *klass)
                               G_OBJECT_CLASS_TYPE (klass),
                               G_SIGNAL_RUN_FIRST,
                               0, NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
+                              g_cclosure_marshal_VOID__ENUM,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
 
         signals[PLAYER_STOPPED] =
                 g_signal_new ("player-stopped",

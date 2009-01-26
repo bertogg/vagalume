@@ -1,5 +1,12 @@
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-tray-icon.c (track_stopped_cb)
+	* src/controller.c (finish_playing_track)
+	(vgl_controller_class_init):
+	Include the RspRating in the "track-stopped" signal
+
+2009-01-26  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/userconfig.c (vgl_user_cfg_read): Fix memory leak
 
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>

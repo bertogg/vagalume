@@ -15,6 +15,7 @@
 #include "metadata.h"
 #include "util.h"
 #include "uimisc.h"
+#include "scrobbler.h"
 
 #define TOOLTIP_DEFAULT_STRING _(" Stopped ")
 #define TOOLTIP_FORMAT_STRING  _(" Now playing: \n %s \n   by  %s ")
@@ -389,7 +390,7 @@ usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg, VglTrayIcon *icon)
 }
 
 static void
-track_stopped_cb (VglController *ctrl, VglTrayIcon *icon)
+track_stopped_cb (VglController *ctrl, RspRating rating, VglTrayIcon *icon)
 {
         vgl_tray_icon_notify_playback (icon, NULL);
 }
