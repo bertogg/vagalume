@@ -38,6 +38,9 @@ typedef struct {
         const char *post_url;
         const char *user;
         const char *pass;
+        /* Private */
+        int refcount;
+        GMutex *mutex;
 } RspSession;
 
 typedef struct {
@@ -81,30 +84,32 @@ rsp_track_new (const char *user, LastfmTrack *track,
 }
 
 static void
-rsp_session_destroy(RspSession *s)
+rsp_session_unref (RspSession *s)
 {
-        if (s == NULL) return;
-        g_return_if_fail (s->id && s->np_url && s->post_url);
-        g_free ((gpointer) s->id);
-        g_free ((gpointer) s->np_url);
-        g_free ((gpointer) s->post_url);
-        g_free ((gpointer) s->user);
-        g_free ((gpointer) s->pass);
-        g_slice_free (RspSession, s);
+        gboolean destroy;
+        g_return_if_fail (s != NULL);
+        g_mutex_lock (s->mutex);
+        destroy = (--(s->refcount) == 0);
+        g_mutex_unlock (s->mutex);
+        if (destroy) {
+                g_mutex_free (s->mutex);
+                g_free ((gpointer) s->id);
+                g_free ((gpointer) s->np_url);
+                g_free ((gpointer) s->post_url);
+                g_free ((gpointer) s->user);
+                g_free ((gpointer) s->pass);
+                g_slice_free (RspSession, s);
+        }
 }
 
 static RspSession *
-rsp_session_copy(const RspSession *s)
+rsp_session_ref (RspSession *s)
 {
-        if (s == NULL) return NULL;
-        g_return_val_if_fail(s->id && s->np_url && s->post_url, NULL);
-        RspSession *s2 = g_slice_new0(RspSession);
-        s2->id = g_strdup(s->id);
-        s2->np_url = g_strdup(s->np_url);
-        s2->post_url = g_strdup(s->post_url);
-        s2->user = g_strdup(s->user);
-        s2->pass = g_strdup(s->pass);
-        return s2;
+        g_return_val_if_fail (s != NULL, NULL);
+        g_mutex_lock (s->mutex);
+        s->refcount++;
+        g_mutex_unlock (s->mutex);
+        return s;
 }
 
 static RspSession *
@@ -130,6 +135,8 @@ rsp_session_new(const char *username, const char *password,
                         char **r = g_strsplit(buffer, "\n", 5);
                         s = g_slice_new0(RspSession);
                         if (r[0] && r[1] && r[2] && r[3]) {
+                                s->refcount = 1;
+                                s->mutex = g_mutex_new();
                                 s->id = g_strdup(r[1]);
                                 s->np_url = g_strdup(r[2]);
                                 s->post_url = g_strdup(r[3]);
@@ -142,7 +149,7 @@ rsp_session_new(const char *username, const char *password,
                         g_warning("Error building rsp session");
                         if (err != NULL) *err = LASTFM_ERR_LOGIN;
                         if (s) {
-                                rsp_session_destroy (s);
+                                rsp_session_unref (s);
                                 s = NULL;
                         }
                 } else if (err != NULL) {
@@ -257,7 +264,7 @@ rsp_global_session_clear (const RspSession *session)
         g_mutex_lock (rsp_mutex);
         if (global_rsp_session != NULL &&
             g_str_equal (global_rsp_session->id, session->id)) {
-                rsp_session_destroy (global_rsp_session);
+                rsp_session_unref (global_rsp_session);
                 global_rsp_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);
@@ -270,7 +277,7 @@ rsp_session_get_or_renew (void)
 
         g_mutex_lock (rsp_mutex);
         if (global_rsp_session) {
-                session = rsp_session_copy (global_rsp_session);
+                session = rsp_session_ref (global_rsp_session);
         } else {
                 char *user = g_strdup (username->str);
                 char *pass = g_strdup (password->str);
@@ -281,9 +288,9 @@ rsp_session_get_or_renew (void)
                 g_mutex_lock (rsp_mutex);
                 if (session) {
                         if (global_rsp_session) {
-                                rsp_session_destroy (global_rsp_session);
+                                rsp_session_unref (global_rsp_session);
                         }
-                        global_rsp_session = rsp_session_copy (session);
+                        global_rsp_session = rsp_session_ref (session);
                 }
         }
         g_mutex_unlock (rsp_mutex);
@@ -345,7 +352,7 @@ rsp_scrobbler_thread_scrobble (RspTrack *track)
         }
 
         if (s != NULL) {
-                rsp_session_destroy (s);
+                rsp_session_unref (s);
         }
 }
 
@@ -411,7 +418,7 @@ set_nowplaying_thread (gpointer data)
                 RspResponse ret = rsp_set_nowplaying (session, track);
                 if (ret == RSP_RESPONSE_BADSESSION) {
                         rsp_global_session_clear (session);
-                        rsp_session_destroy (session);
+                        rsp_session_unref (session);
                         session = rsp_session_get_or_renew ();
                         if (session) {
                                 rsp_set_nowplaying (session, track);
@@ -420,7 +427,7 @@ set_nowplaying_thread (gpointer data)
         }
 
         if (session) {
-                rsp_session_destroy (session);
+                rsp_session_unref (session);
         }
 
         lastfm_track_unref (track);
@@ -442,7 +449,7 @@ usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg, gpointer data)
         }
         enable_scrobbling = cfg->enable_scrobbling;
         if (changed && global_rsp_session) {
-                rsp_session_destroy (global_rsp_session);
+                rsp_session_unref (global_rsp_session);
                 global_rsp_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);

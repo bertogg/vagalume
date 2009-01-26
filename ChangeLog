@@ -1,5 +1,12 @@
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/scrobbler.c (rsp_session_new, rsp_session_get_or_renew)
+	(rsp_scrobbler_thread_scrobble, set_nowplaying_thread)
+	(usercfg_changed_cb, +rsp_session_ref, +rsp_session_unref): Use
+	reference counting to avoid copying the RspSession object.
+
+2009-01-26  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/scrobbler.h
 	* src/scrobbler.c (+rsp_init, +controller_destroyed_cb)
 	(+track_started_cb, +track_stopped_cb, +usercfg_changed_cb)
