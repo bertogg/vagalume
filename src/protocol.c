@@ -9,6 +9,7 @@
 #include <libxml/parser.h>
 #include <string.h>
 #include <stdlib.h>
+#include <glib/gi18n.h>
 
 #include "http.h"
 #include "util.h"
@@ -182,7 +183,8 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
         const xmlChar *name;
         char *val;
         LastfmTrack *track = lastfm_track_new();
-        track->pls_title = g_strdup(pls_title);
+        track->pls_title =
+                g_strdup (pls_title ? pls_title : _("(unknown radio)"));
         track->custom_pls = custom_pls;
 
         while (node != NULL) {

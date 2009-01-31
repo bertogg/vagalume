@@ -1,3 +1,9 @@
+2009-01-31  Alberto Garcia  <agarcia@igalia.com>
+
+	* po/POTFILES.in
+	* src/protocol.c (lastfm_parse_track): Check for NULL in the
+	playlist (radio) title.
+
 2009-01-26  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/scrobbler.c (rsp_session_new, rsp_session_get_or_renew)
