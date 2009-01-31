@@ -1,5 +1,11 @@
 2009-01-31  Alberto Garcia  <agarcia@igalia.com>
 
+	* configure.ac
+	* src/uimisc.c (ui_create_combo_box_entry): Check for Gtk >= 2.12
+	to use gtk_entry_completion_set_inline_selection()
+
+2009-01-31  Alberto Garcia  <agarcia@igalia.com>
+
 	* po/POTFILES.in
 	* src/protocol.c (lastfm_parse_track): Check for NULL in the
 	playlist (radio) title.

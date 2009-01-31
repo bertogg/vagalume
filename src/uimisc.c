@@ -836,7 +836,9 @@ ui_create_combo_box_entry (const GList *elems)
         completion = gtk_entry_completion_new ();
         gtk_entry_completion_set_model (completion, model);
         gtk_entry_completion_set_text_column (completion, 0);
+#ifdef HAVE_ENTRY_COMPLETION_INLINE_SELECTION
         gtk_entry_completion_set_inline_selection (completion, TRUE);
+#endif
 
         gtk_entry_set_completion (
                 GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo))), completion);

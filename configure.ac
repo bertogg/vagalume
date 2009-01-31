@@ -80,6 +80,17 @@ if test "$have_libnotify" = "yes"; then
    echo $have_tray_icon
 fi
 
+# gtk_entry_completion_set_inline_selection requires gtk 2.12
+echo -n "checking for Gtk2 >= 2.12... "
+if $PKG_CONFIG --atleast-version=2.12 gtk+-2.0; then
+   have_gtk_2_12="yes"
+   AC_DEFINE([HAVE_ENTRY_COMPLETION_INLINE_SELECTION],[1],
+             [Defined if gtk_entry_completion_set_inline_selection () exists])
+else
+   have_gtk_2_12="no"
+fi
+echo $have_gtk_2_12
+
 # g_timeout_add_seconds requires glib 2.14
 echo -n "checking for glib >= 2.14... "
 if $PKG_CONFIG --atleast-version=2.14 glib-2.0; then
