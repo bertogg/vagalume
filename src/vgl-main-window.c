@@ -471,12 +471,15 @@ is_topmost_cb(GObject *obj, GParamSpec *arg, VglMainWindow *win)
                 controller_show_cover();
         }
 }
+#endif /* MAEMO */
 
+#if defined(MAEMO) || defined(HAVE_GST_MIXER)
 static gboolean
 key_press_cb(GtkWidget *widget, GdkEventKey *event, VglMainWindow *win)
 {
         int volchange = 0;
         switch (event->keyval) {
+#ifdef MAEMO
         case GDK_F6:
                 if (win->priv->is_fullscreen) {
                         gtk_window_unfullscreen(GTK_WINDOW(win));
@@ -485,9 +488,18 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, VglMainWindow *win)
                 }
                 break;
         case GDK_F7:
+#else
+        case GDK_KP_Add:
+        case GDK_plus:
+#endif
                 volchange = 5;
                 break;
+#ifdef MAEMO
         case GDK_F8:
+#else
+        case GDK_KP_Subtract:
+        case GDK_minus:
+#endif
                 volchange = -5;
                 break;
         }
@@ -499,7 +511,7 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, VglMainWindow *win)
         }
         return FALSE;
 }
-#endif /* MAEMO */
+#endif /* defined(MAEMO) || defined(HAVE_GST_MIXER) */
 
 static void
 play_selected(GtkWidget *widget, gpointer data)
@@ -1111,6 +1123,8 @@ vgl_main_window_init(VglMainWindow *self)
 #ifdef MAEMO
         g_signal_connect(G_OBJECT(win), "notify::is-topmost",
                          G_CALLBACK(is_topmost_cb), self);
+#endif
+#if defined(MAEMO) || defined(HAVE_GST_MIXER)
         g_signal_connect(G_OBJECT(win), "key_press_event",
                          G_CALLBACK(key_press_cb), self);
 #endif

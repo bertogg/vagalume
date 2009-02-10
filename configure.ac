@@ -58,6 +58,9 @@ PKG_CHECK_MODULES(dbus_glib, dbus-glib-1, [have_dbus_glib="yes"],
 PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
                   [have_libnotify="yes"], [have_libnotify="no"])
 
+PKG_CHECK_MODULES(Gst_mixer, gstreamer-interfaces-0.10,
+                  [have_gst_mixer="yes"], [have_gst_mixer="no"])
+
 # D-BUS versions < 1.0 require DBUS_API_SUBJECT_TO_CHANGE
 if test "$have_dbus_glib" = "yes"; then
    if ! $PKG_CONFIG --atleast-version=1.0 dbus-1; then
@@ -235,6 +238,9 @@ if test "$PLATFORM" = "maemo"; then
 
    # Disable tray icon support on Maemo
    have_tray_icon="no"
+
+   # Disable GStreamer mixer
+   have_gst_mixer="no"
 
    # Detect the version of the Maemo SDK
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
@@ -451,6 +457,12 @@ if test "$have_tray_icon" = "yes"; then
    AC_DEFINE([HAVE_TRAY_ICON], [1], [Defined if building the FD tray icon])
 fi
 
+if test "$have_gst_mixer" = "yes"; then
+   AC_DEFINE([HAVE_GST_MIXER], [1], [Defined if buiding with GStreamer mixer])
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $Gst_mixer_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $Gst_mixer_LIBS"
+fi
+
 AC_SUBST(appdatadir, "\${datadir}/vagalume")
 AC_SUBST(pixmapdir, "\${datadir}/pixmaps")
 AC_SUBST(icon48dir, "\${datadir}/icons/hicolor/48x48/apps")
@@ -490,6 +502,7 @@ elif test "$PLATFORM" = "maemo"; then
    echo "Libconic support: $have_conic"
 fi
 echo "D-Bus Support enabled:" $use_dbus_glib
+echo "Mixer support enabled:" $have_gst_mixer
 echo "Target display: $scr_resolution"
 echo ""
 echo "Type 'make' to compile Vagalume"

@@ -1,3 +1,25 @@
+2009-02-10  Alberto Garcia  <agarcia@igalia.com>
+
+	* configure.ac
+	* debian/changelog
+	* debian/control:
+	Compile with GstMixer support (non-Maemo only).
+
+	* src/audio.c (audio_mixer_init, lastfm_audio_init)
+	(lastfm_audio_clear, lastfm_audio_get_volume)
+	(lastfm_audio_set_volume):
+	Use GstMixer if available to change the volume in non-Maemo
+	targets.
+
+	* src/vgl-main-window.c (key_press_cb, vgl_main_window_init):
+	Keybindings to change the volume in non-Maemo targets.
+
+	* src/audio.h
+	* src/audio.c (lastfm_audio_default_mixer_name)
+	* src/main.c (main)
+	* vagalume.1:
+	Command-line option (-m) to select the GstMixer plugin to use.
+
 2009-01-31  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac

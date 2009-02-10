@@ -2,7 +2,7 @@ vagalume (0.7-2) UNRELEASED; urgency=low
 
   * Switched to cdbs
   * Added watch file
-  * Added intltool to Build-Depends
+  * Added intltool and libgstreamer-plugins-base0.10-dev to Build-Depends
   * Updated Standards-Version to 3.8.0
   * Moved 'Homepage' field to source paragraph
   * Use DEB_INSTALL_* variables instead of 'dirs' and 'docs' files
