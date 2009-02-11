@@ -1,5 +1,9 @@
 2009-02-11  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/uimisc.c: Update copyright on about dialog.
+
+2009-02-11  Alberto Garcia  <agarcia@igalia.com>
+
 	* debian/changelog
 	* debian/copyright
 	* README
