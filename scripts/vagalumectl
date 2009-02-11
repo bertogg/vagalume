@@ -3,7 +3,8 @@
 # A shell script for easily managing some of the
 # Vagalume features available via its D-Bus interface.
 #
-# Copyright (C) 2008 Mario Sanchez Prada <msanchez@igalia.com>
+# Copyright (C) 2008 Igalia, S.L.
+# Authors: Mario Sanchez Prada <msanchez@igalia.com>
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License version 3 as

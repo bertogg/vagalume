@@ -43,7 +43,7 @@ Vagalume has the following features:
 
 --------------------------------------------------------
 
-Vagalume is (c) 2007, 2008 Alberto Garcia Gonzalez <agarcia@igalia.com>
+Vagalume is (c) 2007-2009 Igalia, S.L.
 http://vagalume.igalia.com/
 http://garage.maemo.org/projects/vagalume/
 
@@ -55,7 +55,7 @@ Vagalume also contains a free MD5 implementation that is
 (c) 1999 Aladdin Enterprises.
 See the files src/md5/md5.c and src/md5/md5.h for details
 
-See AUTHORS file for details on other contributors
+See AUTHORS file for details on authors
 
 Vagalume is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 3 as

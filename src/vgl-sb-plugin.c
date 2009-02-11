@@ -1,6 +1,9 @@
 /*
  * vgl-sb-plugin.c -- Status bar plugin for Vagalume
- * Copyright (C) 2008 Mario Sanchez Prada <msanchez@igalia.com>
+ *
+ * Copyright (C) 2007-2008 Igalia, S.L.
+ * Authors: Alberto Garcia <agarcia@igalia.com>
+ *          Mario Sanchez Prada <msanchez@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
  * See the README file for more details.

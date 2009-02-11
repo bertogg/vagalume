@@ -1,7 +1,9 @@
 /*
  * imstatus.c -- set IM status to current track
- * Copyright (C) 2008 Tim Wegener <twegener@fastmail.fm>
- * Copyright (C) 2008 Alberto Garcia <agarcia@igalia.com>
+ *
+ * Copyright (C) 2008 Igalia, S.L.
+ * Authors: Alberto Garcia <agarcia@igalia.com>
+ *          Tim Wegener <twegener@fastmail.fm>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
  * See the README file for more details.

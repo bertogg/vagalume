@@ -1,6 +1,8 @@
 /*
  * vgl-main-window.c -- Main program window
- * Copyright (C) 2007, 2008 Alberto Garcia <agarcia@igalia.com>
+ *
+ * Copyright (C) 2007-2009 Igalia, S.L.
+ * Authors: Alberto Garcia <agarcia@igalia.com>
  * Copyright (C) 2008 Felipe Erias Morandeira <femorandeira@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
