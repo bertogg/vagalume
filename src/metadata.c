@@ -279,27 +279,20 @@ void
 lastfm_get_track_cover_image(LastfmTrack *track)
 {
         g_return_if_fail(track != NULL);
+        static GStaticMutex static_mutex = G_STATIC_MUTEX_INIT;
         static GList *dloads_in_progress = NULL;
         static GCond *cond = NULL;
-        static GMutex *mutex = NULL;
+        GMutex *mutex = g_static_mutex_get_mutex (&static_mutex);;
 
         /* If this track has no cover image then we have nothing to do */
         if (track->image_url == NULL) return;
 
-        /* Create the GCond and GMutex objects. This will happen just once */
-        if (G_UNLIKELY(mutex == NULL)) {
-                /* We need a GStaticMutex to create a static GMutex :-) */
-                static GStaticMutex static_mutex = G_STATIC_MUTEX_INIT;
-                g_static_mutex_lock(&static_mutex);
-                if (mutex == NULL) {
-                        cond = g_cond_new();
-                        mutex = g_mutex_new();
-                }
-                g_static_mutex_unlock(&static_mutex);
-        }
-
         /* Critical section: decide if the cover needs to be downloaded */
         g_mutex_lock(mutex);
+
+        if (G_UNLIKELY (cond == NULL)) {
+                cond = g_cond_new();
+        }
 
         if (!track->image_data_available) {
                 if (g_list_find(dloads_in_progress, track) != NULL) {

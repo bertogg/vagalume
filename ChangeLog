@@ -1,5 +1,10 @@
 2009-02-21  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/metadata.c (lastfm_get_track_cover_image): Use
+	g_static_mutex_get_mutex() instead of creating a separate GMutex.
+
+2009-02-21  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/playlist.c (lastfm_track_ref, lastfm_track_unref)
 	* src/audio.c (get_audio_thread, bus_call, lastfm_audio_init)
 	* src/scrobbler.c (rsp_session_unref, rsp_session_ref)
