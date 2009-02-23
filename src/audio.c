@@ -52,7 +52,6 @@ static const char *default_mixers[] = { NULL };
 #endif
 
 static int failed_tracks = 0;
-static GMutex *failed_tracks_mutex = NULL;
 
 static int http_pipe[2] = { -1, -1 };
 static GThread *http_thread = NULL;
@@ -93,9 +92,11 @@ get_audio_thread(gpointer userdata)
         g_free(cookie);
         g_slice_free(get_audio_thread_data, data);
         g_slist_free(headers);
-        g_mutex_lock(failed_tracks_mutex);
-        failed_tracks = transfer_ok ? 0 : (failed_tracks + 1);
-        g_mutex_unlock(failed_tracks_mutex);
+        if (transfer_ok) {
+                g_atomic_int_set (&failed_tracks, 0);
+        } else {
+                g_atomic_int_inc (&failed_tracks);
+        }
         return NULL;
 }
 
@@ -112,17 +113,13 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 
                 g_warning ("Error: %s", err->message);
                 g_error_free (err);
-                g_mutex_lock(failed_tracks_mutex);
-                failed_tracks++;
-                g_mutex_unlock(failed_tracks_mutex);
+                g_atomic_int_inc (&failed_tracks);
         } /* No, I haven't forgotten the break here */
         case GST_MESSAGE_EOS:
                 g_main_loop_quit (loop);
                 gdk_threads_enter ();
                 if (failed_tracks == 3) {
-                        g_mutex_lock(failed_tracks_mutex);
-                        failed_tracks = 0;
-                        g_mutex_unlock(failed_tracks_mutex);
+                        g_atomic_int_set (&failed_tracks, 0);
                         controller_stop_playing();
                         controller_show_warning("Connection error");
                 } else {
@@ -288,7 +285,6 @@ gboolean
 lastfm_audio_init(void)
 {
         GstBus *bus;
-        failed_tracks_mutex = g_mutex_new();
         /* initialize GStreamer */
         gst_init (NULL, NULL);
         loop = g_main_loop_new (NULL, FALSE);

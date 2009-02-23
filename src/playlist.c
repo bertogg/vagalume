@@ -1,7 +1,7 @@
 /*
  * playlist.c -- Functions to control playlist objects
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -56,9 +56,7 @@ LastfmTrack *
 lastfm_track_ref(LastfmTrack *track)
 {
         g_return_val_if_fail(track != NULL, NULL);
-        g_mutex_lock(track->mutex);
-        track->refcount++;
-        g_mutex_unlock(track->mutex);
+        g_atomic_int_inc (&(track->refcount));
         return track;
 }
 
@@ -71,11 +69,9 @@ void
 lastfm_track_unref(LastfmTrack *track)
 {
         g_return_if_fail(track != NULL);
-        gboolean destroy;
-        g_mutex_lock(track->mutex);
-        destroy = (--(track->refcount) == 0);
-        g_mutex_unlock(track->mutex);
-        if (destroy) lastfm_track_destroy(track);
+        if (g_atomic_int_dec_and_test (&(track->refcount))) {
+                lastfm_track_destroy(track);
+        }
 }
 
 /**

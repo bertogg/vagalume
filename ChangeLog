@@ -1,3 +1,11 @@
+2009-02-21  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/playlist.c (lastfm_track_ref, lastfm_track_unref)
+	* src/audio.c (get_audio_thread, bus_call, lastfm_audio_init)
+	* src/scrobbler.c (rsp_session_unref, rsp_session_ref)
+	(rsp_session_new):
+	Replace GMutex by faster g_atomic_* operations.
+
 2009-02-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c: Update copyright on about dialog.

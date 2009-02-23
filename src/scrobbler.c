@@ -43,7 +43,6 @@ typedef struct {
         const char *pass;
         /* Private */
         int refcount;
-        GMutex *mutex;
 } RspSession;
 
 typedef struct {
@@ -89,13 +88,8 @@ rsp_track_new (const char *user, LastfmTrack *track,
 static void
 rsp_session_unref (RspSession *s)
 {
-        gboolean destroy;
         g_return_if_fail (s != NULL);
-        g_mutex_lock (s->mutex);
-        destroy = (--(s->refcount) == 0);
-        g_mutex_unlock (s->mutex);
-        if (destroy) {
-                g_mutex_free (s->mutex);
+        if (g_atomic_int_dec_and_test (&(s->refcount))) {
                 g_free ((gpointer) s->id);
                 g_free ((gpointer) s->np_url);
                 g_free ((gpointer) s->post_url);
@@ -109,9 +103,7 @@ static RspSession *
 rsp_session_ref (RspSession *s)
 {
         g_return_val_if_fail (s != NULL, NULL);
-        g_mutex_lock (s->mutex);
-        s->refcount++;
-        g_mutex_unlock (s->mutex);
+        g_atomic_int_inc (&(s->refcount));
         return s;
 }
 
@@ -139,7 +131,6 @@ rsp_session_new(const char *username, const char *password,
                         s = g_slice_new0(RspSession);
                         if (r[0] && r[1] && r[2] && r[3]) {
                                 s->refcount = 1;
-                                s->mutex = g_mutex_new();
                                 s->id = g_strdup(r[1]);
                                 s->np_url = g_strdup(r[2]);
                                 s->post_url = g_strdup(r[3]);
