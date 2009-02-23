@@ -90,7 +90,7 @@ new_request(const char *user, const char *password, const char *method, ...)
         char *retval;
         xmlChar *xmlbuff;
         int buffersize;
-        xmlDocPtr doc = xmlNewDoc((xmlChar *) "1.0");;
+        xmlDocPtr doc = xmlNewDoc((xmlChar *) "1.0");
         xmlNode *root = xmlNewNode(NULL, (xmlChar *) "methodCall");
         xmlNode *name = xmlNewNode(NULL, (xmlChar *) "methodName");
         xmlNode *params = xmlNewNode(NULL, (xmlChar *) "params");

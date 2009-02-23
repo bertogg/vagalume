@@ -1,3 +1,11 @@
+2009-02-23  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/metadata.c (lastfm_get_track_cover_image)
+	* src/uimisc.c (ui_create_options_list)
+	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_save_to_disk)
+	* src/xmlrpc.c (new_request):
+	Fixed typos.
+
 2009-02-21  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/metadata.c (lastfm_get_track_cover_image): Use

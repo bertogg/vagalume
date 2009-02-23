@@ -282,7 +282,7 @@ lastfm_get_track_cover_image(LastfmTrack *track)
         static GStaticMutex static_mutex = G_STATIC_MUTEX_INIT;
         static GList *dloads_in_progress = NULL;
         static GCond *cond = NULL;
-        GMutex *mutex = g_static_mutex_get_mutex (&static_mutex);;
+        GMutex *mutex = g_static_mutex_get_mutex (&static_mutex);
 
         /* If this track has no cover image then we have nothing to do */
         if (track->image_url == NULL) return;

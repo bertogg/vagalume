@@ -815,7 +815,7 @@ ui_create_options_list(const GList *elems)
 {
         GtkTreeIter iter;
         const GList *current = elems;
-        GtkListStore *store = gtk_list_store_new (1, G_TYPE_STRING);;
+        GtkListStore *store = gtk_list_store_new (1, G_TYPE_STRING);
 
         for (; current != NULL; current = g_list_next(current)) {
                 gtk_list_store_append(store, &iter);

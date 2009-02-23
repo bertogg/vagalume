@@ -193,7 +193,7 @@ vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
         if (!(mgr->priv->dirty) && !force)
                 return;
 
-        doc = xmlNewDoc ((xmlChar *) "1.0");;
+        doc = xmlNewDoc ((xmlChar *) "1.0");
         root = xmlNewNode (NULL, (xmlChar *) "bookmarks");
         xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
         xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "1");
