@@ -270,7 +270,8 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
  * @return A new playlist, or NULL if none was found
  */
 static LastfmPls *
-lastfm_parse_playlist(const char *buffer, size_t bufsize)
+lastfm_parse_playlist (const char *buffer, size_t bufsize,
+                       const char *default_pls_title)
 {
         xmlDoc *doc = NULL;
         xmlNode *node = NULL;
@@ -317,6 +318,9 @@ lastfm_parse_playlist(const char *buffer, size_t bufsize)
                 g_warning("No tracks found in playlist");
                 node = NULL;
         }
+        if (pls_title == NULL) {
+                pls_title = g_strdup (default_pls_title);
+        }
         while (node != NULL) {
                 if (!xmlStrcmp(node->name, (const xmlChar *) "track")) {
                         lastfm_parse_track(doc, node->xmlChildrenNode, pls,
@@ -337,10 +341,12 @@ lastfm_parse_playlist(const char *buffer, size_t bufsize)
  * Request a new playlist from the currently active radio.
  * @param s The session
  * @param discovery Whether to use discovery mode or not
+ * @param pls_title Playlist title to use if no name is found in the response.
  * @return A new playlist or NULL if none has been obtained
  */
 LastfmPls *
-lastfm_request_playlist(LastfmSession *s, gboolean discovery)
+lastfm_request_playlist (LastfmSession *s, gboolean discovery,
+                         const char *pls_title)
 {
         g_return_val_if_fail(s && s->id && s->base_url && s->base_path, NULL);
         const char *disc_mode = discovery ? "1" : "0";
@@ -354,7 +360,7 @@ lastfm_request_playlist(LastfmSession *s, gboolean discovery)
                           "&desktop=" LASTFM_APP_VERSION, NULL);
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) {
-                pls = lastfm_parse_playlist(buffer, bufsize);
+                pls = lastfm_parse_playlist (buffer, bufsize, pls_title);
                 g_free(buffer);
         }
         g_free(url);
@@ -382,7 +388,7 @@ lastfm_request_custom_playlist(LastfmSession *s, const char *radio_url)
                           "&desktop=" LASTFM_APP_VERSION, NULL);
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) {
-                pls = lastfm_parse_playlist(buffer, bufsize);
+                pls = lastfm_parse_playlist (buffer, bufsize, NULL);
                 g_free(buffer);
         }
         g_free(url);
@@ -395,15 +401,17 @@ lastfm_request_custom_playlist(LastfmSession *s, const char *radio_url)
  * tracks from this radio.
  * @param s The session
  * @param radio_url URL of the radio to set
+ * @param pls_title If non-NULL, the playlist title will be stored there.
  * @return Whether the radio has been set correctly
  */
 gboolean
-lastfm_set_radio(LastfmSession *s, const char *radio_url)
+lastfm_set_radio (LastfmSession *s, const char *radio_url, char **pls_title)
 {
         g_return_val_if_fail(s != NULL && s->id != NULL &&
                              s->base_url != NULL &&
                              s->base_path && radio_url != NULL, FALSE);
         char *buffer = NULL;
+        char *title = NULL;
         gboolean retval = FALSE;
         char *url;
         char *radio_url_escaped = escape_url(radio_url, TRUE);
@@ -417,11 +425,19 @@ lastfm_set_radio(LastfmSession *s, const char *radio_url)
         g_free(radio_url_escaped);
 
         if (buffer != NULL) {
-                if (g_strrstr(buffer, "OK")) {
-                        retval = TRUE;
-                }
+                GHashTable *ht = lastfm_parse_handshake (buffer);
+                const char *response = g_hash_table_lookup (ht, "response");
+                retval = g_str_equal (response, "OK");
+                title = g_strdup (g_hash_table_lookup (ht, "stationname"));
+                g_hash_table_destroy (ht);
         }
         g_free(buffer);
+
+        if (pls_title != NULL) {
+                *pls_title = title;
+        } else {
+                g_free (title);
+        }
 
         return retval;
 }

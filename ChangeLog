@@ -1,3 +1,21 @@
+2009-02-24  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/protocol.h
+	* src/protocol.c
+	(lastfm_set_radio):
+	Store the radio title returned in the 'stationname' parameter.
+	(lastfm_request_playlist, lastfm_parse_playlist)
+	(lastfm_request_custom_playlist):
+	Use the aforementioned 'stationname' if no playlist title is
+	returned by the XSPF request.
+
+	* src/controller.c
+	(controller_play_radio_by_url_thread)
+	(start_playing_get_pls_thread):
+	Use the playlist title returned by lastfm_set_radio.
+
+	Fixes #3498 (Listening to... is broken)
+
 2009-02-24  Heinrich Schwietering  <hankschwie@googlemail.com>
 
 	* scripts/vagalumectl: New commands to show and hide the player
