@@ -38,6 +38,8 @@ DBUS_METHOD_VOLUMEDOWN="VolumeDown"
 DBUS_METHOD_SETVOLUME="SetVolume"
 DBUS_METHOD_CLOSEAPP="CloseApp"
 DBUS_METHOD_TOPAPP="top_application"
+DBUS_METHOD_SHOWWINDOW="ShowWindow"
+DBUS_METHOD_HIDEWINDOW="HideWindow"
 
 # Print the usage for this shell script
 print_usage ()
@@ -65,6 +67,8 @@ print_usage ()
     echo "     volume <VALUE>:    set the playback volume to a specific value"
     echo "     start:             start Vagalume (if not already running)"
     echo "     close:             close Vagalume (if not already closed)"
+    echo "     show:              show the player window"
+    echo "     hide:              hide the player window"
     echo "     help:              print this information"
     echo
     echo " Double quotes are REQUIRED when specifying parameters to some commands,"
@@ -113,6 +117,8 @@ if [ $# -eq 1 ]; then
     "close") DBUS_METHOD_CALL=${DBUS_METHOD_CLOSEAPP};;
     "start") DBUS_METHOD_CALL=${DBUS_METHOD_TOPAPP};;
     "close") DBUS_METHOD_CALL=${DBUS_METHOD_CLOSEAPP};;
+    "show") DBUS_METHOD_CALL=${DBUS_METHOD_SHOWWINDOW};;
+    "hide") DBUS_METHOD_CALL=${DBUS_METHOD_HIDEWINDOW};;
     "help") print_usage; exit 0;;
     *) invalid_params;;
   esac

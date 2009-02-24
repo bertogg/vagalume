@@ -1,3 +1,8 @@
+2009-02-24  Heinrich Schwietering  <hankschwie@googlemail.com>
+
+	* scripts/vagalumectl: New commands to show and hide the player
+	window.
+
 2009-02-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/metadata.c (lastfm_get_track_cover_image)
