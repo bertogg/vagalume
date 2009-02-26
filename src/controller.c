@@ -837,15 +837,9 @@ controller_start_playing_cb(gpointer userdata)
         }
 #endif
 
-        if (track->custom_pls) {
-                lastfm_audio_play(track->stream_url,
-                                  (GCallback) controller_audio_started_cb,
-                                  session->id);
-        } else {
-                lastfm_audio_play(track->stream_url,
-                                  (GCallback) controller_audio_started_cb,
-                                  NULL);
-        }
+        lastfm_audio_play(track->stream_url,
+                          (GCallback) controller_audio_started_cb,
+                          session->id);
 }
 
 /**
