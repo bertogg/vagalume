@@ -1,7 +1,7 @@
 
 Summary: GTK+-based client for the Last.fm online radio service
 Name: vagalume
-Version: 0.7
+Version: 0.7.1
 Release: 1
 License: GPL3
 Group: Applications/Multimedia
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 26 2009 Alberto Garcia <agarcia@igalia.com> - 0.7.1-1
+- Updated for 0.7.1.
+
 * Mon Sep 01 2008 Alberto Garcia <agarcia@igalia.com> - 0.7-1
 - Updated for 0.7.
 
