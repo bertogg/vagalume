@@ -3,6 +3,7 @@ src/controller.c
 src/dbus.c
 src/dlwin.c
 src/main.c
+src/protocol.c
 src/uimisc.c
 src/vgl-bookmark-window.c
 src/vgl-main-window.c
