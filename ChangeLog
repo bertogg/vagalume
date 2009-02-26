@@ -1,3 +1,10 @@
+2009-02-26  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/playlist.h
+	* src/controller.c (controller_start_playing_cb)
+	* src/protocol.c (lastfm_parse_track, lastfm_parse_playlist):
+	Send session cookie in all mp3 requests.
+
 2009-02-24  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.h

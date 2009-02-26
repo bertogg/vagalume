@@ -37,7 +37,6 @@ typedef struct {
         const char *trackauth;
         const char *free_track_url;
         gboolean dl_in_progress;
-        gboolean custom_pls;
         /* Private */
         int refcount;
         GMutex *mutex;
