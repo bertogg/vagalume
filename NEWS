@@ -1,3 +1,7 @@
+0.7.1 (26 Feb 2009)
+  * Fix problem that prevents Vagalume from playing Last.fm streams
+  * Display names of radio stations correctly
+
 0.7 (01 Sep 2008)
   * Bookmarks support
   * Support for the Moblin platform

@@ -1,4 +1,4 @@
-vagalume (0.7-2) UNRELEASED; urgency=low
+vagalume (0.7.1-2) UNRELEASED; urgency=low
 
   * Switched to cdbs
   * Added watch file
@@ -9,6 +9,12 @@ vagalume (0.7-2) UNRELEASED; urgency=low
   * Updated copyright file to reflect copyright holder change
 
  -- Alberto Garcia <agarcia@igalia.com>  Sat, 01 Nov 2008 02:05:28 +0100
+
+vagalume (0.7.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alberto Garcia <agarcia@igalia.com>  Thu, 26 Feb 2009 14:59:59 +0100
 
 vagalume (0.7-1) unstable; urgency=low
 

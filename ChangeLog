@@ -1,5 +1,16 @@
 2009-02-26  Alberto Garcia  <agarcia@igalia.com>
 
+	Merged changes from the 0.7.1 release:
+
+	* vagalume.spec
+	* debian/changelog: Update RPM spec and Debian/changelog
+
+	* configure.ac: Update version number
+
+	* NEWS: Update NEWS file
+
+2009-02-26  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.c (lastfm_request_playlist)
 	(lastfm_request_custom_playlist): Set version to 1.5 when
 	requesting playlists.
