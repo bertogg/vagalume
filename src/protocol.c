@@ -20,7 +20,7 @@
 
 static const char *handshake_url =
        "http://ws.audioscrobbler.com/radio/handshake.php"
-       "?version=" LASTFM_APP_VERSION "&platform=" APP_OS_LC;
+       "?version=1.5&platform=" APP_OS_LC;
 static const char *custom_pls_path =
        "/1.0/webclient/getresourceplaylist.php";
 static const xmlChar *free_track_rel = (xmlChar *)
@@ -353,7 +353,7 @@ lastfm_request_playlist (LastfmSession *s, gboolean discovery,
 
         url = g_strconcat("http://", s->base_url, s->base_path,
                           "/xspf.php?sk=", s->id, "&discovery=", disc_mode,
-                          "&desktop=" LASTFM_APP_VERSION, NULL);
+                          "&desktop=1.5", NULL);
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) {
                 pls = lastfm_parse_playlist (buffer, bufsize, pls_title);
@@ -381,7 +381,7 @@ lastfm_request_custom_playlist(LastfmSession *s, const char *radio_url)
         char *radio_url_escaped = escape_url(radio_url, TRUE);
         url = g_strconcat("http://", s->base_url, custom_pls_path,
                           "?sk=", s->id, "&url=", radio_url_escaped,
-                          "&desktop=" LASTFM_APP_VERSION, NULL);
+                          "&desktop=1.5", NULL);
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) {
                 pls = lastfm_parse_playlist (buffer, bufsize, NULL);
