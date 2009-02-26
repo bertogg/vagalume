@@ -46,6 +46,7 @@ static GList *friends = NULL;
 static GList *usertags = NULL;
 static LastfmTrack *nowplaying = NULL;
 static time_t nowplaying_since = 0;
+static char *current_radio_name = NULL;
 static RspRating nowplaying_rating = RSP_RATING_NONE;
 static gboolean showing_cover = FALSE;
 static gboolean stopping_after_track = FALSE;
@@ -746,7 +747,8 @@ start_playing_get_pls_thread(gpointer data)
 {
         LastfmSession *s = (LastfmSession *) data;
         g_return_val_if_fail(s != NULL && usercfg != NULL, NULL);
-        LastfmPls *pls = lastfm_request_playlist(s, usercfg->discovery_mode);
+        LastfmPls *pls = lastfm_request_playlist (s, usercfg->discovery_mode,
+                                                  current_radio_name);
         gdk_threads_enter();
         if (pls == NULL) {
                 controller_stop_playing();
@@ -1322,7 +1324,8 @@ controller_play_radio_by_url_thread(gpointer data)
         } else {
                 gboolean radio_set;
                 gdk_threads_leave();
-                radio_set = lastfm_set_radio(sess, url);
+                g_free (current_radio_name);
+                radio_set = lastfm_set_radio(sess, url, &current_radio_name);
                 gdk_threads_enter();
                 if (radio_set) {
                         lastfm_pls_clear(playlist);
