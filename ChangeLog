@@ -1,3 +1,20 @@
+2009-03-06  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/Makefile.am
+	* src/marshal.list
+	* src/controller.c (vgl_controller_class_init):
+	Define a new 'playback-progress' signal to be emitted by the
+	controller.
+
+	* src/vgl-main-window.h
+	* src/vgl-main-window.c (vgl_main_window_new)
+	(vgl_main_window_controller_progress_cb)
+	* src/controller.h
+	* src/controller.c (controller_update_progress)
+	(controller_audio_started_cb, controller_run_app):
+	Control the main window's progress bar using the
+	'playback-progress' signal.
+
 2009-02-26  Alberto Garcia  <agarcia@igalia.com>
 
 	Merged changes from the 0.7.1 release:

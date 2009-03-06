@@ -24,6 +24,7 @@ vagalume_SOURCES = \
 	globaldefs.h \
 	http.c http.h \
 	main.c \
+	marshal.c marshal.h \
 	metadata.c metadata.h \
 	playlist.c playlist.h \
 	protocol.c protocol.h \
@@ -36,6 +37,14 @@ vagalume_SOURCES = \
 	vgl-bookmark-window.c vgl-bookmark-window.h \
 	vgl-main-window.c vgl-main-window.h \
 	xmlrpc.c xmlrpc.h
+
+BUILT_SOURCES = marshal.c marshal.h
+
+marshal.c marshal.h: marshal.list
+	glib-genmarshal --header \
+		--prefix=vgl_marshal marshal.list > marshal.h
+	glib-genmarshal --body \
+		--prefix=vgl_marshal marshal.list > marshal.c
 
 if SET_IM_STATUS
 vagalume_SOURCES += imstatus.c imstatus.h

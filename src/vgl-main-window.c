@@ -238,8 +238,10 @@ set_progress_bar_text(VglMainWindow *w, const char *text)
         }
 }
 
-void
-vgl_main_window_show_progress(VglMainWindow *w, guint length, guint played)
+static void
+vgl_main_window_controller_progress_cb (VglController *controller,
+                                        guint played, guint length,
+                                        VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         const int bufsize = 16;
@@ -1157,10 +1159,14 @@ vgl_main_window_class_init(VglMainWindowClass *klass)
 }
 
 GtkWidget *
-vgl_main_window_new(void)
+vgl_main_window_new (VglController *controller)
 {
         GtkWidget *win;
+        g_return_val_if_fail (VGL_IS_CONTROLLER (controller), NULL);
         win = g_object_new (VGL_TYPE_MAIN_WINDOW,
                             "type", GTK_WINDOW_TOPLEVEL, NULL);
+        g_signal_connect (controller, "playback-progress",
+                          G_CALLBACK (vgl_main_window_controller_progress_cb),
+                          win);
         return win;
 }

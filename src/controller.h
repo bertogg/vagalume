@@ -40,7 +40,10 @@ G_BEGIN_DECLS
                                VGL_TYPE_CONTROLLER,                     \
                                VglControllerClass))
 
+#ifndef __TYPEDEF_VGL_CONTROLLER__
+#define __TYPEDEF_VGL_CONTROLLER__
 typedef struct _VglController      VglController;
+#endif
 typedef struct _VglControllerClass VglControllerClass;
 
 struct _VglControllerClass

@@ -44,6 +44,10 @@ G_BEGIN_DECLS
                                VGL_TYPE_MAIN_WINDOW,                    \
                                VglMainWindowClass))
 
+#ifndef __TYPEDEF_VGL_CONTROLLER__
+#define __TYPEDEF_VGL_CONTROLLER__
+typedef struct _VglController        VglController;
+#endif
 typedef struct _VglMainWindow        VglMainWindow;
 typedef struct _VglMainWindowClass   VglMainWindowClass;
 typedef struct _VglMainWindowPrivate VglMainWindowPrivate;
@@ -77,14 +81,12 @@ typedef enum {
 
 GType vgl_main_window_get_type (void) G_GNUC_CONST;
 
-GtkWidget *vgl_main_window_new(void);
+GtkWidget *vgl_main_window_new (VglController *controller);
 void vgl_main_window_destroy(VglMainWindow *w);
 void vgl_main_window_show(VglMainWindow *w, gboolean show);
 void vgl_main_window_toggle_visibility(VglMainWindow *w);
 void vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState s,
                                const LastfmTrack *t, const char *radio_url);
-void vgl_main_window_show_progress(VglMainWindow *w,
-                                   guint length, guint played);
 void vgl_main_window_show_status_msg(VglMainWindow *w, const char *text);
 void vgl_main_window_set_album_cover(VglMainWindow *w,
                                      const char *data, int size);

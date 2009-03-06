@@ -16,6 +16,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "marshal.h"
 #include "connection.h"
 #include "controller.h"
 #include "metadata.h"
@@ -58,6 +59,7 @@ enum {
         TRACK_STOPPED,
         PLAYER_STOPPED,
         USERCFG_CHANGED,
+        PLAYBACK_PROGRESS,
         N_SIGNALS
 };
 
@@ -219,15 +221,14 @@ controller_toggle_mainwin_visibility (void)
 }
 
 /**
- * Calculate the amount of time that a track has been playing and
- * updates the UI (progressbars, etc). to reflect that. To be called
- * using g_timeout_add()
+ * Calculate the amount of time that a track has been playing and emit
+ * the 'playback-progress' signal. To be called using g_timeout_add()
  *
  * @param data A pointer to the LastfmTrack being played
  * @return TRUE if the track hasn't fininished yet, FALSE otherwise
  */
 static gboolean
-controller_show_progress(gpointer data)
+controller_update_progress (gpointer data)
 {
         LastfmTrack *tr = (LastfmTrack *) data;
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && tr, FALSE);
@@ -235,7 +236,9 @@ controller_show_progress(gpointer data)
                 guint played = lastfm_audio_get_running_time();
                 if (played != -1) {
                         guint length = nowplaying->duration/1000;
-                        vgl_main_window_show_progress(mainwin,length,played);
+                        g_signal_emit (vgl_controller,
+                                       signals[PLAYBACK_PROGRESS], 0,
+                                       played, length);
                 }
                 return TRUE;
         } else {
@@ -635,10 +638,10 @@ controller_audio_started_cb(void)
         vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_PLAYING,
                                    nowplaying, current_radio_url);
         track = lastfm_track_ref(nowplaying);
-        controller_show_progress(track);
+        controller_update_progress (track);
         showing_cover = FALSE;
         controller_show_cover();
-        g_timeout_add_seconds (1, controller_show_progress, track);
+        g_timeout_add_seconds (1, controller_update_progress, track);
         g_signal_emit (vgl_controller, signals[TRACK_STARTED], 0, nowplaying);
 }
 
@@ -1654,7 +1657,7 @@ controller_run_app (const char *radio_url)
         im_status_init (vgl_controller);
 #endif
 
-        mainwin = VGL_MAIN_WINDOW (vgl_main_window_new ());
+        mainwin = VGL_MAIN_WINDOW (vgl_main_window_new (vgl_controller));
         g_object_add_weak_pointer (G_OBJECT (mainwin), (gpointer) &mainwin);
         vgl_main_window_show(mainwin, TRUE);
         vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
@@ -1789,6 +1792,14 @@ vgl_controller_class_init (VglControllerClass *klass)
                               0, NULL, NULL,
                               g_cclosure_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+        signals[PLAYBACK_PROGRESS] =
+                g_signal_new ("playback-progress",
+                              G_OBJECT_CLASS_TYPE (klass),
+                              G_SIGNAL_RUN_FIRST,
+                              0, NULL, NULL,
+                              vgl_marshal_VOID__UINT_UINT,
+                              G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_UINT);
 }
 
 static void
