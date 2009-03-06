@@ -1,5 +1,13 @@
 2009-03-06  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (controller_play_similarartist_radio):
+	Use current artist (if any) as default value in the "Artists
+	similar to" dialog.
+
+	This closes feature request #3575
+
+2009-03-06  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/Makefile.am
 	* src/marshal.list
 	* src/controller.c (vgl_controller_class_init):

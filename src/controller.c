@@ -1538,7 +1538,8 @@ controller_play_similarartist_radio(void)
         char *url = NULL;
         char *artist = ui_input_dialog(
                 vgl_main_window_get_window(mainwin, TRUE),
-                _("Enter artist"), _("Enter an artist's name"), previous);
+                _("Enter artist"), _("Enter an artist's name"),
+                nowplaying ? nowplaying->artist : previous);
         if (artist != NULL) {
                 url = lastfm_radio_url(LASTFM_SIMILAR_ARTIST_RADIO, artist);
                 controller_play_radio_by_url(url);
