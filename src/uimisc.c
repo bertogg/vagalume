@@ -136,6 +136,7 @@ static const char *translators_tpl =
          "* Amador Loureiro Blanco <dorfun@adorfunteca.org>\n\n"
 "%s (it)\n* Andrea Grandi <a.grandi@gmail.com>\n\n"
 "%s (lv)\n* Pēteris Caune <cuu508@gmail.com>\n\n"
+"%s (pl)\n* Dawid Pakuła (ZuLuS) <zulus@w3des.net>\n\n"
 "%s (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
 "%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
 
@@ -217,8 +218,8 @@ ui_about_dialog (GtkWindow *parent)
                                              _("Spanish"), _("Finnish"),
                                              _("French"),
                                              _("Galician"), _("Italian"),
-                                             _("Latvian"), _("Portuguese"),
-                                             _("Portuguese"));
+                                             _("Latvian"), _("Polish"),
+                                             _("Portuguese"), _("Portuguese"));
 #ifdef HAVE_GIO
         gtk_about_dialog_set_url_hook (about_dialog_uri_hook, "", NULL);
         gtk_about_dialog_set_email_hook (about_dialog_uri_hook, "mailto:",

@@ -1,3 +1,11 @@
+2009-03-13  Alberto Garcia  <agarcia@igalia.com>
+
+	* TRANSLATORS
+	* po/LINGUAS
+	* po/pl.po
+	* src/uimisc.c (ui_about_dialog):
+	Added Polish translation, by Dawid Pakuła
+
 2009-03-06  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c (controller_play_similarartist_radio):
