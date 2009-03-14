@@ -13,6 +13,7 @@
 #include "config.h"
 #include <glib.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <libxml/parser.h>
 
 #ifdef HAVE_GIO
 #    include <gio/gio.h>
@@ -29,6 +30,13 @@ const char *get_home_directory(void);
 char *obfuscate_string(char *str);
 char *lastfm_url_decode (const char *url);
 char *lastfm_url_encode (const char *url);
+void xml_add_string (xmlNode *parent, const char *name, const char *value);
+void xml_add_bool (xmlNode *parent, const char *name, gboolean value);
+void xml_get_string (xmlDoc *doc, const xmlNode *node,
+                     const char *name, char **value);
+void xml_get_bool (xmlDoc *doc, const xmlNode *node,
+                   const char *name, gboolean *value);
+
 
 #ifdef HAVE_GIO
 void launch_url (const char *url, GAppLaunchContext *context);

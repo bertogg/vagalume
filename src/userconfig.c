@@ -237,69 +237,6 @@ lastfm_old_usercfg_read(void)
         return cfg;
 }
 
-static void
-xml_add_string (xmlNode *parent, const char *name, const char *value)
-{
-        xmlNode *node;
-        xmlChar *enc;
-
-        node = xmlNewNode (NULL, (xmlChar *) name);
-        enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) value);
-        xmlNodeSetContent (node, enc);
-        xmlFree (enc);
-
-        xmlAddChild (parent, node);
-}
-
-static void
-xml_add_bool (xmlNode *parent, const char *name, gboolean value)
-{
-        xml_add_string (parent, name, value ? "1" : "0");
-}
-
-static void
-xml_get_string (xmlDoc *doc, const xmlNode *node,
-                const char *name, char **value)
-{
-        const xmlNode *iter;
-        xmlChar *val = NULL;
-        gboolean found = FALSE;
-
-        g_return_if_fail (doc && node && name && value);
-
-        for (iter = node; iter != NULL && !found; iter = iter->next) {
-                if (!xmlStrcmp (iter->name, (const xmlChar *) name)) {
-                        val = xmlNodeListGetString
-                                (doc, iter->xmlChildrenNode, 1);
-                        found = TRUE;
-                }
-
-        }
-
-        g_free (*value);
-
-        if (val != NULL) {
-                *value = g_strstrip (g_strdup ((char *) val));
-                xmlFree (val);
-        } else {
-                *value = g_strdup ("");
-        }
-
-}
-
-static void
-xml_get_bool (xmlDoc *doc, const xmlNode *node,
-              const char *name, gboolean *value)
-{
-        char *strval = NULL;
-
-        g_return_if_fail (value != NULL);
-
-        xml_get_string (doc, node, name, &strval);
-        *value = g_str_equal (strval, "1");
-        g_free (strval);
-}
-
 VglUserCfg *
 vgl_user_cfg_read (void)
 {

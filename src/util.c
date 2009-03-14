@@ -313,3 +313,94 @@ launch_url (const char *url, GAppLaunchContext *context)
         g_object_unref(context);
 }
 #endif
+
+/**
+ * Add a child element to an XML node consisting on a string.
+ * @param parent Parent XML node
+ * @param name Name of the child node to be created
+ * @param value Value of the child node
+ */
+void
+xml_add_string (xmlNode *parent, const char *name, const char *value)
+{
+        xmlNode *node;
+        xmlChar *enc;
+
+        node = xmlNewNode (NULL, (xmlChar *) name);
+        enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) value);
+        xmlNodeSetContent (node, enc);
+        xmlFree (enc);
+
+        xmlAddChild (parent, node);
+}
+
+/**
+ * Add a child element to an XML node consisting on a boolean.
+ * @param parent Parent XML node
+ * @param name Name of the child node to be created
+ * @param value Value of the child node
+ */
+void
+xml_add_bool (xmlNode *parent, const char *name, gboolean value)
+{
+        xml_add_string (parent, name, value ? "1" : "0");
+}
+
+/**
+ * Find an XML node in a list and get its value as a string.
+ * @param doc The xmlDoc
+ * @param node The first node on the list to search
+ * @param name The name of the node to find
+ * @param value A pointer to a string for the return value. The
+ *              pointed string will be freed first (so it must ve a
+ *              valid string, or NULL).
+ */
+void
+xml_get_string (xmlDoc *doc, const xmlNode *node,
+                const char *name, char **value)
+{
+        const xmlNode *iter;
+        xmlChar *val = NULL;
+        gboolean found = FALSE;
+
+        g_return_if_fail (doc && node && name && value);
+
+        for (iter = node; iter != NULL && !found; iter = iter->next) {
+                if (!xmlStrcmp (iter->name, (const xmlChar *) name)) {
+                        val = xmlNodeListGetString
+                                (doc, iter->xmlChildrenNode, 1);
+                        found = TRUE;
+                }
+
+        }
+
+        g_free (*value);
+
+        if (val != NULL) {
+                *value = g_strstrip (g_strdup ((char *) val));
+                xmlFree (val);
+        } else {
+                *value = g_strdup ("");
+        }
+
+}
+
+/**
+ * Find an XML node in a list and get its value as a boolean.
+ * @param doc The xmlDoc
+ * @param node The first node on the list to search
+ * @param name The name of the node to find
+ * @param value A pointer to a boolean for the return value.
+ */
+void
+xml_get_bool (xmlDoc *doc, const xmlNode *node,
+              const char *name, gboolean *value)
+{
+        char *strval = NULL;
+
+        g_return_if_fail (value != NULL);
+
+        xml_get_string (doc, node, name, &strval);
+        *value = g_str_equal (strval, "1");
+        g_free (strval);
+}
