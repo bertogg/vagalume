@@ -326,6 +326,8 @@ xml_add_string (xmlNode *parent, const char *name, const char *value)
         xmlNode *node;
         xmlChar *enc;
 
+        g_return_if_fail (parent && name && value);
+
         node = xmlNewNode (NULL, (xmlChar *) name);
         enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) value);
         xmlNodeSetContent (node, enc);
@@ -354,22 +356,23 @@ xml_add_bool (xmlNode *parent, const char *name, gboolean value)
  * @param value A pointer to a string for the return value. The
  *              pointed string will be freed first (so it must ve a
  *              valid string, or NULL).
+ * @return The node, or NULL if it was not found.
  */
-void
+const xmlNode *
 xml_get_string (xmlDoc *doc, const xmlNode *node,
                 const char *name, char **value)
 {
         const xmlNode *iter;
+        const xmlNode *found = NULL;
         xmlChar *val = NULL;
-        gboolean found = FALSE;
 
-        g_return_if_fail (doc && node && name && value);
+        g_return_val_if_fail (doc && name && value, NULL);
 
         for (iter = node; iter != NULL && !found; iter = iter->next) {
                 if (!xmlStrcmp (iter->name, (const xmlChar *) name)) {
                         val = xmlNodeListGetString
                                 (doc, iter->xmlChildrenNode, 1);
-                        found = TRUE;
+                        found = iter;
                 }
 
         }
@@ -383,6 +386,7 @@ xml_get_string (xmlDoc *doc, const xmlNode *node,
                 *value = g_strdup ("");
         }
 
+        return found;
 }
 
 /**
@@ -391,16 +395,20 @@ xml_get_string (xmlDoc *doc, const xmlNode *node,
  * @param node The first node on the list to search
  * @param name The name of the node to find
  * @param value A pointer to a boolean for the return value.
+ * @return The node, or NULL if it was not found.
  */
-void
+const xmlNode *
 xml_get_bool (xmlDoc *doc, const xmlNode *node,
               const char *name, gboolean *value)
 {
+        const xmlNode *position;
         char *strval = NULL;
 
-        g_return_if_fail (value != NULL);
+        g_return_val_if_fail (doc && name && value, NULL);
 
-        xml_get_string (doc, node, name, &strval);
+        position = xml_get_string (doc, node, name, &strval);
         *value = g_str_equal (strval, "1");
         g_free (strval);
+
+        return position;
 }

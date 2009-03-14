@@ -32,10 +32,10 @@ char *lastfm_url_decode (const char *url);
 char *lastfm_url_encode (const char *url);
 void xml_add_string (xmlNode *parent, const char *name, const char *value);
 void xml_add_bool (xmlNode *parent, const char *name, gboolean value);
-void xml_get_string (xmlDoc *doc, const xmlNode *node,
-                     const char *name, char **value);
-void xml_get_bool (xmlDoc *doc, const xmlNode *node,
-                   const char *name, gboolean *value);
+const xmlNode *xml_get_string (xmlDoc *doc, const xmlNode *node,
+                               const char *name, char **value);
+const xmlNode *xml_get_bool (xmlDoc *doc, const xmlNode *node,
+                             const char *name, gboolean *value);
 
 
 #ifdef HAVE_GIO

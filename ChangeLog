@@ -1,5 +1,15 @@
 2009-03-14  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/util.h
+	* src/util.c
+	(xml_add_string, xml_get_string, xml_get_bool):
+	Extra checks for parameters.
+	(xml_get_string, xml_get_bool):
+	Allow passing NULL nodes (= empty lists) as parameter.
+	Return the node, or NULL if not found.
+
+2009-03-14  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/userconfig.c
 	* src/util.h
 	* src/util.c
