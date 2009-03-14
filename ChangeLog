@@ -1,5 +1,14 @@
 2009-03-14  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/metadata.c (get_xml_tag_name)
+	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_load_from_disk)
+	(vgl_bookmark_mgr_save_to_disk)
+	* src/xmlrpc.c (string_param, array_param):
+	Refactor code using xml_add_string() and xml_get_string() from
+	util.c
+
+2009-03-14  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/util.h
 	* src/util.c
 	(xml_add_string, xml_get_string, xml_get_bool):

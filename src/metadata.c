@@ -75,21 +75,15 @@ static char *
 get_xml_tag_name(xmlDoc *doc, const xmlNode *node)
 {
         g_return_val_if_fail(node != NULL, NULL);
+        char *tagname = NULL;
         const xmlNode *child = node->xmlChildrenNode;
-        while (child != NULL) {
-                const xmlChar *name = child->name;
-                if (!xmlStrcmp(name, (const xmlChar *) "name")) {
-                        char *tagname = NULL;
-                        xmlNode *content = child->xmlChildrenNode;
-                        xmlChar *tag = xmlNodeListGetString(doc, content, 1);
-                        if (tag != NULL) tagname = g_strdup((char *) tag);
-                        xmlFree(tag);
-                        return tagname;
-                }
-                child = child->next;
+        xml_get_string (doc, child, "name", &tagname);
+        if (*tagname == '\0') {
+                g_warning("Found <tag> element with no name");
+                g_free (tagname);
+                tagname = NULL;
         }
-        g_warning("Found <tag> element with no name");
-        return NULL;
+        return tagname;
 }
 
 /**

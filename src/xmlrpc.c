@@ -32,12 +32,8 @@ string_param(const char *str)
         g_return_val_if_fail(str != NULL, NULL);
         xmlNode *param = xmlNewNode(NULL, (xmlChar *) "param");
         xmlNode *value = xmlNewNode(NULL, (xmlChar *) "value");
-        xmlNode *string = xmlNewNode(NULL, (xmlChar *) "string");
-        xmlChar *encstr = xmlEncodeEntitiesReentrant(NULL, (xmlChar *)str);
         xmlAddChild(param, value);
-        xmlAddChild(value, string);
-        xmlNodeSetContent(string, encstr);
-        xmlFree(encstr);
+        xml_add_string (value, "string", str);
         return param;
 }
 
@@ -60,14 +56,8 @@ array_param(const GSList *params)
         xmlAddChild(array, data);
         for (iter = params; iter != NULL; iter = g_slist_next(iter)) {
                 xmlNode *val = xmlNewNode(NULL, (xmlChar *) "value");
-                xmlNode *string = xmlNewNode(NULL, (xmlChar *) "string");
-                xmlChar *encstr;
-                encstr = xmlEncodeEntitiesReentrant(NULL,
-                                                    (xmlChar *) iter->data);
                 xmlAddChild(data, val);
-                xmlAddChild(val, string);
-                xmlNodeSetContent(string, encstr);
-                xmlFree(encstr);
+                xml_add_string (val, "string", (const char *) iter->data);
         }
         return param;
 }

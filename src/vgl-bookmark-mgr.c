@@ -103,30 +103,6 @@ vgl_bookmark_mgr_get_cfgfile(void)
 }
 
 static void
-vgl_bookmark_get_from_xml_node(xmlDoc *doc, xmlNode *node,
-                               char **name, char **url)
-{
-        xmlNode *child;
-
-        g_return_if_fail (node != NULL && name != NULL && url != NULL);
-
-        for (child = node->xmlChildrenNode; child; child = child->next) {
-                char *val = (char *) xmlNodeListGetString(
-                        doc, child->xmlChildrenNode, 1);
-                if (val == NULL) {
-                        /* Ignore empty nodes */;
-                } else if (!xmlStrcmp(child->name, (const xmlChar *) "name")) {
-                        g_free (*name);
-                        *name = g_strdup (val);
-                } else if (!xmlStrcmp(child->name, (const xmlChar *) "url")) {
-                        g_free (*url);
-                        *url = g_strdup (val);
-                }
-                xmlFree ((xmlChar *) val);
-        }
-}
-
-static void
 vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
 {
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
@@ -166,8 +142,10 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
                 if (!xmlStrcmp(nodename, (const xmlChar *) "bookmark")) {
                         char *name = NULL;
                         char *url = NULL;
-                        vgl_bookmark_get_from_xml_node (doc,node,&name,&url);
-                        if (name != NULL && url != NULL) {
+                        const xmlNode *subnode = node->xmlChildrenNode;
+                        xml_get_string (doc, subnode, "name", &name);
+                        xml_get_string (doc, subnode, "url", &url);
+                        if (*name != '\0' && *url != '\0') {
                                 vgl_bookmark_mgr_add_bookmark (mgr, name, url);
                         }
                         g_free (name);
@@ -200,24 +178,12 @@ vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
         xmlDocSetRootElement (doc, root);
 
         for (l = mgr->priv->bookmarks; l != NULL; l = l->next) {
-                xmlNode *bmknode, *name, *url;
-                xmlChar *enc;
+                xmlNode *bmknode;
                 const VglBookmark *bmk = (const VglBookmark *) l->data;
-
-                name = xmlNewNode (NULL, (xmlChar *) "name");
-                enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) bmk->name);
-                xmlNodeSetContent (name, enc);
-                xmlFree (enc);
-
-                url = xmlNewNode (NULL, (xmlChar *) "url");
-                enc = xmlEncodeEntitiesReentrant (NULL, (xmlChar *) bmk->url);
-                xmlNodeSetContent (url, enc);
-                xmlFree (enc);
-
                 bmknode = xmlNewNode (NULL, (xmlChar *) "bookmark");
                 xmlAddChild (root, bmknode);
-                xmlAddChild (bmknode, name);
-                xmlAddChild (bmknode, url);
+                xml_add_string (bmknode, "name", bmk->name);
+                xml_add_string (bmknode, "url", bmk->url);
         }
 
         if (xmlSaveFormatFileEnc (cfgfile, doc, "UTF-8", 1) != -1) {
