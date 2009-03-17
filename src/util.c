@@ -349,6 +349,43 @@ xml_add_bool (xmlNode *parent, const char *name, gboolean value)
 }
 
 /**
+ * Add a child element to an XML node consisting on a long int.
+ * @param parent Parent XML node
+ * @param name Name of the child node to be created
+ * @param value Value of the child node
+ */
+void
+xml_add_glong (xmlNode *parent, const char *name, glong value)
+{
+        const int maxlen = sizeof (glong) * 3; /* Enough to store a glong */
+        char strvalue[maxlen];
+        g_snprintf (strvalue, maxlen, "%ld", value);
+        xml_add_string (parent, name, strvalue);
+}
+
+/**
+ * Find an XML node in a list by its name
+ * @param node The first node on the list to search
+ * @param name Name of the node to find
+ * @return The node, or NULL if it was not found
+ */
+const xmlNode *
+xml_find_node (const xmlNode *node, const char *name)
+{
+        const xmlNode *iter;
+
+        g_return_val_if_fail (node != NULL && name != NULL, NULL);
+
+        for (iter = node; iter != NULL; iter = iter->next) {
+                if (!xmlStrcmp (iter->name, (const xmlChar *) name)) {
+                        return iter;
+                }
+        }
+
+        return NULL;
+}
+
+/**
  * Find an XML node in a list and get its value as a string.
  * @param doc The xmlDoc
  * @param node The first node on the list to search
@@ -362,23 +399,17 @@ const xmlNode *
 xml_get_string (xmlDoc *doc, const xmlNode *node,
                 const char *name, char **value)
 {
-        const xmlNode *iter;
-        const xmlNode *found = NULL;
+        const xmlNode *found;
         xmlChar *val = NULL;
 
         g_return_val_if_fail (doc && name && value, NULL);
 
-        for (iter = node; iter != NULL && !found; iter = iter->next) {
-                if (!xmlStrcmp (iter->name, (const xmlChar *) name)) {
-                        val = xmlNodeListGetString
-                                (doc, iter->xmlChildrenNode, 1);
-                        found = iter;
-                }
-
+        found = xml_find_node (node, name);
+        if (found) {
+                val = xmlNodeListGetString (doc, found->xmlChildrenNode, 1);
         }
 
         g_free (*value);
-
         if (val != NULL) {
                 *value = g_strstrip (g_strdup ((char *) val));
                 xmlFree (val);
@@ -408,6 +439,30 @@ xml_get_bool (xmlDoc *doc, const xmlNode *node,
 
         position = xml_get_string (doc, node, name, &strval);
         *value = g_str_equal (strval, "1");
+        g_free (strval);
+
+        return position;
+}
+
+/**
+ * Find an XML node in a list and get its value as a glong.
+ * @param doc The xmlDoc
+ * @param node The first node on the list to search
+ * @param name The name of the node to find
+ * @param value A pointer to a glong for the return value.
+ * @return The node, or NULL if it was not found.
+ */
+const xmlNode *
+xml_get_glong (xmlDoc *doc, const xmlNode *node,
+               const char *name, glong *value)
+{
+        const xmlNode *position;
+        char *strval = NULL;
+
+        g_return_val_if_fail (doc && name && value, NULL);
+
+        position = xml_get_string (doc, node, name, &strval);
+        *value = atol (strval);
         g_free (strval);
 
         return position;

@@ -1,3 +1,10 @@
+2009-03-16  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/util.h
+	* src/util.c (xml_add_glong, xml_get_glong, xml_get_string)
+	(xml_find_node):
+	Added xml_find_node(), xml_add_glong() and xml_get_glong()
+
 2009-03-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/metadata.c (get_xml_tag_name)
