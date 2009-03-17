@@ -182,7 +182,7 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
         g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
 
         gboolean retval = FALSE;
-        char *val = NULL;
+        char *val;
         glong id, artistid, duration;
         LastfmTrack *track = lastfm_track_new();
         track->pls_title =
@@ -222,10 +222,10 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
                         }
                         xmlFree (rel);
                 }
+                g_free (val);
                 node = (xmlNode *) xml_get_string (doc, node->next,
                                                    "link", &val);
         }
-        g_free (val);
 
         if (track->stream_url[0] == '\0') {
                 g_debug("Found track with no stream URL, discarding it");

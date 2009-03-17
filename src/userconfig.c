@@ -284,16 +284,30 @@ vgl_user_cfg_read (void)
 
         /* Parse the configuration */
         if (node != NULL) {
+                char *str;
                 cfg = vgl_user_cfg_new();
                 /* This code is not very optimal, but it is simpler */
-                xml_get_string (doc, node, "username", &(cfg->username));
-                xml_get_string (doc, node, "password", &(cfg->password));
-                obfuscate_string (cfg->password);
-                xml_get_string (doc, node, "http-proxy", &(cfg->http_proxy));
-                xml_get_string (doc, node, "download-dir",
-                                &(cfg->download_dir));
-                xml_get_string (doc, node, "imstatus-template",
-                                &(cfg->imstatus_template));
+                if (xml_get_string (doc, node, "username", &str)) {
+                        vgl_user_cfg_set_username (cfg, str);
+                        g_free (str);
+                }
+                if (xml_get_string (doc, node, "password", &str)) {
+                        obfuscate_string (str);
+                        vgl_user_cfg_set_password (cfg, str);
+                        g_free (str);
+                }
+                if (xml_get_string (doc, node, "http-proxy", &str)) {
+                        vgl_user_cfg_set_http_proxy (cfg, str);
+                        g_free (str);
+                }
+                if (xml_get_string (doc, node, "download-dir", &str)) {
+                        vgl_user_cfg_set_download_dir (cfg, str);
+                        g_free (str);
+                }
+                if (xml_get_string (doc, node, "imstatus-template", &str)) {
+                        vgl_user_cfg_set_imstatus_template (cfg, str);
+                        g_free (str);
+                }
                 xml_get_bool (doc, node, "use-proxy", &(cfg->use_proxy));
                 xml_get_bool (doc, node, "discovery-mode",
                               &(cfg->discovery_mode));

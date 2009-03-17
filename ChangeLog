@@ -1,3 +1,13 @@
+2009-03-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/metadata.c (get_xml_tag_name)
+	* src/protocol.c (lastfm_parse_track)
+	* src/userconfig.c (vgl_user_cfg_read)
+	* src/util.c (xml_get_string, xml_get_bool, xml_get_glong)
+	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_load_from_disk):
+	Don't make xml_get_string() free the value parameter, return NULL
+	instead
+
 2009-03-17  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.c (lastfm_parse_track):

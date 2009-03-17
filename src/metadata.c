@@ -75,13 +75,11 @@ static char *
 get_xml_tag_name(xmlDoc *doc, const xmlNode *node)
 {
         g_return_val_if_fail(node != NULL, NULL);
-        char *tagname = NULL;
+        char *tagname;
         const xmlNode *child = node->xmlChildrenNode;
         xml_get_string (doc, child, "name", &tagname);
-        if (*tagname == '\0') {
+        if (tagname == NULL) {
                 g_warning("Found <tag> element with no name");
-                g_free (tagname);
-                tagname = NULL;
         }
         return tagname;
 }

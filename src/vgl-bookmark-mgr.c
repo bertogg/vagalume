@@ -140,12 +140,11 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
         for (; node != NULL; node = node->next) {
                 const xmlChar *nodename = node->name;
                 if (!xmlStrcmp(nodename, (const xmlChar *) "bookmark")) {
-                        char *name = NULL;
-                        char *url = NULL;
+                        char *name, *url;
                         const xmlNode *subnode = node->xmlChildrenNode;
                         xml_get_string (doc, subnode, "name", &name);
                         xml_get_string (doc, subnode, "url", &url);
-                        if (*name != '\0' && *url != '\0') {
+                        if (name && *name != '\0' && url && *url != '\0') {
                                 vgl_bookmark_mgr_add_bookmark (mgr, name, url);
                         }
                         g_free (name);
