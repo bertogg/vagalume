@@ -182,73 +182,58 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
         g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
 
         gboolean retval = FALSE;
-        const xmlChar *name;
-        char *val;
+        char *val = NULL;
+        glong id, artistid, duration;
         LastfmTrack *track = lastfm_track_new();
         track->pls_title =
                 g_strdup (pls_title ? pls_title : _("(unknown radio)"));
 
+        xml_get_string (doc, node, "location", (char **) &(track->stream_url));
+        xml_get_string (doc, node, "title", (char **) &(track->title));
+        xml_get_string (doc, node, "creator", (char **) &(track->artist));
+        xml_get_string (doc, node, "album", (char **) &(track->album));
+        xml_get_string (doc, node, "image", (char **) &(track->image_url));
+        xml_get_string (doc, node, "trackauth", (char **) &(track->trackauth));
+        xml_get_glong (doc, node, "id", &id);
+        xml_get_glong (doc, node, "artistId", &artistid);
+        xml_get_glong (doc, node, "duration", &duration);
+
+        track->id = id;
+        track->artistid = artistid;
+        track->duration = duration;
+
+        node = (xmlNode *) xml_get_string (doc, node, "link", &val);
         while (node != NULL) {
-                name = node->name;
-                val = (char *) xmlNodeListGetString(doc,
-                                                    node->xmlChildrenNode,
-                                                    1);
-                if (val == NULL) {
-                        /* Ignore empty nodes */;
-                } else if (!xmlStrcmp(name, (xmlChar *) "location")) {
-                        track->stream_url = g_strstrip(g_strdup(val));
-                } else if (!xmlStrcmp(name, (xmlChar *) "title")) {
-                        track->title = g_strstrip(g_strdup(val));
-                } else if (!xmlStrcmp(name, (xmlChar *) "id")) {
-                        track->id = strtol(val, NULL, 10);
-                } else if (!xmlStrcmp(name, (xmlChar *) "artistId")) {
-                        track->artistid = strtol(val, NULL, 10);
-                } else if (!xmlStrcmp(name, (xmlChar *) "creator")) {
-                        track->artist = g_strstrip(g_strdup(val));
-                } else if (!xmlStrcmp(name, (xmlChar *) "album")) {
-                        track->album = g_strstrip(g_strdup(val));
-                } else if (!xmlStrcmp(name, (xmlChar *) "duration")) {
-                        track->duration = strtol(val, NULL, 10);
-                } else if (!xmlStrcmp(name, (xmlChar *) "image")) {
-                        track->image_url = g_strstrip(g_strdup(val));
-                } else if (!xmlStrcmp(name, (xmlChar *) "trackauth")) {
-                        track->trackauth = g_strstrip(g_strdup(val));
-                } else if (!xmlStrcmp(name, (xmlChar *) "link")) {
-                        xmlChar *rel = xmlGetProp(node, (xmlChar *) "rel");
-                        if (rel != NULL) {
-                                if (!xmlStrcmp(rel, free_track_rel)) {
-                                        track->free_track_url =
-                                                g_strstrip(g_strdup(val));
-                                } else if (!xmlStrcmp(rel, album_page_rel) &&
-                                           g_str_has_prefix (
-                                                   val, lastfm_music_prefix)) {
-                                        char *artist, **parts;
-                                        parts = g_strsplit (val, "/", 6);
-                                        artist = lastfm_url_decode (parts[4]);
-                                        g_strfreev (parts);
-                                        track->album_artist = artist;
-                                }
-                                xmlFree(rel);
+                xmlChar *rel = xmlGetProp (node, (xmlChar *) "rel");
+                if (rel != NULL) {
+                        if (!xmlStrcmp (rel, free_track_rel)) {
+                                g_free ((gpointer) track->free_track_url);
+                                track->free_track_url = val;
+                                val = NULL;
+                        } else if (!xmlStrcmp (rel, album_page_rel) &&
+                                   g_str_has_prefix (
+                                           val, lastfm_music_prefix)) {
+                                char *artist, **parts;
+                                parts = g_strsplit (val, "/", 6);
+                                artist = lastfm_url_decode (parts[4]);
+                                g_strfreev (parts);
+                                g_free ((gpointer) track->album_artist);
+                                track->album_artist = artist;
                         }
+                        xmlFree (rel);
                 }
-                xmlFree((xmlChar *)val);
-                node = node->next;
+                node = (xmlNode *) xml_get_string (doc, node->next,
+                                                   "link", &val);
         }
-        if (track->stream_url == NULL || track->stream_url[0] == '\0') {
+        g_free (val);
+
+        if (track->stream_url[0] == '\0') {
                 g_debug("Found track with no stream URL, discarding it");
-        } else if (track->title == NULL || track->title[0] == '\0') {
+        } else if (track->title[0] == '\0') {
                 g_debug("Found track with no title, discarding it");
-        } else if (track->artist == NULL || track->artist[0] == '\0') {
+        } else if (track->artist[0] == '\0') {
                 g_debug("Found track with no artist, discarding it");
         } else {
-                if (track->album == NULL) {
-                        /* album_artist != NULL unlikely if album == NULL,
-                           but we free it just in case */
-                        g_free ((gpointer) track->album_artist);
-                        track->album = g_strdup("");
-                        track->album_artist = g_strdup("");
-                }
-                if (track->trackauth == NULL) track->trackauth = g_strdup("");
                 if (track->album_artist == NULL ||
                     !strcmp (track->artist, track->album_artist)) {
                         /* Don't waste memory */

@@ -1,3 +1,8 @@
+2009-03-17  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/protocol.c (lastfm_parse_track):
+	Refactor code using xml functions in util.c
+
 2009-03-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/util.h
