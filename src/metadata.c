@@ -66,25 +66,6 @@ lastfm_get_friends(const char *username, GList **friendlist)
 }
 
 /**
- * Obtain the name of a <tag> attribute in an XML tag list
- * @param doc The XML document
- * @param node The xmlNode pointing to the <tag> attribute
- * @return A newly-allocate string with the name of the tag (or NULL)
- */
-static char *
-get_xml_tag_name(xmlDoc *doc, const xmlNode *node)
-{
-        g_return_val_if_fail(node != NULL, NULL);
-        char *tagname;
-        const xmlNode *child = node->xmlChildrenNode;
-        xml_get_string (doc, child, "name", &tagname);
-        if (tagname == NULL) {
-                g_warning("Found <tag> element with no name");
-        }
-        return tagname;
-}
-
-/**
  * Parse an XML tag list
  * @param buffer A buffer where the XML document is stored
  * @param bufsize The size of the buffer
@@ -115,15 +96,17 @@ parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
         } else {
                 g_warning("Tag list is not an XML document");
         }
+        node = xml_find_node (node, "tag");
         while (node != NULL) {
-                const xmlChar *name = node->name;
-                if (!xmlStrcmp(name, (const xmlChar *) "tag")) {
-                        char *tagname = get_xml_tag_name(doc, node);
-                        if (tagname != NULL) {
-                                *tags = g_list_append(*tags, tagname);
-                        }
+                char *tagname;
+                xml_get_string (doc, node->xmlChildrenNode, "name", &tagname);
+                if (tagname != NULL && tagname[0] != '\0') {
+                        *tags = g_list_append (*tags, tagname);
+                } else {
+                        g_warning ("Found <tag> element with no name");
+                        g_free (tagname);
                 }
-                node = node->next;
+                node = xml_find_node (node, "tag");
         }
         if (doc != NULL) xmlFreeDoc(doc);
         return retval;

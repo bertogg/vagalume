@@ -257,12 +257,11 @@ static LastfmPls *
 lastfm_parse_playlist (const char *buffer, size_t bufsize,
                        const char *default_pls_title)
 {
-        xmlDoc *doc = NULL;
-        xmlNode *node = NULL;
-        xmlNode *tracklist = NULL;
+        xmlDoc *doc;
+        const xmlNode *node = NULL;
+        const xmlNode *tracklist;
         LastfmPls *pls = NULL;
-        const xmlChar *name;
-        char *pls_title = NULL;
+        char *pls_title;
         g_return_val_if_fail(buffer != NULL && bufsize > 0, NULL);
 
         doc = xmlParseMemory(buffer, bufsize);
@@ -277,44 +276,38 @@ lastfm_parse_playlist (const char *buffer, size_t bufsize,
         } else {
                 g_warning("Playlist is not an XML document");
         }
-        while (node != NULL) {
-                name = node->name;
-                if (!xmlStrcmp(name, (const xmlChar *) "title")) {
-                        char *title = (char *) xmlNodeListGetString(doc,
-                                               node->xmlChildrenNode, 1);
-                        if (title != NULL && pls_title == NULL) {
-                                /* The playlist comes encoded */
-                                pls_title = lastfm_url_decode (title);
-                        }
-                        xmlFree((xmlChar *)title);
-                } else if (!xmlStrcmp(name, (const xmlChar *) "trackList")) {
-                        tracklist = node;
-                }
-                node = node->next;
-        }
-        if (tracklist != NULL) {
-                node = tracklist->xmlChildrenNode;
-                pls = lastfm_pls_new();
+
+        /* Get playlist title */
+        xml_get_string (doc, node, "title", &pls_title);
+        if (pls_title && pls_title[0] != '\0') {
+                char *tmp = lastfm_url_decode (pls_title);
+                g_free (pls_title);
+                pls_title = tmp;
         } else {
-                g_warning("No tracks found in playlist");
-                node = NULL;
-        }
-        if (pls_title == NULL) {
+                g_free (pls_title);
                 pls_title = g_strdup (default_pls_title);
         }
-        while (node != NULL) {
-                if (!xmlStrcmp(node->name, (const xmlChar *) "track")) {
-                        lastfm_parse_track(doc, node->xmlChildrenNode, pls,
-                                           pls_title);
+
+        /* Get trackList node */
+        tracklist = xml_find_node (node, "trackList");
+        if (tracklist != NULL) {
+                node = xml_find_node (tracklist->xmlChildrenNode, "track");
+                pls = lastfm_pls_new();
+                while (node != NULL) {
+                        lastfm_parse_track (doc, node->xmlChildrenNode,
+                                            pls, pls_title);
+                        node = xml_find_node (node->next, "track");
                 }
-                node = node->next;
+                if (lastfm_pls_size (pls) == 0) {
+                        lastfm_pls_destroy (pls);
+                        pls = NULL;
+                }
+        } else {
+                g_warning("No tracks found in playlist");
         }
+
         g_free(pls_title);
         if (doc != NULL) xmlFreeDoc(doc);
-        if (pls != NULL && lastfm_pls_size(pls) == 0) {
-                lastfm_pls_destroy(pls);
-                pls = NULL;
-        }
         return pls;
 }
 

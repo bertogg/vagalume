@@ -1,5 +1,11 @@
 2009-03-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/protocol.c (lastfm_parse_playlist)
+	* src/metadata.c (parse_xml_tags, -get_xml_tag_name):
+	Refactor code using xml functions in util.c
+
+2009-03-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/metadata.c (get_xml_tag_name)
 	* src/protocol.c (lastfm_parse_track)
 	* src/userconfig.c (vgl_user_cfg_read)
