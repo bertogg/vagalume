@@ -106,7 +106,7 @@ parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
                         g_warning ("Found <tag> element with no name");
                         g_free (tagname);
                 }
-                node = xml_find_node (node, "tag");
+                node = xml_find_node (node->next, "tag");
         }
         if (doc != NULL) xmlFreeDoc(doc);
         return retval;
