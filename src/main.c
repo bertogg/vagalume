@@ -34,7 +34,8 @@
 #endif
 
 int
-main (int argc, char **argv)
+main                                    (int    argc,
+                                         char **argv)
 {
         char *radio = NULL;
 
@@ -69,8 +70,8 @@ main (int argc, char **argv)
                         g_setenv(GST_SINK_ENVVAR, optarg, TRUE);
                         break;
                 default:
-                        g_print(_("Usage:\n  %s [-c converter] [-d decoder] [-m mixer] "
-                                  "[-s sink] [lastfm radio url]\n\n"
+                        g_print(_("Usage:\n  %s [-c converter] [-d decoder] "
+                                  "[-m mixer] [-s sink] [lastfm radio url]\n\n"
                                   "  converter: GStreamer converter "
                                   "(default: '%s', 'none' to disable)\n"
                                   "  decoder:   GStreamer decoder "

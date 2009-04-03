@@ -142,14 +142,14 @@ static const char *translators_tpl =
 "%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
 
 void
-flush_ui_events(void)
+flush_ui_events                         (void)
 {
         while (gtk_events_pending()) gtk_main_iteration();
 }
 
 /* Don't use gtk_button_new() in Nokia 770 or icons won't appear */
 GtkWidget *
-compat_gtk_button_new(void)
+compat_gtk_button_new                   (void)
 {
 #ifdef MAEMO2
         return gtk_button_new_with_label("");
@@ -159,7 +159,9 @@ compat_gtk_button_new(void)
 }
 
 static void
-ui_show_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
+ui_show_dialog                          (GtkWindow      *parent,
+                                         const char     *text,
+                                         GtkMessageType  type)
 {
         g_return_if_fail(text != NULL);
         GtkDialogFlags flags = GTK_DIALOG_MODAL |
@@ -172,25 +174,29 @@ ui_show_dialog(GtkWindow *parent, const char *text, GtkMessageType type)
 }
 
 void
-ui_info_dialog(GtkWindow *parent, const char *text)
+ui_info_dialog                          (GtkWindow  *parent,
+                                         const char *text)
 {
         ui_show_dialog(parent, text, GTK_MESSAGE_INFO);
 }
 
 void
-ui_warning_dialog(GtkWindow *parent, const char *text)
+ui_warning_dialog                       (GtkWindow  *parent,
+                                         const char *text)
 {
         ui_show_dialog(parent, text, GTK_MESSAGE_WARNING);
 }
 
 void
-ui_error_dialog(GtkWindow *parent, const char *text)
+ui_error_dialog                         (GtkWindow  *parent,
+                                         const char *text)
 {
         ui_show_dialog(parent, text, GTK_MESSAGE_ERROR);
 }
 
 void
-ui_info_banner(GtkWindow *parent, const char *text)
+ui_info_banner                          (GtkWindow  *parent,
+                                         const char *text)
 {
         g_return_if_fail(parent != NULL && text != NULL);
 #ifdef MAEMO
@@ -203,7 +209,9 @@ ui_info_banner(GtkWindow *parent, const char *text)
 
 #ifdef HAVE_GIO
 static void
-about_dialog_uri_hook (GtkAboutDialog *about, const gchar *link, gpointer data)
+about_dialog_uri_hook                   (GtkAboutDialog *about,
+                                         const gchar    *link,
+                                         gpointer        data)
 {
         gchar *uri = g_strconcat (data, link, NULL);
         launch_url (uri, NULL);
@@ -212,7 +220,7 @@ about_dialog_uri_hook (GtkAboutDialog *about, const gchar *link, gpointer data)
 #endif
 
 void
-ui_about_dialog (GtkWindow *parent)
+ui_about_dialog                         (GtkWindow *parent)
 {
         GdkPixbuf *logo = gdk_pixbuf_new_from_file (APP_ICON_BIG, NULL);
         char *translators = g_strdup_printf (translators_tpl, _("German"),
@@ -237,7 +245,8 @@ ui_about_dialog (GtkWindow *parent)
 }
 
 static GtkDialog *
-ui_base_dialog(GtkWindow *parent, const char *title)
+ui_base_dialog                          (GtkWindow  *parent,
+                                         const char *title)
 {
         GtkWidget *dialog;
         dialog = gtk_dialog_new_with_buttons(title, parent,
@@ -254,7 +263,8 @@ ui_base_dialog(GtkWindow *parent, const char *title)
 }
 
 gboolean
-ui_confirm_dialog(GtkWindow *parent, const char *text)
+ui_confirm_dialog                       (GtkWindow  *parent,
+                                         const char *text)
 {
         g_return_val_if_fail(text != NULL, FALSE);
         gint response;
@@ -268,8 +278,10 @@ ui_confirm_dialog(GtkWindow *parent, const char *text)
 }
 
 char *
-ui_input_dialog(GtkWindow *parent, const char *title,
-                const char *text, const char *value)
+ui_input_dialog                         (GtkWindow  *parent,
+                                         const char *title,
+                                         const char *text,
+                                         const char *value)
 {
         GtkDialog *dialog;
         GtkWidget *label;
@@ -292,8 +304,10 @@ ui_input_dialog(GtkWindow *parent, const char *title,
 }
 
 gboolean
-ui_edit_bookmark_dialog(GtkWindow *parent, char **name, char **url,
-                        gboolean add)
+ui_edit_bookmark_dialog                 (GtkWindow  *parent,
+                                         char      **name,
+                                         char      **url,
+                                         gboolean    add)
 {
         GtkDialog *dialog;
         GtkWidget *namelabel, *urllabel;
@@ -356,7 +370,8 @@ ui_edit_bookmark_dialog(GtkWindow *parent, char **name, char **url,
 }
 
 GtkWidget *
-ui_menu_item_create_from_icon (const gchar *icon_name, const gchar *label)
+ui_menu_item_create_from_icon           (const gchar *icon_name,
+                                         const gchar *label)
 {
         g_return_val_if_fail (icon_name != NULL && label != NULL, NULL);
 
@@ -377,7 +392,8 @@ ui_menu_item_create_from_icon (const gchar *icon_name, const gchar *label)
 }
 
 static char *
-ui_select_download_dir(GtkWindow *parent, const char *curdir)
+ui_select_download_dir                  (GtkWindow  *parent,
+                                         const char *curdir)
 {
         GtkWidget *dialog;
         char *dir = NULL;
@@ -410,7 +426,8 @@ typedef struct {
 } change_dir_selected_data;
 
 static void
-change_dir_selected(GtkWidget *widget, gpointer data)
+change_dir_selected                     (GtkWidget *widget,
+                                         gpointer   data)
 {
         change_dir_selected_data *d = (change_dir_selected_data *) data;
         g_return_if_fail(d != NULL && GTK_IS_ENTRY(d->entry));
@@ -423,7 +440,8 @@ change_dir_selected(GtkWidget *widget, gpointer data)
 }
 
 static void
-usercfg_help_button_clicked (GtkButton *button, usercfgwin *win)
+usercfg_help_button_clicked             (GtkButton  *button,
+                                         usercfgwin *win)
 {
         g_return_if_fail(win != NULL);
         int page = gtk_notebook_get_current_page(win->nb);
@@ -434,7 +452,9 @@ usercfg_help_button_clicked (GtkButton *button, usercfgwin *win)
 }
 
 static void
-usercfg_user_pw_modified(GObject *obj, GParamSpec *arg, usercfgwin *win)
+usercfg_user_pw_modified                (GObject    *obj,
+                                         GParamSpec *arg,
+                                         usercfgwin *win)
 {
         const char *user = gtk_entry_get_text(win->user);
         const char *pw = gtk_entry_get_text(win->pw);
@@ -444,7 +464,8 @@ usercfg_user_pw_modified(GObject *obj, GParamSpec *arg, usercfgwin *win)
 }
 
 static void
-usercfg_add_account_settings(usercfgwin *win, VglUserCfg *cfg)
+usercfg_add_account_settings            (usercfgwin *win,
+                                         VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -511,7 +532,8 @@ usercfg_add_account_settings(usercfgwin *win, VglUserCfg *cfg)
 }
 
 static void
-usercfg_add_connection_settings(usercfgwin *win, VglUserCfg *cfg)
+usercfg_add_connection_settings         (usercfgwin *win,
+                                         VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -550,7 +572,8 @@ usercfg_add_connection_settings(usercfgwin *win, VglUserCfg *cfg)
 }
 
 static void
-usercfg_add_download_settings(usercfgwin *win, VglUserCfg *cfg)
+usercfg_add_download_settings           (usercfgwin *win,
+                                         VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -593,7 +616,8 @@ usercfg_add_download_settings(usercfgwin *win, VglUserCfg *cfg)
 }
 
 static void
-usercfg_add_imstatus_settings(usercfgwin *win, VglUserCfg *cfg)
+usercfg_add_imstatus_settings           (usercfgwin *win,
+                                         VglUserCfg *cfg)
 {
 #ifdef SET_IM_STATUS
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
@@ -654,7 +678,8 @@ usercfg_add_imstatus_settings(usercfgwin *win, VglUserCfg *cfg)
 }
 
 static void
-usercfg_add_misc_settings(usercfgwin *win, VglUserCfg *cfg)
+usercfg_add_misc_settings               (usercfgwin *win,
+                                         VglUserCfg *cfg)
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
@@ -729,7 +754,8 @@ usercfg_add_misc_settings(usercfgwin *win, VglUserCfg *cfg)
 }
 
 gboolean
-ui_usercfg_window(GtkWindow *parent, VglUserCfg **cfg)
+ui_usercfg_window                       (GtkWindow   *parent,
+                                         VglUserCfg **cfg)
 {
         g_return_val_if_fail(cfg != NULL, FALSE);
         change_dir_selected_data *windata;
@@ -813,7 +839,7 @@ ui_usercfg_window(GtkWindow *parent, VglUserCfg **cfg)
 }
 
 static GtkTreeModel *
-ui_create_options_list(const GList *elems)
+ui_create_options_list                  (const GList *elems)
 {
         GtkTreeIter iter;
         const GList *current = elems;
@@ -827,7 +853,7 @@ ui_create_options_list(const GList *elems)
 }
 
 static GtkWidget *
-ui_create_combo_box_entry (const GList *elems)
+ui_create_combo_box_entry               (const GList *elems)
 {
         GtkWidget *combo;
         GtkEntryCompletion *completion;
@@ -853,7 +879,7 @@ ui_create_combo_box_entry (const GList *elems)
 }
 
 static void
-stop_after_dialog_update_sensitivity (StopAfterDialog *win)
+stop_after_dialog_update_sensitivity    (StopAfterDialog *win)
 {
         gboolean radio3_active = gtk_toggle_button_get_active (win->radio3);
         gboolean ok_button_sensitive = TRUE;
@@ -869,20 +895,24 @@ stop_after_dialog_update_sensitivity (StopAfterDialog *win)
 }
 
 static void
-stop_after_entry_changed (GtkWidget *w, GParamSpec *arg, StopAfterDialog *win)
+stop_after_entry_changed                (GtkWidget       *w,
+                                         GParamSpec      *arg,
+                                         StopAfterDialog *win)
 {
         stop_after_dialog_update_sensitivity (win);
 }
 
 static void
-stop_after_radio_button_toggled (GtkWidget *button, StopAfterDialog *win)
+stop_after_radio_button_toggled         (GtkWidget       *button,
+                                         StopAfterDialog *win)
 {
         stop_after_dialog_update_sensitivity (win);
 }
 
 gboolean
-ui_stop_after_dialog (GtkWindow *parent, StopAfterType *stopafter,
-                      int *minutes)
+ui_stop_after_dialog                    (GtkWindow     *parent,
+                                         StopAfterType *stopafter,
+                                         int           *minutes)
 {
         GtkDialog *dialog;
         GtkWidget *alignment;
@@ -999,9 +1029,11 @@ ui_stop_after_dialog (GtkWindow *parent, StopAfterType *stopafter,
 }
 
 char *
-ui_input_dialog_with_list(GtkWindow *parent, const char *title,
-                          const char *text, const GList *elems,
-                          const char *value)
+ui_input_dialog_with_list               (GtkWindow   *parent,
+                                         const char  *title,
+                                         const char  *text,
+                                         const GList *elems,
+                                         const char  *value)
 {
         GtkDialog *dialog;
         GtkWidget *label;
@@ -1027,8 +1059,10 @@ ui_input_dialog_with_list(GtkWindow *parent, const char *title,
 }
 
 void
-ui_usertag_dialog (GtkWindow *parent, char **user, char **tag,
-                   const GList *userlist)
+ui_usertag_dialog                       (GtkWindow    *parent,
+                                         char        **user,
+                                         char        **tag,
+                                         const GList  *userlist)
 {
         GtkDialog *dialog;
         GtkWidget *userlabel, *taglabel;
@@ -1083,7 +1117,7 @@ ui_usertag_dialog (GtkWindow *parent, char **user, char **tag,
 }
 
 static GtkComboBox *
-artist_track_album_selection_combo(const LastfmTrack *t)
+artist_track_album_selection_combo      (const LastfmTrack *t)
 {
         g_return_val_if_fail(t != NULL, NULL);
         char *text;
@@ -1129,7 +1163,7 @@ artist_track_album_selection_combo(const LastfmTrack *t)
 }
 
 static request_type
-artist_track_album_combo_get_selected(GtkComboBox *combo)
+artist_track_album_combo_get_selected   (GtkComboBox *combo)
 {
         g_return_val_if_fail(combo != NULL, 0);
         GtkTreeModel *model;
@@ -1143,7 +1177,7 @@ artist_track_album_combo_get_selected(GtkComboBox *combo)
 
 
 static void
-tagwin_destroy(tagwin *w)
+tagwin_destroy                          (tagwin *w)
 {
         g_return_if_fail(w != NULL);
         gtk_widget_destroy(GTK_WIDGET(w->window));
@@ -1161,7 +1195,7 @@ tagwin_destroy(tagwin *w)
 }
 
 static tagwin *
-tagwin_create(void)
+tagwin_create                           (void)
 {
         tagwin *w = g_slice_new0(tagwin);
         w->refcount = 1;
@@ -1169,7 +1203,7 @@ tagwin_create(void)
 }
 
 static tagwin *
-tagwin_ref(tagwin *w)
+tagwin_ref                              (tagwin *w)
 {
         g_return_val_if_fail (w != NULL && w->refcount > 0, NULL);
         w->refcount++;
@@ -1177,7 +1211,7 @@ tagwin_ref(tagwin *w)
 }
 
 static void
-tagwin_unref(tagwin *w)
+tagwin_unref                            (tagwin *w)
 {
         g_return_if_fail (w != NULL && w->refcount > 0);
         w->refcount--;
@@ -1185,7 +1219,7 @@ tagwin_unref(tagwin *w)
 }
 
 static gpointer
-get_track_tags_thread(gpointer userdata)
+get_track_tags_thread                   (gpointer userdata)
 {
         get_track_tags_data *data = (get_track_tags_data *) userdata;
         g_return_val_if_fail(data && data->w && data->w->track, NULL);
@@ -1236,7 +1270,8 @@ get_track_tags_thread(gpointer userdata)
 }
 
 static void
-tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
+tagwin_selcombo_changed                 (GtkComboBox *combo,
+                                         gpointer     data)
 {
         tagwin *w = (tagwin *) data;
         GtkTreeModel *model = NULL;
@@ -1301,7 +1336,8 @@ tagwin_selcombo_changed(GtkComboBox *combo, gpointer data)
 }
 
 static void
-tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
+tagwin_tagcombo_changed                 (GtkComboBox *combo,
+                                         gpointer     data)
 {
         if (gtk_combo_box_get_active(combo) == -1 ||
             !GTK_WIDGET_IS_SENSITIVE(combo)) return;
@@ -1326,8 +1362,12 @@ tagwin_tagcombo_changed(GtkComboBox *combo, gpointer data)
 }
 
 gboolean
-tagwin_run(GtkWindow *parent, const char *user, char **newtags,
-           const GList *usertags, LastfmTrack *track, request_type *type)
+tagwin_run                              (GtkWindow     *parent,
+                                         const char    *user,
+                                         char         **newtags,
+                                         const GList   *usertags,
+                                         LastfmTrack   *track,
+                                         request_type  *type)
 {
         g_return_val_if_fail(track && type && user && newtags, FALSE);
         tagwin *t;
@@ -1486,9 +1526,12 @@ tagwin_run(GtkWindow *parent, const char *user, char **newtags,
 }
 
 gboolean
-recommwin_run(GtkWindow *parent, char **user, char **message,
-              const GList *friends, const LastfmTrack *track,
-              request_type *type)
+recommwin_run                           (GtkWindow          *parent,
+                                         char              **user,
+                                         char              **message,
+                                         const GList        *friends,
+                                         const LastfmTrack  *track,
+                                         request_type       *type)
 {
         g_return_val_if_fail(user && message && track && type, FALSE);
         gboolean retval = FALSE;

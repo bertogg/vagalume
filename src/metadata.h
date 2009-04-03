@@ -14,13 +14,26 @@
 #include "playlist.h"
 #include <glib.h>
 
-gboolean lastfm_get_friends(const char *username, GList **friendlist);
-gboolean lastfm_get_user_tags(const char *username, GList **taglist);
-gboolean lastfm_get_user_track_tags(const char *username,
-                                    const LastfmTrack *track,
-                                    request_type req, GList **taglist);
-gboolean lastfm_get_track_tags(const LastfmTrack *track,
-                               request_type req, GList **taglist);
-void lastfm_get_track_cover_image(LastfmTrack *track);
+gboolean
+lastfm_get_friends                      (const char  *username,
+                                         GList      **friendlist);
+
+gboolean
+lastfm_get_user_tags                    (const char  *username,
+                                         GList      **taglist);
+
+gboolean
+lastfm_get_user_track_tags              (const char         *username,
+                                         const LastfmTrack  *track,
+                                         request_type        req,
+                                         GList             **taglist);
+
+gboolean
+lastfm_get_track_tags                   (const LastfmTrack  *track,
+                                         request_type        req,
+                                         GList             **taglist);
+
+void
+lastfm_get_track_cover_image            (LastfmTrack *track);
 
 #endif

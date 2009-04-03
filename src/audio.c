@@ -60,7 +60,7 @@ static GCallback audio_started_callback = NULL;
 static GMainLoop *loop = NULL;
 
 static void
-close_previous_playback(void)
+close_previous_playback                 (void)
 {
         if (http_pipe[0] != -1) close(http_pipe[0]);
         if (http_pipe[1] != -1) close(http_pipe[1]);
@@ -73,7 +73,7 @@ typedef struct {
 } get_audio_thread_data;
 
 static gpointer
-get_audio_thread(gpointer userdata)
+get_audio_thread                        (gpointer userdata)
 {
         g_return_val_if_fail(userdata != NULL && http_pipe[1] > 0, NULL);
         get_audio_thread_data *data = (get_audio_thread_data *) userdata;
@@ -101,7 +101,9 @@ get_audio_thread(gpointer userdata)
 }
 
 static gboolean
-bus_call (GstBus *bus, GstMessage *msg, gpointer data)
+bus_call                                (GstBus     *bus,
+                                         GstMessage *msg,
+                                         gpointer    data)
 {
         switch (GST_MESSAGE_TYPE (msg)) {
         case GST_MESSAGE_ERROR: {
@@ -157,7 +159,8 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 }
 
 static GstElement *
-audio_element_create(const char **elem_names, const char *envvar)
+audio_element_create                    (const char **elem_names,
+                                         const char  *envvar)
 {
         g_return_val_if_fail(elem_names != NULL, NULL);
         GstElement *retval = NULL;
@@ -187,51 +190,51 @@ audio_element_create(const char **elem_names, const char *envvar)
 
 #ifndef MAEMO
 static GstElement *
-audio_decoder_create(void)
+audio_decoder_create                    (void)
 {
         return audio_element_create(default_decoders, GST_DECODER_ENVVAR);
 }
 
 static GstElement *
-audio_convert_create(void)
+audio_convert_create                    (void)
 {
         return audio_element_create(default_converters, GST_CONVERT_ENVVAR);
 }
 #endif
 
 const char *
-lastfm_audio_default_decoder_name(void)
+lastfm_audio_default_decoder_name       (void)
 {
         return default_decoders[0] ? default_decoders[0] : "none";
 }
 
 const char *
-lastfm_audio_default_sink_name(void)
+lastfm_audio_default_sink_name          (void)
 {
         return default_sinks[0] ? default_sinks[0] : "none";
 }
 
 const char *
-lastfm_audio_default_convert_name(void)
+lastfm_audio_default_convert_name       (void)
 {
         return default_converters[0] ? default_converters[0] : "none";
 }
 
 const char *
-lastfm_audio_default_mixer_name(void)
+lastfm_audio_default_mixer_name         (void)
 {
         return default_mixers[0] ? default_mixers[0] : "none";
 }
 
 static GstElement *
-audio_sink_create(void)
+audio_sink_create                       (void)
 {
         return audio_element_create(default_sinks, GST_SINK_ENVVAR);
 }
 
 #ifdef HAVE_GST_MIXER
 static void
-audio_mixer_init (VglMixer *mixer)
+audio_mixer_init                        (VglMixer *mixer)
 {
         GstElement *elem = NULL;
         GstMixerTrack *track = NULL;
@@ -282,7 +285,7 @@ audio_mixer_init (VglMixer *mixer)
 #endif /* HAVE_GST_MIXER */
 
 gboolean
-lastfm_audio_init(void)
+lastfm_audio_init                       (void)
 {
         GstBus *bus;
         /* initialize GStreamer */
@@ -330,8 +333,9 @@ lastfm_audio_init(void)
 }
 
 gboolean
-lastfm_audio_play(const char *url, GCallback audio_started_cb,
-                  const char *session_id)
+lastfm_audio_play                       (const char *url,
+                                         GCallback   audio_started_cb,
+                                         const char *session_id)
 {
         g_return_val_if_fail(pipeline && source && url, FALSE);
         get_audio_thread_data *data = NULL;
@@ -359,7 +363,7 @@ lastfm_audio_play(const char *url, GCallback audio_started_cb,
 }
 
 gboolean
-lastfm_audio_stop(void)
+lastfm_audio_stop                       (void)
 {
         g_return_val_if_fail(pipeline != NULL, FALSE);
         gst_element_set_state(pipeline, GST_STATE_NULL);
@@ -368,7 +372,7 @@ lastfm_audio_stop(void)
 }
 
 void
-lastfm_audio_clear(void)
+lastfm_audio_clear                      (void)
 {
         g_return_if_fail(pipeline != NULL);
         gst_element_set_state (pipeline, GST_STATE_NULL);
@@ -389,7 +393,7 @@ lastfm_audio_clear(void)
 }
 
 int
-lastfm_audio_get_running_time(void)
+lastfm_audio_get_running_time           (void)
 {
         g_return_val_if_fail(pipeline != NULL, 0);
         gint64 t;
@@ -404,7 +408,7 @@ lastfm_audio_get_running_time(void)
 }
 
 int
-lastfm_audio_get_volume(void)
+lastfm_audio_get_volume                 (void)
 {
         int vol = 0;
 #ifdef MAEMO
@@ -432,7 +436,7 @@ lastfm_audio_get_volume(void)
 }
 
 void
-lastfm_audio_set_volume(int vol)
+lastfm_audio_set_volume                 (int vol)
 {
 #ifdef MAEMO
         g_return_if_fail(sink != NULL);
@@ -459,7 +463,7 @@ lastfm_audio_set_volume(int vol)
 }
 
 int
-lastfm_audio_increase_volume(int inc)
+lastfm_audio_increase_volume            (int inc)
 {
         lastfm_audio_set_volume(lastfm_audio_get_volume() + inc);
         return lastfm_audio_get_volume();

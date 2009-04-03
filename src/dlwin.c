@@ -29,7 +29,9 @@ typedef struct {
 } dlwin;
 
 static gboolean
-dlwin_progress_cb(gpointer data, double dltotal, double dlnow)
+dlwin_progress_cb                       (gpointer data,
+                                         double   dltotal,
+                                         double   dlnow)
 {
         dlwin *w = (dlwin *) data;
         g_return_val_if_fail (w != NULL, FALSE);
@@ -50,7 +52,7 @@ dlwin_progress_cb(gpointer data, double dltotal, double dlnow)
 }
 
 static void
-dlwin_cleanup (dlwin *w)
+dlwin_cleanup                           (dlwin *w)
 {
         g_free (w->url);
         g_free (w->dstpath);
@@ -58,7 +60,8 @@ dlwin_cleanup (dlwin *w)
 }
 
 static void
-dlwin_destroyed_cb (GtkObject *object, dlwin *w)
+dlwin_destroyed_cb                      (GtkObject *object,
+                                         dlwin     *w)
 {
         if (w->finished) {
                 dlwin_cleanup (w);
@@ -69,7 +72,7 @@ dlwin_destroyed_cb (GtkObject *object, dlwin *w)
 }
 
 static gpointer
-dlwin_download_file_thread(gpointer data)
+dlwin_download_file_thread              (gpointer data)
 {
         gboolean success;
         dlwin *w = (dlwin *) data;
@@ -103,8 +106,11 @@ dlwin_download_file_thread(gpointer data)
 }
 
 void
-dlwin_download_file(const char *url, const char *filename,
-                    const char *dstpath, dlwin_cb cb, gpointer cbdata)
+dlwin_download_file                     (const char *url,
+                                         const char *filename,
+                                         const char *dstpath,
+                                         dlwin_cb    cb,
+                                         gpointer    cbdata)
 {
         GtkWidget *label;
         const int textsize = 100;

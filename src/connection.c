@@ -32,8 +32,9 @@ typedef struct {
  * needed
  */
 static void
-con_ic_status_handler(ConIcConnection *conn, ConIcConnectionEvent *event,
-                      gpointer data)
+con_ic_status_handler                   (ConIcConnection      *conn,
+                                         ConIcConnectionEvent *event,
+                                         gpointer              data)
 {
         ConIcConnectionStatus status;
         status = con_ic_connection_event_get_status(event);
@@ -50,7 +51,7 @@ con_ic_status_handler(ConIcConnection *conn, ConIcConnectionEvent *event,
  * @return An error message, or NULL if everything went OK
  */
 const char *
-connection_init(void)
+connection_init                         (void)
 {
 	con_ic_connection = con_ic_connection_new();
 	if (con_ic_connection == NULL) {
@@ -69,8 +70,9 @@ connection_init(void)
  * @param userdata The callback to call from here
  */
 static void
-connection_go_online_handler(ConIcConnection *conn,
-                             ConIcConnectionEvent *event, gpointer userdata)
+connection_go_online_handler            (ConIcConnection      *conn,
+                                         ConIcConnectionEvent *event,
+                                         gpointer              userdata)
 {
         connection_go_online_handler_data *data;
         gulong id;
@@ -88,7 +90,8 @@ connection_go_online_handler(ConIcConnection *conn,
  * @param cbdata The callback's data
  */
 void
-connection_go_online(connection_go_online_cb cb, gpointer cbdata)
+connection_go_online                    (connection_go_online_cb cb,
+                                         gpointer                cbdata)
 {
         if (is_online) {
                 (*cb)(cbdata);

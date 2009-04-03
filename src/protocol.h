@@ -28,16 +28,29 @@ typedef struct {
         char *base_path;
 } LastfmSession;
 
-LastfmSession *lastfm_session_new(const char *username,
-                                   const char *password,
-                                   LastfmErr *err);
-LastfmPls *lastfm_request_playlist (LastfmSession *s, gboolean discovery,
-                                    const char *pls_title);
-LastfmPls *lastfm_request_custom_playlist(LastfmSession *s,
-                                           const char *radio_url);
-LastfmSession *lastfm_session_copy(const LastfmSession *session);
-void lastfm_session_destroy(LastfmSession *session);
-gboolean lastfm_set_radio (LastfmSession *s, const char *radio_url,
-                           char **pls_title);
+LastfmSession *
+lastfm_session_new                      (const char *username,
+                                         const char *password,
+                                         LastfmErr  *err);
+
+LastfmPls *
+lastfm_request_playlist                 (LastfmSession *s,
+                                         gboolean       discovery,
+                                         const char    *pls_title);
+
+LastfmPls *
+lastfm_request_custom_playlist          (LastfmSession *s,
+                                         const char    *radio_url);
+
+LastfmSession *
+lastfm_session_copy                     (const LastfmSession *session);
+
+void
+lastfm_session_destroy                  (LastfmSession *session);
+
+gboolean
+lastfm_set_radio                        (LastfmSession  *s,
+                                         const char     *radio_url,
+                                         char          **pls_title);
 
 #endif

@@ -46,16 +46,42 @@ typedef struct {
         GQueue *tracks;
 } LastfmPls;
 
-LastfmTrack *lastfm_track_new(void);
-LastfmTrack *lastfm_track_ref(LastfmTrack *track);
-void lastfm_track_unref(LastfmTrack *track);
-void lastfm_track_set_cover_image(LastfmTrack *track,char *data,size_t size);
-LastfmTrack *lastfm_pls_get_track(LastfmPls *pls);
-void lastfm_pls_add_track(LastfmPls *pls, LastfmTrack *track);
-guint lastfm_pls_size(LastfmPls *pls);
-LastfmPls *lastfm_pls_new(void);
-void lastfm_pls_clear(LastfmPls *pls);
-void lastfm_pls_destroy(LastfmPls *pls);
-void lastfm_pls_merge(LastfmPls *pls1, LastfmPls *pls2);
+
+LastfmTrack *
+lastfm_track_new                        (void);
+
+LastfmTrack *
+lastfm_track_ref                        (LastfmTrack *track);
+
+void
+lastfm_track_unref                      (LastfmTrack *track);
+
+void
+lastfm_track_set_cover_image            (LastfmTrack *track,
+                                         char        *data,
+                                         size_t       size);
+
+LastfmTrack *
+lastfm_pls_get_track                    (LastfmPls *pls);
+
+void
+lastfm_pls_add_track                    (LastfmPls   *pls,
+                                         LastfmTrack *track);
+
+guint
+lastfm_pls_size                         (LastfmPls *pls);
+
+LastfmPls *
+lastfm_pls_new                          (void);
+
+void
+lastfm_pls_clear                        (LastfmPls *pls);
+
+void
+lastfm_pls_destroy                      (LastfmPls *pls);
+
+void
+lastfm_pls_merge                        (LastfmPls *pls1,
+                                         LastfmPls *pls2);
 
 #endif

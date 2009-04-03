@@ -29,7 +29,7 @@
  * @return The MD5 hash, in hexadecimal
  */
 char *
-get_md5_hash(const char *str)
+get_md5_hash                            (const char *str)
 {
         g_return_val_if_fail(str != NULL, NULL);
 #ifdef HAVE_GCHECKSUM
@@ -63,7 +63,8 @@ get_md5_hash(const char *str)
  * @return The auth token
  */
 char *
-compute_auth_token(const char *password, const char *timestamp)
+compute_auth_token                      (const char *password,
+                                         const char *timestamp)
 {
         g_return_val_if_fail(password && timestamp, NULL);
         char *md5password = get_md5_hash(password);
@@ -82,7 +83,8 @@ compute_auth_token(const char *password, const char *timestamp)
  * @return A newly allocated string
  */
 char *
-str_glist_join(const GList *list, const char *separator)
+str_glist_join                          (const GList *list,
+                                         const char  *separator)
 {
         if (list == NULL) return g_strdup("");
         const GList *iter = list;
@@ -102,7 +104,7 @@ str_glist_join(const GList *list, const char *separator)
  * @return TRUE if it exists, FALSE otherwise
  */
 gboolean
-file_exists(const char *filename)
+file_exists                             (const char *filename)
 {
         g_return_val_if_fail(filename, FALSE);
         return !access(filename, F_OK);
@@ -115,7 +117,9 @@ file_exists(const char *filename)
  * @param new The new text
  */
 void
-string_replace_gstr(GString *str, const char *old, const char *new)
+string_replace_gstr                     (GString    *str,
+                                         const char *old,
+                                         const char *new)
 {
         g_return_if_fail(str && old && new);
         int oldlen = strlen(old);
@@ -137,7 +141,9 @@ string_replace_gstr(GString *str, const char *old, const char *new)
  * @return A newly-created string
  */
 char *
-string_replace(const char *str, const char *old, const char *new)
+string_replace                          (const char *str,
+                                         const char *old,
+                                         const char *new)
 {
         g_return_val_if_fail(str && old && new, NULL);
         GString *gstr = g_string_new(str);
@@ -152,7 +158,9 @@ string_replace(const char *str, const char *old, const char *new)
  * @param new The new char
  **/
 static void
-string_replace_char (char *str, char old, char new)
+string_replace_char                     (char *str,
+                                         char  old,
+                                         char  new)
 {
         char *i;
         g_return_if_fail (str != NULL);
@@ -171,7 +179,9 @@ string_replace_char (char *str, char old, char new)
  * @return The GdkPixbuf, or NULL
  */
 GdkPixbuf *
-get_pixbuf_from_image(const char *data, size_t size, int imgsize)
+get_pixbuf_from_image                   (const char *data,
+                                         size_t      size,
+                                         int         imgsize)
 {
         g_return_val_if_fail(imgsize > 0, NULL);
         GdkPixbufLoader *ldr = NULL;
@@ -201,7 +211,7 @@ get_pixbuf_from_image(const char *data, size_t size, int imgsize)
  * @return The HOME directory, or NULL if not found
  */
 const char *
-get_home_directory (void)
+get_home_directory                      (void)
 {
         const char *homedir = g_getenv ("HOME");
         if (homedir == NULL) {
@@ -221,7 +231,7 @@ get_home_directory (void)
  * @return The same string, for convenience
  */
 char *
-obfuscate_string (char *str)
+obfuscate_string                        (char *str)
 {
         guchar *ptr;
 
@@ -246,7 +256,7 @@ obfuscate_string (char *str)
  * @return The decoded string in a newly-allocated buffer
  */
 char *
-lastfm_url_decode (const char *str)
+lastfm_url_decode                       (const char *str)
 {
         char *tmp;
         GString *gstr;
@@ -272,7 +282,7 @@ lastfm_url_decode (const char *str)
  * @return The encoded string in a newly-allocated buffer
  */
 char *
-lastfm_url_encode (const char *str)
+lastfm_url_encode                       (const char *str)
 {
         char *retvalue;
         GString *gstr;
@@ -297,7 +307,8 @@ lastfm_url_encode (const char *str)
  */
 #ifdef HAVE_GIO
 void
-launch_url (const char *url, GAppLaunchContext *context)
+launch_url                              (const char        *url,
+                                         GAppLaunchContext *context)
 {
         GError *error = NULL;
 
@@ -321,7 +332,9 @@ launch_url (const char *url, GAppLaunchContext *context)
  * @param value Value of the child node
  */
 void
-xml_add_string (xmlNode *parent, const char *name, const char *value)
+xml_add_string                          (xmlNode    *parent,
+                                         const char *name,
+                                         const char *value)
 {
         xmlNode *node;
         xmlChar *enc;
@@ -343,7 +356,9 @@ xml_add_string (xmlNode *parent, const char *name, const char *value)
  * @param value Value of the child node
  */
 void
-xml_add_bool (xmlNode *parent, const char *name, gboolean value)
+xml_add_bool                            (xmlNode    *parent,
+                                         const char *name,
+                                         gboolean    value)
 {
         xml_add_string (parent, name, value ? "1" : "0");
 }
@@ -355,7 +370,9 @@ xml_add_bool (xmlNode *parent, const char *name, gboolean value)
  * @param value Value of the child node
  */
 void
-xml_add_glong (xmlNode *parent, const char *name, glong value)
+xml_add_glong                           (xmlNode    *parent,
+                                         const char *name,
+                                         glong       value)
 {
         const int maxlen = sizeof (glong) * 3; /* Enough to store a glong */
         char strvalue[maxlen];
@@ -370,7 +387,8 @@ xml_add_glong (xmlNode *parent, const char *name, glong value)
  * @return The node, or NULL if it was not found
  */
 const xmlNode *
-xml_find_node (const xmlNode *node, const char *name)
+xml_find_node                           (const xmlNode *node,
+                                         const char    *name)
 {
         const xmlNode *iter;
 
@@ -395,8 +413,10 @@ xml_find_node (const xmlNode *node, const char *name)
  * @return The node, or NULL if it was not found.
  */
 const xmlNode *
-xml_get_string (xmlDoc *doc, const xmlNode *node,
-                const char *name, char **value)
+xml_get_string                          (xmlDoc         *doc,
+                                         const xmlNode  *node,
+                                         const char     *name,
+                                         char          **value)
 {
         g_return_val_if_fail (doc && name && value, NULL);
 
@@ -426,8 +446,10 @@ xml_get_string (xmlDoc *doc, const xmlNode *node,
  * @return The node, or NULL if it was not found.
  */
 const xmlNode *
-xml_get_bool (xmlDoc *doc, const xmlNode *node,
-              const char *name, gboolean *value)
+xml_get_bool                            (xmlDoc        *doc,
+                                         const xmlNode *node,
+                                         const char    *name,
+                                         gboolean      *value)
 {
         const xmlNode *position;
         char *strval;
@@ -450,8 +472,10 @@ xml_get_bool (xmlDoc *doc, const xmlNode *node,
  * @return The node, or NULL if it was not found.
  */
 const xmlNode *
-xml_get_glong (xmlDoc *doc, const xmlNode *node,
-               const char *name, glong *value)
+xml_get_glong                           (xmlDoc        *doc,
+                                         const xmlNode *node,
+                                         const char    *name,
+                                         glong         *value)
 {
         const xmlNode *position;
         char *strval = NULL;

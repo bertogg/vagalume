@@ -79,24 +79,55 @@ typedef enum {
         VGL_MAIN_WINDOW_STATE_CONNECTING
 } VglMainWindowState;
 
-GType vgl_main_window_get_type (void) G_GNUC_CONST;
+GType
+vgl_main_window_get_type                (void) G_GNUC_CONST;
 
-GtkWidget *vgl_main_window_new (VglController *controller);
-void vgl_main_window_destroy(VglMainWindow *w);
-void vgl_main_window_show(VglMainWindow *w, gboolean show);
-void vgl_main_window_toggle_visibility(VglMainWindow *w);
-void vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState s,
-                               const LastfmTrack *t, const char *radio_url);
-void vgl_main_window_show_status_msg(VglMainWindow *w, const char *text);
-void vgl_main_window_set_album_cover(VglMainWindow *w,
-                                     const char *data, int size);
-void vgl_main_window_set_track_as_loved(VglMainWindow *w);
-void vgl_main_window_set_track_as_added_to_playlist(VglMainWindow *w,
-                                                    gboolean added);
-void vgl_main_window_run_app(void);
-GtkWindow *vgl_main_window_get_window(VglMainWindow *w,gboolean get_if_hidden);
-gboolean vgl_main_window_is_hidden(VglMainWindow *w);
+GtkWidget *
+vgl_main_window_new                     (VglController *controller);
+
+void
+vgl_main_window_destroy                 (VglMainWindow *w);
+
+void
+vgl_main_window_show                    (VglMainWindow *w,
+                                         gboolean       show);
+
+void
+vgl_main_window_toggle_visibility       (VglMainWindow *w);
+
+void
+vgl_main_window_set_state               (VglMainWindow      *w,
+                                         VglMainWindowState  s,
+                                         const LastfmTrack  *t,
+                                         const char         *radio_url);
+
+void
+vgl_main_window_show_status_msg         (VglMainWindow *w,
+                                         const char    *text);
+
+void
+vgl_main_window_set_album_cover         (VglMainWindow *w,
+                                         const char    *data,
+                                         int            size);
+
+void
+vgl_main_window_set_track_as_loved      (VglMainWindow *w);
+
+void
+vgl_main_window_set_track_as_added_to_playlist
+                                        (VglMainWindow *w,
+                                         gboolean       added);
+
+void
+vgl_main_window_run_app                 (void);
+
+GtkWindow *
+vgl_main_window_get_window              (VglMainWindow *w,
+                                         gboolean       get_if_hidden);
+
+gboolean
+vgl_main_window_is_hidden               (VglMainWindow *w);
 
 G_END_DECLS
 
-#endif /* VGL_MAIN_WINDOW_H */
+#endif                          /* VGL_MAIN_WINDOW_H */

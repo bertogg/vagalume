@@ -1,5 +1,10 @@
 2009-04-03  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/*.[ch]:
+	Change all function declarations to use the same formatting rules.
+
+2009-04-03  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/metadata.c (parse_xml_tags)
 	* src/protocol.c (lastfm_parse_track, lastfm_parse_playlist)
 	* src/userconfig.c (vgl_user_cfg_read)

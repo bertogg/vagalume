@@ -100,7 +100,7 @@ static void vgl_tray_icon_notify_playback (VglTrayIcon *vti,
 /* Initialization/destruction functions */
 
 static void
-vgl_tray_icon_class_init(VglTrayIconClass *klass)
+vgl_tray_icon_class_init                (VglTrayIconClass *klass)
 {
         GObjectClass *obj_class = G_OBJECT_CLASS(klass);
 
@@ -109,7 +109,7 @@ vgl_tray_icon_class_init(VglTrayIconClass *klass)
 }
 
 static void
-vgl_tray_icon_init (VglTrayIcon *vti)
+vgl_tray_icon_init                      (VglTrayIcon *vti)
 {
         int i;
         VglTrayIconPrivate *priv = VGL_TRAY_ICON_GET_PRIVATE (vti);
@@ -153,7 +153,7 @@ vgl_tray_icon_init (VglTrayIcon *vti)
 }
 
 static void
-vgl_tray_icon_finalize (GObject* object)
+vgl_tray_icon_finalize                  (GObject* object)
 {
         int i;
         VglTrayIcon *vti = VGL_TRAY_ICON (object);
@@ -187,7 +187,7 @@ vgl_tray_icon_finalize (GObject* object)
 
 /* Libnotify functions */
 static void
-setup_libnotify  (VglTrayIcon *vti)
+setup_libnotify                         (VglTrayIcon *vti)
 {
         if (!notify_init (APP_NAME)) {
                 g_debug ("[TRAY ICON] :: Error initializing libnotify");
@@ -197,7 +197,7 @@ setup_libnotify  (VglTrayIcon *vti)
 }
 
 static void
-cleanup_libnotify  (VglTrayIcon *vti)
+cleanup_libnotify                       (VglTrayIcon *vti)
 {
         VglTrayIconPrivate *priv = vti->priv;
 
@@ -213,7 +213,7 @@ cleanup_libnotify  (VglTrayIcon *vti)
 /* Panel update functions */
 
 static void
-ctxt_menu_create (VglTrayIcon *vti)
+ctxt_menu_create                        (VglTrayIcon *vti)
 {
         VglTrayIconPrivate *priv = vti->priv;
 
@@ -305,7 +305,7 @@ ctxt_menu_create (VglTrayIcon *vti)
 }
 
 static void
-ctxt_menu_update (VglTrayIcon *vti)
+ctxt_menu_update                        (VglTrayIcon *vti)
 {
         VglTrayIconPrivate *priv = vti->priv;
         gboolean np = priv->now_playing;
@@ -333,14 +333,17 @@ ctxt_menu_update (VglTrayIcon *vti)
 /* Signals handlers */
 
 static void
-tray_icon_clicked (GtkStatusIcon *status_icon, gpointer data)
+tray_icon_clicked                       (GtkStatusIcon *status_icon,
+                                         gpointer       data)
 {
         controller_toggle_mainwin_visibility ();
 }
 
 static void
-tray_icon_popup_menu (GtkStatusIcon *status_icon, guint button,
-                      guint activate_time, gpointer data)
+tray_icon_popup_menu                    (GtkStatusIcon *status_icon,
+                                         guint          button,
+                                         guint          activate_time,
+                                         gpointer       data)
 {
         VglTrayIcon *vti = VGL_TRAY_ICON (data);
         VglTrayIconPrivate *priv = vti->priv;
@@ -354,7 +357,8 @@ tray_icon_popup_menu (GtkStatusIcon *status_icon, guint button,
 }
 
 static void
-ctxt_menu_item_activated (GtkWidget *item, gpointer data)
+ctxt_menu_item_activated                (GtkWidget *item,
+                                         gpointer   data)
 {
         VglTrayIcon *vti = VGL_TRAY_ICON (data);
         VglTrayIconPrivate *priv = vti->priv;
@@ -387,25 +391,32 @@ ctxt_menu_item_activated (GtkWidget *item, gpointer data)
 }
 
 static void
-usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg, VglTrayIcon *icon)
+usercfg_changed_cb                      (VglController *ctrl,
+                                         VglUserCfg    *cfg,
+                                         VglTrayIcon   *icon)
 {
         icon->priv->show_notifications = cfg->show_notifications;
 }
 
 static void
-track_stopped_cb (VglController *ctrl, RspRating rating, VglTrayIcon *icon)
+track_stopped_cb                        (VglController *ctrl,
+                                         RspRating      rating,
+                                         VglTrayIcon   *icon)
 {
         vgl_tray_icon_notify_playback (icon, NULL);
 }
 
 static void
-track_started_cb (VglController *ctrl, LastfmTrack *track, VglTrayIcon *icon)
+track_started_cb                        (VglController *ctrl,
+                                         LastfmTrack   *track,
+                                         VglTrayIcon   *icon)
 {
         vgl_tray_icon_notify_playback (icon, track);
 }
 
 static void
-controller_destroyed_cb (gpointer data, GObject *controller)
+controller_destroyed_cb                 (gpointer  data,
+                                         GObject  *controller)
 {
         VglTrayIcon *icon = VGL_TRAY_ICON (data);
         g_object_unref (icon);
@@ -414,7 +425,7 @@ controller_destroyed_cb (gpointer data, GObject *controller)
 /* Public */
 
 VglTrayIcon *
-vgl_tray_icon_create (VglController *controller)
+vgl_tray_icon_create                    (VglController *controller)
 {
         VglTrayIcon *icon;
         g_return_val_if_fail (VGL_IS_CONTROLLER (controller), NULL);
@@ -431,7 +442,7 @@ vgl_tray_icon_create (VglController *controller)
 }
 
 static GdkPixbuf *
-get_default_album_cover_icon (void)
+get_default_album_cover_icon            (void)
 {
         static GdkPixbuf *pixbuf = NULL;
 
@@ -444,7 +455,7 @@ get_default_album_cover_icon (void)
 }
 
 static GdkPixbuf *
-get_album_cover_icon (LastfmTrack *track)
+get_album_cover_icon                    (LastfmTrack *track)
 {
         g_return_val_if_fail(track != NULL && track->image_url != NULL, NULL);
         GdkPixbuf *pixbuf = NULL;
@@ -471,7 +482,8 @@ typedef struct {
 } VglTrayIconPlaybackData;
 
 static void
-show_notification (VglTrayIcon *vti, LastfmTrack *track)
+show_notification                       (VglTrayIcon *vti,
+                                         LastfmTrack *track)
 {
         g_return_if_fail(VGL_IS_TRAY_ICON(vti) && track != NULL);
         VglTrayIconPrivate *priv = vti->priv;
@@ -548,7 +560,7 @@ show_notification (VglTrayIcon *vti, LastfmTrack *track)
 }
 
 static gpointer
-notify_playback_thread (VglTrayIconPlaybackData *d)
+notify_playback_thread                  (VglTrayIconPlaybackData *d)
 {
         g_return_val_if_fail(d != NULL, NULL);
         VglTrayIconPrivate *priv;
@@ -576,7 +588,8 @@ notify_playback_thread (VglTrayIconPlaybackData *d)
                         show_notification (d->vti, d->track);
                 }
         } else {
-                gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
+                gtk_status_icon_set_tooltip (priv->tray_icon,
+                                             TOOLTIP_DEFAULT_STRING);
         }
         gdk_threads_leave();
 
@@ -589,7 +602,8 @@ notify_playback_thread (VglTrayIconPlaybackData *d)
 }
 
 static void
-vgl_tray_icon_notify_playback (VglTrayIcon *vti, LastfmTrack *track)
+vgl_tray_icon_notify_playback           (VglTrayIcon *vti,
+                                         LastfmTrack *track)
 {
         g_return_if_fail(VGL_IS_TRAY_ICON(vti));
         VglTrayIconPlaybackData *data;

@@ -36,7 +36,7 @@ static const char *lastfm_music_prefix =
  *         static and must not be modified
  */
 static const char *
-get_language_code(void)
+get_language_code                       (void)
 {
         static char lang[3] = "";
         if (lang[0] == '\0') {
@@ -61,7 +61,7 @@ get_language_code(void)
  * @return A new GHashTable containing the keys and values
  */
 static GHashTable *
-lastfm_parse_handshake(const char *buffer)
+lastfm_parse_handshake                  (const char *buffer)
 {
         GHashTable *hash;
         int i;
@@ -91,7 +91,7 @@ lastfm_parse_handshake(const char *buffer)
  * @param session The session
  */
 void
-lastfm_session_destroy(LastfmSession *session)
+lastfm_session_destroy                  (LastfmSession *session)
 {
         if (session == NULL) return;
         g_free(session->id);
@@ -106,7 +106,7 @@ lastfm_session_destroy(LastfmSession *session)
  * @return A new object
  */
 LastfmSession *
-lastfm_session_copy(const LastfmSession *session)
+lastfm_session_copy                     (const LastfmSession *session)
 {
         if (session == NULL) return NULL;
         LastfmSession *s = g_slice_new0(LastfmSession);
@@ -125,8 +125,9 @@ lastfm_session_copy(const LastfmSession *session)
  * @return A new LastfmSession or NULL if it couldn't be created
  */
 LastfmSession *
-lastfm_session_new(const char *username, const char *password,
-                   LastfmErr *err)
+lastfm_session_new                      (const char *username,
+                                         const char *password,
+                                         LastfmErr  *err)
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
         char *buffer = NULL;
@@ -176,8 +177,10 @@ lastfm_session_new(const char *username, const char *password,
  * @return Whether a track has been found and added to the playlist
  */
 static gboolean
-lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
-                   const char *pls_title)
+lastfm_parse_track                      (xmlDoc     *doc,
+                                         xmlNode    *node,
+                                         LastfmPls  *pls,
+                                         const char *pls_title)
 {
         g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
 
@@ -254,8 +257,9 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
  * @return A new playlist, or NULL if none was found
  */
 static LastfmPls *
-lastfm_parse_playlist (const char *buffer, size_t bufsize,
-                       const char *default_pls_title)
+lastfm_parse_playlist                   (const char *buffer,
+                                         size_t      bufsize,
+                                         const char *default_pls_title)
 {
         xmlDoc *doc;
         const xmlNode *node = NULL;
@@ -319,8 +323,9 @@ lastfm_parse_playlist (const char *buffer, size_t bufsize,
  * @return A new playlist or NULL if none has been obtained
  */
 LastfmPls *
-lastfm_request_playlist (LastfmSession *s, gboolean discovery,
-                         const char *pls_title)
+lastfm_request_playlist                 (LastfmSession *s,
+                                         gboolean       discovery,
+                                         const char    *pls_title)
 {
         g_return_val_if_fail(s && s->id && s->base_url && s->base_path, NULL);
         const char *disc_mode = discovery ? "1" : "0";
@@ -349,7 +354,8 @@ lastfm_request_playlist (LastfmSession *s, gboolean discovery,
  * @return A new playlist, or NULL if none has been obtained
  */
 LastfmPls *
-lastfm_request_custom_playlist(LastfmSession *s, const char *radio_url)
+lastfm_request_custom_playlist          (LastfmSession *s,
+                                         const char    *radio_url)
 {
         g_return_val_if_fail(s != NULL && radio_url != NULL, NULL);
         char *buffer = NULL;
@@ -379,7 +385,9 @@ lastfm_request_custom_playlist(LastfmSession *s, const char *radio_url)
  * @return Whether the radio has been set correctly
  */
 gboolean
-lastfm_set_radio (LastfmSession *s, const char *radio_url, char **pls_title)
+lastfm_set_radio                        (LastfmSession  *s,
+                                         const char     *radio_url,
+                                         char          **pls_title)
 {
         g_return_val_if_fail(s != NULL && s->id != NULL &&
                              s->base_url != NULL &&

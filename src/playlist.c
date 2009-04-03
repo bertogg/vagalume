@@ -15,7 +15,7 @@
  * @return The new track
  */
 LastfmTrack *
-lastfm_track_new(void)
+lastfm_track_new                        (void)
 {
         LastfmTrack *track = g_slice_new0(LastfmTrack);
         track->refcount = 1;
@@ -28,7 +28,7 @@ lastfm_track_new(void)
  * @param track Track to be destroyed, or NULL
  */
 static void
-lastfm_track_destroy(LastfmTrack *track)
+lastfm_track_destroy                    (LastfmTrack *track)
 {
         if (track == NULL) return;
         g_mutex_free(track->mutex);
@@ -53,7 +53,7 @@ lastfm_track_destroy(LastfmTrack *track)
  * @return The same track
  */
 LastfmTrack *
-lastfm_track_ref(LastfmTrack *track)
+lastfm_track_ref                        (LastfmTrack *track)
 {
         g_return_val_if_fail(track != NULL, NULL);
         g_atomic_int_inc (&(track->refcount));
@@ -66,7 +66,7 @@ lastfm_track_ref(LastfmTrack *track)
  * @param track The track
  */
 void
-lastfm_track_unref(LastfmTrack *track)
+lastfm_track_unref                      (LastfmTrack *track)
 {
         g_return_if_fail(track != NULL);
         if (g_atomic_int_dec_and_test (&(track->refcount))) {
@@ -83,7 +83,9 @@ lastfm_track_unref(LastfmTrack *track)
  * @param size Size of the data buffer
  */
 void
-lastfm_track_set_cover_image(LastfmTrack *track, char *data, size_t size)
+lastfm_track_set_cover_image            (LastfmTrack *track,
+                                         char        *data,
+                                         size_t       size)
 {
         g_return_if_fail(track != NULL);
         g_mutex_lock(track->mutex);
@@ -100,7 +102,7 @@ lastfm_track_set_cover_image(LastfmTrack *track, char *data, size_t size)
  * @return The number of tracks in the playlist
  */
 guint
-lastfm_pls_size(LastfmPls *pls)
+lastfm_pls_size                         (LastfmPls *pls)
 {
         g_return_val_if_fail(pls != NULL, 0);
         return g_queue_get_length(pls->tracks);
@@ -114,7 +116,7 @@ lastfm_pls_size(LastfmPls *pls)
  * unref'ed with lastfm_track_unref() when no longer used.
  */
 LastfmTrack *
-lastfm_pls_get_track(LastfmPls *pls)
+lastfm_pls_get_track                    (LastfmPls *pls)
 {
         g_return_val_if_fail(pls != NULL, NULL);
         LastfmTrack *track = NULL;
@@ -130,7 +132,8 @@ lastfm_pls_get_track(LastfmPls *pls)
  * @param track The track to be appended
  */
 void
-lastfm_pls_add_track(LastfmPls *pls, LastfmTrack *track)
+lastfm_pls_add_track                    (LastfmPls   *pls,
+                                         LastfmTrack *track)
 {
         g_return_if_fail(pls != NULL && track != NULL);
         g_queue_push_tail(pls->tracks, track);
@@ -142,7 +145,7 @@ lastfm_pls_add_track(LastfmPls *pls, LastfmTrack *track)
  * lastfm_pls_destroy() when no longer used
  */
 LastfmPls *
-lastfm_pls_new(void)
+lastfm_pls_new                          (void)
 {
         LastfmPls *pls = g_slice_new0(LastfmPls);
         pls->tracks = g_queue_new();
@@ -154,7 +157,7 @@ lastfm_pls_new(void)
  * @param pls The playlist to be cleared
  */
 void
-lastfm_pls_clear(LastfmPls *pls)
+lastfm_pls_clear                        (LastfmPls *pls)
 {
         g_return_if_fail (pls != NULL);
         LastfmTrack *track;
@@ -168,7 +171,7 @@ lastfm_pls_clear(LastfmPls *pls)
  * @param pls The playlist to be destroyed, or NULL.
  */
 void
-lastfm_pls_destroy(LastfmPls *pls)
+lastfm_pls_destroy                      (LastfmPls *pls)
 {
         if (pls == NULL) return;
         lastfm_pls_clear(pls);
@@ -184,7 +187,8 @@ lastfm_pls_destroy(LastfmPls *pls)
  * @param pls2 The second playlist (empty after this operation)
  */
 void
-lastfm_pls_merge(LastfmPls *pls1, LastfmPls *pls2)
+lastfm_pls_merge                        (LastfmPls *pls1,
+                                         LastfmPls *pls2)
 {
         g_return_if_fail(pls1 != NULL && pls2 != NULL);
         LastfmTrack *track;

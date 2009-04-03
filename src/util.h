@@ -19,31 +19,88 @@
 #    include <gio/gio.h>
 #endif
 
-char *get_md5_hash(const char *str);
-char *compute_auth_token(const char *password, const char *timestamp);
-char *str_glist_join(const GList *list, const char *separator);
-gboolean file_exists(const char *filename);
-void string_replace_gstr(GString *str, const char *old, const char *new);
-char *string_replace(const char *str, const char *old, const char *new);
-GdkPixbuf *get_pixbuf_from_image(const char *data, size_t size, int imgsize);
-const char *get_home_directory(void);
-char *obfuscate_string(char *str);
-char *lastfm_url_decode (const char *url);
-char *lastfm_url_encode (const char *url);
-void xml_add_string (xmlNode *parent, const char *name, const char *value);
-void xml_add_bool (xmlNode *parent, const char *name, gboolean value);
-void xml_add_glong (xmlNode *parent, const char *name, glong value);
-const xmlNode *xml_find_node (const xmlNode *node, const char *name);
-const xmlNode *xml_get_string (xmlDoc *doc, const xmlNode *node,
-                               const char *name, char **value);
-const xmlNode *xml_get_bool (xmlDoc *doc, const xmlNode *node,
-                             const char *name, gboolean *value);
-const xmlNode *xml_get_glong (xmlDoc *doc, const xmlNode *node,
-                              const char *name, glong *value);
+char *
+get_md5_hash                            (const char *str);
 
+char *
+compute_auth_token                      (const char *password,
+                                         const char *timestamp);
+
+char *
+str_glist_join                          (const GList *list,
+                                         const char  *separator);
+
+gboolean
+file_exists                             (const char *filename);
+
+void
+string_replace_gstr                     (GString    *str,
+                                         const char *old,
+                                         const char *new);
+
+char *
+string_replace                          (const char *str,
+                                         const char *old,
+                                         const char *new);
+
+GdkPixbuf *
+get_pixbuf_from_image                   (const char *data,
+                                         size_t      size,
+                                         int         imgsize);
+
+const char *
+get_home_directory                      (void);
+
+char *
+obfuscate_string                        (char *str);
+
+char *
+lastfm_url_decode                       (const char *url);
+
+char *
+lastfm_url_encode                       (const char *url);
+
+void
+xml_add_string                          (xmlNode    *parent,
+                                         const char *name,
+                                         const char *value);
+
+void
+xml_add_bool                            (xmlNode    *parent,
+                                         const char *name,
+                                         gboolean    value);
+
+void
+xml_add_glong                           (xmlNode    *parent,
+                                         const char *name,
+                                         glong       value);
+
+const xmlNode *
+xml_find_node                           (const xmlNode *node,
+                                         const char    *name);
+
+const xmlNode *
+xml_get_string                          (xmlDoc         *doc,
+                                         const xmlNode  *node,
+                                         const char     *name,
+                                         char          **value);
+
+const xmlNode *
+xml_get_bool                            (xmlDoc        *doc,
+                                         const xmlNode *node,
+                                         const char    *name,
+                                         gboolean      *value);
+
+const xmlNode *
+xml_get_glong                           (xmlDoc        *doc,
+                                         const xmlNode *node,
+                                         const char    *name,
+                                         glong         *value);
 
 #ifdef HAVE_GIO
-void launch_url (const char *url, GAppLaunchContext *context);
+void
+launch_url                              (const char        *url,
+                                         GAppLaunchContext *context);
 #endif
 
 #endif

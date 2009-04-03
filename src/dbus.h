@@ -66,11 +66,22 @@ typedef enum {
         DBUS_INIT_ALREADY_RUNNING
 } DbusInitReturnCode;
 
-DbusInitReturnCode lastfm_dbus_init(VglController *controller);
-void lastfm_dbus_close(void);
-void lastfm_dbus_notify_playback(LastfmTrack *track);
-void lastfm_dbus_notify_started(void);
-void lastfm_dbus_notify_closing(void);
-void lastfm_dbus_play_radio_url(const char *url);
+DbusInitReturnCode
+lastfm_dbus_init                        (VglController *controller);
+
+void
+lastfm_dbus_close                       (void);
+
+void
+lastfm_dbus_notify_playback             (LastfmTrack *track);
+
+void
+lastfm_dbus_notify_started              (void);
+
+void
+lastfm_dbus_notify_closing              (void);
+
+void
+lastfm_dbus_play_radio_url              (const char *url);
 
 #endif

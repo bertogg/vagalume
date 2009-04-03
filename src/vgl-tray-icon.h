@@ -41,12 +41,14 @@ struct _VglTrayIconClass
 };
 
 
-GType vgl_tray_icon_get_type(void) G_GNUC_CONST;
+GType
+vgl_tray_icon_get_type                  (void) G_GNUC_CONST;
 
 
 /* Public methods */
 
-VglTrayIcon *vgl_tray_icon_create (VglController *controller);
+VglTrayIcon *
+vgl_tray_icon_create                    (VglController *controller);
 
 G_END_DECLS
 

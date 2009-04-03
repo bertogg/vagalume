@@ -47,7 +47,9 @@ static void vgl_bookmark_window_close(VglBookmarkWindow *win);
 /* After a drag and drop, make sure that the bookmark manager keeps
  * the items in the same order as the treeview */
 static void
-drag_end_cb (GtkWidget *widget, GdkDragContext *ctx, VglBookmarkWindow *win)
+drag_end_cb                             (GtkWidget         *widget,
+                                         GdkDragContext    *ctx,
+                                         VglBookmarkWindow *win)
 {
         g_return_if_fail (VGL_IS_BOOKMARK_WINDOW (win));
         GtkTreeIter iter;
@@ -68,7 +70,9 @@ drag_end_cb (GtkWidget *widget, GdkDragContext *ctx, VglBookmarkWindow *win)
 }
 
 static gboolean
-find_bookmark_by_id(GtkTreeModel *model, int id, GtkTreeIter *iter)
+find_bookmark_by_id                     (GtkTreeModel *model,
+                                         int           id,
+                                         GtkTreeIter  *iter)
 {
         gboolean valid = gtk_tree_model_get_iter_first(model, iter);
         while (valid) {
@@ -83,8 +87,9 @@ find_bookmark_by_id(GtkTreeModel *model, int id, GtkTreeIter *iter)
 }
 
 static void
-bookmark_added_cb(VglBookmarkMgr *mgr, VglBookmark *bmk,
-                  VglBookmarkWindow *win)
+bookmark_added_cb                       (VglBookmarkMgr    *mgr,
+                                         VglBookmark       *bmk,
+                                         VglBookmarkWindow *win)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_WINDOW(win) && bmk != NULL);
         GtkTreeIter iter;
@@ -97,8 +102,9 @@ bookmark_added_cb(VglBookmarkMgr *mgr, VglBookmark *bmk,
 }
 
 static void
-bookmark_changed_cb(VglBookmarkMgr *mgr, VglBookmark *bmk,
-                    VglBookmarkWindow *win)
+bookmark_changed_cb                     (VglBookmarkMgr    *mgr,
+                                         VglBookmark       *bmk,
+                                         VglBookmarkWindow *win)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_WINDOW(win) && bmk != NULL);
         GtkTreeIter iter;
@@ -114,7 +120,9 @@ bookmark_changed_cb(VglBookmarkMgr *mgr, VglBookmark *bmk,
 }
 
 static void
-bookmark_removed_cb(VglBookmarkMgr *mgr, int id, VglBookmarkWindow *win)
+bookmark_removed_cb                     (VglBookmarkMgr    *mgr,
+                                         int                id,
+                                         VglBookmarkWindow *win)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_WINDOW(win) && id >= 0);
         GtkTreeIter iter;
@@ -128,7 +136,7 @@ bookmark_removed_cb(VglBookmarkMgr *mgr, int id, VglBookmarkWindow *win)
 }
 
 static void
-play_selected_row(VglBookmarkWindow *win)
+play_selected_row                       (VglBookmarkWindow *win)
 {
         GtkTreeSelection *sel;
         GtkTreeIter iter;
@@ -148,13 +156,15 @@ play_selected_row(VglBookmarkWindow *win)
 }
 
 static void
-play_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
+play_button_clicked                     (GtkWidget         *widget,
+                                         VglBookmarkWindow *win)
 {
         play_selected_row (win);
 }
 
 static void
-add_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
+add_button_clicked                      (GtkWidget         *widget,
+                                         VglBookmarkWindow *win)
 {
         char *name = NULL, *url = NULL;
         if (ui_edit_bookmark_dialog(GTK_WINDOW(win), &name, &url, TRUE)) {
@@ -165,7 +175,8 @@ add_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 }
 
 static void
-edit_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
+edit_button_clicked                     (GtkWidget         *widget,
+                                         VglBookmarkWindow *win)
 {
         GtkTreeSelection *sel;
         GtkTreeIter iter;
@@ -192,7 +203,8 @@ edit_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 }
 
 static void
-delete_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
+delete_button_clicked                   (GtkWidget         *widget,
+                                         VglBookmarkWindow *win)
 {
         GtkTreeSelection *sel;
         GtkTreeIter iter;
@@ -208,13 +220,15 @@ delete_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
 }
 
 static void
-close_button_clicked(GtkWidget *widget, VglBookmarkWindow *win)
+close_button_clicked                    (GtkWidget         *widget,
+                                         VglBookmarkWindow *win)
 {
         vgl_bookmark_window_close(win);
 }
 
 static void
-selection_changed(GtkTreeSelection *sel, VglBookmarkWindow *win)
+selection_changed                       (GtkTreeSelection  *sel,
+                                         VglBookmarkWindow *win)
 {
         gboolean selected;
         VglBookmarkWindowPrivate *priv = win->priv;
@@ -225,14 +239,16 @@ selection_changed(GtkTreeSelection *sel, VglBookmarkWindow *win)
 }
 
 static void
-row_clicked (GtkTreeView *tree_view, GtkTreePath *path,
-             GtkTreeViewColumn *column, VglBookmarkWindow *win)
+row_clicked                             (GtkTreeView       *tree_view,
+                                         GtkTreePath       *path,
+                                         GtkTreeViewColumn *column,
+                                         VglBookmarkWindow *win)
 {
         play_selected_row (win);
 }
 
 static void
-vgl_bookmark_window_finalize (GObject *object)
+vgl_bookmark_window_finalize            (GObject *object)
 {
         VglBookmarkWindow *win = VGL_BOOKMARK_WINDOW(object);
         VglBookmarkWindowPrivate *priv = win->priv;
@@ -244,7 +260,7 @@ vgl_bookmark_window_finalize (GObject *object)
 }
 
 static void
-vgl_bookmark_window_class_init (VglBookmarkWindowClass *klass)
+vgl_bookmark_window_class_init          (VglBookmarkWindowClass *klass)
 {
         GObjectClass *obj_class = (GObjectClass *)klass;
         obj_class->finalize = vgl_bookmark_window_finalize;
@@ -252,7 +268,7 @@ vgl_bookmark_window_class_init (VglBookmarkWindowClass *klass)
 }
 
 static void
-vgl_bookmark_window_init (VglBookmarkWindow *self)
+vgl_bookmark_window_init                (VglBookmarkWindow *self)
 {
         GtkWidget *scrwindow;
         GtkBox *vbox, *action_area;
@@ -355,7 +371,7 @@ vgl_bookmark_window_init (VglBookmarkWindow *self)
 }
 
 static GtkWidget *
-vgl_bookmark_window_new(GtkWindow *parent)
+vgl_bookmark_window_new                 (GtkWindow *parent)
 {
         GtkWidget *win = g_object_new (VGL_TYPE_BOOKMARK_WINDOW,
                                        "default-height", 300, NULL);
@@ -366,7 +382,7 @@ vgl_bookmark_window_new(GtkWindow *parent)
 }
 
 static void
-vgl_bookmark_window_close(VglBookmarkWindow *win)
+vgl_bookmark_window_close               (VglBookmarkWindow *win)
 {
         vgl_bookmark_mgr_save_to_disk (win->priv->mgr, FALSE);
 
@@ -374,7 +390,7 @@ vgl_bookmark_window_close(VglBookmarkWindow *win)
 }
 
 void
-vgl_bookmark_window_show(GtkWindow *parent)
+vgl_bookmark_window_show                (GtkWindow *parent)
 {
         /* Singleton, only one bookmark window can exist */
         static GtkWidget *win = NULL;

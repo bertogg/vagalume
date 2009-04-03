@@ -32,16 +32,39 @@ typedef struct {
         gboolean autodl_free_tracks;
 } VglUserCfg;
 
-VglUserCfg *vgl_user_cfg_new(void);
-void vgl_user_cfg_destroy(VglUserCfg *cfg);
-void vgl_user_cfg_set_username(VglUserCfg *cfg, const char *username);
-void vgl_user_cfg_set_password(VglUserCfg *cfg, const char *password);
-void vgl_user_cfg_set_http_proxy(VglUserCfg *cfg, const char *proxy);
-void vgl_user_cfg_set_download_dir(VglUserCfg *cfg, const char *dir);
-void vgl_user_cfg_set_imstatus_template(VglUserCfg *cfg, const char *str);
+VglUserCfg *
+vgl_user_cfg_new                        (void);
 
-VglUserCfg *vgl_user_cfg_read(void);
-gboolean vgl_user_cfg_write(VglUserCfg *cfg);
-const char *vgl_user_cfg_get_cfgdir(void);
+void
+vgl_user_cfg_destroy                    (VglUserCfg *cfg);
+
+void
+vgl_user_cfg_set_username               (VglUserCfg *cfg,
+                                         const char *username);
+
+void
+vgl_user_cfg_set_password               (VglUserCfg *cfg,
+                                         const char *password);
+
+void
+vgl_user_cfg_set_http_proxy             (VglUserCfg *cfg,
+                                         const char *proxy);
+
+void
+vgl_user_cfg_set_download_dir           (VglUserCfg *cfg,
+                                         const char *dir);
+
+void
+vgl_user_cfg_set_imstatus_template      (VglUserCfg *cfg,
+                                         const char *str);
+
+VglUserCfg *
+vgl_user_cfg_read                       (void);
+
+gboolean
+vgl_user_cfg_write                      (VglUserCfg *cfg);
+
+const char *
+vgl_user_cfg_get_cfgdir                 (void);
 
 #endif

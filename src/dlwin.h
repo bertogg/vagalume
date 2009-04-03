@@ -11,9 +11,15 @@
 #ifndef DLWIN_H
 #define DLWIN_H
 
-typedef void (*dlwin_cb)(gboolean success, gpointer userdata);
+typedef void
+(*dlwin_cb)                             (gboolean success,
+                                         gpointer userdata);
 
-void dlwin_download_file(const char *url, const char *filename,
-                         const char *dstpath, dlwin_cb cb, gpointer cbdata);
+void
+dlwin_download_file                     (const char *url,
+                                         const char *filename,
+                                         const char *dstpath,
+                                         dlwin_cb    cb,
+                                         gpointer    cbdata);
 
 #endif

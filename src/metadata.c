@@ -38,7 +38,8 @@ static const char *user_track_tags_url =
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_friends(const char *username, GList **friendlist)
+lastfm_get_friends                      (const char  *username,
+                                         GList      **friendlist)
 {
         g_return_val_if_fail(username != NULL && friendlist != NULL, FALSE);
         GList *list = NULL;
@@ -73,7 +74,9 @@ lastfm_get_friends(const char *username, GList **friendlist)
  * @return Whether a list (even an empty list) has been found or not
  */
 static gboolean
-parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
+parse_xml_tags                          (const char  *buffer,
+                                         size_t       bufsize,
+                                         GList      **tags)
 {
         g_return_val_if_fail(buffer && bufsize > 0 && tags, FALSE);
         xmlDoc *doc = NULL;
@@ -119,7 +122,8 @@ parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
  * @return Whether the operation has been successful or not
  */
 static gboolean
-lastfm_get_tags(const char *url, GList **taglist)
+lastfm_get_tags                         (const char  *url,
+                                         GList      **taglist)
 {
         g_return_val_if_fail(url != NULL && taglist != NULL, FALSE);
         char *buffer = NULL;
@@ -142,7 +146,8 @@ lastfm_get_tags(const char *url, GList **taglist)
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_user_tags(const char *username, GList **taglist)
+lastfm_get_user_tags                    (const char  *username,
+                                         GList      **taglist)
 {
         g_return_val_if_fail(username != NULL && taglist != NULL, FALSE);
         char *url = g_strdup_printf(user_tags_url, username);
@@ -160,8 +165,10 @@ lastfm_get_user_tags(const char *username, GList **taglist)
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_user_track_tags(const char *username, const LastfmTrack *track,
-                           request_type req, GList **taglist)
+lastfm_get_user_track_tags              (const char         *username,
+                                         const LastfmTrack  *track,
+                                         request_type        req,
+                                         GList             **taglist)
 {
         g_return_val_if_fail(username && track && taglist, FALSE);
         char *artist = NULL;
@@ -206,8 +213,9 @@ lastfm_get_user_track_tags(const char *username, const LastfmTrack *track,
  * @return Whether the operation has been successful or not
  */
 gboolean
-lastfm_get_track_tags(const LastfmTrack *track, request_type req,
-                      GList **taglist)
+lastfm_get_track_tags                   (const LastfmTrack  *track,
+                                         request_type        req,
+                                         GList             **taglist)
 {
         g_return_val_if_fail(track != NULL && taglist != NULL, FALSE);
         char *artist = NULL;
@@ -251,7 +259,7 @@ lastfm_get_track_tags(const LastfmTrack *track, request_type req,
  * @param track The track
  */
 void
-lastfm_get_track_cover_image(LastfmTrack *track)
+lastfm_get_track_cover_image            (LastfmTrack *track)
 {
         g_return_if_fail(track != NULL);
         static GStaticMutex static_mutex = G_STATIC_MUTEX_INIT;

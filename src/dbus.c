@@ -21,26 +21,30 @@ static DBusConnection *dbus_connection = NULL;
 static gboolean dbus_filter_added = FALSE;
 
 static void
-player_stopped_cb (VglController *ctrl, gpointer data)
+player_stopped_cb                       (VglController *ctrl,
+                                         gpointer       data)
 {
         lastfm_dbus_notify_playback (NULL);
 }
 
 static void
-track_started_cb (VglController *ctrl, LastfmTrack *track, gpointer data)
+track_started_cb                        (VglController *ctrl,
+                                         LastfmTrack   *track,
+                                         gpointer       data)
 {
         lastfm_dbus_notify_playback (track);
 }
 
 static void
-controller_destroyed_cb (gpointer data, GObject *controller)
+controller_destroyed_cb                 (gpointer  data,
+                                         GObject  *controller)
 {
         lastfm_dbus_notify_closing();
         lastfm_dbus_close();
 }
 
 static gboolean
-playurl_handler_idle(gpointer data)
+playurl_handler_idle                    (gpointer data)
 {
         g_return_val_if_fail(data != NULL, FALSE);
         char *url = (char *) data;
@@ -52,7 +56,7 @@ playurl_handler_idle(gpointer data)
 }
 
 static gboolean
-play_handler_idle(gpointer data)
+play_handler_idle                       (gpointer data)
 {
         gdk_threads_enter();
         controller_start_playing();
@@ -61,7 +65,7 @@ play_handler_idle(gpointer data)
 }
 
 static gboolean
-stop_handler_idle(gpointer data)
+stop_handler_idle                       (gpointer data)
 {
         gdk_threads_enter();
         controller_stop_playing();
@@ -70,7 +74,7 @@ stop_handler_idle(gpointer data)
 }
 
 static gboolean
-skip_handler_idle(gpointer data)
+skip_handler_idle                       (gpointer data)
 {
         gdk_threads_enter();
         controller_skip_track();
@@ -79,7 +83,7 @@ skip_handler_idle(gpointer data)
 }
 
 static gboolean
-lovetrack_handler_idle(gpointer data)
+lovetrack_handler_idle                  (gpointer data)
 {
         gboolean interactive = (gboolean)GPOINTER_TO_INT(data);
         gdk_threads_enter();
@@ -89,7 +93,7 @@ lovetrack_handler_idle(gpointer data)
 }
 
 static gboolean
-bantrack_handler_idle(gpointer data)
+bantrack_handler_idle                   (gpointer data)
 {
         gboolean interactive = (gboolean)GPOINTER_TO_INT(data);
         gdk_threads_enter();
@@ -99,7 +103,7 @@ bantrack_handler_idle(gpointer data)
 }
 
 static gboolean
-showwindow_handler_idle(gpointer data)
+showwindow_handler_idle                 (gpointer data)
 {
         gboolean show = GPOINTER_TO_INT(data);
         gdk_threads_enter();
@@ -109,7 +113,7 @@ showwindow_handler_idle(gpointer data)
 }
 
 static gboolean
-volumechange_handler_idle(gpointer data)
+volumechange_handler_idle               (gpointer data)
 {
         gint volchange = GPOINTER_TO_INT(data);
         gdk_threads_enter();
@@ -119,7 +123,7 @@ volumechange_handler_idle(gpointer data)
 }
 
 static gboolean
-volumeset_handler_idle(gpointer data)
+volumeset_handler_idle                  (gpointer data)
 {
         gint vol = GPOINTER_TO_INT(data);
         gdk_threads_enter();
@@ -129,7 +133,7 @@ volumeset_handler_idle(gpointer data)
 }
 
 static gboolean
-requeststatus_handler_idle(gpointer data)
+requeststatus_handler_idle              (gpointer data)
 {
         LastfmTrack *current_track = NULL;
 
@@ -144,7 +148,7 @@ requeststatus_handler_idle(gpointer data)
 #ifdef HAVE_GSD_MEDIA_PLAYER_KEYS
 
 static gboolean
-gsd_mp_keys_handler_idle(gpointer data)
+gsd_mp_keys_handler_idle                (gpointer data)
 {
         g_return_val_if_fail (data != NULL, FALSE);
 
@@ -173,7 +177,7 @@ gsd_mp_keys_handler_idle(gpointer data)
 }
 
 static void
-grab_media_player_keys(void)
+grab_media_player_keys                  (void)
 {
         DBusMessage *dbus_msg = NULL;
         gchar *app_name = g_strdup (APP_NAME);
@@ -197,7 +201,7 @@ grab_media_player_keys(void)
 }
 
 static void
-release_media_player_keys(void)
+release_media_player_keys               (void)
 {
         DBusMessage *dbus_msg = NULL;
         gchar *app_name = g_strdup (APP_NAME);
@@ -221,7 +225,7 @@ release_media_player_keys(void)
 #endif /* HAVE_GSD_MEDIA_PLAYER_KEYS */
 
 static gboolean
-closeapp_handler_idle(gpointer data)
+closeapp_handler_idle                   (gpointer data)
 {
         gdk_threads_enter();
         controller_quit_app();
@@ -230,7 +234,9 @@ closeapp_handler_idle(gpointer data)
 }
 
 static void
-send_message(char *message, int first_type, ...)
+send_message                            (char *message,
+                                         int   first_type,
+                                         ...)
 {
         DBusMessage *dbus_msg = NULL;
         va_list ap;
@@ -250,7 +256,7 @@ send_message(char *message, int first_type, ...)
 }
 
 void
-lastfm_dbus_notify_playback (LastfmTrack *track)
+lastfm_dbus_notify_playback             (LastfmTrack *track)
 {
         const char *param = NULL;
 
@@ -274,7 +280,7 @@ lastfm_dbus_notify_playback (LastfmTrack *track)
 }
 
 void
-lastfm_dbus_notify_started(void)
+lastfm_dbus_notify_started              (void)
 {
         const char *param = APP_DBUS_SIGNAL_NOTIFY_STARTED;
 
@@ -285,7 +291,7 @@ lastfm_dbus_notify_started(void)
 }
 
 void
-lastfm_dbus_notify_closing(void)
+lastfm_dbus_notify_closing              (void)
 {
         const char *param = APP_DBUS_SIGNAL_NOTIFY_CLOSING;
 
@@ -296,7 +302,7 @@ lastfm_dbus_notify_closing(void)
 }
 
 static gboolean
-method_is_interactive (DBusMessage *message)
+method_is_interactive                   (DBusMessage *message)
 {
         gboolean interactive = FALSE;
         DBusMessageIter iter;
@@ -310,7 +316,7 @@ method_is_interactive (DBusMessage *message)
 }
 
 void
-lastfm_dbus_play_radio_url (const char *url)
+lastfm_dbus_play_radio_url              (const char *url)
 {
         DBusMessage *dbus_msg = NULL;
         dbus_msg = dbus_message_new_method_call (APP_DBUS_SERVICE,
@@ -328,8 +334,9 @@ lastfm_dbus_play_radio_url (const char *url)
 }
 
 static DBusHandlerResult
-dbus_req_handler(DBusConnection *connection, DBusMessage *message,
-                 gpointer user_data)
+dbus_req_handler                        (DBusConnection *connection,
+                                         DBusMessage    *message,
+                                         gpointer        user_data)
 {
         DBusHandlerResult result = DBUS_HANDLER_RESULT_HANDLED;
 
@@ -445,7 +452,7 @@ dbus_req_handler(DBusConnection *connection, DBusMessage *message,
 }
 
 DbusInitReturnCode
-lastfm_dbus_init (VglController *controller)
+lastfm_dbus_init                        (VglController *controller)
 {
         int result;
 
@@ -514,7 +521,7 @@ lastfm_dbus_init (VglController *controller)
 }
 
 void
-lastfm_dbus_close(void)
+lastfm_dbus_close                       (void)
 {
         /* Remove filter, if added */
         if (dbus_filter_added) {

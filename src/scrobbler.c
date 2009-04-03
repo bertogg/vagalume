@@ -63,7 +63,7 @@ static GString *password = NULL;
 static gboolean enable_scrobbling = FALSE;
 
 static void
-rsp_track_destroy (RspTrack *track)
+rsp_track_destroy                       (RspTrack *track)
 {
         g_return_if_fail (track != NULL);
         g_free (track->username);
@@ -72,8 +72,10 @@ rsp_track_destroy (RspTrack *track)
 }
 
 static RspTrack *
-rsp_track_new (const char *user, LastfmTrack *track,
-               time_t start_time, RspRating rating)
+rsp_track_new                           (const char  *user,
+                                         LastfmTrack *track,
+                                         time_t       start_time,
+                                         RspRating    rating)
 {
         RspTrack *t;
         g_return_val_if_fail (username && track && start_time > 0, NULL);
@@ -86,7 +88,7 @@ rsp_track_new (const char *user, LastfmTrack *track,
 }
 
 static void
-rsp_session_unref (RspSession *s)
+rsp_session_unref                       (RspSession *s)
 {
         g_return_if_fail (s != NULL);
         if (g_atomic_int_dec_and_test (&(s->refcount))) {
@@ -100,7 +102,7 @@ rsp_session_unref (RspSession *s)
 }
 
 static RspSession *
-rsp_session_ref (RspSession *s)
+rsp_session_ref                         (RspSession *s)
 {
         g_return_val_if_fail (s != NULL, NULL);
         g_atomic_int_inc (&(s->refcount));
@@ -108,8 +110,9 @@ rsp_session_ref (RspSession *s)
 }
 
 static RspSession *
-rsp_session_new(const char *username, const char *password,
-                LastfmErr *err)
+rsp_session_new                         (const char *username,
+                                         const char *password,
+                                         LastfmErr  *err)
 {
         g_return_val_if_fail(username != NULL && password != NULL, NULL);
         RspSession *s = NULL;
@@ -158,7 +161,8 @@ rsp_session_new(const char *username, const char *password,
 }
 
 static RspResponse
-rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t)
+rsp_set_nowplaying                      (const RspSession  *rsp,
+                                         const LastfmTrack *t)
 {
         g_return_val_if_fail(rsp != NULL && t != NULL, RSP_RESPONSE_ERROR);
         RspResponse retvalue = RSP_RESPONSE_ERROR;
@@ -196,8 +200,10 @@ rsp_set_nowplaying(const RspSession *rsp, const LastfmTrack *t)
 }
 
 static RspResponse
-rsp_scrobble(const RspSession *rsp, const LastfmTrack *t, time_t start,
-             RspRating rating)
+rsp_scrobble                            (const RspSession  *rsp,
+                                         const LastfmTrack *t,
+                                         time_t             start,
+                                         RspRating          rating)
 {
         g_return_val_if_fail(rsp != NULL && t != NULL, RSP_RESPONSE_ERROR);
         RspResponse retvalue = RSP_RESPONSE_ERROR;
@@ -252,7 +258,7 @@ rsp_scrobble(const RspSession *rsp, const LastfmTrack *t, time_t start,
 
 /* Clears rsp_global_session if it has the same id as @session */
 static void
-rsp_global_session_clear (const RspSession *session)
+rsp_global_session_clear                (const RspSession *session)
 {
         g_return_if_fail (session != NULL);
         g_mutex_lock (rsp_mutex);
@@ -265,7 +271,7 @@ rsp_global_session_clear (const RspSession *session)
 }
 
 static RspSession *
-rsp_session_get_or_renew (void)
+rsp_session_get_or_renew                (void)
 {
         RspSession *session;
 
@@ -293,7 +299,7 @@ rsp_session_get_or_renew (void)
 }
 
 static void
-rsp_scrobbler_thread_scrobble (RspTrack *track)
+rsp_scrobbler_thread_scrobble           (RspTrack *track)
 {
         RspSession *s;
         int sleep_seconds = 0;
@@ -351,7 +357,7 @@ rsp_scrobbler_thread_scrobble (RspTrack *track)
 }
 
 static gpointer
-rsp_scrobbler_thread (gpointer data)
+rsp_scrobbler_thread                    (gpointer data)
 {
         while (rsp_initialized) {
                 RspTrack *track;
@@ -389,7 +395,7 @@ rsp_scrobbler_thread (gpointer data)
 }
 
 static gpointer
-set_nowplaying_thread (gpointer data)
+set_nowplaying_thread                   (gpointer data)
 {
         LastfmTrack *track = (LastfmTrack *) data;
         RspSession *session = NULL;
@@ -429,7 +435,9 @@ set_nowplaying_thread (gpointer data)
 }
 
 static void
-usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg, gpointer data)
+usercfg_changed_cb                      (VglController *ctrl,
+                                         VglUserCfg    *cfg,
+                                         gpointer       data)
 {
         gboolean changed = FALSE;
         g_mutex_lock (rsp_mutex);
@@ -450,7 +458,9 @@ usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg, gpointer data)
 }
 
 static void
-track_stopped_cb (VglController *ctrl, RspRating rating, gpointer data)
+track_stopped_cb                        (VglController *ctrl,
+                                         RspRating      rating,
+                                         gpointer       data)
 {
         g_mutex_lock (rsp_mutex);
         if (enable_scrobbling && current_track &&
@@ -477,7 +487,9 @@ track_stopped_cb (VglController *ctrl, RspRating rating, gpointer data)
 }
 
 static void
-track_started_cb (VglController *ctrl, LastfmTrack *track, gpointer data)
+track_started_cb                        (VglController *ctrl,
+                                         LastfmTrack   *track,
+                                         gpointer       data)
 {
         g_mutex_lock (rsp_mutex);
         if (current_track) {
@@ -493,14 +505,15 @@ track_started_cb (VglController *ctrl, LastfmTrack *track, gpointer data)
 }
 
 static void
-controller_destroyed_cb (gpointer data, GObject *controller)
+controller_destroyed_cb                 (gpointer  data,
+                                         GObject  *controller)
 {
         /* rsp_scrobbler_thread will destroying everything else */
         rsp_initialized = FALSE;
 }
 
 void
-rsp_init (VglController *controller)
+rsp_init                                (VglController *controller)
 {
         g_return_if_fail (!rsp_initialized);
         g_return_if_fail (VGL_IS_CONTROLLER (controller));

@@ -33,7 +33,8 @@ static gboolean im_gossip = FALSE;
 static GString *im_status_template = NULL;
 
 static gboolean
-error_happened(gboolean code, GError *error)
+error_happened                          (gboolean  code,
+                                         GError   *error)
 {
         g_return_val_if_fail(code || error != NULL, TRUE);
         gboolean retval = FALSE;
@@ -54,7 +55,9 @@ error_happened(gboolean code, GError *error)
 }
 
 static DBusGProxy *
-get_dbus_proxy(const char *dest, const char *objpath, const char *iface)
+get_dbus_proxy                          (const char *dest,
+                                         const char *objpath,
+                                         const char *iface)
 {
         g_return_val_if_fail (dest && objpath && iface, NULL);
         DBusGConnection *connection;
@@ -78,7 +81,7 @@ get_dbus_proxy(const char *dest, const char *objpath, const char *iface)
 }
 
 static gboolean
-gajim_set_status(const char *message)
+gajim_set_status                        (const char *message)
 {
         g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
@@ -133,7 +136,7 @@ cleanup:
 }
 
 static gboolean
-gossip_set_status(const char *message)
+gossip_set_status                       (const char *message)
 {
         g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
@@ -195,7 +198,7 @@ cleanup:
 }
 
 static gboolean
-pidgin_set_status(const char *message)
+pidgin_set_status                       (const char *message)
 {
         g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
@@ -262,7 +265,7 @@ cleanup:
 
 
 static gboolean
-telepathy_set_status(const char *message)
+telepathy_set_status                    (const char *message)
 {
         g_return_val_if_fail(message != NULL, FALSE);
         DBusGProxy *proxy;
@@ -308,7 +311,7 @@ cleanup:
 }
 
 static gboolean
-im_set_status_idle(gpointer data)
+im_set_status_idle                      (gpointer data)
 {
         LastfmTrack *track = (LastfmTrack *) data;
         GString *msg;
@@ -340,7 +343,7 @@ im_set_status_idle(gpointer data)
 }
 
 static gboolean
-im_clear_status_idle(gpointer data)
+im_clear_status_idle                    (gpointer data)
 {
         gdk_threads_enter();
         if (saved_pidgin_status != NULL) {
@@ -372,7 +375,8 @@ im_clear_status_idle(gpointer data)
 }
 
 static void
-usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg)
+usercfg_changed_cb                      (VglController *ctrl,
+                                         VglUserCfg    *cfg)
 {
         if (im_pidgin    != cfg->im_pidgin    ||
             im_telepathy != cfg->im_telepathy ||
@@ -396,26 +400,30 @@ usercfg_changed_cb (VglController *ctrl, VglUserCfg *cfg)
 }
 
 static void
-player_stopped_cb (VglController *ctrl, gpointer data)
+player_stopped_cb                       (VglController *ctrl,
+                                         gpointer       data)
 {
         g_idle_add (im_clear_status_idle, NULL);
 }
 
 static void
-track_started_cb (VglController *ctrl, LastfmTrack *track, gpointer data)
+track_started_cb                        (VglController *ctrl,
+                                         LastfmTrack   *track,
+                                         gpointer       data)
 {
         g_idle_add (im_set_status_idle, lastfm_track_ref (track));
 }
 
 static void
-controller_destroyed_cb (gpointer data, GObject *controller)
+controller_destroyed_cb                 (gpointer  data,
+                                         GObject  *controller)
 {
         g_string_free (im_status_template, TRUE);
         im_status_template = NULL;
 }
 
 void
-im_status_init (VglController *controller)
+im_status_init                          (VglController *controller)
 {
         g_return_if_fail (VGL_IS_CONTROLLER (controller));
         im_status_template = g_string_sized_new (80);

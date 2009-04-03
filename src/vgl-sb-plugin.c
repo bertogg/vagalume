@@ -127,7 +127,7 @@ static gboolean vagalume_running (VglSbPlugin *vsbp);
 /* Initialization/destruction functions */
 
 static void
-vgl_sb_plugin_class_init (VglSbPluginClass *klass)
+vgl_sb_plugin_class_init                (VglSbPluginClass *klass)
 {
         GObjectClass *object_class = G_OBJECT_CLASS (klass);
         object_class->dispose = vgl_sb_plugin_dispose;
@@ -140,7 +140,7 @@ vgl_sb_plugin_class_init (VglSbPluginClass *klass)
 }
 
 static void
-vgl_sb_plugin_init (VglSbPlugin *vsbp)
+vgl_sb_plugin_init                      (VglSbPlugin *vsbp)
 {
         int i;
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN_GET_PRIVATE (vsbp);
@@ -210,7 +210,7 @@ vgl_sb_plugin_init (VglSbPlugin *vsbp)
 }
 
 static void
-vgl_sb_plugin_dispose (GObject *object)
+vgl_sb_plugin_dispose                   (GObject *object)
 {
         int i;
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (object);
@@ -263,7 +263,7 @@ vgl_sb_plugin_dispose (GObject *object)
 /* Dbus stuff */
 
 static gboolean
-dbus_init(VglSbPlugin *vsbp)
+dbus_init                               (VglSbPlugin *vsbp)
 {
         VglSbPluginPrivate *priv = vsbp->priv;
 
@@ -294,7 +294,7 @@ dbus_init(VglSbPlugin *vsbp)
         return TRUE;
 }
 
-static void dbus_cleanup (VglSbPlugin *vsbp)
+static void dbus_cleanup                (VglSbPlugin *vsbp)
 {
         VglSbPluginPrivate *priv = vsbp->priv;
 
@@ -314,7 +314,9 @@ static void dbus_cleanup (VglSbPlugin *vsbp)
 }
 
 static DBusHandlerResult
-dbus_req_handler (DBusConnection *connection, DBusMessage *message, gpointer data)
+dbus_req_handler                        (DBusConnection *connection,
+                                         DBusMessage    *message,
+                                         gpointer        data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
 
@@ -329,14 +331,18 @@ dbus_req_handler (DBusConnection *connection, DBusMessage *message, gpointer dat
 }
 
 static void
-dbus_send_request (VglSbPlugin *vsbp, const gchar *request)
+dbus_send_request                       (VglSbPlugin *vsbp,
+                                         const gchar *request)
 {
         /* Delegate on dbus_send_request_with_params() */
         dbus_send_request_with_params (vsbp, request, DBUS_TYPE_INVALID);
 }
 
 static void
-dbus_send_request_with_params (VglSbPlugin *vsbp, const char *request, int first_type, ...)
+dbus_send_request_with_params           (VglSbPlugin *vsbp,
+                                         const char  *request,
+                                         int          first_type,
+                                         ...)
 {
         VglSbPluginPrivate *priv = vsbp->priv;
         DBusMessage *dbus_msg = NULL;
@@ -359,7 +365,8 @@ dbus_send_request_with_params (VglSbPlugin *vsbp, const char *request, int first
 }
 
 static void
-notify_handler (VglSbPlugin *vsbp, DBusMessage *message)
+notify_handler                          (VglSbPlugin *vsbp,
+                                         DBusMessage *message)
 {
         VglSbPluginPrivate *priv = vsbp->priv;
         DBusMessageIter iter;
@@ -458,7 +465,8 @@ notify_handler (VglSbPlugin *vsbp, DBusMessage *message)
 /* Setters */
 
 static void
-set_visibility (VglSbPlugin *vsbp, gboolean visible)
+set_visibility                          (VglSbPlugin *vsbp,
+                                         gboolean     visible)
 {
         gboolean old_condition;
 
@@ -474,7 +482,9 @@ set_visibility (VglSbPlugin *vsbp, gboolean visible)
 
 
 static void
-set_field (gchar **field, const gchar *text, const gchar *markup_fmt)
+set_field                               (gchar       **field,
+                                         const gchar  *text,
+                                         const gchar  *markup_fmt)
 {
         g_return_if_fail (text != NULL);
         gchar *final_text = NULL;
@@ -503,10 +513,10 @@ set_field (gchar **field, const gchar *text, const gchar *markup_fmt)
 }
 
 static void
-set_track_info (VglSbPlugin *vsbp,
-               const gchar *artist,
-               const gchar *track,
-               const gchar *album)
+set_track_info                          (VglSbPlugin *vsbp,
+                                         const gchar *artist,
+                                         const gchar *track,
+                                         const gchar *album)
 {
         g_return_if_fail(VGL_IS_SB_PLUGIN(vsbp));
 
@@ -534,7 +544,7 @@ set_track_info (VglSbPlugin *vsbp,
 /* Panel update functions */
 
 static PangoFontDescription *
-get_small_font (GtkWidget *widget)
+get_small_font                          (GtkWidget *widget)
 {
         static PangoFontDescription *new_font = NULL;
 
@@ -547,7 +557,7 @@ get_small_font (GtkWidget *widget)
 }
 
 static void
-main_panel_create (VglSbPlugin *vsbp)
+main_panel_create                       (VglSbPlugin *vsbp)
 {
         VglSbPluginPrivate *priv = vsbp->priv;
         GtkWidget *label;
@@ -646,7 +656,7 @@ main_panel_create (VglSbPlugin *vsbp)
 }
 
 static void
-main_panel_update (VglSbPlugin *vsbp)
+main_panel_update                       (VglSbPlugin *vsbp)
 {
         VglSbPluginPrivate *priv = vsbp->priv;
         gboolean np = priv->now_playing;
@@ -698,11 +708,11 @@ main_panel_update (VglSbPlugin *vsbp)
 /* Signals handlers */
 
 static void
-main_panel_position_func (GtkMenu   *main_panel,
-                          gint      *x,
-                          gint      *y,
-                          gboolean  *push_in,
-                          gpointer   data)
+main_panel_position_func                (GtkMenu  *main_panel,
+                                         gint     *x,
+                                         gint     *y,
+                                         gboolean *push_in,
+                                         gpointer  data)
 {
         VglSbPluginPrivate *priv = VGL_SB_PLUGIN (data)->priv;
 
@@ -718,7 +728,8 @@ main_panel_position_func (GtkMenu   *main_panel,
 }
 
 static void
-plugin_btn_toggled (GtkWidget *button, gpointer data)
+plugin_btn_toggled                      (GtkWidget *button,
+                                         gpointer   data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
 
@@ -735,7 +746,8 @@ plugin_btn_toggled (GtkWidget *button, gpointer data)
 }
 
 static void
-main_panel_item_activated (GtkWidget *item, gpointer data)
+main_panel_item_activated               (GtkWidget *item,
+                                         gpointer   data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
         VglSbPluginPrivate *priv = vsbp->priv;
@@ -776,7 +788,8 @@ main_panel_item_activated (GtkWidget *item, gpointer data)
 }
 
 static void
-main_panel_hidden (GtkWidget *main_panel, gpointer data)
+main_panel_hidden                       (GtkWidget *main_panel,
+                                         gpointer   data)
 {
         VglSbPlugin *vsbp = VGL_SB_PLUGIN (data);
         VglSbPluginPrivate *priv = vsbp->priv;
@@ -790,7 +803,7 @@ main_panel_hidden (GtkWidget *main_panel, gpointer data)
 /* Utility functions */
 
 static gboolean
-vagalume_running (VglSbPlugin *vsbp)
+vagalume_running                        (VglSbPlugin *vsbp)
 {
         HDWM *hdwm;
         HDWMEntryInfo *info = NULL;

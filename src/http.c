@@ -31,7 +31,7 @@ typedef struct {
 } http_dl_progress_wrapper_data;
 
 void
-http_set_proxy(const char *proxy)
+http_set_proxy                          (const char *proxy)
 {
         if (proxy == NULL || *proxy == '\0') {
                 g_unsetenv("http_proxy");
@@ -41,13 +41,14 @@ http_set_proxy(const char *proxy)
 }
 
 void
-http_init(void)
+http_init                               (void)
 {
         curl_global_init(CURL_GLOBAL_ALL);
 }
 
 char *
-escape_url(const char *url, gboolean escape)
+escape_url                              (const char *url,
+                                         gboolean    escape)
 {
         g_return_val_if_fail(url != NULL, NULL);
         CURL *handle;
@@ -71,7 +72,10 @@ escape_url(const char *url, gboolean escape)
 }
 
 static size_t
-http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
+http_copy_buffer                        (void   *src,
+                                         size_t  size,
+                                         size_t  nmemb,
+                                         void   *dest)
 {
         curl_buffer *dstbuf = (curl_buffer *) dest;
         size_t datasize = size*nmemb;
@@ -85,7 +89,9 @@ http_copy_buffer(void *src, size_t size, size_t nmemb, void *dest)
 }
 
 gboolean
-http_get_to_fd(const char *url, int fd, const GSList *headers)
+http_get_to_fd                          (const char   *url,
+                                         int           fd,
+                                         const GSList *headers)
 {
         g_return_val_if_fail(url != NULL && fd > 0, FALSE);
         CURLcode retcode;
@@ -127,8 +133,11 @@ http_get_to_fd(const char *url, int fd, const GSList *headers)
 }
 
 static int
-http_dl_progress_wrapper(void *data, double dltotal, double dlnow,
-                             double ultotal, double ulnow)
+http_dl_progress_wrapper                (void   *data,
+                                         double  dltotal,
+                                         double  dlnow,
+                                         double  ultotal,
+                                         double  ulnow)
 {
         http_dl_progress_wrapper_data *wrapdata;
         wrapdata = (http_dl_progress_wrapper_data *) data;
@@ -141,8 +150,10 @@ http_dl_progress_wrapper(void *data, double dltotal, double dlnow,
 }
 
 gboolean
-http_download_file(const char *url, const char *filename,
-                   http_download_progress_cb cb, gpointer userdata)
+http_download_file                      (const char                *url,
+                                         const char                *filename,
+                                         http_download_progress_cb  cb,
+                                         gpointer                   userdata)
 {
         g_return_val_if_fail(url != NULL && filename != NULL, FALSE);
         http_dl_progress_wrapper_data *wrapdata = NULL;
@@ -189,7 +200,9 @@ http_download_file(const char *url, const char *filename,
 }
 
 gboolean
-http_get_buffer(const char *url, char **buffer, size_t *bufsize)
+http_get_buffer                         (const char  *url,
+                                         char       **buffer,
+                                         size_t      *bufsize)
 {
         g_return_val_if_fail(url != NULL && buffer != NULL, FALSE);
         curl_buffer dstbuf = { NULL, 0 };
@@ -234,8 +247,10 @@ http_get_buffer(const char *url, char **buffer, size_t *bufsize)
 }
 
 gboolean
-http_post_buffer(const char *url, const char *postdata, char **retdata,
-                 const GSList *headers)
+http_post_buffer                        (const char    *url,
+                                         const char    *postdata,
+                                         char         **retdata,
+                                         const GSList  *headers)
 {
         g_return_val_if_fail(url != NULL && postdata != NULL, FALSE);
         curl_buffer dstbuf = { NULL, 0 };

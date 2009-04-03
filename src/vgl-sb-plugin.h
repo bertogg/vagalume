@@ -36,6 +36,7 @@ struct _VglSbPluginClass
   StatusbarItemClass parent_class;
 };
 
-GType vgl_sb_plugin_get_type(void);
+GType
+vgl_sb_plugin_get_type                  (void);
 
 #endif /* !VGL_SB_PLUGIN_H */

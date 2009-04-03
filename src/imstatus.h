@@ -13,6 +13,7 @@
 
 #include "controller.h"
 
-void im_status_init (VglController *controller);
+void
+im_status_init                          (VglController *controller);
 
 #endif

@@ -20,6 +20,7 @@ typedef enum {
         RSP_RATING_SKIP
 } RspRating;
 
-void rsp_init (VglController *controller);
+void
+rsp_init                                (VglController *controller);
 
 #endif

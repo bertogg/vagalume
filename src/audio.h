@@ -18,18 +18,42 @@
 #define GST_CONVERT_ENVVAR "VAGALUME_GST_CONVERT"
 #define GST_MIXER_ENVVAR "VAGALUME_GST_MIXER"
 
-gboolean lastfm_audio_init(void);
-gboolean lastfm_audio_play(const char *url, GCallback audio_started_cb,
-                           const char *session_id);
-gboolean lastfm_audio_stop(void);
-int lastfm_audio_get_running_time(void);
-int lastfm_audio_get_volume(void);
-void lastfm_audio_set_volume(int vol);
-int lastfm_audio_increase_volume(int inc);
-void lastfm_audio_clear(void);
-const char *lastfm_audio_default_decoder_name(void);
-const char *lastfm_audio_default_convert_name(void);
-const char *lastfm_audio_default_mixer_name(void);
-const char *lastfm_audio_default_sink_name(void);
+gboolean
+lastfm_audio_init                       (void);
+
+gboolean
+lastfm_audio_play                       (const char *url,
+                                         GCallback   audio_started_cb,
+                                         const char *session_id);
+
+gboolean
+lastfm_audio_stop                       (void);
+
+int
+lastfm_audio_get_running_time           (void);
+
+int
+lastfm_audio_get_volume                 (void);
+
+void
+lastfm_audio_set_volume                 (int vol);
+
+int
+lastfm_audio_increase_volume            (int inc);
+
+void
+lastfm_audio_clear                      (void);
+
+const char *
+lastfm_audio_default_decoder_name       (void);
+
+const char *
+lastfm_audio_default_convert_name       (void);
+
+const char *
+lastfm_audio_default_mixer_name         (void);
+
+const char *
+lastfm_audio_default_sink_name          (void);
 
 #endif

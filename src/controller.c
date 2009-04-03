@@ -124,7 +124,7 @@ typedef struct {
  * @param text The text to show
  */
 void
-controller_show_error(const char *text)
+controller_show_error                   (const char *text)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         ui_error_dialog(vgl_main_window_get_window(mainwin, TRUE), text);
@@ -136,7 +136,7 @@ controller_show_error(const char *text)
  * @param text The text to show
  */
 void
-controller_show_warning(const char *text)
+controller_show_warning                 (const char *text)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         ui_warning_dialog(vgl_main_window_get_window(mainwin, TRUE), text);
@@ -148,7 +148,7 @@ controller_show_warning(const char *text)
  * @param text The text to show
  */
 void
-controller_show_info(const char *text)
+controller_show_info                    (const char *text)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         ui_info_dialog(vgl_main_window_get_window(mainwin, TRUE), text);
@@ -160,7 +160,7 @@ controller_show_info(const char *text)
  * @param text The text to show
  */
 void
-controller_show_banner(const char *text)
+controller_show_banner                  (const char *text)
 {
 #ifdef MAEMO
         ui_info_banner(vgl_main_window_get_window(mainwin, FALSE), text);
@@ -173,7 +173,7 @@ controller_show_banner(const char *text)
  * Show the about dialog
  */
 void
-controller_show_about (void)
+controller_show_about                   (void)
 {
         ui_about_dialog (vgl_main_window_get_window (mainwin, FALSE));
 }
@@ -185,7 +185,8 @@ controller_show_about (void)
  * @return TRUE if the user selects OK, cancel otherwise
  */
 gboolean
-controller_confirm_dialog(const char *text, gboolean show_always)
+controller_confirm_dialog               (const char *text,
+                                         gboolean    show_always)
 {
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(mainwin), FALSE);
 
@@ -202,7 +203,7 @@ controller_confirm_dialog(const char *text, gboolean show_always)
  * @param show Whether to show or hide it
  */
 void
-controller_show_mainwin(gboolean show)
+controller_show_mainwin                 (gboolean show)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         vgl_main_window_show(mainwin, show);
@@ -214,7 +215,7 @@ controller_show_mainwin(gboolean show)
  * @param iconify Whether to iconify or not (deiconify)
  */
 void
-controller_toggle_mainwin_visibility (void)
+controller_toggle_mainwin_visibility    (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         vgl_main_window_toggle_visibility(mainwin);
@@ -228,7 +229,7 @@ controller_toggle_mainwin_visibility (void)
  * @return TRUE if the track hasn't fininished yet, FALSE otherwise
  */
 static gboolean
-controller_update_progress (gpointer data)
+controller_update_progress              (gpointer data)
 {
         LastfmTrack *tr = (LastfmTrack *) data;
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && tr, FALSE);
@@ -252,7 +253,7 @@ controller_update_progress (gpointer data)
  * @return The track
  */
 LastfmTrack *
-controller_get_current_track(void)
+controller_get_current_track            (void)
 {
   return nowplaying;
 }
@@ -264,7 +265,8 @@ controller_get_current_track(void)
  * @param list The list of friends
  */
 static void
-set_friend_list(const char *user, GList *list)
+set_friend_list                         (const char *user,
+                                         GList      *list)
 {
         g_return_if_fail(user != NULL && usercfg != NULL);
         if (!strcmp(user, usercfg->username)) {
@@ -281,7 +283,8 @@ set_friend_list(const char *user, GList *list)
  * @param list The list of tags
  */
 static void
-set_user_tag_list(const char *user, GList *list)
+set_user_tag_list                       (const char *user,
+                                         GList      *list)
 {
         g_return_if_fail(user != NULL && usercfg != NULL);
         if (!strcmp(user, usercfg->username)) {
@@ -297,7 +300,7 @@ set_user_tag_list(const char *user, GList *list)
  * @param track The track to be set as Now Playing
  */
 static void
-controller_set_nowplaying(LastfmTrack *track)
+controller_set_nowplaying               (LastfmTrack *track)
 {
         if (nowplaying != NULL) {
                 lastfm_track_unref(nowplaying);
@@ -314,7 +317,7 @@ controller_set_nowplaying(LastfmTrack *track)
  * @return NULL (not used)
  */
 static void
-get_user_extradata(void)
+get_user_extradata                      (void)
 {
         g_return_if_fail (usercfg != NULL);
         gboolean finished = FALSE;
@@ -371,7 +374,7 @@ get_user_extradata(void)
  * Apply all user cfg settings
  */
 static void
-apply_usercfg(void)
+apply_usercfg                           (void)
 {
         g_return_if_fail(usercfg != NULL);
         if (usercfg->use_proxy) {
@@ -388,7 +391,7 @@ apply_usercfg(void)
  * close the current session.
  */
 void
-controller_open_usercfg(void)
+controller_open_usercfg                 (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         gboolean userchanged = FALSE;
@@ -429,7 +432,7 @@ controller_open_usercfg(void)
  * @return TRUE if the settings exist, FALSE otherwise
  */
 static gboolean
-check_usercfg(gboolean ask)
+check_usercfg                           (gboolean ask)
 {
         if (usercfg == NULL) usercfg = vgl_user_cfg_read();
         if (usercfg == NULL && ask) controller_open_usercfg();
@@ -450,7 +453,7 @@ check_usercfg(gboolean ask)
  * @return NULL (not used)
  */
 static gpointer
-check_session_thread(gpointer userdata)
+check_session_thread                    (gpointer userdata)
 {
         g_return_val_if_fail(userdata != NULL, NULL);
         check_session_thread_data *data;
@@ -503,7 +506,7 @@ check_session_thread(gpointer userdata)
  * @param data A pointer with data to pass to the thread
  */
 static void
-check_session_conn_cb(gpointer data)
+check_session_conn_cb                   (gpointer data)
 {
         g_thread_create(check_session_thread, data, FALSE, NULL);
 }
@@ -520,8 +523,9 @@ check_session_conn_cb(gpointer data)
  *               must be freed by the caller (if necessary)
  */
 static void
-check_session(check_session_cb success_cb, check_session_cb failure_cb,
-              gpointer cbdata)
+check_session                           (check_session_cb success_cb,
+                                         check_session_cb failure_cb,
+                                         gpointer         cbdata)
 {
         if (session != NULL) {
                 if (success_cb != NULL) (*success_cb)(cbdata);
@@ -557,7 +561,7 @@ check_session(check_session_cb success_cb, check_session_cb failure_cb,
  * @return NULL (not used)
  */
 static gpointer
-set_album_cover_thread(gpointer data)
+set_album_cover_thread                  (gpointer data)
 {
         LastfmTrack *t = (LastfmTrack *) data;
         g_return_val_if_fail(t != NULL && t->image_url != NULL, NULL);
@@ -584,7 +588,7 @@ set_album_cover_thread(gpointer data)
  * @return NULL (not used)
  */
 static gpointer
-start_playing_get_pls_thread(gpointer data)
+start_playing_get_pls_thread            (gpointer data)
 {
         LastfmSession *s = (LastfmSession *) data;
         g_return_val_if_fail(s != NULL && usercfg != NULL, NULL);
@@ -612,7 +616,7 @@ start_playing_get_pls_thread(gpointer data)
  * can be called several times.
  */
 void
-controller_show_cover(void)
+controller_show_cover                   (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         if (showing_cover || nowplaying == NULL ||
@@ -631,7 +635,7 @@ controller_show_cover(void)
  * starts playing
  */
 static void
-controller_audio_started_cb(void)
+controller_audio_started_cb             (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin) && nowplaying);
         LastfmTrack *track;
@@ -654,7 +658,7 @@ controller_audio_started_cb(void)
  * @param userdata Not used
  */
 static void
-controller_start_playing_cb(gpointer userdata)
+controller_start_playing_cb             (gpointer userdata)
 {
         LastfmTrack *track = NULL;
         g_return_if_fail(mainwin && playlist && nowplaying == NULL);
@@ -684,7 +688,7 @@ controller_start_playing_cb(gpointer userdata)
  * controller_start_playing_cb()
  */
 void
-controller_start_playing(void)
+controller_start_playing                (void)
 {
         if (stop_after_this_track) {
                 controller_stop_playing();
@@ -701,7 +705,7 @@ controller_start_playing(void)
  * controller_play_radio_by_url()
  */
 static void
-finish_playing_track(void)
+finish_playing_track                    (void)
 {
         if (nowplaying != NULL) {
                 controller_set_nowplaying(NULL);
@@ -715,7 +719,7 @@ finish_playing_track(void)
  * Stop the track being played, updating the UI as well
  */
 void
-controller_stop_playing(void)
+controller_stop_playing                 (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         VglMainWindowState new_state = session != NULL ?
@@ -737,7 +741,7 @@ controller_stop_playing(void)
  * Stop the track being played and immediately play the next one.
  */
 void
-controller_skip_track(void)
+controller_skip_track                   (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         finish_playing_track();
@@ -749,7 +753,7 @@ controller_skip_track(void)
  * the active session (if any)
  */
 void
-controller_disconnect(void)
+controller_disconnect                   (void)
 {
         if (session != NULL) {
                 lastfm_session_destroy(session);
@@ -764,7 +768,7 @@ controller_disconnect(void)
  * Download a file in background. Must be called using g_thread_create()
  */
 static gpointer
-download_track_thread (gpointer userdata)
+download_track_thread                   (gpointer userdata)
 {
         DownloadData *d = (DownloadData *) userdata;
         gboolean success;
@@ -799,7 +803,8 @@ download_track_thread (gpointer userdata)
  * Callback executed when dlwin_download_file() finishes
  */
 static void
-download_track_dlwin_cb (gboolean success, gpointer userdata)
+download_track_dlwin_cb                 (gboolean success,
+                                         gpointer userdata)
 {
         LastfmTrack *track = (LastfmTrack *) userdata;
         track->dl_in_progress = FALSE;
@@ -813,7 +818,7 @@ download_track_dlwin_cb (gboolean success, gpointer userdata)
  *                   without using a download window
  */
 void
-controller_download_track (gboolean background)
+controller_download_track               (gboolean background)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
         LastfmTrack *t = lastfm_track_ref(nowplaying);
@@ -874,7 +879,7 @@ controller_download_track (gboolean background)
  * Opens the bookmarks window
  */
 void
-controller_manage_bookmarks(void)
+controller_manage_bookmarks             (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         vgl_bookmark_window_show(vgl_main_window_get_window(mainwin, FALSE));
@@ -883,7 +888,7 @@ controller_manage_bookmarks(void)
 /*
  * Bookmark the current track
  */
-void controller_add_bookmark (BookmarkType type)
+void controller_add_bookmark            (BookmarkType type)
 {
         g_return_if_fail (VGL_IS_MAIN_WINDOW (mainwin));
         g_return_if_fail (nowplaying != NULL || (type == BOOKMARK_TYPE_EMPTY));
@@ -931,7 +936,7 @@ void controller_add_bookmark (BookmarkType type)
  * from controller_set_stop_after().
  */
 static gboolean
-stop_after_timeout (gpointer data)
+stop_after_timeout                      (gpointer data)
 {
         guint *source_id = (guint *) data;
         controller_stop_playing();
@@ -944,7 +949,7 @@ stop_after_timeout (gpointer data)
  * time.
  */
 void
-controller_set_stop_after (void)
+controller_set_stop_after               (void)
 {
         /* If source_id != 0, playback will stop at source_stop_at (approx) */
         static guint source_id = 0;
@@ -993,7 +998,7 @@ controller_set_stop_after (void)
  * @param interactive If called interactively
  */
 void
-controller_love_track(gboolean interactive)
+controller_love_track                   (gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL && VGL_IS_MAIN_WINDOW(mainwin));
         if (!interactive ||
@@ -1011,7 +1016,7 @@ controller_love_track(gboolean interactive)
  * @param interactive If called interactively
  */
 void
-controller_ban_track(gboolean interactive)
+controller_ban_track                    (gboolean interactive)
 {
         g_return_if_fail(nowplaying != NULL);
         if (!interactive ||
@@ -1033,7 +1038,7 @@ controller_ban_track(gboolean interactive)
  * @return NULL (this value is not used)
  */
 static gpointer
-tag_track_thread(gpointer data)
+tag_track_thread                        (gpointer data)
 {
         tag_data *d = (tag_data *) data;
         g_return_val_if_fail(d && d->track && d->taglist, NULL);
@@ -1077,7 +1082,7 @@ tag_track_thread(gpointer data)
  * @param type The type of tag (artist, track, album)
  */
 void
-controller_tag_track()
+controller_tag_track                    (void)
 {
         g_return_if_fail(mainwin && usercfg && nowplaying);
         /* Keep this static to remember the previous value */
@@ -1117,7 +1122,7 @@ controller_tag_track()
  * @return NULL (this value is not used)
  */
 static gpointer
-recomm_track_thread(gpointer data)
+recomm_track_thread                     (gpointer data)
 {
         recomm_data *d = (recomm_data *) data;
         g_return_val_if_fail(d && d->track && d->rcpt && d->text, NULL);
@@ -1154,7 +1159,7 @@ recomm_track_thread(gpointer data)
  * artist, track or album (chosen by the user)
  */
 void
-controller_recomm_track(void)
+controller_recomm_track                 (void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         char *rcpt = NULL;
@@ -1197,7 +1202,7 @@ controller_recomm_track(void)
  * @return NULL (this value is not used)
  */
 gpointer
-add_to_playlist_thread(gpointer data)
+add_to_playlist_thread                  (gpointer data)
 {
         LastfmTrack *t = (LastfmTrack *) data;
         g_return_val_if_fail(t != NULL, NULL);
@@ -1232,7 +1237,7 @@ add_to_playlist_thread(gpointer data)
  * Last.fm website: http://www.last.fm/user/USERNAME/playlist/
  */
 void
-controller_add_to_playlist(void)
+controller_add_to_playlist              (void)
 {
         g_return_if_fail(usercfg != NULL && nowplaying != NULL);
         if (controller_confirm_dialog(
@@ -1253,7 +1258,7 @@ controller_add_to_playlist(void)
  * @return NULL (not used)
  */
 static gpointer
-controller_play_radio_by_url_thread(gpointer data)
+controller_play_radio_by_url_thread     (gpointer data)
 {
         char *url = (char *) data;
         LastfmSession *sess;
@@ -1318,7 +1323,7 @@ controller_play_radio_by_url_thread(gpointer data)
  * @param url The URL of the radio to be played (freed by this function)
  */
 static void
-controller_play_radio_by_url_cb(char *url)
+controller_play_radio_by_url_cb         (char *url)
 {
         g_thread_create(controller_play_radio_by_url_thread, url, FALSE, NULL);
 }
@@ -1332,7 +1337,7 @@ controller_play_radio_by_url_cb(char *url)
  * @param url The URL of the radio to be played
  */
 void
-controller_play_radio_by_url(const char *url)
+controller_play_radio_by_url            (const char *url)
 {
         check_session_cb cb;
         finish_playing_track();
@@ -1351,7 +1356,7 @@ controller_play_radio_by_url(const char *url)
  * @param userdata The radio type (passed as a gpointer)
  */
 static void
-controller_play_radio_cb(gpointer userdata)
+controller_play_radio_cb                (gpointer userdata)
 {
         lastfm_radio type = GPOINTER_TO_INT(userdata);
         char *url = NULL;
@@ -1390,7 +1395,7 @@ controller_play_radio_cb(gpointer userdata)
  * @param type Radio type
  */
 void
-controller_play_radio(lastfm_radio type)
+controller_play_radio                   (lastfm_radio type)
 {
         check_session_cb cb;
         cb = (check_session_cb) controller_play_radio_cb;
@@ -1406,7 +1411,7 @@ controller_play_radio(lastfm_radio type)
  * @param userdata The radio type (passed as a gpointer)
  */
 static void
-controller_play_others_radio_cb(gpointer userdata)
+controller_play_others_radio_cb         (gpointer userdata)
 {
         lastfm_radio type = GPOINTER_TO_INT(userdata);
         static char *previous = NULL;
@@ -1436,7 +1441,7 @@ controller_play_others_radio_cb(gpointer userdata)
  * @param userdata Not used
  **/
 static void
-controller_play_usertag_radio_cb (gpointer userdata)
+controller_play_usertag_radio_cb        (gpointer userdata)
 {
         static char *previoususer = NULL;
         static char *previoustag = NULL;
@@ -1469,7 +1474,7 @@ controller_play_usertag_radio_cb (gpointer userdata)
  * @param type Radio type
  */
 void
-controller_play_others_radio(lastfm_radio type)
+controller_play_others_radio            (lastfm_radio type)
 {
         check_session_cb cb;
         if (type == LASTFM_USERTAG_RADIO) {
@@ -1484,7 +1489,7 @@ controller_play_others_radio(lastfm_radio type)
  * Open a dialog asking for a group and play its radio
  */
 void
-controller_play_group_radio(void)
+controller_play_group_radio             (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
@@ -1506,7 +1511,7 @@ controller_play_group_radio(void)
  * Open a dialog asking for a global tag and play its radio
  */
 void
-controller_play_globaltag_radio(void)
+controller_play_globaltag_radio         (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
@@ -1531,7 +1536,7 @@ controller_play_globaltag_radio(void)
  * radio
  */
 void
-controller_play_similarartist_radio(void)
+controller_play_similarartist_radio     (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
@@ -1554,7 +1559,7 @@ controller_play_similarartist_radio(void)
  * Open a dialog asking for a radio URL and play it
  */
 void
-controller_play_radio_ask_url(void)
+controller_play_radio_ask_url           (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         static char *previous = NULL;
@@ -1583,7 +1588,7 @@ controller_play_radio_ask_url(void)
  * @return The new level
  */
 int
-controller_increase_volume(int inc)
+controller_increase_volume              (int inc)
 {
         int newvol;
         if (inc != 0) {
@@ -1599,7 +1604,7 @@ controller_increase_volume(int inc)
  * @param vol New volume level
  */
 void
-controller_set_volume(int vol)
+controller_set_volume                   (int vol)
 {
         lastfm_audio_set_volume (vol);
 }
@@ -1608,7 +1613,7 @@ controller_set_volume(int vol)
  * Close the application
  */
 void
-controller_quit_app(void)
+controller_quit_app                     (void)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         shutting_down = TRUE;
@@ -1626,7 +1631,7 @@ controller_quit_app(void)
  *                  command line
  */
 void
-controller_run_app (const char *radio_url)
+controller_run_app                      (const char *radio_url)
 {
         g_return_if_fail (mainwin == NULL);
         const char *errmsg = NULL;
@@ -1733,7 +1738,7 @@ controller_run_app (const char *radio_url)
  * Close the application (either to systray or shut it down)
  */
 void
-controller_close_mainwin(void)
+controller_close_mainwin                (void)
 {
 #ifdef HAVE_TRAY_ICON
         if (usercfg->close_to_systray)
@@ -1744,7 +1749,7 @@ controller_close_mainwin(void)
 }
 
 static void
-vgl_controller_class_init (VglControllerClass *klass)
+vgl_controller_class_init               (VglControllerClass *klass)
 {
         signals[CONNECTED] =
                 g_signal_new ("connected",
@@ -1804,6 +1809,6 @@ vgl_controller_class_init (VglControllerClass *klass)
 }
 
 static void
-vgl_controller_init (VglController *self)
+vgl_controller_init                     (VglController *self)
 {
 }

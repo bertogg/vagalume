@@ -18,15 +18,23 @@ typedef void (*connection_go_online_cb)(gpointer data);
 
 #ifdef HAVE_CONIC
 
-const char *connection_init(void);
-void connection_go_online(connection_go_online_cb cb, gpointer data);
+const char *
+connection_init                         (void);
+
+void
+connection_go_online                    (connection_go_online_cb cb,
+                                         gpointer                data);
 
 #else
 
-const char *connection_init(void) { return NULL; }
-void connection_go_online(connection_go_online_cb cb, gpointer data) {
-        (*cb)(data);
-}
+const char *
+connection_init                         (void)
+                                        { return NULL; }
+
+void
+connection_go_online                    (connection_go_online_cb cb,
+                                         gpointer                data)
+                                        { (*cb)(data); }
 
 #endif
 

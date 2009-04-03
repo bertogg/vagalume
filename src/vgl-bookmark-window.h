@@ -51,9 +51,11 @@ struct _VglBookmarkWindow
     VglBookmarkWindowPrivate *priv;
 };
 
-GType vgl_bookmark_window_get_type (void) G_GNUC_CONST;
+GType
+vgl_bookmark_window_get_type            (void) G_GNUC_CONST;
 
-void vgl_bookmark_window_show(GtkWindow *parent);
+void
+vgl_bookmark_window_show                (GtkWindow *parent);
 
 G_END_DECLS
 

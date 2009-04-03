@@ -14,7 +14,8 @@
 #include "radio.h"
 
 char *
-lastfm_radio_url(lastfm_radio type, const char *data)
+lastfm_radio_url                        (lastfm_radio  type,
+                                         const char   *data)
 {
         g_return_val_if_fail(data != NULL, NULL);
         switch (type) {
@@ -45,7 +46,8 @@ lastfm_radio_url(lastfm_radio type, const char *data)
 }
 
 char *
-lastfm_recommended_radio_url(const char *user, int val)
+lastfm_recommended_radio_url            (const char *user,
+                                         int         val)
 {
         g_return_val_if_fail(user != NULL && val >= 0 && val <= 100, NULL);
         char value[4];
@@ -55,14 +57,15 @@ lastfm_recommended_radio_url(const char *user, int val)
 }
 
 char *
-lastfm_usertag_radio_url(const char *user, const char *tag)
+lastfm_usertag_radio_url                (const char *user,
+                                         const char *tag)
 {
         g_return_val_if_fail(user != NULL && tag != NULL, NULL);
         return g_strconcat("lastfm://usertags/", user, "/", tag, NULL);
 }
 
 gboolean
-lastfm_radio_url_is_custom(const char *url)
+lastfm_radio_url_is_custom              (const char *url)
 {
         g_return_val_if_fail(url != NULL, FALSE);
         return !strncmp(url, "lastfm://play/", 14);

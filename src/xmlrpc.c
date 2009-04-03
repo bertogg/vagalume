@@ -27,7 +27,7 @@ static const char *xmlrpc_url =
  * @return A new xmlNode *
  */
 static xmlNode *
-string_param(const char *str)
+string_param                            (const char *str)
 {
         g_return_val_if_fail(str != NULL, NULL);
         xmlNode *param = xmlNewNode(NULL, (xmlChar *) "param");
@@ -44,7 +44,7 @@ string_param(const char *str)
  * @return A new xmlNode *
  */
 static xmlNode *
-array_param(const GSList *params)
+array_param                             (const GSList *params)
 {
         const GSList *iter;
         xmlNode *param = xmlNewNode(NULL, (xmlChar *) "param");
@@ -73,7 +73,10 @@ array_param(const GSList *params)
  *         by the caller
  */
 static char *
-new_request(const char *user, const char *password, const char *method, ...)
+new_request                             (const char *user,
+                                         const char *password,
+                                         const char *method,
+                                         ...)
 {
         g_return_val_if_fail(user && password && method, NULL);
         va_list ap;
@@ -120,7 +123,8 @@ new_request(const char *user, const char *password, const char *method, ...)
  * @return Whether the operation was successful or not
  */
 static gboolean
-xmlrpc_send_request(const char *request, const char *name)
+xmlrpc_send_request                     (const char *request,
+                                         const char *name)
 {
         g_return_val_if_fail(request != NULL, FALSE);
         gboolean retval = FALSE;
@@ -156,8 +160,11 @@ xmlrpc_send_request(const char *request, const char *name)
  * @return Whether the operation was successful or not
  */
 gboolean
-tag_track(const char *user, const char *password, const LastfmTrack *track,
-          request_type type, GSList *tags)
+tag_track                               (const char        *user,
+                                         const char        *password,
+                                         const LastfmTrack *track,
+                                         request_type       type,
+                                         GSList            *tags)
 {
         g_return_val_if_fail(user && password && track, FALSE);
         gboolean retval;
@@ -204,8 +211,10 @@ tag_track(const char *user, const char *password, const LastfmTrack *track,
  * @return Whether the operation was successful or not
  */
 gboolean
-love_ban_track(const char *user, const char *password,
-               const LastfmTrack *track, gboolean love)
+love_ban_track                          (const char        *user,
+                                         const char        *password,
+                                         const LastfmTrack *track,
+                                         gboolean           love)
 {
         g_return_val_if_fail(user && password && track, FALSE);
         gboolean retval;
@@ -232,9 +241,12 @@ love_ban_track(const char *user, const char *password,
  * @return Whether the operation was successful or not
  */
 gboolean
-recommend_track(const char *user, const char *password,
-                const LastfmTrack *track, const char *text,
-                request_type type, const char *rcpt)
+recommend_track                         (const char        *user,
+                                         const char        *password,
+                                         const LastfmTrack *track,
+                                         const char        *text,
+                                         request_type       type,
+                                         const char        *rcpt)
 {
         g_return_val_if_fail(user && password && track && text && rcpt, FALSE);
         gboolean retval;
@@ -275,8 +287,9 @@ recommend_track(const char *user, const char *password,
  * @return Whether the operation was successful or not
  */
 gboolean
-add_to_playlist(const char *user, const char *password,
-                const LastfmTrack *track)
+add_to_playlist                         (const char        *user,
+                                         const char        *password,
+                                         const LastfmTrack *track)
 {
         g_return_val_if_fail(user && password && track, FALSE);
         gboolean retval;

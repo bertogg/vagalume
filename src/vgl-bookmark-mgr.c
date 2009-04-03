@@ -38,7 +38,9 @@ struct _VglBookmarkMgrPrivate {
 };
 
 static VglBookmark *
-vgl_bookmark_new(int id, const char *name, const char *url)
+vgl_bookmark_new                        (int         id,
+                                         const char *name,
+                                         const char *url)
 {
         g_return_val_if_fail(name != NULL && url != NULL, NULL);
         VglBookmark *bookmark;
@@ -50,7 +52,7 @@ vgl_bookmark_new(int id, const char *name, const char *url)
 }
 
 static void
-vgl_bookmark_destroy(VglBookmark *bookmark)
+vgl_bookmark_destroy                    (VglBookmark *bookmark)
 {
         g_return_if_fail(bookmark != NULL);
         g_free((char *)bookmark->name);
@@ -59,8 +61,9 @@ vgl_bookmark_destroy(VglBookmark *bookmark)
 }
 
 static void
-vgl_bookmark_change(VglBookmark *bookmark, const char *newname,
-                    const char *newurl)
+vgl_bookmark_change                     (VglBookmark *bookmark,
+                                         const char  *newname,
+                                         const char  *newurl)
 {
         g_return_if_fail(bookmark != NULL);
         if (newname != NULL && newname != bookmark->name) {
@@ -74,7 +77,8 @@ vgl_bookmark_change(VglBookmark *bookmark, const char *newname,
 }
 
 static int
-vgl_bookmark_compare (gconstpointer bookmark, gconstpointer bookmark_id)
+vgl_bookmark_compare                    (gconstpointer bookmark,
+                                         gconstpointer bookmark_id)
 {
         const VglBookmark *bmk = (const VglBookmark *) bookmark;
         int id = GPOINTER_TO_INT (bookmark_id);
@@ -87,7 +91,7 @@ vgl_bookmark_compare (gconstpointer bookmark, gconstpointer bookmark_id)
 }
 
 static const char *
-vgl_bookmark_mgr_get_cfgfile(void)
+vgl_bookmark_mgr_get_cfgfile            (void)
 {
         static char *cfgfilename = NULL;
 
@@ -103,7 +107,7 @@ vgl_bookmark_mgr_get_cfgfile(void)
 }
 
 static void
-vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
+vgl_bookmark_mgr_load_from_disk         (VglBookmarkMgr *mgr)
 {
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
         xmlDoc *doc = NULL;
@@ -158,7 +162,8 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
 }
 
 void
-vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
+vgl_bookmark_mgr_save_to_disk           (VglBookmarkMgr *mgr,
+                                         gboolean        force)
 {
         const GList *l;
         const char *cfgfile = vgl_bookmark_mgr_get_cfgfile ();
@@ -195,13 +200,13 @@ vgl_bookmark_mgr_save_to_disk (VglBookmarkMgr *mgr, gboolean force)
 }
 
 static VglBookmarkMgr *
-vgl_bookmark_mgr_new(void)
+vgl_bookmark_mgr_new                    (void)
 {
         return g_object_new(VGL_TYPE_BOOKMARK_MGR, NULL);
 }
 
 static void
-vgl_bookmark_mgr_init(VglBookmarkMgr *self)
+vgl_bookmark_mgr_init                   (VglBookmarkMgr *self)
 {
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR_GET_PRIVATE(self);
         self->priv = priv;
@@ -212,7 +217,7 @@ vgl_bookmark_mgr_init(VglBookmarkMgr *self)
 }
 
 static void
-vgl_bookmark_mgr_finalize(GObject *object)
+vgl_bookmark_mgr_finalize               (GObject *object)
 {
         VglBookmarkMgrPrivate *priv = VGL_BOOKMARK_MGR (object)->priv;
 
@@ -226,7 +231,7 @@ vgl_bookmark_mgr_finalize(GObject *object)
 }
 
 static void
-vgl_bookmark_mgr_class_init(VglBookmarkMgrClass *klass)
+vgl_bookmark_mgr_class_init             (VglBookmarkMgrClass *klass)
 {
         GObjectClass *gobject_class = (GObjectClass *)klass;
         gobject_class->finalize = vgl_bookmark_mgr_finalize;
@@ -255,7 +260,7 @@ vgl_bookmark_mgr_class_init(VglBookmarkMgrClass *klass)
 }
 
 VglBookmarkMgr *
-vgl_bookmark_mgr_get_instance(void)
+vgl_bookmark_mgr_get_instance           (void)
 {
         /* Singleton, only one bookmark manager can exist */
         static VglBookmarkMgr *mgr = NULL;
@@ -267,7 +272,8 @@ vgl_bookmark_mgr_get_instance(void)
 }
 
 static GList *
-vgl_bookmark_mgr_find_bookmark_node(VglBookmarkMgr *mgr, int id)
+vgl_bookmark_mgr_find_bookmark_node     (VglBookmarkMgr *mgr,
+                                         int             id)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0, NULL);
         return g_list_find_custom (mgr->priv->bookmarks, GINT_TO_POINTER (id),
@@ -275,8 +281,9 @@ vgl_bookmark_mgr_find_bookmark_node(VglBookmarkMgr *mgr, int id)
 }
 
 int
-vgl_bookmark_mgr_add_bookmark(VglBookmarkMgr *mgr,
-                              const char *name, const char *url)
+vgl_bookmark_mgr_add_bookmark           (VglBookmarkMgr *mgr,
+                                         const char     *name,
+                                         const char     *url)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && name && url, -1);
         VglBookmark *bmk;
@@ -291,7 +298,8 @@ vgl_bookmark_mgr_add_bookmark(VglBookmarkMgr *mgr,
 }
 
 void
-vgl_bookmark_mgr_remove_bookmark(VglBookmarkMgr *mgr, int id)
+vgl_bookmark_mgr_remove_bookmark        (VglBookmarkMgr *mgr,
+                                         int             id)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0);
         VglBookmarkMgrPrivate *priv = mgr->priv;
@@ -309,8 +317,10 @@ vgl_bookmark_mgr_remove_bookmark(VglBookmarkMgr *mgr, int id)
 }
 
 void
-vgl_bookmark_mgr_change_bookmark(VglBookmarkMgr *mgr,
-                                 int id, char *newname, char *newurl)
+vgl_bookmark_mgr_change_bookmark        (VglBookmarkMgr *mgr,
+                                         int             id,
+                                         char           *newname,
+                                         char           *newurl)
 {
         g_return_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0);
         GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
@@ -325,7 +335,8 @@ vgl_bookmark_mgr_change_bookmark(VglBookmarkMgr *mgr,
 }
 
 const VglBookmark *
-vgl_bookmark_mgr_get_bookmark(VglBookmarkMgr *mgr, int id)
+vgl_bookmark_mgr_get_bookmark           (VglBookmarkMgr *mgr,
+                                         int             id)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr) && id >= 0, NULL);
         GList *l = vgl_bookmark_mgr_find_bookmark_node(mgr, id);
@@ -336,7 +347,7 @@ vgl_bookmark_mgr_get_bookmark(VglBookmarkMgr *mgr, int id)
 }
 
 const GList *
-vgl_bookmark_mgr_get_bookmark_list(VglBookmarkMgr *mgr)
+vgl_bookmark_mgr_get_bookmark_list      (VglBookmarkMgr *mgr)
 {
         g_return_val_if_fail(VGL_IS_BOOKMARK_MGR(mgr), NULL);
         return mgr->priv->bookmarks;
@@ -349,7 +360,8 @@ vgl_bookmark_mgr_get_bookmark_list(VglBookmarkMgr *mgr)
  * @para ids An array indicating the new order, finishing with -1
  */
 void
-vgl_bookmark_mgr_reorder (VglBookmarkMgr *mgr, const int *ids)
+vgl_bookmark_mgr_reorder                (VglBookmarkMgr *mgr,
+                                         const int      *ids)
 {
         g_return_if_fail (VGL_IS_BOOKMARK_MGR (mgr));
         VglBookmarkMgrPrivate *priv = mgr->priv;

@@ -116,13 +116,13 @@ static const button_data addpl_button = {
 static const char *cover_background = APP_DATA_DIR "/cover.png";
 
 void
-vgl_main_window_run_app(void)
+vgl_main_window_run_app                 (void)
 {
         gtk_main();
 }
 
 void
-vgl_main_window_destroy(VglMainWindow *w)
+vgl_main_window_destroy                 (VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         while (gtk_events_pending()) gtk_main_iteration();
@@ -130,7 +130,8 @@ vgl_main_window_destroy(VglMainWindow *w)
 }
 
 GtkWindow *
-vgl_main_window_get_window(VglMainWindow *w, gboolean get_if_hidden)
+vgl_main_window_get_window              (VglMainWindow *w,
+                                         gboolean       get_if_hidden)
 {
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(w), NULL);
         if (!(w->priv->is_hidden) || get_if_hidden) {
@@ -141,7 +142,8 @@ vgl_main_window_get_window(VglMainWindow *w, gboolean get_if_hidden)
 }
 
 void
-vgl_main_window_show(VglMainWindow *w, gboolean show)
+vgl_main_window_show                    (VglMainWindow *w,
+                                         gboolean       show)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         GtkWindow *win = GTK_WINDOW(w);
@@ -158,21 +160,23 @@ vgl_main_window_show(VglMainWindow *w, gboolean show)
 }
 
 void
-vgl_main_window_toggle_visibility(VglMainWindow *w)
+vgl_main_window_toggle_visibility       (VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         vgl_main_window_show (w, !gtk_window_is_active (GTK_WINDOW (w)));
 }
 
 gboolean
-vgl_main_window_is_hidden(VglMainWindow *w)
+vgl_main_window_is_hidden               (VglMainWindow *w)
 {
         g_return_val_if_fail(VGL_IS_MAIN_WINDOW(w), TRUE);
         return w->priv->is_hidden;
 }
 
 void
-vgl_main_window_set_album_cover(VglMainWindow *w, const char *data, int size)
+vgl_main_window_set_album_cover         (VglMainWindow *w,
+                                         const char    *data,
+                                         int            size)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         GdkPixbuf *pixbuf = get_pixbuf_from_image(data, size, ALBUM_COVER_SIZE);
@@ -182,7 +186,8 @@ vgl_main_window_set_album_cover(VglMainWindow *w, const char *data, int size)
 }
 
 static void
-vgl_main_window_update_track_info(VglMainWindow *w, const LastfmTrack *t)
+vgl_main_window_update_track_info       (VglMainWindow     *w,
+                                         const LastfmTrack *t)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w) && t != NULL);
         VglMainWindowPrivate *priv = w->priv;
@@ -227,7 +232,8 @@ vgl_main_window_update_track_info(VglMainWindow *w, const LastfmTrack *t)
 }
 
 static void
-set_progress_bar_text(VglMainWindow *w, const char *text)
+set_progress_bar_text                   (VglMainWindow *w,
+                                         const char    *text)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         if (w->priv->showing_msg) {
@@ -239,9 +245,10 @@ set_progress_bar_text(VglMainWindow *w, const char *text)
 }
 
 static void
-vgl_main_window_controller_progress_cb (VglController *controller,
-                                        guint played, guint length,
-                                        VglMainWindow *w)
+vgl_main_window_controller_progress_cb  (VglController *controller,
+                                         guint          played,
+                                         guint          length,
+                                         VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         const int bufsize = 16;
@@ -266,7 +273,7 @@ typedef struct {
 } remove_status_msg_data;
 
 static gboolean
-remove_status_msg(gpointer data)
+remove_status_msg                       (gpointer data)
 {
         g_return_val_if_fail(data != NULL, FALSE);
         remove_status_msg_data *d = (remove_status_msg_data *) data;
@@ -282,7 +289,8 @@ remove_status_msg(gpointer data)
 }
 
 void
-vgl_main_window_show_status_msg(VglMainWindow *w, const char *text)
+vgl_main_window_show_status_msg         (VglMainWindow *w,
+                                         const char    *text)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w) && text != NULL);
         remove_status_msg_data *d;
@@ -303,7 +311,7 @@ vgl_main_window_show_status_msg(VglMainWindow *w, const char *text)
 }
 
 void
-vgl_main_window_set_track_as_loved(VglMainWindow *w)
+vgl_main_window_set_track_as_loved      (VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         gtk_widget_set_sensitive (w->priv->lovebutton, FALSE);
@@ -311,7 +319,9 @@ vgl_main_window_set_track_as_loved(VglMainWindow *w)
 }
 
 void
-vgl_main_window_set_track_as_added_to_playlist(VglMainWindow *w,gboolean added)
+vgl_main_window_set_track_as_added_to_playlist
+                                        (VglMainWindow *w,
+                                         gboolean       added)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         gtk_widget_set_sensitive (w->priv->addplbutton, !added);
@@ -319,7 +329,8 @@ vgl_main_window_set_track_as_added_to_playlist(VglMainWindow *w,gboolean added)
 }
 
 static void
-menu_enable_all_items(GtkWidget *menu, gboolean enable)
+menu_enable_all_items                   (GtkWidget *menu,
+                                         gboolean   enable)
 {
         g_return_if_fail(GTK_IS_MENU(menu));
         GList *l;
@@ -338,8 +349,10 @@ menu_enable_all_items(GtkWidget *menu, gboolean enable)
 }
 
 void
-vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
-                          const LastfmTrack *t, const char *radio_url)
+vgl_main_window_set_state               (VglMainWindow      *w,
+                                         VglMainWindowState  state,
+                                         const LastfmTrack  *t,
+                                         const char         *radio_url)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         VglMainWindowPrivate *priv = w->priv;
@@ -445,8 +458,9 @@ vgl_main_window_set_state(VglMainWindow *w, VglMainWindowState state,
 }
 
 static gboolean
-window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
-                VglMainWindow *win)
+window_state_cb                         (GtkWidget           *widget,
+                                         GdkEventWindowState *event,
+                                         VglMainWindow       *win)
 {
         GdkWindowState st = event->new_window_state;
         VglMainWindowPrivate *priv = win->priv;
@@ -466,7 +480,9 @@ window_state_cb(GtkWidget *widget, GdkEventWindowState *event,
 
 #ifdef MAEMO
 static void
-is_topmost_cb(GObject *obj, GParamSpec *arg, VglMainWindow *win)
+is_topmost_cb                           (GObject       *obj,
+                                         GParamSpec    *arg,
+                                         VglMainWindow *win)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(win));
         HildonWindow *hildonwin = HILDON_WINDOW(win);
@@ -479,7 +495,9 @@ is_topmost_cb(GObject *obj, GParamSpec *arg, VglMainWindow *win)
 
 #if defined(MAEMO) || defined(HAVE_GST_MIXER)
 static gboolean
-key_press_cb(GtkWidget *widget, GdkEventKey *event, VglMainWindow *win)
+key_press_cb                            (GtkWidget     *widget,
+                                         GdkEventKey   *event,
+                                         VglMainWindow *win)
 {
         int volchange = 0;
         switch (event->keyval) {
@@ -518,143 +536,167 @@ key_press_cb(GtkWidget *widget, GdkEventKey *event, VglMainWindow *win)
 #endif /* defined(MAEMO) || defined(HAVE_GST_MIXER) */
 
 static void
-play_selected(GtkWidget *widget, gpointer data)
+play_selected                           (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_start_playing();
 }
 
 static void
-stop_selected(GtkWidget *widget, gpointer data)
+stop_selected                           (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_stop_playing();
 }
 
 static void
-skip_selected(GtkWidget *widget, gpointer data)
+skip_selected                           (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_skip_track();
 }
 
 static void
-close_app(GtkWidget *widget, gpointer data)
+close_app                               (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_quit_app();
 }
 
 static gboolean
-delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
+delete_event                            (GtkWidget *widget,
+                                         GdkEvent  *event,
+                                         gpointer   data)
 {
         controller_close_mainwin();
         return TRUE;
 }
 
 static void
-radio_selected(GtkWidget *widget, gpointer data)
+radio_selected                          (GtkWidget *widget,
+                                         gpointer   data)
 {
         lastfm_radio type = GPOINTER_TO_INT(data);
         controller_play_radio(type);
 }
 
 static void
-others_radio_selected(GtkWidget *widget, gpointer data)
+others_radio_selected                   (GtkWidget *widget,
+                                         gpointer   data)
 {
         lastfm_radio type = GPOINTER_TO_INT(data);
         controller_play_others_radio(type);
 }
 
 static void
-group_radio_selected(GtkWidget *widget, gpointer data)
+group_radio_selected                    (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_play_group_radio();
 }
 
 static void
-globaltag_radio_selected(GtkWidget *widget, gpointer data)
+globaltag_radio_selected                (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_play_globaltag_radio();
 }
 
 static void
-similarartist_radio_selected(GtkWidget *widget, gpointer data)
+similarartist_radio_selected            (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_play_similarartist_radio();
 }
 
 static void
-url_radio_selected(GtkWidget *widget, gpointer data)
+url_radio_selected                      (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_play_radio_ask_url();
 }
 
 static void
-stop_after_selected (GtkWidget *widget, gpointer data)
+stop_after_selected                     (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_set_stop_after ();
 }
 
 static void
-love_track_selected(GtkWidget *widget, gpointer data)
+love_track_selected                     (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_love_track(TRUE);
 }
 
 static void
-ban_track_selected(GtkWidget *widget, gpointer data)
+ban_track_selected                      (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_ban_track(TRUE);
 }
 
 static void
-tag_track_selected(GtkWidget *widget, gpointer data)
+tag_track_selected                      (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_tag_track();
 }
 
 static void
-recomm_track_selected(GtkWidget *widget, gpointer data)
+recomm_track_selected                   (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_recomm_track();
 }
 
 static void
-add_to_playlist_selected(GtkWidget *widget, gpointer data)
+add_to_playlist_selected                (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_add_to_playlist();
 }
 
 static void
-download_track_selected(GtkWidget *widget, gpointer data)
+download_track_selected                 (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_download_track (FALSE);
 }
 
 static void
-manage_bookmarks_selected(GtkWidget *widget, gpointer data)
+manage_bookmarks_selected               (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_manage_bookmarks();
 }
 
 static void
-add_bookmark_selected(GtkWidget *widget, gpointer data)
+add_bookmark_selected                   (GtkWidget *widget,
+                                         gpointer   data)
 {
         BookmarkType type = GPOINTER_TO_INT(data);
         controller_add_bookmark(type);
 }
 
 static void
-show_about_dialog(GtkWidget *widget, gpointer data)
+show_about_dialog                       (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_show_about ();
 }
 
 static void
-open_user_settings(GtkWidget *widget, gpointer data)
+open_user_settings                      (GtkWidget *widget,
+                                         gpointer   data)
 {
         controller_open_usercfg();
 }
 
 static void
-apply_icon_theme(GtkIconTheme *icon_theme, GtkButton *button)
+apply_icon_theme                        (GtkIconTheme *icon_theme,
+                                         GtkButton    *button)
 {
         g_return_if_fail(button != NULL);
         const button_data *data;
@@ -677,7 +719,7 @@ apply_icon_theme(GtkIconTheme *icon_theme, GtkButton *button)
 }
 
 static GtkWidget *
-image_button_new(const button_data *data)
+image_button_new                        (const button_data *data)
 {
         g_return_val_if_fail(data->icon_name && data->icon_size > 0, NULL);
         GtkWidget *button = compat_gtk_button_new();
@@ -704,7 +746,8 @@ image_button_new(const button_data *data)
 }
 
 static GtkWidget *
-create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
+create_main_menu                        (VglMainWindow *w,
+                                         GtkAccelGroup *accel)
 {
         VglMainWindowPrivate *priv = w->priv;
         GtkMenuItem *lastfm, *radio, *actions, *bookmarks, *help;
@@ -978,7 +1021,7 @@ create_main_menu(VglMainWindow *w, GtkAccelGroup *accel)
 }
 
 static void
-vgl_main_window_init(VglMainWindow *self)
+vgl_main_window_init                    (VglMainWindow *self)
 {
         VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(self);
         GtkWindow *win = GTK_WINDOW(self);
@@ -1141,7 +1184,7 @@ vgl_main_window_init(VglMainWindow *self)
 }
 
 static void
-vgl_main_window_finalize(GObject *object)
+vgl_main_window_finalize                (GObject *object)
 {
         VglMainWindowPrivate *priv = VGL_MAIN_WINDOW (object)->priv;
         g_debug("Destroying main window ...");
@@ -1151,7 +1194,7 @@ vgl_main_window_finalize(GObject *object)
 }
 
 static void
-vgl_main_window_class_init(VglMainWindowClass *klass)
+vgl_main_window_class_init              (VglMainWindowClass *klass)
 {
         GObjectClass *obj_class = (GObjectClass *)klass;
         obj_class->finalize = vgl_main_window_finalize;
@@ -1159,7 +1202,7 @@ vgl_main_window_class_init(VglMainWindowClass *klass)
 }
 
 GtkWidget *
-vgl_main_window_new (VglController *controller)
+vgl_main_window_new                     (VglController *controller)
 {
         GtkWidget *win;
         g_return_val_if_fail (VGL_IS_CONTROLLER (controller), NULL);

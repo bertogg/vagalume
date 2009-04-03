@@ -23,7 +23,8 @@
         "\342\231\253 {artist} - {title} \342\231\253 (Vagalume {version})"
 
 static char *
-cfg_get_val(const char *line, const char *key)
+cfg_get_val                             (const char *line,
+                                         const char *key)
 {
         g_return_val_if_fail(line != NULL && key != NULL, NULL);
         regex_t creg;
@@ -45,14 +46,14 @@ cfg_get_val(const char *line, const char *key)
 
 /* Old config file, to be removed soon */
 static char *
-get_old_cfg_filename(void)
+get_old_cfg_filename                    (void)
 {
         const char *homedir = get_home_directory ();
         return g_strconcat(homedir, "/.vagalumerc", NULL);
 }
 
 static char *
-default_download_dir(void)
+default_download_dir                    (void)
 {
         const char *homedir = get_home_directory ();
         char *dldir = NULL;
@@ -68,7 +69,7 @@ default_download_dir(void)
 }
 
 const char *
-vgl_user_cfg_get_cfgdir(void)
+vgl_user_cfg_get_cfgdir                 (void)
 {
         static char *cfgdir = NULL;
         if (cfgdir == NULL) {
@@ -85,7 +86,7 @@ vgl_user_cfg_get_cfgdir(void)
 }
 
 static const char *
-get_cfg_filename(void)
+get_cfg_filename                        (void)
 {
         static char *cfgfile = NULL;
 
@@ -97,7 +98,8 @@ get_cfg_filename(void)
 }
 
 void
-vgl_user_cfg_set_username(VglUserCfg *cfg, const char *username)
+vgl_user_cfg_set_username               (VglUserCfg *cfg,
+                                         const char *username)
 {
         g_return_if_fail(cfg != NULL && username != NULL);
         g_free(cfg->username);
@@ -105,7 +107,8 @@ vgl_user_cfg_set_username(VglUserCfg *cfg, const char *username)
 }
 
 void
-vgl_user_cfg_set_password(VglUserCfg *cfg, const char *password)
+vgl_user_cfg_set_password               (VglUserCfg *cfg,
+                                         const char *password)
 {
         g_return_if_fail(cfg != NULL && password != NULL);
         g_free(cfg->password);
@@ -113,7 +116,8 @@ vgl_user_cfg_set_password(VglUserCfg *cfg, const char *password)
 }
 
 void
-vgl_user_cfg_set_http_proxy(VglUserCfg *cfg, const char *proxy)
+vgl_user_cfg_set_http_proxy             (VglUserCfg *cfg,
+                                         const char *proxy)
 {
         g_return_if_fail(cfg != NULL && proxy != NULL);
         g_free(cfg->http_proxy);
@@ -121,7 +125,8 @@ vgl_user_cfg_set_http_proxy(VglUserCfg *cfg, const char *proxy)
 }
 
 void
-vgl_user_cfg_set_download_dir(VglUserCfg *cfg, const char *dir)
+vgl_user_cfg_set_download_dir           (VglUserCfg *cfg,
+                                         const char *dir)
 {
         g_return_if_fail(cfg != NULL && dir != NULL);
         g_free(cfg->download_dir);
@@ -129,7 +134,8 @@ vgl_user_cfg_set_download_dir(VglUserCfg *cfg, const char *dir)
 }
 
 void
-vgl_user_cfg_set_imstatus_template(VglUserCfg *cfg, const char *str)
+vgl_user_cfg_set_imstatus_template      (VglUserCfg *cfg,
+                                         const char *str)
 {
         g_return_if_fail(cfg != NULL && str != NULL);
         g_free(cfg->imstatus_template);
@@ -137,7 +143,7 @@ vgl_user_cfg_set_imstatus_template(VglUserCfg *cfg, const char *str)
 }
 
 VglUserCfg *
-vgl_user_cfg_new(void)
+vgl_user_cfg_new                        (void)
 {
         VglUserCfg *cfg = g_slice_new0(VglUserCfg);
         cfg->username = g_strdup("");
@@ -160,7 +166,7 @@ vgl_user_cfg_new(void)
 }
 
 void
-vgl_user_cfg_destroy(VglUserCfg *cfg)
+vgl_user_cfg_destroy                    (VglUserCfg *cfg)
 {
         g_free(cfg->username);
         g_free(cfg->password);
@@ -171,7 +177,7 @@ vgl_user_cfg_destroy(VglUserCfg *cfg)
 }
 
 static VglUserCfg *
-lastfm_old_usercfg_read(void)
+lastfm_old_usercfg_read                 (void)
 {
         VglUserCfg *cfg = NULL;
         const int bufsize = 256;
@@ -238,7 +244,7 @@ lastfm_old_usercfg_read(void)
 }
 
 VglUserCfg *
-vgl_user_cfg_read (void)
+vgl_user_cfg_read                       (void)
 {
         xmlDoc *doc = NULL;
         xmlNode *root = NULL;
@@ -333,7 +339,7 @@ vgl_user_cfg_read (void)
 }
 
 gboolean
-vgl_user_cfg_write (VglUserCfg *cfg)
+vgl_user_cfg_write                      (VglUserCfg *cfg)
 {
         xmlDoc *doc;
         xmlNode *root;
