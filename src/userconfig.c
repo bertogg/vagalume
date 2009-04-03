@@ -270,9 +270,9 @@ vgl_user_cfg_read (void)
                 root = xmlDocGetRootElement (doc);
                 xmlChar *version = xmlGetProp (root, (xmlChar *) "version");
                 if (version == NULL ||
-                    xmlStrcmp (root->name, (const xmlChar *) "config")) {
+                    !xmlStrEqual (root->name, (xmlChar *) "config")) {
                         g_warning ("Error parsing config file");
-                } else if (xmlStrcmp (version, (const xmlChar *) "1")) {
+                } else if (!xmlStrEqual (version, (xmlChar *) "1")) {
                         g_warning ("This config file is version %s, but "
                                    "Vagalume " APP_VERSION " can only "
                                    "read version 1", version);

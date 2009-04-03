@@ -206,11 +206,11 @@ lastfm_parse_track(xmlDoc *doc, xmlNode *node, LastfmPls *pls,
         while (node != NULL) {
                 xmlChar *rel = xmlGetProp (node, (xmlChar *) "rel");
                 if (rel != NULL) {
-                        if (!xmlStrcmp (rel, free_track_rel)) {
+                        if (xmlStrEqual (rel, free_track_rel)) {
                                 g_free ((gpointer) track->free_track_url);
                                 track->free_track_url = val;
                                 val = NULL;
-                        } else if (!xmlStrcmp (rel, album_page_rel) &&
+                        } else if (xmlStrEqual (rel, album_page_rel) &&
                                    g_str_has_prefix (
                                            val, lastfm_music_prefix)) {
                                 char *artist, **parts;
@@ -267,7 +267,7 @@ lastfm_parse_playlist (const char *buffer, size_t bufsize,
         doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
                 node = xmlDocGetRootElement(doc);
-                if (!xmlStrcmp(node->name, (const xmlChar *) "playlist")) {
+                if (xmlStrEqual (node->name, (xmlChar *) "playlist")) {
                         node = node->xmlChildrenNode;
                 } else {
                         g_warning("Playlist file not in the expected format");

@@ -124,9 +124,9 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
                 xmlNode *root = xmlDocGetRootElement (doc);
                 xmlChar *mv = xmlGetProp (root, (xmlChar *) "version");
                 if (mv == NULL ||
-                    xmlStrcmp (root->name, (const xmlChar *) "bookmarks")) {
+                    !xmlStrEqual (root->name, (xmlChar *) "bookmarks")) {
                         g_warning ("Error parsing bookmark file");
-                } else if (xmlStrcmp (mv, (const xmlChar *) "1")) {
+                } else if (!xmlStrEqual (mv, (xmlChar *) "1")) {
                         g_warning ("This bookmark file is version %s, but "
                                    "Vagalume " APP_VERSION " can only "
                                    "read version 1", mv);
@@ -139,7 +139,7 @@ vgl_bookmark_mgr_load_from_disk(VglBookmarkMgr *mgr)
         /* Parse each bookmark */
         for (; node != NULL; node = node->next) {
                 const xmlChar *nodename = node->name;
-                if (!xmlStrcmp(nodename, (const xmlChar *) "bookmark")) {
+                if (xmlStrEqual (nodename, (xmlChar *) "bookmark")) {
                         char *name, *url;
                         const xmlNode *subnode = node->xmlChildrenNode;
                         xml_get_string (doc, subnode, "name", &name);

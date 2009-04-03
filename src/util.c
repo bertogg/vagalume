@@ -377,7 +377,7 @@ xml_find_node (const xmlNode *node, const char *name)
         g_return_val_if_fail (node != NULL && name != NULL, NULL);
 
         for (iter = node; iter != NULL; iter = iter->next) {
-                if (!xmlStrcmp (iter->name, (const xmlChar *) name)) {
+                if (xmlStrEqual (iter->name, (xmlChar *) name)) {
                         return iter;
                 }
         }

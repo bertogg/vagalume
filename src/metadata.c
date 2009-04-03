@@ -83,10 +83,10 @@ parse_xml_tags(const char *buffer, size_t bufsize, GList **tags)
         doc = xmlParseMemory(buffer, bufsize);
         if (doc != NULL) {
                 node = xmlDocGetRootElement(doc);
-                if (!xmlStrcmp(node->name, (const xmlChar *) "toptags") ||
-                    !xmlStrcmp(node->name, (const xmlChar *) "albumtags") ||
-                    !xmlStrcmp(node->name, (const xmlChar *) "artisttags") ||
-                    !xmlStrcmp(node->name, (const xmlChar *) "tracktags")) {
+                if (xmlStrEqual (node->name, (xmlChar *) "toptags") ||
+                    xmlStrEqual (node->name, (xmlChar *) "albumtags") ||
+                    xmlStrEqual (node->name, (xmlChar *) "artisttags") ||
+                    xmlStrEqual (node->name, (xmlChar *) "tracktags")) {
                         node = node->xmlChildrenNode;
                         retval = TRUE;
                 } else {
