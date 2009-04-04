@@ -392,7 +392,7 @@ xml_find_node                           (const xmlNode *node,
 {
         const xmlNode *iter;
 
-        g_return_val_if_fail (node != NULL && name != NULL, NULL);
+        g_return_val_if_fail (name != NULL, NULL);
 
         for (iter = node; iter != NULL; iter = iter->next) {
                 if (xmlStrEqual (iter->name, (xmlChar *) name)) {
