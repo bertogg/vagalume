@@ -18,16 +18,16 @@
 #include "protocol.h"
 #include "globaldefs.h"
 
-static const char *handshake_url =
+static const char handshake_url[] =
        "http://ws.audioscrobbler.com/radio/handshake.php"
        "?version=1.5&platform=" APP_OS_LC;
-static const char *custom_pls_path =
+static const char custom_pls_path[] =
        "/1.0/webclient/getresourceplaylist.php";
-static const xmlChar *free_track_rel = (xmlChar *)
+static const xmlChar free_track_rel[] =
        "http://www.last.fm/freeTrackURL";
-static const xmlChar *album_page_rel = (xmlChar *)
+static const xmlChar album_page_rel[] =
        "http://www.last.fm/albumpage";
-static const char *lastfm_music_prefix =
+static const char lastfm_music_prefix[] =
        "http://www.last.fm/music/";
 
 /**

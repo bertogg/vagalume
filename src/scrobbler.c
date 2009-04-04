@@ -25,7 +25,7 @@
 #include "util.h"
 #include "userconfig.h"
 
-static const char *rsp_session_url =
+static const char rsp_session_url[] =
        "http://post.audioscrobbler.com/?hs=true&p=1.2"
        "&c=" LASTFM_APP_ID "&v=" LASTFM_APP_VERSION;
 

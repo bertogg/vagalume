@@ -17,7 +17,7 @@
 #include "http.h"
 #include "util.h"
 
-static const char *xmlrpc_url =
+static const char xmlrpc_url[] =
 "http://ws.audioscrobbler.com:80/1.0/rw/xmlrpc.php";
 
 /**

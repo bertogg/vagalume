@@ -14,21 +14,21 @@
 #include <libxml/parser.h>
 #include <strings.h>
 
-static const char *friends_url =
+static const char friends_url[] =
        "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
-static const char *user_tags_url =
+static const char user_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/user/%s/tags.xml";
-static const char *artist_tags_url =
+static const char artist_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/artist/%s/toptags.xml";
-static const char *album_tags_url =
+static const char album_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/album/%s/%s/toptags.xml";
-static const char *track_tags_url =
+static const char track_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/track/%s/%s/toptags.xml";
-static const char *user_artist_tags_url =
+static const char user_artist_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/user/%s/artisttags.xml?artist=%s";
-static const char *user_album_tags_url =
+static const char user_album_tags_url[] =
  "http://ws.audioscrobbler.com/1.0/user/%s/albumtags.xml?artist=%s&album=%s";
-static const char *user_track_tags_url =
+static const char user_track_tags_url[] =
  "http://ws.audioscrobbler.com/1.0/user/%s/tracktags.xml?artist=%s&track=%s";
 
 /**

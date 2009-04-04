@@ -106,10 +106,10 @@ static const char *artists[] = {
         NULL
 };
 
-static const char *appdescr = N_("A Last.fm client for Gnome and Maemo");
-static const char *copyright = "(c) 2007-2009 Igalia, S.L.";
-static const char *website = "http://vagalume.igalia.com/";
-static const char *license =
+static const char appdescr[] = N_("A Last.fm client for Gnome and Maemo");
+static const char copyright[] = "(c) 2007-2009 Igalia, S.L.";
+static const char website[] = "http://vagalume.igalia.com/";
+static const char license[] =
 "Vagalume is free software: you can redistribute\n"
 "it and/or modify it under the terms of the GNU\n"
 "General Public License version 3 as published by\n"
@@ -124,7 +124,7 @@ static const char *license =
 "You should have received a copy of the GNU General\n"
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/\n";
-static const char *translators_tpl =
+static const char translators_tpl[] =
 "%s (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
          "* Oskar Welzl <mail@welzl.info>\n\n"
 "%s (es)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"

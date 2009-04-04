@@ -1,5 +1,15 @@
 2009-04-04  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/metadata.c
+	* src/protocol.c
+	* src/scrobbler.c
+	* src/uimisc.c
+	* src/vgl-main-window.c
+	* src/xmlrpc.c:
+	Use arrays instead of pointers for static strings.
+
+2009-04-04  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.c (lastfm_parse_track):
 	Check for empty free track URLs
 

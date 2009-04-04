@@ -113,7 +113,7 @@ static const button_data addpl_button = {
         N_("Add this track to playlist")
 };
 
-static const char *cover_background = APP_DATA_DIR "/cover.png";
+static const char cover_background[] = APP_DATA_DIR "/cover.png";
 
 void
 vgl_main_window_run_app                 (void)
