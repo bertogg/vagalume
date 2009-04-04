@@ -208,7 +208,7 @@ lastfm_parse_track                      (xmlDoc     *doc,
         node = (xmlNode *) xml_get_string (doc, node, "link", &val);
         while (node != NULL) {
                 xmlChar *rel = xmlGetProp (node, (xmlChar *) "rel");
-                if (rel != NULL) {
+                if (rel != NULL && val != NULL && val[0] != '\0') {
                         if (xmlStrEqual (rel, free_track_rel)) {
                                 g_free ((gpointer) track->free_track_url);
                                 track->free_track_url = val;

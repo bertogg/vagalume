@@ -1,5 +1,10 @@
 2009-04-04  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/protocol.c (lastfm_parse_track):
+	Check for empty free track URLs
+
+2009-04-04  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/util.c (xml_find_node):
 	Allow empty lists (node == NULL)
 
