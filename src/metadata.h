@@ -14,6 +14,7 @@
 #include "playlist.h"
 #include <glib.h>
 
+#if 0 /* Superseded by lastfm_ws_*() */
 gboolean
 lastfm_get_friends                      (const char  *username,
                                          GList      **friendlist);
@@ -21,6 +22,7 @@ lastfm_get_friends                      (const char  *username,
 gboolean
 lastfm_get_user_tags                    (const char  *username,
                                          GList      **taglist);
+#endif
 
 gboolean
 lastfm_get_user_track_tags              (const char            *username,

@@ -14,10 +14,12 @@
 #include <libxml/parser.h>
 #include <strings.h>
 
+#if 0
 static const char friends_url[] =
        "http://ws.audioscrobbler.com/1.0/user/%s/friends.txt";
 static const char user_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/user/%s/tags.xml";
+#endif
 static const char artist_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/artist/%s/toptags.xml";
 static const char album_tags_url[] =
@@ -37,6 +39,7 @@ static const char user_track_tags_url[] =
  * @param friendlist Where the list of friends (char *) will be written
  * @return Whether the operation has been successful or not
  */
+#if 0 /* Superseded by lastfm_ws_*() */
 gboolean
 lastfm_get_friends                      (const char  *username,
                                          GList      **friendlist)
@@ -65,7 +68,7 @@ lastfm_get_friends                      (const char  *username,
         *friendlist = list;
         return found;
 }
-
+#endif
 /**
  * Parse an XML tag list
  * @param buffer A buffer where the XML document is stored
@@ -145,6 +148,7 @@ lastfm_get_tags                         (const char  *url,
  * @param taglist Where the list of tags (char *) will be written
  * @return Whether the operation has been successful or not
  */
+#if 0 /* Superseded by lastfm_ws_*() */
 gboolean
 lastfm_get_user_tags                    (const char  *username,
                                          GList      **taglist)
@@ -155,7 +159,7 @@ lastfm_get_user_tags                    (const char  *username,
         g_free(url);
         return found;
 }
-
+#endif
 /**
  * Obtain the list of tags that the user set to a track
  * @param username The user ID

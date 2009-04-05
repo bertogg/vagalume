@@ -31,6 +31,7 @@
 #include "util.h"
 #include "vgl-bookmark-mgr.h"
 #include "vgl-bookmark-window.h"
+#include "lastfm-ws.h"
 
 #ifdef SET_IM_STATUS
 #include "imstatus.h"
@@ -334,7 +335,7 @@ get_user_extradata                      (void)
         }
         while (!finished) {
                 if (!friends_ok) {
-                        friends_ok = lastfm_get_friends(user, &friends);
+                        friends_ok = lastfm_ws_get_friends (user, &friends);
                         if (friends_ok) {
                                 g_debug("Friend list ready");
                                 gdk_threads_enter();
@@ -345,7 +346,7 @@ get_user_extradata                      (void)
                         }
                 }
                 if (!usertags_ok) {
-                        usertags_ok = lastfm_get_user_tags(user, &usertags);
+                        usertags_ok = lastfm_ws_get_user_tags (user,&usertags);
                         if (usertags_ok) {
                                 g_debug("Tag list ready");
                                 gdk_threads_enter();

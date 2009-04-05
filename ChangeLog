@@ -1,5 +1,14 @@
 2009-04-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/Makefile.am
+	* src/metadata.h
+	* src/metadata.c
+	* src/controller.c (get_user_extradata):
+	Use lastfm_ws_get_friends() and lastfm_ws_get_user_tags() from the
+	new API and disable the old functions.
+
+2009-04-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.c (lastfm_ws_http_request):
 	Return a boolean with the response status code.
 

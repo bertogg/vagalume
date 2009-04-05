@@ -23,6 +23,7 @@ vagalume_SOURCES = \
 	dlwin.c dlwin.h \
 	globaldefs.h \
 	http.c http.h \
+	lastfm-ws.c lastfm-ws.h \
 	main.c \
 	marshal.c marshal.h \
 	metadata.c metadata.h \
