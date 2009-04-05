@@ -23,15 +23,15 @@ lastfm_get_user_tags                    (const char  *username,
                                          GList      **taglist);
 
 gboolean
-lastfm_get_user_track_tags              (const char         *username,
-                                         const LastfmTrack  *track,
-                                         request_type        req,
-                                         GList             **taglist);
+lastfm_get_user_track_tags              (const char            *username,
+                                         const LastfmTrack     *track,
+                                         LastfmTrackComponent   type,
+                                         GList                **taglist);
 
 gboolean
-lastfm_get_track_tags                   (const LastfmTrack  *track,
-                                         request_type        req,
-                                         GList             **taglist);
+lastfm_get_track_tags                   (const LastfmTrack     *track,
+                                         LastfmTrackComponent   type,
+                                         GList                **taglist);
 
 void
 lastfm_get_track_cover_image            (LastfmTrack *track);

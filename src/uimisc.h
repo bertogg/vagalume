@@ -32,20 +32,20 @@ GtkWidget *
 compat_gtk_button_new                   (void);
 
 gboolean
-tagwin_run                              (GtkWindow     *parent,
-                                         const char    *user,
-                                         char         **newtags,
-                                         const GList   *usertags,
-                                         LastfmTrack   *track,
-                                         request_type  *type);
+tagwin_run                              (GtkWindow             *parent,
+                                         const char            *user,
+                                         char                 **newtags,
+                                         const GList           *usertags,
+                                         LastfmTrack           *track,
+                                         LastfmTrackComponent  *type);
 
 gboolean
-recommwin_run                           (GtkWindow          *parent,
-                                         char              **user,
-                                         char              **message,
-                                         const GList        *friends,
-                                         const LastfmTrack  *track,
-                                         request_type       *type);
+recommwin_run                           (GtkWindow             *parent,
+                                         char                 **user,
+                                         char                 **message,
+                                         const GList           *friends,
+                                         const LastfmTrack     *track,
+                                         LastfmTrackComponent  *type);
 
 void
 ui_info_banner                          (GtkWindow  *parent,

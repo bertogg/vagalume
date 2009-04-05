@@ -160,11 +160,11 @@ xmlrpc_send_request                     (const char *request,
  * @return Whether the operation was successful or not
  */
 gboolean
-tag_track                               (const char        *user,
-                                         const char        *password,
-                                         const LastfmTrack *track,
-                                         request_type       type,
-                                         GSList            *tags)
+tag_track                               (const char           *user,
+                                         const char           *password,
+                                         const LastfmTrack    *track,
+                                         LastfmTrackComponent  type,
+                                         GSList               *tags)
 {
         g_return_val_if_fail(user && password && track, FALSE);
         gboolean retval;
@@ -173,11 +173,11 @@ tag_track                               (const char        *user,
         const char *method;
         param3 = array_param(tags);
         param4 = string_param("set");                  /* or use "append" */
-        if (type == REQUEST_ARTIST) {
+        if (type == LASTFM_TRACK_COMPONENT_ARTIST) {
                 method = "tagArtist";
                 param1 = string_param(track->artist);
                 param2 = NULL;
-        } else if (type == REQUEST_TRACK) {
+        } else if (type == LASTFM_TRACK_COMPONENT_TRACK) {
                 method = "tagTrack";
                 param1 = string_param(track->artist);
                 param2 = string_param(track->title);
@@ -241,12 +241,12 @@ love_ban_track                          (const char        *user,
  * @return Whether the operation was successful or not
  */
 gboolean
-recommend_track                         (const char        *user,
-                                         const char        *password,
-                                         const LastfmTrack *track,
-                                         const char        *text,
-                                         request_type       type,
-                                         const char        *rcpt)
+recommend_track                         (const char           *user,
+                                         const char           *password,
+                                         const LastfmTrack    *track,
+                                         const char           *text,
+                                         LastfmTrackComponent  type,
+                                         const char           *rcpt)
 {
         g_return_val_if_fail(user && password && track && text && rcpt, FALSE);
         gboolean retval;
@@ -254,11 +254,11 @@ recommend_track                         (const char        *user,
         const char *method = "recommendItem";
         xmlNode *artist, *title, *recomm_type, *recomm_to;
         xmlNode *recomm_body, *language;
-        if (type == REQUEST_ARTIST) {
+        if (type == LASTFM_TRACK_COMPONENT_ARTIST) {
                 artist = string_param(track->artist);
                 title = string_param("");
                 recomm_type = string_param("artist");
-        } else if (type == REQUEST_TRACK) {
+        } else if (type == LASTFM_TRACK_COMPONENT_TRACK) {
                 artist = string_param(track->artist);
                 title = string_param(track->title);
                 recomm_type = string_param("track");

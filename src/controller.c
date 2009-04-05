@@ -88,14 +88,14 @@ typedef struct {
 typedef struct {
         LastfmTrack *track;
         char *taglist;                /* comma-separated list of tags */
-        request_type type;
+        LastfmTrackComponent type;
 } tag_data;
 
 typedef struct {
         LastfmTrack *track;
         char *rcpt;                  /* Recipient of the recommendation */
         char *text;                  /* text of the recommendation */
-        request_type type;
+        LastfmTrackComponent type;
 } recomm_data;
 
 typedef struct {
@@ -1087,12 +1087,12 @@ controller_tag_track                    (void)
 {
         g_return_if_fail(mainwin && usercfg && nowplaying);
         /* Keep this static to remember the previous value */
-        static request_type type = REQUEST_ARTIST;
+        static LastfmTrackComponent type = LASTFM_TRACK_COMPONENT_ARTIST;
         char *tags = NULL;
         LastfmTrack *track = lastfm_track_ref(nowplaying);
         gboolean accept;
-        if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
-                type = REQUEST_ARTIST;
+        if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
+                type = LASTFM_TRACK_COMPONENT_ARTIST;
         }
         accept = tagwin_run(vgl_main_window_get_window(mainwin, FALSE),
                             usercfg->username, &tags,
@@ -1166,11 +1166,11 @@ controller_recomm_track                 (void)
         char *rcpt = NULL;
         char *body = NULL;
         /* Keep this static to remember the previous value */
-        static request_type type = REQUEST_TRACK;
+        static LastfmTrackComponent type = LASTFM_TRACK_COMPONENT_TRACK;
         LastfmTrack *track = lastfm_track_ref(nowplaying);
         gboolean accept;
-        if (track->album[0] == '\0' && type == REQUEST_ALBUM) {
-                type = REQUEST_ARTIST;
+        if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
+                type = LASTFM_TRACK_COMPONENT_ARTIST;
         }
 
         accept = recommwin_run(vgl_main_window_get_window(mainwin, FALSE),

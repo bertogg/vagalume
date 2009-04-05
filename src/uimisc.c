@@ -87,7 +87,7 @@ typedef struct {
 
 typedef struct {
         tagwin *w;
-        request_type type;
+        LastfmTrackComponent type;
 } get_track_tags_data;
 
 enum {
@@ -1131,14 +1131,16 @@ artist_track_album_selection_combo      (const LastfmTrack *t)
         text = g_strconcat(_("Artist: "), t->artist, NULL);
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter,
-                           ARTIST_TRACK_ALBUM_TYPE, REQUEST_ARTIST,
+                           ARTIST_TRACK_ALBUM_TYPE,
+                           LASTFM_TRACK_COMPONENT_ARTIST,
                            ARTIST_TRACK_ALBUM_TEXT, text, -1);
         g_free(text);
 
         text = g_strconcat(_("Track: "), t->title, NULL);
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter,
-                           ARTIST_TRACK_ALBUM_TYPE, REQUEST_TRACK,
+                           ARTIST_TRACK_ALBUM_TYPE,
+                           LASTFM_TRACK_COMPONENT_TRACK,
                            ARTIST_TRACK_ALBUM_TEXT, text, -1);
         g_free(text);
 
@@ -1146,7 +1148,8 @@ artist_track_album_selection_combo      (const LastfmTrack *t)
                 text = g_strconcat(_("Album: "), t->album, NULL);
                 gtk_list_store_append(store, &iter);
                 gtk_list_store_set(store, &iter,
-                                   ARTIST_TRACK_ALBUM_TYPE, REQUEST_ALBUM,
+                                   ARTIST_TRACK_ALBUM_TYPE,
+                                   LASTFM_TRACK_COMPONENT_ALBUM,
                                    ARTIST_TRACK_ALBUM_TEXT, text, -1);
                 g_free(text);
         }
@@ -1162,13 +1165,13 @@ artist_track_album_selection_combo      (const LastfmTrack *t)
         return GTK_COMBO_BOX(combo);
 }
 
-static request_type
+static LastfmTrackComponent
 artist_track_album_combo_get_selected   (GtkComboBox *combo)
 {
         g_return_val_if_fail(combo != NULL, 0);
         GtkTreeModel *model;
         GtkTreeIter iter;
-        request_type type;
+        LastfmTrackComponent type;
         model = gtk_combo_box_get_model(combo);
         gtk_combo_box_get_active_iter(combo, &iter);
         gtk_tree_model_get(model, &iter, ARTIST_TRACK_ALBUM_TYPE, &type, -1);
@@ -1238,17 +1241,17 @@ get_track_tags_thread                   (gpointer userdata)
                 model = ui_create_options_list(globallist);
         }
         switch (data->type) {
-        case REQUEST_ARTIST:
+        case LASTFM_TRACK_COMPONENT_ARTIST:
                 data->w->poptags_artist = model;
                 data->w->tags_artist = usertags;
                 data->w->artist_state = TAGCOMBO_STATE_READY;
                 break;
-        case REQUEST_TRACK:
+        case LASTFM_TRACK_COMPONENT_TRACK:
                 data->w->poptags_track = model;
                 data->w->tags_track = usertags;
                 data->w->track_state = TAGCOMBO_STATE_READY;
                 break;
-        case REQUEST_ALBUM:
+        case LASTFM_TRACK_COMPONENT_ALBUM:
                 data->w->poptags_album = model;
                 data->w->tags_album = usertags;
                 data->w->album_state = TAGCOMBO_STATE_READY;
@@ -1277,9 +1280,10 @@ tagwin_selcombo_changed                 (GtkComboBox *combo,
         GtkTreeModel *model = NULL;
         const char *usertags = NULL;
         tagcombo_state oldstate;
-        request_type type = artist_track_album_combo_get_selected(combo);
+        LastfmTrackComponent type;
+        type = artist_track_album_combo_get_selected (combo);
         switch (type) {
-        case REQUEST_ARTIST:
+        case LASTFM_TRACK_COMPONENT_ARTIST:
                 oldstate = w->artist_state;
                 if (oldstate == TAGCOMBO_STATE_READY) {
                         model = w->poptags_artist;
@@ -1288,7 +1292,7 @@ tagwin_selcombo_changed                 (GtkComboBox *combo,
                         w->artist_state = TAGCOMBO_STATE_LOADING;
                 }
                 break;
-        case REQUEST_TRACK:
+        case LASTFM_TRACK_COMPONENT_TRACK:
                 oldstate = w->track_state;
                 if (oldstate == TAGCOMBO_STATE_READY) {
                         model = w->poptags_track;
@@ -1297,7 +1301,7 @@ tagwin_selcombo_changed                 (GtkComboBox *combo,
                         w->track_state = TAGCOMBO_STATE_LOADING;
                 }
                 break;
-        case REQUEST_ALBUM:
+        case LASTFM_TRACK_COMPONENT_ALBUM:
                 g_return_if_fail(w->track->album[0] != '\0');
                 oldstate = w->album_state;
                 if (oldstate == TAGCOMBO_STATE_READY) {
@@ -1362,12 +1366,12 @@ tagwin_tagcombo_changed                 (GtkComboBox *combo,
 }
 
 gboolean
-tagwin_run                              (GtkWindow     *parent,
-                                         const char    *user,
-                                         char         **newtags,
-                                         const GList   *usertags,
-                                         LastfmTrack   *track,
-                                         request_type  *type)
+tagwin_run                              (GtkWindow             *parent,
+                                         const char            *user,
+                                         char                 **newtags,
+                                         const GList           *usertags,
+                                         LastfmTrack           *track,
+                                         LastfmTrackComponent  *type)
 {
         g_return_val_if_fail(track && type && user && newtags, FALSE);
         tagwin *t;
@@ -1401,13 +1405,13 @@ tagwin_run                              (GtkWindow     *parent,
         selcombo = artist_track_album_selection_combo(track);
 
         switch (*type) {
-        case REQUEST_ARTIST:
+        case LASTFM_TRACK_COMPONENT_ARTIST:
                 gtk_combo_box_set_active(selcombo, 0);
                 break;
-        case REQUEST_TRACK:
+        case LASTFM_TRACK_COMPONENT_TRACK:
                 gtk_combo_box_set_active(selcombo, 1);
                 break;
-        case REQUEST_ALBUM:
+        case LASTFM_TRACK_COMPONENT_ALBUM:
                 g_return_val_if_fail(track->album[0] != '\0', FALSE);
                 gtk_combo_box_set_active(selcombo, 2);
                 break;
@@ -1526,12 +1530,12 @@ tagwin_run                              (GtkWindow     *parent,
 }
 
 gboolean
-recommwin_run                           (GtkWindow          *parent,
-                                         char              **user,
-                                         char              **message,
-                                         const GList        *friends,
-                                         const LastfmTrack  *track,
-                                         request_type       *type)
+recommwin_run                           (GtkWindow             *parent,
+                                         char                 **user,
+                                         char                 **message,
+                                         const GList           *friends,
+                                         const LastfmTrack     *track,
+                                         LastfmTrackComponent  *type)
 {
         g_return_val_if_fail(user && message && track && type, FALSE);
         gboolean retval = FALSE;
@@ -1557,13 +1561,13 @@ recommwin_run                           (GtkWindow          *parent,
         gtk_box_pack_start(selbox, GTK_WIDGET(selcombo), TRUE, TRUE, 0);
 
         switch (*type) {
-        case REQUEST_ARTIST:
+        case LASTFM_TRACK_COMPONENT_ARTIST:
                 gtk_combo_box_set_active(selcombo, 0);
                 break;
-        case REQUEST_TRACK:
+        case LASTFM_TRACK_COMPONENT_TRACK:
                 gtk_combo_box_set_active(selcombo, 1);
                 break;
-        case REQUEST_ALBUM:
+        case LASTFM_TRACK_COMPONENT_ALBUM:
                 g_return_val_if_fail(track->album[0] != '\0', FALSE);
                 gtk_combo_box_set_active(selcombo, 2);
                 break;

@@ -14,10 +14,10 @@
 #include <glib.h>
 
 typedef enum {
-        REQUEST_ARTIST,
-        REQUEST_TRACK,
-        REQUEST_ALBUM
-} request_type;
+        LASTFM_TRACK_COMPONENT_ARTIST,
+        LASTFM_TRACK_COMPONENT_TRACK,
+        LASTFM_TRACK_COMPONENT_ALBUM
+} LastfmTrackComponent;
 
 typedef struct {
         const char *stream_url;
