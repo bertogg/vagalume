@@ -1,5 +1,10 @@
 2009-04-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/lastfm-ws.c (lastfm_ws_http_request):
+	Return a boolean with the response status code.
+
+2009-04-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.h
 	* src/lastfm-ws.c:
 	Initial implementation of the Last.fm Web Services API v2.0

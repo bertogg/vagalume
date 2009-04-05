@@ -171,7 +171,7 @@ lastfm_ws_format_params                 (const char  *base_url,
         return g_string_free (url, FALSE);
 }
 
-static void
+static gboolean
 lastfm_ws_http_request                  (const char       *method,
                                          HttpRequestType   type,
                                          gboolean          add_api_sig,
@@ -179,13 +179,14 @@ lastfm_ws_http_request                  (const char       *method,
                                          const xmlNode   **node,
                                          ...)
 {
+        gboolean retvalue = FALSE;
         const char *name;
         char *buffer;
         size_t bufsize;
         GList *l = NULL;
         va_list args;
 
-        g_return_if_fail (method && doc && node);
+        g_return_val_if_fail (method && doc && node, FALSE);
 
         *doc  = NULL;
         *node = NULL;
@@ -225,13 +226,21 @@ lastfm_ws_http_request                  (const char       *method,
         if (buffer != NULL) {
                 *doc = xmlParseMemory (buffer, bufsize);
                 if (*doc != NULL) {
-                        *node = xmlDocGetRootElement (*doc);
-                        if ((*node = xml_find_node (*node, "lfm"))) {
-                                *node = (*node)->xmlChildrenNode;
+                        xmlNode *n = xmlDocGetRootElement (*doc);
+                        if ((n = (xmlNode *) xml_find_node (n, "lfm"))) {
+                                xmlChar *status;
+                                status = xmlGetProp (n, (xmlChar *) "status");
+                                if (status) {
+                                        retvalue = xmlStrEqual (
+                                                status, (xmlChar *) "ok");
+                                        xmlFree (status);
+                                }
+                        }
+                        if (retvalue) {
+                                *node = n->xmlChildrenNode;
                         } else {
                                 xmlFreeDoc (*doc);
                                 *doc = NULL;
-                                *node = NULL;
                         }
                 }
         }
@@ -240,6 +249,8 @@ lastfm_ws_http_request                  (const char       *method,
         g_list_foreach (l, (GFunc) lastfm_ws_parameter_destroy, NULL);
         g_list_free (l);
         g_free (buffer);
+
+        return retvalue;
 }
 
 char *
