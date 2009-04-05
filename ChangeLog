@@ -1,5 +1,10 @@
 2009-04-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (finish_playing_track):
+	Love/ban rating was being reset before scrobbling a track. Fixed.
+
+2009-04-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/http.h
 	* src/http.c (http_post_buffer)
 	* src/scrobbler.c (rsp_set_nowplaying, rsp_scrobble)

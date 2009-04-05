@@ -708,10 +708,11 @@ static void
 finish_playing_track                    (void)
 {
         if (nowplaying != NULL) {
+                RspRating rating = nowplaying_rating;
                 controller_set_nowplaying(NULL);
                 lastfm_audio_stop ();
                 g_signal_emit (vgl_controller, signals[TRACK_STOPPED], 0,
-                               nowplaying_rating);
+                               rating);
         }
 }
 
