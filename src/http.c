@@ -249,7 +249,8 @@ http_get_buffer                         (const char  *url,
 gboolean
 http_post_buffer                        (const char    *url,
                                          const char    *postdata,
-                                         char         **retdata,
+                                         char         **retbuf,
+                                         size_t        *retbufsize,
                                          const GSList  *headers)
 {
         g_return_val_if_fail(url != NULL && postdata != NULL, FALSE);
@@ -259,7 +260,7 @@ http_post_buffer                        (const char    *url,
         struct curl_slist *hdrs = NULL;
         handle = curl_easy_init();
 
-        if (retdata != NULL) {
+        if (retbuf != NULL) {
                 curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION,
                                  http_copy_buffer);
                 curl_easy_setopt(handle, CURLOPT_WRITEDATA, &dstbuf);
@@ -289,11 +290,14 @@ http_post_buffer                        (const char    *url,
                 dstbuf.buffer = NULL;
         }
 
-        if (retdata != NULL) {
+        if (retbuf != NULL) {
                 if (dstbuf.buffer != NULL) {
                         dstbuf.buffer[dstbuf.size] = '\0';
                 }
-                *retdata = dstbuf.buffer;
+                *retbuf = dstbuf.buffer;
+                if (retbufsize != NULL) {
+                        *retbufsize = dstbuf.size;
+                }
         }
         return (retcode == CURLE_OK);
 }

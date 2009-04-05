@@ -1,3 +1,11 @@
+2009-04-05  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/http.h
+	* src/http.c (http_post_buffer)
+	* src/scrobbler.c (rsp_set_nowplaying, rsp_scrobble)
+	* src/xmlrpc.c (xmlrpc_send_request):
+	Add optional 'retbufsize' param to http_post_buffer()
+
 2009-04-04  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/metadata.c

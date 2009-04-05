@@ -44,7 +44,8 @@ http_download_file                      (const char                *url,
 gboolean
 http_post_buffer                        (const char    *url,
                                          const char    *postdata,
-                                         char         **retdata,
+                                         char         **retbuf,
+                                         size_t        *retbufsize,
                                          const GSList  *headers);
 
 void

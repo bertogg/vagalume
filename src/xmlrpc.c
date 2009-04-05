@@ -131,7 +131,7 @@ xmlrpc_send_request                     (const char *request,
         GSList *headers = NULL;
         char *retbuf = NULL;
         headers = g_slist_append(headers, "Content-Type: text/xml");
-        http_post_buffer(xmlrpc_url, request, &retbuf, headers);
+        http_post_buffer (xmlrpc_url, request, &retbuf, NULL, headers);
 
         /* Check its return value */
         if (retbuf != NULL && g_strrstr(retbuf, "OK")) {

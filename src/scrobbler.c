@@ -178,7 +178,7 @@ rsp_set_nowplaying                      (const RspSession  *rsp,
         buffer = g_strconcat("s=", rsp->id, "&a=", artist,
                              "&t=", title, "&b=", album,
                              "&m=&n=", duration, NULL);
-        http_post_buffer(rsp->np_url, buffer, &retbuf, NULL);
+        http_post_buffer (rsp->np_url, buffer, &retbuf, NULL, NULL);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Correctly set Now Playing");
                 retvalue = RSP_RESPONSE_OK;
@@ -234,7 +234,7 @@ rsp_scrobble                            (const RspSession  *rsp,
                              "&o[0]=L", t->trackauth,
                              "&n[0]=&m[0]=&r[0]=", ratingstr,
                              duration, NULL);
-        http_post_buffer(rsp->post_url, buffer, &retbuf, NULL);
+        http_post_buffer (rsp->post_url, buffer, &retbuf, NULL, NULL);
         if (retbuf != NULL && !strncmp(retbuf, "OK", 2)) {
                 g_debug("Track scrobbled");
                 retvalue = RSP_RESPONSE_OK;
