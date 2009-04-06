@@ -2,7 +2,7 @@
  * xmlrpc.c -- XMLRPC-based functions to tag artists, tracks, albums,
  *             loves and hates
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3

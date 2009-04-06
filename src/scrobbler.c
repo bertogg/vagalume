@@ -7,8 +7,6 @@
  * Version 1.2 implemented, see here:
  * http://www.audioscrobbler.net/development/protocol/
  *
- * Copyright (C) 2007 Alberto Garcia <agarcia@igalia.com>
- *
  * This file is part of Vagalume and is published under the GNU GPLv3.
  * See the README file for more details.
  */
