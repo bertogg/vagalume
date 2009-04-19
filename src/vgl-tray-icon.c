@@ -15,7 +15,6 @@
 #include "vgl-tray-icon.h"
 #include "globaldefs.h"
 
-#include "metadata.h"
 #include "util.h"
 #include "uimisc.h"
 #include "scrobbler.h"

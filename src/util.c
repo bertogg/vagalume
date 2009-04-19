@@ -488,3 +488,61 @@ xml_get_glong                           (xmlDoc        *doc,
 
         return position;
 }
+
+/**
+ * Download the album cover of a track, and store it in the track
+ * object. This function can take a long time so better use threads or
+ * make sure it won't block anything important. The cover of the same
+ * track won't be downloaded twice, not even if you call this function
+ * while other thread is downloading it.
+ * @param track The track
+ */
+void
+lastfm_get_track_cover_image            (LastfmTrack *track)
+{
+        g_return_if_fail(track != NULL);
+        static GStaticMutex static_mutex = G_STATIC_MUTEX_INIT;
+        static GList *dloads_in_progress = NULL;
+        static GCond *cond = NULL;
+        GMutex *mutex = g_static_mutex_get_mutex (&static_mutex);
+
+        /* If this track has no cover image then we have nothing to do */
+        if (track->image_url == NULL) return;
+
+        /* Critical section: decide if the cover needs to be downloaded */
+        g_mutex_lock(mutex);
+
+        if (G_UNLIKELY (cond == NULL)) {
+                cond = g_cond_new();
+        }
+
+        if (!track->image_data_available) {
+                if (g_list_find(dloads_in_progress, track) != NULL) {
+                        /* If the track is being downloaded, then wait */
+                        while (!track->image_data_available) {
+                                g_cond_wait(cond, mutex);
+                        }
+                } else {
+                        /* Otherwise, mark the track as being downloaded */
+                        dloads_in_progress =
+                                g_list_prepend(dloads_in_progress, track);
+                }
+        }
+
+        g_mutex_unlock(mutex);
+
+        if (!track->image_data_available) {
+                char *imgdata;
+                size_t imgsize;
+
+                /* Download the cover and save it on the track */
+                http_get_buffer(track->image_url, &imgdata, &imgsize);
+                lastfm_track_set_cover_image(track, imgdata, imgsize);
+
+                /* Remove from the download list and tell everyone */
+                g_mutex_lock(mutex);
+                dloads_in_progress = g_list_remove(dloads_in_progress, track);
+                g_cond_broadcast(cond);
+                g_mutex_unlock(mutex);
+        }
+}

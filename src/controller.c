@@ -19,7 +19,6 @@
 #include "marshal.h"
 #include "connection.h"
 #include "controller.h"
-#include "metadata.h"
 #include "scrobbler.h"
 #include "protocol.h"
 #include "playlist.h"

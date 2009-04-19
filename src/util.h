@@ -11,6 +11,7 @@
 #define UTIL_H
 
 #include "config.h"
+#include "playlist.h"
 #include <glib.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <libxml/parser.h>
@@ -102,5 +103,8 @@ void
 launch_url                              (const char        *url,
                                          GAppLaunchContext *context);
 #endif
+
+void
+lastfm_get_track_cover_image            (LastfmTrack *track);
 
 #endif

@@ -1,7 +1,7 @@
 /*
  * metadata.h -- Last.fm metadata (friends, tags, ...)
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -34,8 +34,5 @@ gboolean
 lastfm_get_track_tags                   (const LastfmTrack     *track,
                                          LastfmTrackComponent   type,
                                          GList                **taglist);
-
-void
-lastfm_get_track_cover_image            (LastfmTrack *track);
 
 #endif
