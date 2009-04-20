@@ -15,6 +15,10 @@
 #include <string.h>
 #include <stdarg.h>
 
+/* Uncomment this to use the new album.getInfo() web service to obtain
+ * album tags. Note that it gives less results than the old method */
+/* #define VGL_USE_NEW_ALBUM_TAGS_API 1 */
+
 typedef enum {
         HTTP_REQUEST_GET,
         HTTP_REQUEST_POST
@@ -533,6 +537,40 @@ lastfm_ws_get_user_track_tags           (const LastfmWsSession  *session,
         return retvalue;
 }
 
+#ifndef VGL_USE_NEW_ALBUM_TAGS_API
+static gboolean
+lastfm_ws_old_get_album_tags            (const LastfmTrack     *track,
+                                         GList                **taglist)
+{
+        const char album_tags_url[] =
+                "http://ws.audioscrobbler.com/1.0/album/%s/%s/toptags.xml";
+        char *artist, *album, *url, *buffer;
+        size_t bufsize;
+        gboolean found = FALSE;
+
+        artist = lastfm_url_encode (track->album_artist);
+        album = lastfm_url_encode (track->album);
+        url = g_strdup_printf (album_tags_url, artist, album);
+        http_get_buffer (url, &buffer, &bufsize);
+
+        if (buffer != NULL) {
+                xmlDoc *doc = xmlParseMemory (buffer, bufsize);
+                if (doc != NULL) {
+                        xmlNode *node = xmlDocGetRootElement (doc);
+                        found = parse_xml_tags (doc, node, "toptags", taglist);
+                        xmlFreeDoc (doc);
+                }
+        }
+
+        g_free (artist);
+        g_free (album);
+        g_free (url);
+        g_free (buffer);
+
+        return FALSE;
+}
+#endif /* VGL_USE_NEW_ALBUM_TAGS_API */
+
 gboolean
 lastfm_ws_get_track_tags                (const LastfmTrack     *track,
                                          LastfmTrackComponent   type,
@@ -559,15 +597,18 @@ lastfm_ws_get_track_tags                (const LastfmTrack     *track,
                 extraparamvalue = track->title;
                 break;
         case LASTFM_TRACK_COMPONENT_ALBUM:
-                /* FIXME: Last.fm don't seem to be sending album tags
-                 * with the new API. Consider using
-                 * metadata.c:lastfm_get_tags() instead */
+                /* The new API to get album tags seems to return less
+                 * results than the old API */
                 g_return_val_if_fail (track->album[0] != '\0', FALSE);
+#ifdef VGL_USE_NEW_ALBUM_TAGS_API
                 artist = track->album_artist;
                 method = "album.getInfo";
                 extraparam = "album";
                 extraparamvalue = track->album;
                 break;
+#else
+                return lastfm_ws_old_get_album_tags (track, taglist);
+#endif
         default:
                 g_return_val_if_reached (FALSE);
         }
@@ -578,11 +619,13 @@ lastfm_ws_get_track_tags                (const LastfmTrack     *track,
                                 NULL);
 
         if (doc != NULL) {
+#ifdef VGL_USE_NEW_ALBUM_TAGS_API
                 if (type == LASTFM_TRACK_COMPONENT_ALBUM) {
                         if ((node = xml_find_node (node, "album"))) {
                                 node = node->xmlChildrenNode;
                         }
                 }
+#endif
                 retvalue = parse_xml_tags (doc, node, "toptags", taglist);
                 xmlFreeDoc (doc);
         }

@@ -1,5 +1,20 @@
 2009-04-20  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/lastfm-ws.c (lastfm_ws_get_track_tags)
+	(+lastfm_ws_old_get_album_tags):
+	Get album tags using the old Last.fm API, as the new one seems to
+	return less results.
+
+	* src/uimisc.c (get_track_tags_thread):
+	Use the v2.0 Last.fm API to get track tags.
+
+	* src/Makefile.am
+	* src/metadata.[ch]:
+	Remove implementation of v1.0 Last.fm API as it's not being used
+	anymore.
+
+2009-04-20  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/uimisc.h
 	* src/uimisc.c
 	(tagwin_run, get_track_tags_thread, tagwin_destroy):

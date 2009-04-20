@@ -1,7 +1,7 @@
 #
 # This file is part of Vagalume and is published under the GNU GPLv3.
 #
-# Copyright (C) 2007, 2008 Igalia, S.L.
+# Copyright (C) 2007-2009 Igalia, S.L.
 #
 # See the README file for more details.
 #
@@ -26,7 +26,6 @@ vagalume_SOURCES = \
 	lastfm-ws.c lastfm-ws.h \
 	main.c \
 	marshal.c marshal.h \
-	metadata.c metadata.h \
 	playlist.c playlist.h \
 	protocol.c protocol.h \
 	radio.c radio.h \
