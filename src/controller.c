@@ -66,6 +66,7 @@ enum {
 static guint signals[N_SIGNALS] = { 0 };
 
 static LastfmSession *session = NULL;
+static LastfmWsSession *ws_session = NULL;
 static LastfmPls *playlist = NULL;
 static VglMainWindow *mainwin = NULL;
 static VglUserCfg *usercfg = NULL;
@@ -117,6 +118,11 @@ typedef struct {
         check_session_cb failure_cb;
         gpointer cbdata;
 } check_session_thread_data;
+
+typedef struct {
+        char *user;
+        char *pass;
+} check_ws_session_thread_data;
 
 /**
  * Show an error dialog with an OK button
@@ -446,6 +452,32 @@ check_usercfg                           (gboolean ask)
         return (usercfg != NULL);
 }
 
+static gpointer
+create_ws_session                       (gpointer userdata)
+{
+        check_ws_session_thread_data *data = userdata;
+        LastfmWsSession *s;
+
+        g_return_val_if_fail (data && data->user && data->pass, NULL);
+
+        s = lastfm_ws_get_session (data->user, data->pass);
+
+        if (s != NULL) {
+                gdk_threads_enter ();
+                if (ws_session) {
+                        lastfm_ws_session_unref (ws_session);
+                }
+                ws_session = s;
+                gdk_threads_leave ();
+        }
+
+        g_free (data->user);
+        g_free (data->pass);
+        g_slice_free (check_ws_session_thread_data, data);
+
+        return NULL;
+}
+
 /**
  * Check if there's a Last.fm session opened. If not, try to create
  * one.
@@ -533,10 +565,21 @@ check_session                           (check_session_cb success_cb,
                                          check_session_cb failure_cb,
                                          gpointer         cbdata)
 {
+        check_usercfg (TRUE);
+
+        /* First we get the WebServices session, if needed */
+        if (ws_session == NULL && usercfg != NULL) {
+                check_ws_session_thread_data *data;
+                data = g_slice_new (check_ws_session_thread_data);
+                data->user = g_strdup (usercfg->username);
+                data->pass = g_strdup (usercfg->password);
+                g_thread_create (create_ws_session, data, FALSE, NULL);
+        }
+
+        /* Then the actual streaming session */
         if (session != NULL) {
                 if (success_cb != NULL) (*success_cb)(cbdata);
         } else {
-                check_usercfg(TRUE);
                 if (usercfg != NULL) {
                         check_session_thread_data *data;
                         data = g_slice_new(check_session_thread_data);
@@ -765,6 +808,10 @@ controller_disconnect                   (void)
         if (session != NULL) {
                 lastfm_session_destroy(session);
                 session = NULL;
+        }
+        if (ws_session != NULL) {
+                lastfm_ws_session_unref (ws_session);
+                ws_session = NULL;
         }
         lastfm_pls_clear(playlist);
         controller_stop_playing();
@@ -1723,6 +1770,10 @@ controller_run_app                      (const char *radio_url)
 
         lastfm_session_destroy(session);
         session = NULL;
+        if (ws_session != NULL) {
+                lastfm_ws_session_unref (ws_session);
+                ws_session = NULL;
+        }
         lastfm_pls_destroy(playlist);
         playlist = NULL;
         if (usercfg != NULL) {

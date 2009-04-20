@@ -1,5 +1,11 @@
 2009-04-20  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (controller_run_app, controller_disconnect)
+	(check_session, create_ws_session):
+	Create a LastfmWsSession to use the Last.fm Web Services.
+
+2009-04-20  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c
 	(check_usercfg):
 	Don't send the usercfg-changed signal if the configuration hasn't
