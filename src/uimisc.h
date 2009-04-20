@@ -15,6 +15,7 @@
 #include "userconfig.h"
 #include "playlist.h"
 #include "controller.h"
+#include "lastfm-ws.h"
 
 #define RECOMMEND_ITEM_STRING _("_Recommend to...")
 #define TAG_ITEM_STRING _("_Tags...")
@@ -36,6 +37,7 @@ tagwin_run                              (GtkWindow             *parent,
                                          const char            *user,
                                          char                 **newtags,
                                          const GList           *usertags,
+                                         LastfmWsSession       *ws_session,
                                          LastfmTrack           *track,
                                          LastfmTrackComponent  *type);
 

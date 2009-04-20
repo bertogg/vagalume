@@ -26,12 +26,14 @@ static const char album_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/album/%s/%s/toptags.xml";
 static const char track_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/track/%s/%s/toptags.xml";
+#if 0
 static const char user_artist_tags_url[] =
        "http://ws.audioscrobbler.com/1.0/user/%s/artisttags.xml?artist=%s";
 static const char user_album_tags_url[] =
  "http://ws.audioscrobbler.com/1.0/user/%s/albumtags.xml?artist=%s&album=%s";
 static const char user_track_tags_url[] =
  "http://ws.audioscrobbler.com/1.0/user/%s/tracktags.xml?artist=%s&track=%s";
+#endif
 
 /**
  * Obtain the list of friends from a user
@@ -159,7 +161,7 @@ lastfm_get_user_tags                    (const char  *username,
         g_free(url);
         return found;
 }
-#endif
+
 /**
  * Obtain the list of tags that the user set to a track
  * @param username The user ID
@@ -208,7 +210,7 @@ lastfm_get_user_track_tags              (const char            *username,
         g_free(url);
         return found;
 }
-
+#endif
 /**
  * Obtain the list of tags from a track
  * @param track The track

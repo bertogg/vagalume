@@ -1138,18 +1138,29 @@ tag_track_thread                        (gpointer data)
 void
 controller_tag_track                    (void)
 {
-        g_return_if_fail(mainwin && usercfg && nowplaying);
         /* Keep this static to remember the previous value */
         static LastfmTrackComponent type = LASTFM_TRACK_COMPONENT_ARTIST;
         char *tags = NULL;
-        LastfmTrack *track = lastfm_track_ref(nowplaying);
+        LastfmTrack *track;
         gboolean accept;
+
+        g_return_if_fail (mainwin && usercfg && nowplaying);
+
+        /* Cannot obtain current tags if ws_session is NULL */
+        if (ws_session == NULL) {
+                check_session (NULL, NULL, NULL);
+                controller_show_error (_("Error logging in to the Last.fm Web "
+                                         "Services. Please try again later"));
+                return;
+        }
+
+        track = lastfm_track_ref (nowplaying);
         if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
                 type = LASTFM_TRACK_COMPONENT_ARTIST;
         }
         accept = tagwin_run(vgl_main_window_get_window(mainwin, FALSE),
                             usercfg->username, &tags,
-                            usertags, track, &type);
+                            usertags, ws_session, track, &type);
         if (accept) {
                 tag_data *d = g_slice_new0(tag_data);
                 if (tags == NULL) {

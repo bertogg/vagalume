@@ -47,6 +47,7 @@ typedef struct {
         GtkComboBox *selcombo;
         GtkComboBox *globalcombo;
         LastfmTrack *track;
+        LastfmWsSession *ws_session;
         char *user;
         char *tags_artist;
         char *tags_track;
@@ -1185,6 +1186,7 @@ tagwin_destroy                          (tagwin *w)
         g_return_if_fail(w != NULL);
         gtk_widget_destroy(GTK_WIDGET(w->window));
         lastfm_track_unref(w->track);
+        lastfm_ws_session_unref(w->ws_session);
         g_free(w->user);
         g_free(w->tags_artist);
         g_free(w->tags_track);
@@ -1231,8 +1233,8 @@ get_track_tags_thread                   (gpointer userdata)
         GList *userlist = NULL;
         GList *globallist = NULL;
 
-        lastfm_get_user_track_tags(data->w->user, data->w->track,
-                                   data->type, &userlist);
+        lastfm_ws_get_user_track_tags(data->w->ws_session, data->w->track,
+                                      data->type, &userlist);
         lastfm_get_track_tags(data->w->track, data->type, &globallist);
 
         gdk_threads_enter();
@@ -1370,10 +1372,12 @@ tagwin_run                              (GtkWindow             *parent,
                                          const char            *user,
                                          char                 **newtags,
                                          const GList           *usertags,
+                                         LastfmWsSession       *ws_session,
                                          LastfmTrack           *track,
                                          LastfmTrackComponent  *type)
 {
-        g_return_val_if_fail(track && type && user && newtags, FALSE);
+        g_return_val_if_fail (ws_session && track && type &&
+                              user && newtags, FALSE);
         tagwin *t;
         gboolean retvalue = FALSE;
         GtkWidget *sellabel;
@@ -1497,6 +1501,7 @@ tagwin_run                              (GtkWindow             *parent,
 
         t = tagwin_create();
         t->track = lastfm_track_ref(track);
+        t->ws_session = lastfm_ws_session_ref(ws_session);
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
         t->selcombo = selcombo;

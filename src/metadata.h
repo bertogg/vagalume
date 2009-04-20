@@ -22,13 +22,13 @@ lastfm_get_friends                      (const char  *username,
 gboolean
 lastfm_get_user_tags                    (const char  *username,
                                          GList      **taglist);
-#endif
 
 gboolean
 lastfm_get_user_track_tags              (const char            *username,
                                          const LastfmTrack     *track,
                                          LastfmTrackComponent   type,
                                          GList                **taglist);
+#endif
 
 gboolean
 lastfm_get_track_tags                   (const LastfmTrack     *track,
