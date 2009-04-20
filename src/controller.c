@@ -434,9 +434,15 @@ controller_open_usercfg                 (void)
 static gboolean
 check_usercfg                           (gboolean ask)
 {
-        if (usercfg == NULL) usercfg = vgl_user_cfg_read();
-        if (usercfg == NULL && ask) controller_open_usercfg();
-        if (usercfg != NULL) apply_usercfg();
+        if (usercfg == NULL) {
+                usercfg = vgl_user_cfg_read();
+                if (usercfg == NULL && ask) {
+                        controller_open_usercfg();
+                }
+                if (usercfg != NULL) {
+                        apply_usercfg();
+                }
+        }
         return (usercfg != NULL);
 }
 
@@ -1676,9 +1682,10 @@ controller_run_app                      (const char *radio_url)
 #endif
 
         http_init();
-        check_usercfg(FALSE);
         playlist = lastfm_pls_new();
         rsp_init (vgl_controller);
+
+        check_usercfg(FALSE);
 
         if (!errmsg && !lastfm_audio_init()) {
                 controller_show_error(_("Error initializing audio system"));

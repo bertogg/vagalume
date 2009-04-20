@@ -1,6 +1,16 @@
 2009-04-20  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
+	(check_usercfg):
+	Don't send the usercfg-changed signal if the configuration hasn't
+	changed.
+	(controller_run_app):
+	Make sure that rsp_init() is called before loading the user
+	config.
+
+2009-04-20  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c
 	* src/metadata.[ch]
 	* src/util.[ch]
 	* src/vgl-tray-icon.c:
