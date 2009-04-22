@@ -1,6 +1,13 @@
 2009-04-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/protocol.h
+	* src/protocol.c (-lastfm_set_radio)
+	(-lastfm_session_copy, -lastfm_request_playlist):
+	Remove unused methods from the legacy streaming API.
+
+2009-04-23  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/protocol.h
 	* src/protocol.c (lastfm_session_new):
 	Remove the 'subscriber' attribute from the legacy session object.
 

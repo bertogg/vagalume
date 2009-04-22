@@ -1,5 +1,5 @@
 /*
- * protocol.c -- Last.fm streaming protocol and XSPF
+ * protocol.c -- Last.fm legacy streaming protocol and XSPF
  *
  * Copyright (C) 2007-2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
@@ -71,23 +71,6 @@ lastfm_session_destroy                  (LastfmSession *session)
         g_free(session->base_url);
         g_free(session->base_path);
         g_slice_free(LastfmSession, session);
-}
-
-/**
- * Copy a LastfmSession object
- * @param session The original object
- * @return A new object
- */
-LastfmSession *
-lastfm_session_copy                     (const LastfmSession *session)
-{
-        if (session == NULL) return NULL;
-        LastfmSession *s = g_slice_new0(LastfmSession);
-        *s = *session;
-        s->id = g_strdup(session->id);
-        s->base_url = g_strdup(session->base_url);
-        s->base_path = g_strdup(session->base_path);
-        return s;
 }
 
 /**
@@ -360,43 +343,6 @@ lastfm_parse_playlist                   (xmlDoc        *doc,
 }
 
 /**
- * Request a new playlist from the currently active radio.
- * @param s The session
- * @param discovery Whether to use discovery mode or not
- * @param pls_title Playlist title to use if no name is found in the response.
- * @return A new playlist or NULL if none has been obtained
- */
-LastfmPls *
-lastfm_request_playlist                 (LastfmSession *s,
-                                         gboolean       discovery,
-                                         const char    *pls_title)
-{
-        g_return_val_if_fail(s && s->id && s->base_url && s->base_path, NULL);
-        const char *disc_mode = discovery ? "1" : "0";
-        char *url;
-        char *buffer = NULL;
-        size_t bufsize = 0;
-        LastfmPls *pls = NULL;
-
-        url = g_strconcat("http://", s->base_url, s->base_path,
-                          "/xspf.php?sk=", s->id, "&discovery=", disc_mode,
-                          "&desktop=1.5", NULL);
-        http_get_buffer(url, &buffer, &bufsize);
-        if (buffer != NULL) {
-                xmlDoc *doc = xmlParseMemory(buffer, bufsize);
-                if (doc != NULL) {
-                        pls = lastfm_parse_playlist (doc, pls_title);
-                        xmlFree (doc);
-                } else {
-                        g_warning ("Playlist is not an XML document");
-                }
-                g_free(buffer);
-        }
-        g_free(url);
-        return pls;
-}
-
-/**
  * Request a custom playlist (those starting with lastfm://play/).
  * These are handled different from the usual playlists
  * @param s The session
@@ -431,52 +377,3 @@ lastfm_request_custom_playlist          (LastfmSession *s,
         g_free(radio_url_escaped);
         return pls;
 }
-
-/**
- * Set a radio URL. All the following playlist requests will return
- * tracks from this radio.
- * @param s The session
- * @param radio_url URL of the radio to set
- * @param pls_title If non-NULL, the playlist title will be stored there.
- * @return Whether the radio has been set correctly
- */
-gboolean
-lastfm_set_radio                        (LastfmSession  *s,
-                                         const char     *radio_url,
-                                         char          **pls_title)
-{
-        g_return_val_if_fail(s != NULL && s->id != NULL &&
-                             s->base_url != NULL &&
-                             s->base_path && radio_url != NULL, FALSE);
-        char *buffer = NULL;
-        char *title = NULL;
-        gboolean retval = FALSE;
-        char *url;
-        char *radio_url_escaped = escape_url(radio_url, TRUE);
-
-        url = g_strconcat("http://", s->base_url, s->base_path,
-                          "/adjust.php?session=", s->id,
-                          "&lang=", get_language_code(), "&url=",
-                          radio_url_escaped, NULL);
-        http_get_buffer(url, &buffer, NULL);
-        g_free(url);
-        g_free(radio_url_escaped);
-
-        if (buffer != NULL) {
-                GHashTable *ht = lastfm_parse_handshake (buffer);
-                const char *response = g_hash_table_lookup (ht, "response");
-                retval = g_str_equal (response, "OK");
-                title = g_strdup (g_hash_table_lookup (ht, "stationname"));
-                g_hash_table_destroy (ht);
-        }
-        g_free(buffer);
-
-        if (pls_title != NULL) {
-                *pls_title = title;
-        } else {
-                g_free (title);
-        }
-
-        return retval;
-}
-

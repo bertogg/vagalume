@@ -1,7 +1,7 @@
 /*
- * protocol.h -- Last.fm streaming protocol and XSPF
+ * protocol.h -- Last.fm legacy streaming protocol and XSPF
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -38,23 +38,10 @@ lastfm_parse_playlist                   (xmlDoc        *doc,
                                          const char    *default_pls_title);
 
 LastfmPls *
-lastfm_request_playlist                 (LastfmSession *s,
-                                         gboolean       discovery,
-                                         const char    *pls_title);
-
-LastfmPls *
 lastfm_request_custom_playlist          (LastfmSession *s,
                                          const char    *radio_url);
 
-LastfmSession *
-lastfm_session_copy                     (const LastfmSession *session);
-
 void
 lastfm_session_destroy                  (LastfmSession *session);
-
-gboolean
-lastfm_set_radio                        (LastfmSession  *s,
-                                         const char     *radio_url,
-                                         char          **pls_title);
 
 #endif
