@@ -11,7 +11,6 @@
 #include "lastfm-ws.h"
 #include "http.h"
 #include "util.h"
-#include "protocol.h"
 
 #include <string.h>
 #include <stdarg.h>
@@ -46,6 +45,7 @@ struct _LastfmWsSession {
         char *username;
         char *key;
         gboolean subscriber;
+        LastfmSession *v1sess;
         int refcount;
 };
 
@@ -81,9 +81,9 @@ lastfm_ws_parameter_destroy             (LastfmWsParameter *param)
 }
 
 static LastfmWsSession *
-lastfm_ws_session_new                   (const char *username,
-                                         const char *key,
-                                         gboolean    subscriber)
+lastfm_ws_session_new                   (const char    *username,
+                                         const char    *key,
+                                         gboolean       subscriber)
 {
         LastfmWsSession *session;
 
@@ -93,6 +93,7 @@ lastfm_ws_session_new                   (const char *username,
 
         session->username   = g_strdup (username);
         session->key        = g_strdup (key);
+        session->v1sess     = NULL;
         session->subscriber = subscriber;
         session->refcount   = 1;
 
@@ -114,8 +115,18 @@ lastfm_ws_session_unref                 (LastfmWsSession *session)
         if (g_atomic_int_dec_and_test (&(session->refcount))) {
                 g_free (session->username);
                 g_free (session->key);
+                if (session->v1sess) {
+                        lastfm_session_destroy (session->v1sess);
+                }
                 g_slice_free (LastfmWsSession, session);
         }
+}
+
+LastfmSession *
+lastfm_ws_session_get_v1_session        (LastfmWsSession *session)
+{
+        g_return_val_if_fail (session != NULL, NULL);
+        return session->v1sess;
 }
 
 static void
@@ -330,14 +341,15 @@ lastfm_ws_get_session_from_token        (const char *token)
 
 LastfmWsSession *
 lastfm_ws_get_session                   (const char *user,
-                                         const char *pass)
+                                         const char *pass,
+                                         LastfmErr  *err)
 {
         LastfmWsSession *retvalue = NULL;
         char *md5pw, *usermd5pw, *authtoken;
         xmlDoc *doc;
         const xmlNode *node;
 
-        g_return_val_if_fail (user && pass, NULL);
+        g_return_val_if_fail (user && pass && err, NULL);
 
         md5pw = get_md5_hash (pass);
         usermd5pw = g_strconcat (user, md5pw, NULL);
@@ -366,7 +378,9 @@ lastfm_ws_get_session                   (const char *user,
                 xmlFreeDoc (doc);
         }
 
-        if (!retvalue) {
+        if (retvalue) {
+                retvalue->v1sess = lastfm_session_new (user, pass, err);
+        } else {
                 g_warning ("Unable to get session");
         }
 

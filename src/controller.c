@@ -65,8 +65,7 @@ enum {
 
 static guint signals[N_SIGNALS] = { 0 };
 
-static LastfmSession *session = NULL;
-static LastfmWsSession *ws_session = NULL;
+static LastfmWsSession *session = NULL;
 static LastfmPls *playlist = NULL;
 static VglMainWindow *mainwin = NULL;
 static VglUserCfg *usercfg = NULL;
@@ -118,11 +117,6 @@ typedef struct {
         check_session_cb failure_cb;
         gpointer cbdata;
 } check_session_thread_data;
-
-typedef struct {
-        char *user;
-        char *pass;
-} check_ws_session_thread_data;
 
 /**
  * Show an error dialog with an OK button
@@ -452,32 +446,6 @@ check_usercfg                           (gboolean ask)
         return (usercfg != NULL);
 }
 
-static gpointer
-create_ws_session                       (gpointer userdata)
-{
-        check_ws_session_thread_data *data = userdata;
-        LastfmWsSession *s;
-
-        g_return_val_if_fail (data && data->user && data->pass, NULL);
-
-        s = lastfm_ws_get_session (data->user, data->pass);
-
-        if (s != NULL) {
-                gdk_threads_enter ();
-                if (ws_session) {
-                        lastfm_ws_session_unref (ws_session);
-                }
-                ws_session = s;
-                gdk_threads_leave ();
-        }
-
-        g_free (data->user);
-        g_free (data->pass);
-        g_slice_free (check_ws_session_thread_data, data);
-
-        return NULL;
-}
-
 /**
  * Check if there's a Last.fm session opened. If not, try to create
  * one.
@@ -497,10 +465,11 @@ check_session_thread                    (gpointer userdata)
         check_session_thread_data *data;
         gboolean connected = FALSE;
         LastfmErr err = LASTFM_ERR_NONE;
-        LastfmSession *s;
+        LastfmWsSession *s;
         data = (check_session_thread_data *) userdata;
-        s = lastfm_session_new(data->user, data->pass, &err);
-        if (s == NULL || s->id == NULL) {
+        s = lastfm_ws_get_session (data->user, data->pass, &err);
+
+        if (s == NULL) {
                 gdk_threads_enter();
                 controller_disconnect();
                 if (err == LASTFM_ERR_LOGIN) {
@@ -512,6 +481,9 @@ check_session_thread                    (gpointer userdata)
                 gdk_threads_leave();
         } else {
                 gdk_threads_enter();
+                if (session) {
+                        lastfm_ws_session_unref (session);
+                }
                 session = s;
                 g_signal_emit (vgl_controller, signals[CONNECTED], 0);
                 vgl_main_window_set_state (mainwin,
@@ -565,21 +537,11 @@ check_session                           (check_session_cb success_cb,
                                          check_session_cb failure_cb,
                                          gpointer         cbdata)
 {
-        check_usercfg (TRUE);
-
-        /* First we get the WebServices session, if needed */
-        if (ws_session == NULL && usercfg != NULL) {
-                check_ws_session_thread_data *data;
-                data = g_slice_new (check_ws_session_thread_data);
-                data->user = g_strdup (usercfg->username);
-                data->pass = g_strdup (usercfg->password);
-                g_thread_create (create_ws_session, data, FALSE, NULL);
-        }
-
         /* Then the actual streaming session */
         if (session != NULL) {
                 if (success_cb != NULL) (*success_cb)(cbdata);
         } else {
+                check_usercfg (TRUE);
                 if (usercfg != NULL) {
                         check_session_thread_data *data;
                         data = g_slice_new(check_session_thread_data);
@@ -632,17 +594,17 @@ set_album_cover_thread                  (gpointer data)
  * otherwise. This can take a bit, so it is done in a separate thread
  * to avoid freezing the UI.
  *
- * @param data A copy of the LastfmSession used to get the new
+ * @param data A copy of the LastfmWsSession used to get the new
  *             playlist.
  * @return NULL (not used)
  */
 static gpointer
 start_playing_get_pls_thread            (gpointer data)
 {
-        LastfmSession *s = (LastfmSession *) data;
+        LastfmWsSession *s = (LastfmWsSession *) data;
         g_return_val_if_fail(s != NULL && usercfg != NULL, NULL);
-        LastfmPls *pls = lastfm_request_playlist (s, usercfg->discovery_mode,
-                                                  current_radio_name);
+        LastfmPls *pls = lastfm_ws_radio_get_playlist
+                (s, current_radio_name, usercfg->discovery_mode, TRUE);
         gdk_threads_enter();
         if (pls == NULL) {
                 controller_stop_playing();
@@ -653,7 +615,7 @@ start_playing_get_pls_thread            (gpointer data)
                 controller_start_playing();
         }
         gdk_threads_leave();
-        lastfm_session_destroy(s);
+        lastfm_ws_session_unref (s);
         return NULL;
 }
 
@@ -710,11 +672,12 @@ static void
 controller_start_playing_cb             (gpointer userdata)
 {
         LastfmTrack *track = NULL;
+        LastfmSession *v1session;
         g_return_if_fail(mainwin && playlist && nowplaying == NULL);
         vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
                                    NULL, NULL);
         if (lastfm_pls_size(playlist) == 0) {
-                LastfmSession *s = lastfm_session_copy(session);
+                LastfmWsSession *s = lastfm_ws_session_ref (session);
                 g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
                 return;
         }
@@ -725,9 +688,11 @@ controller_start_playing_cb             (gpointer userdata)
                 controller_download_track (TRUE);
         }
 
+        v1session = lastfm_ws_session_get_v1_session (session);
+
         lastfm_audio_play(track->stream_url,
                           (GCallback) controller_audio_started_cb,
-                          session->id);
+                          v1session ? v1session->id : NULL);
 }
 
 /**
@@ -806,12 +771,8 @@ void
 controller_disconnect                   (void)
 {
         if (session != NULL) {
-                lastfm_session_destroy(session);
+                lastfm_ws_session_unref (session);
                 session = NULL;
-        }
-        if (ws_session != NULL) {
-                lastfm_ws_session_unref (ws_session);
-                ws_session = NULL;
         }
         lastfm_pls_clear(playlist);
         controller_stop_playing();
@@ -1146,21 +1107,13 @@ controller_tag_track                    (void)
 
         g_return_if_fail (mainwin && usercfg && nowplaying);
 
-        /* Cannot obtain current tags if ws_session is NULL */
-        if (ws_session == NULL) {
-                check_session (NULL, NULL, NULL);
-                controller_show_error (_("Error logging in to the Last.fm Web "
-                                         "Services. Please try again later"));
-                return;
-        }
-
         track = lastfm_track_ref (nowplaying);
         if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
                 type = LASTFM_TRACK_COMPONENT_ARTIST;
         }
         accept = tagwin_run(vgl_main_window_get_window(mainwin, FALSE),
                             usercfg->username, &tags,
-                            usertags, ws_session, track, &type);
+                            usertags, session, track, &type);
         if (accept) {
                 tag_data *d = g_slice_new0(tag_data);
                 if (tags == NULL) {
@@ -1326,22 +1279,25 @@ static gpointer
 controller_play_radio_by_url_thread     (gpointer data)
 {
         char *url = (char *) data;
-        LastfmSession *sess;
+        LastfmWsSession *sess;
         gdk_threads_enter();
         if (!VGL_IS_MAIN_WINDOW(mainwin) || session == NULL) {
                 g_critical("Main window destroyed or session not found");
                 gdk_threads_leave();
                 return NULL;
         }
-        sess = lastfm_session_copy(session);
+        sess = lastfm_ws_session_ref (session);
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
         } else if (lastfm_radio_url_is_custom(url)) {
-                LastfmPls *pls;
-                gdk_threads_leave();
-                pls = lastfm_request_custom_playlist(sess, url);
-                gdk_threads_enter();
+                LastfmPls *pls = NULL;
+                LastfmSession *v1 = lastfm_ws_session_get_v1_session (sess);
+                if (v1 != NULL) {
+                        gdk_threads_leave ();
+                        pls = lastfm_request_custom_playlist (v1, url);
+                        gdk_threads_enter ();
+                }
                 if (pls != NULL) {
                         lastfm_pls_destroy(playlist);
                         playlist = pls;
@@ -1356,7 +1312,9 @@ controller_play_radio_by_url_thread     (gpointer data)
                 gboolean radio_set;
                 gdk_threads_leave();
                 g_free (current_radio_name);
-                radio_set = lastfm_set_radio(sess, url, &current_radio_name);
+                radio_set = lastfm_ws_radio_tune (sess, url,
+                                                  get_language_code (),
+                                                  &current_radio_name);
                 gdk_threads_enter();
                 if (radio_set) {
                         g_free (current_radio_url);
@@ -1373,7 +1331,7 @@ controller_play_radio_by_url_thread     (gpointer data)
         }
         gdk_threads_leave();
         g_free(url);
-        lastfm_session_destroy(sess);
+        lastfm_ws_session_unref (sess);
         return NULL;
 }
 
@@ -1779,12 +1737,8 @@ controller_run_app                      (const char *radio_url)
 
         /* --- From here onwards the app shuts down --- */
 
-        lastfm_session_destroy(session);
+        lastfm_ws_session_unref (session);
         session = NULL;
-        if (ws_session != NULL) {
-                lastfm_ws_session_unref (ws_session);
-                ws_session = NULL;
-        }
         lastfm_pls_destroy(playlist);
         playlist = NULL;
         if (usercfg != NULL) {

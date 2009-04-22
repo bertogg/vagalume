@@ -125,8 +125,6 @@ lastfm_session_new                      (const char *username,
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
         s->base_url = g_strdup(g_hash_table_lookup(response, "base_url"));
         s->base_path = g_strdup(g_hash_table_lookup(response, "base_path"));
-        const char *subs = g_hash_table_lookup(response, "subscriber");
-        s->subscriber = (subs != NULL && *subs == '1');
 
         g_hash_table_destroy(response);
 

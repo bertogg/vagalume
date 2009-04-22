@@ -12,6 +12,7 @@
 #define LASTFM_WS_H
 
 #include "playlist.h"
+#include "protocol.h"
 
 #include <glib.h>
 
@@ -26,6 +27,9 @@ lastfm_ws_session_ref                   (LastfmWsSession *session);
 void
 lastfm_ws_session_unref                 (LastfmWsSession *session);
 
+LastfmSession *
+lastfm_ws_session_get_v1_session        (LastfmWsSession *session);
+
 char *
 lastfm_ws_get_auth_token                (char **auth_url);
 
@@ -34,7 +38,8 @@ lastfm_ws_get_session_from_token        (const char *token);
 
 LastfmWsSession *
 lastfm_ws_get_session                   (const char *user,
-                                         const char *pass);
+                                         const char *pass,
+                                         LastfmErr  *err);
 
 gboolean
 lastfm_ws_radio_tune                    (const LastfmWsSession  *session,

@@ -1,3 +1,25 @@
+2009-04-23  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/protocol.h
+	* src/protocol.c (lastfm_session_new):
+	Remove the 'subscriber' attribute from the legacy session object.
+
+	* src/lastfm-ws.h
+	* src/lastfm-ws.c
+	(+lastfm_ws_session_get_v1_session, lastfm_ws_session_new)
+	(lastfm_ws_session_unref, lastfm_ws_get_session):
+	Create a legacy v1 session and include it in every v2 session
+	object.
+
+	* src/controller.c
+	(-create_ws_session, check_session_thread, check_session)
+	(start_playing_get_pls_thread, controller_start_playing_cb)
+	(controller_disconnect, controller_tag_track)
+	(controller_play_radio_by_url_thread, controller_run_app):
+	Replace all LastfmSession objects with LastfmWsSession, as the
+	former is now included in the latter.
+	Use the v2.0 Last.fm API to stream music.
+
 2009-04-22  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/lastfm-ws.h

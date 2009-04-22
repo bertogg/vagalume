@@ -24,7 +24,6 @@ typedef enum {
 
 typedef struct {
         char *id;
-        gboolean subscriber;
         char *base_url;
         char *base_path;
 } LastfmSession;
