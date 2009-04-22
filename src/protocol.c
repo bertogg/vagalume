@@ -8,7 +8,6 @@
  * See the README file for more details.
  */
 
-#include <libxml/parser.h>
 #include <glib/gi18n.h>
 
 #include "http.h"
@@ -143,33 +142,14 @@ lastfm_session_new                      (const char *username,
         return s;
 }
 
-/**
- * Parse a <track> element from an XSPF and add it to a playlist
- * @param doc The XML document that is being parsed
- * @param node The node poiting to the track to parse
- * @param pls The playlist where the track will be added
- * @return Whether a track has been found and added to the playlist
- */
-static gboolean
-lastfm_parse_track                      (xmlDoc     *doc,
-                                         xmlNode    *node,
-                                         LastfmPls  *pls,
-                                         const char *pls_title)
+static void
+parse_old_track_parts                   (xmlDoc      *doc,
+                                         xmlNode     *node,
+                                         LastfmTrack *track)
 {
-        g_return_val_if_fail(doc!=NULL && node!=NULL && pls!=NULL, FALSE);
-
-        gboolean retval = FALSE;
         char *val;
         glong id, artistid, duration;
-        LastfmTrack *track = lastfm_track_new();
-        track->pls_title =
-                g_strdup (pls_title ? pls_title : _("(unknown radio)"));
 
-        xml_get_string (doc, node, "location", (char **) &(track->stream_url));
-        xml_get_string (doc, node, "title", (char **) &(track->title));
-        xml_get_string (doc, node, "creator", (char **) &(track->artist));
-        xml_get_string (doc, node, "album", (char **) &(track->album));
-        xml_get_string (doc, node, "image", (char **) &(track->image_url));
         xml_get_string (doc, node, "trackauth", (char **) &(track->trackauth));
         xml_get_glong (doc, node, "id", &id);
         xml_get_glong (doc, node, "artistId", &artistid);
@@ -203,12 +183,102 @@ lastfm_parse_track                      (xmlDoc     *doc,
                 node = (xmlNode *) xml_get_string (doc, node->next,
                                                    "link", &val);
         }
+}
 
-        if (track->stream_url[0] == '\0') {
+static void
+parse_new_track_parts                   (xmlDoc      *doc,
+                                         xmlNode     *node,
+                                         LastfmTrack *track)
+{
+        glong id, duration;
+
+        xml_get_glong (doc, node, "identifier", &id);
+        xml_get_glong (doc, node, "duration", &duration);
+
+        track->id = id;
+        track->duration = duration;
+
+        node = (xmlNode *) xml_find_node (node, "extension");
+        if (node != NULL) {
+                glong artistid;
+                char *albumpage, *auth, *free_track;
+                node = node->xmlChildrenNode;
+
+                xml_get_glong (doc, node, "artistid", &artistid);
+                xml_get_string (doc, node, "trackauth", &auth);
+                xml_get_string (doc, node, "freeTrackURL", &free_track);
+                xml_get_string (doc, node, "albumpage", &albumpage);
+
+                if (albumpage &&
+                    g_str_has_prefix (albumpage, lastfm_music_prefix)) {
+                        char *artist, **parts;
+                        parts = g_strsplit (albumpage, "/", 6);
+                        artist = lastfm_url_decode (parts[4]);
+                        g_strfreev (parts);
+                        g_free ((gpointer) track->album_artist);
+                        track->album_artist = artist;
+                }
+
+                /* We don't want empty strings */
+                if (auth && *auth == '\0') {
+                        g_free (auth);
+                        auth = NULL;
+                }
+
+                if (free_track && *free_track == '\0') {
+                        g_free (free_track);
+                        free_track = NULL;
+                }
+
+                track->trackauth = auth;
+                track->free_track_url = free_track;
+                track->artistid = artistid;
+
+                g_free (albumpage);
+        }
+}
+
+/**
+ * Parse a <track> element from an XSPF and add it to a playlist
+ * @param doc The XML document that is being parsed
+ * @param node The node poiting to the track to parse
+ * @param pls The playlist where the track will be added
+ * @param pls_title Title of the playlist where this track is in
+ * @param new_format Whether the track is in the new XML format or not
+ * @return Whether a track has been found and added to the playlist
+ */
+static gboolean
+lastfm_parse_track                      (xmlDoc     *doc,
+                                         xmlNode    *node,
+                                         LastfmPls  *pls,
+                                         const char *pls_title,
+                                         gboolean    new_format)
+{
+        g_return_val_if_fail (doc && node && pls, FALSE);
+
+        gboolean retval = FALSE;
+        LastfmTrack *track = lastfm_track_new ();
+        track->pls_title =
+                g_strdup (pls_title ? pls_title : _("(unknown radio)"));
+
+        /* Common elements in both formats */
+        xml_get_string (doc, node, "location", (char **) &(track->stream_url));
+        xml_get_string (doc, node, "title", (char **) &(track->title));
+        xml_get_string (doc, node, "creator", (char **) &(track->artist));
+        xml_get_string (doc, node, "album", (char **) &(track->album));
+        xml_get_string (doc, node, "image", (char **) &(track->image_url));
+
+        if (new_format) {
+                parse_new_track_parts (doc, node, track);
+        } else {
+                parse_old_track_parts (doc, node, track);
+        }
+
+        if (!track->stream_url || track->stream_url[0] == '\0') {
                 g_debug("Found track with no stream URL, discarding it");
-        } else if (track->title[0] == '\0') {
+        } else if (!track->title || track->title[0] == '\0') {
                 g_debug("Found track with no title, discarding it");
-        } else if (track->artist[0] == '\0') {
+        } else if (!track->artist || track->artist[0] == '\0') {
                 g_debug("Found track with no artist, discarding it");
         } else {
                 if (track->album_artist == NULL ||
@@ -226,33 +296,36 @@ lastfm_parse_track                      (xmlDoc     *doc,
 
 /**
  * Parse a playlist in XSPF form and add its tracks to a lastfm_pls
- * @param buffer A buffer containing the playlist in XSPF format
- * @param bufsize Size of the buffer
+ * @param doc An XML document containing the playlist
+ * @param default_pls_title The title of the playlist in case the XML
+ *        doesn't provide one
  * @return A new playlist, or NULL if none was found
  */
-static LastfmPls *
-lastfm_parse_playlist                   (const char *buffer,
-                                         size_t      bufsize,
-                                         const char *default_pls_title)
+LastfmPls *
+lastfm_parse_playlist                   (xmlDoc        *doc,
+                                         const char    *default_pls_title)
 {
-        xmlDoc *doc;
-        const xmlNode *node = NULL;
-        const xmlNode *tracklist;
+        const xmlNode *tracklist, *node, *root;
+        gboolean new_format = FALSE;
         LastfmPls *pls = NULL;
         char *pls_title;
-        g_return_val_if_fail(buffer != NULL && bufsize > 0, NULL);
+        g_return_val_if_fail (doc != NULL, NULL);
 
-        doc = xmlParseMemory(buffer, bufsize);
-        if (doc != NULL) {
-                node = xmlDocGetRootElement(doc);
-                if (xmlStrEqual (node->name, (xmlChar *) "playlist")) {
-                        node = node->xmlChildrenNode;
-                } else {
-                        g_warning("Playlist file not in the expected format");
-                        node = NULL;
-                }
+        /* First see whether the playlist is in the new format or not */
+        root = xmlDocGetRootElement (doc);
+        node = xml_find_node (root, "lfm");
+        if (node != NULL) {
+                new_format = TRUE;
+                node = node->xmlChildrenNode;
         } else {
-                g_warning("Playlist is not an XML document");
+                node = root;
+        }
+
+        node = xml_find_node (node, "playlist");
+        if (node != NULL) {
+                node = node->xmlChildrenNode;
+        } else {
+                g_warning ("Playlist file not in the expected format");
         }
 
         /* Get playlist title */
@@ -273,7 +346,7 @@ lastfm_parse_playlist                   (const char *buffer,
                 pls = lastfm_pls_new();
                 while (node != NULL) {
                         lastfm_parse_track (doc, node->xmlChildrenNode,
-                                            pls, pls_title);
+                                            pls, pls_title, new_format);
                         node = xml_find_node (node->next, "track");
                 }
                 if (lastfm_pls_size (pls) == 0) {
@@ -285,7 +358,6 @@ lastfm_parse_playlist                   (const char *buffer,
         }
 
         g_free(pls_title);
-        if (doc != NULL) xmlFreeDoc(doc);
         return pls;
 }
 
@@ -313,7 +385,13 @@ lastfm_request_playlist                 (LastfmSession *s,
                           "&desktop=1.5", NULL);
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) {
-                pls = lastfm_parse_playlist (buffer, bufsize, pls_title);
+                xmlDoc *doc = xmlParseMemory(buffer, bufsize);
+                if (doc != NULL) {
+                        pls = lastfm_parse_playlist (doc, pls_title);
+                        xmlFree (doc);
+                } else {
+                        g_warning ("Playlist is not an XML document");
+                }
                 g_free(buffer);
         }
         g_free(url);
@@ -342,7 +420,13 @@ lastfm_request_custom_playlist          (LastfmSession *s,
                           "&desktop=1.5", NULL);
         http_get_buffer(url, &buffer, &bufsize);
         if (buffer != NULL) {
-                pls = lastfm_parse_playlist (buffer, bufsize, NULL);
+                xmlDoc *doc = xmlParseMemory(buffer, bufsize);
+                if (doc != NULL) {
+                        pls = lastfm_parse_playlist (doc, NULL);
+                        xmlFree (doc);
+                } else {
+                        g_warning ("Playlist is not an XML document");
+                }
                 g_free(buffer);
         }
         g_free(url);

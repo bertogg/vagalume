@@ -12,6 +12,7 @@
 #define PROTOCOL_H
 
 #include <glib.h>
+#include <libxml/parser.h>
 
 #include "playlist.h"
 
@@ -32,6 +33,10 @@ LastfmSession *
 lastfm_session_new                      (const char *username,
                                          const char *password,
                                          LastfmErr  *err);
+
+LastfmPls *
+lastfm_parse_playlist                   (xmlDoc        *doc,
+                                         const char    *default_pls_title);
 
 LastfmPls *
 lastfm_request_playlist                 (LastfmSession *s,

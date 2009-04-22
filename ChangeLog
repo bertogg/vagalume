@@ -1,5 +1,14 @@
 2009-04-22  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/protocol.h
+	* src/protocol.c
+	(+parse_old_track_parts, +parse_new_track_parts)
+	(lastfm_parse_track, lastfm_parse_playlist)
+	(lastfm_request_playlist, lastfm_request_custom_playlist):
+	Add support for the new Last.fm playlist format.
+
+2009-04-22  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.c
 	* src/util.h
 	* src/util.c (get_language_code):
