@@ -52,6 +52,9 @@ get_pixbuf_from_image                   (const char *data,
 const char *
 get_home_directory                      (void);
 
+const char *
+get_language_code                       (void);
+
 char *
 obfuscate_string                        (char *str);
 

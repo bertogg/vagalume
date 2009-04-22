@@ -224,6 +224,30 @@ get_home_directory                      (void)
 }
 
 /**
+ * Get the 2-letter language code from the currently active language
+ * @return The language code, or "en" if it is unset. This string is
+ *         static and must not be modified
+ */
+const char *
+get_language_code                       (void)
+{
+        static char lang[3] = "";
+        if (lang[0] == '\0') {
+                const char *env = g_getenv("LANGUAGE");
+                if (!env) env = g_getenv("LC_MESSAGES");
+                if (!env) env = g_getenv("LC_ALL");
+                if (!env) env = g_getenv("LANG");
+                if (env != NULL && strlen(env) > 1) {
+                        strncpy(lang, env, 2);
+                        lang[2] = '\0';
+                } else {
+                        strncpy(lang, "en", 3);
+                }
+        }
+        return lang;
+}
+
+/**
  * Obfuscates an ASCII string. All characters between 33 and 126 will
  * be modified. The string will be modified in place. Calling this
  * function twice will return the original string.

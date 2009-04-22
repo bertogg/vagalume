@@ -9,8 +9,6 @@
  */
 
 #include <libxml/parser.h>
-#include <string.h>
-#include <stdlib.h>
 #include <glib/gi18n.h>
 
 #include "http.h"
@@ -29,30 +27,6 @@ static const xmlChar album_page_rel[] =
        "http://www.last.fm/albumpage";
 static const char lastfm_music_prefix[] =
        "http://www.last.fm/music/";
-
-/**
- * Get the 2-letter language code from the currently active language
- * @return The language code, or "en" if it is unset. This string is
- *         static and must not be modified
- */
-static const char *
-get_language_code                       (void)
-{
-        static char lang[3] = "";
-        if (lang[0] == '\0') {
-                const char *env = g_getenv("LANGUAGE");
-                if (!env) env = g_getenv("LC_MESSAGES");
-                if (!env) env = g_getenv("LC_ALL");
-                if (!env) env = g_getenv("LANG");
-                if (env != NULL && strlen(env) > 1) {
-                        strncpy(lang, env, 2);
-                        lang[2] = '\0';
-                } else {
-                        strncpy(lang, "en", 3);
-                }
-        }
-        return lang;
-}
 
 /**
  * Parse the output of a lastfm handshake and return a hashtable
