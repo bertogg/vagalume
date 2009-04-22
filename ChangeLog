@@ -1,5 +1,12 @@
 2009-04-22  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/lastfm-ws.h
+	* src/lastfm-ws.c
+	(+lastfm_ws_radio_tune, +lastfm_ws_radio_get_playlist):
+	New methods for streaming radio using the v2.0 Last.fm API.
+
+2009-04-22  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.h
 	* src/protocol.c
 	(+parse_old_track_parts, +parse_new_track_parts)

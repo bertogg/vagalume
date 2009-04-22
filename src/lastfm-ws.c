@@ -11,6 +11,7 @@
 #include "lastfm-ws.h"
 #include "http.h"
 #include "util.h"
+#include "protocol.h"
 
 #include <string.h>
 #include <stdarg.h>
@@ -374,6 +375,66 @@ lastfm_ws_get_session                   (const char *user,
         g_free (authtoken);
 
         return retvalue;
+}
+
+gboolean
+lastfm_ws_radio_tune                    (const LastfmWsSession  *session,
+                                         const char             *radio_url,
+                                         const char             *lang,
+                                         char                  **radio_title)
+{
+        xmlDoc *doc;
+        const xmlNode *node;
+
+        g_return_val_if_fail (session && radio_url, FALSE);
+
+        lastfm_ws_http_request ("radio.tune",
+                                HTTP_REQUEST_POST, TRUE, &doc, &node,
+                                "sk", session->key,
+                                "station", radio_url,
+                                lang ? "lang" : NULL, lang,
+                                NULL);
+
+        if (doc != NULL) {
+                if (radio_title != NULL) {
+                        node = xml_find_node (node, "station");
+                        if (node != NULL) {
+                                node = node->xmlChildrenNode;
+                        }
+                        xml_get_string (doc, node, "name", radio_title);
+                }
+                xmlFreeDoc (doc);
+                return TRUE;
+        } else {
+                return FALSE;
+        }
+}
+
+LastfmPls *
+lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
+                                         const char            *pls_title,
+                                         gboolean               discovery,
+                                         gboolean               scrobbling)
+{
+        LastfmPls *pls = NULL;
+        xmlDoc *doc;
+        const xmlNode *node;
+
+        g_return_val_if_fail (session, NULL);
+
+        lastfm_ws_http_request ("radio.getPlaylist",
+                                HTTP_REQUEST_GET, TRUE, &doc, &node,
+                                "discovery", discovery ? "1" : "0",
+                                "rtp", scrobbling ? "1" : "0",
+                                "sk", session->key,
+                                NULL);
+
+        if (doc != NULL) {
+                pls = lastfm_parse_playlist (doc, pls_title);
+                xmlFreeDoc (doc);
+        }
+
+        return pls;
 }
 
 gboolean

@@ -37,6 +37,18 @@ lastfm_ws_get_session                   (const char *user,
                                          const char *pass);
 
 gboolean
+lastfm_ws_radio_tune                    (const LastfmWsSession  *session,
+                                         const char             *radio_url,
+                                         const char             *lang,
+                                         char                  **radio_title);
+
+LastfmPls *
+lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
+                                         const char            *pls_title,
+                                         gboolean               discovery,
+                                         gboolean               scrobbling);
+
+gboolean
 lastfm_ws_get_friends                   (const char  *user,
                                          GList      **friendlist);
 
