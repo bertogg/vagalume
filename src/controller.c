@@ -92,6 +92,7 @@ typedef struct {
 } tag_data;
 
 typedef struct {
+        LastfmWsSession *session;
         LastfmTrack *track;
         char *rcpt;                  /* Recipient of the recommendation */
         char *text;                  /* text of the recommendation */
@@ -1143,21 +1144,14 @@ static gpointer
 recomm_track_thread                     (gpointer data)
 {
         recomm_data *d = (recomm_data *) data;
-        g_return_val_if_fail(d && d->track && d->rcpt && d->text, NULL);
-        gboolean retval = FALSE;
-        char *user = NULL, *pass = NULL;
-        gdk_threads_enter();
-        if (usercfg != NULL) {
-                user = g_strdup(usercfg->username);
-                pass = g_strdup(usercfg->password);
-        }
-        gdk_threads_leave();
-        if (user != NULL && pass != NULL) {
-                retval = recommend_track(user, pass, d->track, d->text,
-                                         d->type, d->rcpt);
-                g_free(user);
-                g_free(pass);
-        }
+        gboolean retval;
+
+        g_return_val_if_fail (d && d->session && d->track &&
+                              d->rcpt && d->text, NULL);
+
+        retval = lastfm_ws_share_track (d->session, d->track, d->text,
+                                        d->type, d->rcpt);
+
         gdk_threads_enter();
         if (mainwin) {
                 controller_show_banner(retval ?
@@ -1165,10 +1159,13 @@ recomm_track_thread                     (gpointer data)
                                        _("Error sending recommendation"));
         }
         gdk_threads_leave();
+
         lastfm_track_unref(d->track);
+        lastfm_ws_session_unref(d->session);
         g_free(d->rcpt);
         g_free(d->text);
         g_slice_free(recomm_data, d);
+
         return NULL;
 }
 
@@ -1179,12 +1176,13 @@ recomm_track_thread                     (gpointer data)
 void
 controller_recomm_track                 (void)
 {
-        g_return_if_fail(usercfg != NULL && nowplaying != NULL);
+        g_return_if_fail (nowplaying && session);
         char *rcpt = NULL;
         char *body = NULL;
         /* Keep this static to remember the previous value */
         static LastfmTrackComponent type = LASTFM_TRACK_COMPONENT_TRACK;
         LastfmTrack *track = lastfm_track_ref(nowplaying);
+        LastfmWsSession *sess = lastfm_ws_session_ref (session);
         gboolean accept;
         if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
                 type = LASTFM_TRACK_COMPONENT_ARTIST;
@@ -1194,7 +1192,8 @@ controller_recomm_track                 (void)
                                &rcpt, &body, friends, track, &type);
         if (accept && rcpt && body && rcpt[0] && body[0]) {
                 g_strstrip(rcpt);
-                recomm_data *d = g_slice_new0(recomm_data);
+                recomm_data *d = g_slice_new (recomm_data);
+                d->session = sess;
                 d->track = track;
                 d->rcpt = rcpt;
                 d->text = body;
@@ -1206,6 +1205,7 @@ controller_recomm_track                 (void)
                                                "and a recommendation message."));
                 }
                 lastfm_track_unref(track);
+                lastfm_ws_session_unref(sess);
                 g_free(rcpt);
                 g_free(body);
         }
