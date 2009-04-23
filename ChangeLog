@@ -1,5 +1,11 @@
 2009-04-23  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/scrobbler.c (rsp_init, +connected_cb, +disconnected_cb)
+	(rsp_scrobbler_thread_scrobble, rsp_scrobbler_thread):
+	Use love/ban methods from the v2.0 API.
+
+2009-04-23  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c
 	(vgl_controller_class_init, check_session_thread):
 	Make the session object parameter of the 'connected' signal.

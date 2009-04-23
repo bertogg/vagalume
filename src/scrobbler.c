@@ -22,6 +22,7 @@
 #include "globaldefs.h"
 #include "util.h"
 #include "userconfig.h"
+#include "lastfm-ws.h"
 
 static const char rsp_session_url[] =
        "http://post.audioscrobbler.com/?hs=true&p=1.2"
@@ -56,6 +57,7 @@ static GSList *rsp_queue = NULL;
 static gboolean rsp_initialized = FALSE;
 static RspSession *global_rsp_session = NULL;
 static RspTrack *current_track = NULL;
+static LastfmWsSession *global_ws_session;
 static GString *username = NULL;
 static GString *password = NULL;
 static gboolean enable_scrobbling = FALSE;
@@ -300,12 +302,19 @@ static void
 rsp_scrobbler_thread_scrobble           (RspTrack *track)
 {
         RspSession *s;
+        LastfmWsSession *ws_session = NULL;
         int sleep_seconds = 0;
 
         g_return_if_fail (track != NULL);
 
         /* Get RSP session (or create one if necessary) */
         s = rsp_session_get_or_renew ();
+
+        g_mutex_lock (rsp_mutex);
+        if (global_ws_session != NULL) {
+                ws_session = lastfm_ws_session_ref (global_ws_session);
+        }
+        g_mutex_unlock (rsp_mutex);
 
         /* If there's no session, don't try to scrobble anything */
         if (s == NULL) {
@@ -317,10 +326,10 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
                 RspResponse ret;
 
                 /* Love/ban if necessary */
-                if (track->rating == RSP_RATING_LOVE) {
-                        love_ban_track (s->user, s->pass, track->track, TRUE);
-                } else if (track->rating == RSP_RATING_BAN) {
-                        love_ban_track (s->user, s->pass, track->track, FALSE);
+                if (track->rating == RSP_RATING_LOVE && ws_session) {
+                        lastfm_ws_love_track (ws_session, track->track);
+                } else if (track->rating == RSP_RATING_BAN && ws_session) {
+                        lastfm_ws_ban_track (ws_session, track->track);
                 }
 
                 /* Scrobble track */
@@ -351,6 +360,10 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
 
         if (s != NULL) {
                 rsp_session_unref (s);
+        }
+
+        if (ws_session != NULL) {
+                lastfm_ws_session_unref (ws_session);
         }
 }
 
@@ -386,6 +399,10 @@ rsp_scrobbler_thread                    (gpointer data)
         g_string_free (password, TRUE);
         g_mutex_free (rsp_mutex);
         g_cond_free (rsp_thread_cond);
+        if (global_ws_session) {
+                lastfm_ws_session_unref (global_ws_session);
+                global_ws_session = NULL;
+        }
         username = password = NULL;
         rsp_mutex = NULL;
         rsp_thread_cond = NULL;
@@ -430,6 +447,31 @@ set_nowplaying_thread                   (gpointer data)
 
         lastfm_track_unref (track);
         return NULL;
+}
+
+static void
+connected_cb                            (VglController   *ctrl,
+                                         LastfmWsSession *session,
+                                         gpointer         data)
+{
+        g_mutex_lock (rsp_mutex);
+        if (global_ws_session) {
+                lastfm_ws_session_unref (global_ws_session);
+        }
+        global_ws_session = lastfm_ws_session_ref (session);
+        g_mutex_unlock (rsp_mutex);
+}
+
+static void
+disconnected_cb                         (VglController   *ctrl,
+                                         gpointer         data)
+{
+        g_mutex_lock (rsp_mutex);
+        if (global_ws_session) {
+                lastfm_ws_session_unref (global_ws_session);
+                global_ws_session = NULL;
+        }
+        g_mutex_unlock (rsp_mutex);
 }
 
 static void
@@ -520,6 +562,10 @@ rsp_init                                (VglController *controller)
         rsp_thread_cond = g_cond_new ();
         username = g_string_sized_new (20);
         password = g_string_sized_new (20);
+        g_signal_connect (controller, "connected",
+                          G_CALLBACK (connected_cb), NULL);
+        g_signal_connect (controller, "disconnected",
+                          G_CALLBACK (disconnected_cb), NULL);
         g_signal_connect (controller, "usercfg-changed",
                           G_CALLBACK (usercfg_changed_cb), NULL);
         g_signal_connect (controller, "track-stopped",
