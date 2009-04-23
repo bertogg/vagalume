@@ -43,6 +43,7 @@ static const char vgl_lastfm_api_secret[] = "10d704729842d9ef0129694be78d529a";
 
 struct _LastfmWsSession {
         char *username;
+        char *password;
         char *key;
         gboolean subscriber;
         LastfmSession *v1sess;
@@ -82,6 +83,7 @@ lastfm_ws_parameter_destroy             (LastfmWsParameter *param)
 
 static LastfmWsSession *
 lastfm_ws_session_new                   (const char    *username,
+                                         const char    *password,
                                          const char    *key,
                                          gboolean       subscriber)
 {
@@ -92,6 +94,7 @@ lastfm_ws_session_new                   (const char    *username,
         session = g_slice_new (LastfmWsSession);
 
         session->username   = g_strdup (username);
+        session->password   = g_strdup (password);
         session->key        = g_strdup (key);
         session->v1sess     = NULL;
         session->subscriber = subscriber;
@@ -114,6 +117,7 @@ lastfm_ws_session_unref                 (LastfmWsSession *session)
         g_return_if_fail (session != NULL);
         if (g_atomic_int_dec_and_test (&(session->refcount))) {
                 g_free (session->username);
+                g_free (session->password);
                 g_free (session->key);
                 if (session->v1sess) {
                         lastfm_session_destroy (session->v1sess);
@@ -324,7 +328,7 @@ lastfm_ws_get_session_from_token        (const char *token)
                         xml_get_bool (doc, node, "subscriber", &subscriber);
                         if (user && *user != '\0' && key && *key != '\0') {
                                 retvalue = lastfm_ws_session_new (
-                                        user, key, subscriber);
+                                        user, user, key, subscriber);
                         }
                         g_free (user);
                         g_free (key);
@@ -371,7 +375,7 @@ lastfm_ws_get_session                   (const char *user,
                         xml_get_bool (doc, node, "subscriber", &subscriber);
                         if (key && key[0] != '\0') {
                                 retvalue = lastfm_ws_session_new (
-                                        user, key, subscriber);
+                                        user, pass, key, subscriber);
                         }
                         g_free (key);
                 }

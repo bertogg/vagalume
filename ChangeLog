@@ -1,5 +1,12 @@
 2009-04-23  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/lastfm-ws.c
+	(lastfm_ws_session_new, lastfm_ws_session_unref)
+	(lastfm_ws_get_session_from_token, lastfm_ws_get_session):
+	Store password in LastfmWsSession object.
+
+2009-04-23  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/xmlrpc.c (-recommend_track, -love_ban_track):
 	Remove deprecated methods to love, ban and recommend.
 
