@@ -485,7 +485,7 @@ check_session_thread                    (gpointer userdata)
                         lastfm_ws_session_unref (session);
                 }
                 session = s;
-                g_signal_emit (vgl_controller, signals[CONNECTED], 0);
+                g_signal_emit (vgl_controller, signals[CONNECTED], 0, s);
                 vgl_main_window_set_state (mainwin,
                                            VGL_MAIN_WINDOW_STATE_STOPPED,
                                            NULL, NULL);
@@ -1780,8 +1780,8 @@ vgl_controller_class_init               (VglControllerClass *klass)
                               G_OBJECT_CLASS_TYPE (klass),
                               G_SIGNAL_RUN_FIRST,
                               0, NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
+                              g_cclosure_marshal_VOID__POINTER,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         signals[DISCONNECTED] =
                 g_signal_new ("disconnected",

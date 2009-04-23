@@ -1,5 +1,11 @@
 2009-04-23  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c
+	(vgl_controller_class_init, check_session_thread):
+	Make the session object parameter of the 'connected' signal.
+
+2009-04-23  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.h
 	* src/protocol.c (-lastfm_set_radio)
 	(-lastfm_session_copy, -lastfm_request_playlist):
