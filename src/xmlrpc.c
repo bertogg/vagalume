@@ -200,6 +200,55 @@ tag_track                               (const char           *user,
 }
 
 /**
+ * Recommend a track to a user
+ *
+ * @param user The user's Last.fm ID
+ * @param password The user's password
+ * @param track The track to recommend
+ * @param text The text of the recommendation
+ * @param type Whether to recommend an artist, track or album
+ * @param rcpt The user who will receive the recommendation
+ * @return Whether the operation was successful or not
+ */
+gboolean
+recommend_track                         (const char           *user,
+                                         const char           *password,
+                                         const LastfmTrack    *track,
+                                         const char           *text,
+                                         LastfmTrackComponent  type,
+                                         const char           *rcpt)
+{
+        g_return_val_if_fail(user && password && track && text && rcpt, FALSE);
+        gboolean retval;
+        char *request;
+        const char *method = "recommendItem";
+        xmlNode *artist, *title, *recomm_type, *recomm_to;
+        xmlNode *recomm_body, *language;
+        if (type == LASTFM_TRACK_COMPONENT_ARTIST) {
+                artist = string_param(track->artist);
+                title = string_param("");
+                recomm_type = string_param("artist");
+        } else if (type == LASTFM_TRACK_COMPONENT_TRACK) {
+                artist = string_param(track->artist);
+                title = string_param(track->title);
+                recomm_type = string_param("track");
+        } else {
+                artist = string_param (track->album_artist);
+                title = string_param(track->album);
+                recomm_type = string_param("album");
+        }
+        recomm_to = string_param(rcpt);
+        recomm_body = string_param(text);
+        language = string_param("en");
+        request = new_request(user, password, method, artist,
+                              title, recomm_type, recomm_to,
+                              recomm_body, language, NULL);
+        retval = xmlrpc_send_request(request, method);
+        g_free(request);
+        return retval;
+}
+
+/**
  * Add a track to the user's playlist
  *
  * @param user The user's Last.fm ID

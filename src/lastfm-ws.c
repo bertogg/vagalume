@@ -11,6 +11,7 @@
 #include "lastfm-ws.h"
 #include "http.h"
 #include "util.h"
+#include "xmlrpc.h"
 
 #include <string.h>
 #include <stdarg.h>
@@ -842,8 +843,10 @@ lastfm_ws_share_track                   (const LastfmWsSession *session,
                 extraparamvalue = track->title;
                 break;
         case LASTFM_TRACK_COMPONENT_ALBUM:
-                g_warning ("Sharing albums is not supported in 2.0 API!!");
-                return FALSE;
+                g_return_val_if_fail (track->album[0] != '\0', FALSE);
+                /* Use v1 API: sharing albums is not supported in v2 */
+                return recommend_track (session->username, session->password,
+                                        track, text, type, rcpt);
         default:
                 g_return_val_if_reached (FALSE);
         }

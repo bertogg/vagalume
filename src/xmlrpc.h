@@ -23,6 +23,14 @@ tag_track                               (const char           *user,
                                          GSList               *tags);
 
 gboolean
+recommend_track                         (const char           *user,
+                                         const char           *password,
+                                         const LastfmTrack    *track,
+                                         const char           *text,
+                                         LastfmTrackComponent  type,
+                                         const char           *rcpt);
+
+gboolean
 add_to_playlist                         (const char        *user,
                                          const char        *password,
                                          const LastfmTrack *track);
