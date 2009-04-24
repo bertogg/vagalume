@@ -1,5 +1,10 @@
 2009-04-24  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (controller_tag_track, tag_track_thread):
+	Use the new lastfm_ws_tag_track() method
+
+2009-04-24  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.h
 	* src/lastfm-ws.c (+lastfm_ws_tag_track):
 	Method to tag tracks using the new API (it's a wrapper for the old

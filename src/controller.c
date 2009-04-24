@@ -86,6 +86,7 @@ typedef struct {
 } rsp_data;
 
 typedef struct {
+        LastfmWsSession *session;
         LastfmTrack *track;
         char *taglist;                /* comma-separated list of tags */
         LastfmTrackComponent type;
@@ -1057,37 +1058,34 @@ static gpointer
 tag_track_thread                        (gpointer data)
 {
         tag_data *d = (tag_data *) data;
-        g_return_val_if_fail(d && d->track && d->taglist, NULL);
-        gboolean tagged = FALSE;
-        char *user = NULL, *pass = NULL;
-        gdk_threads_enter();
-        if (usercfg != NULL) {
-                user = g_strdup(usercfg->username);
-                pass = g_strdup(usercfg->password);
+        gboolean tagged;
+        GSList *list = NULL;
+        char **tags;
+        int i;
+
+        g_return_val_if_fail (d && d->track && d->taglist, NULL);
+
+        tags = g_strsplit(d->taglist, ",", 0);
+        for (i = 0; tags[i] != NULL; i++) {
+                list = g_slist_append(list, g_strstrip(tags[i]));
         }
-        gdk_threads_leave();
-        if (user != NULL && pass != NULL) {
-                GSList *list = NULL;
-                char **tags = g_strsplit(d->taglist, ",", 0);
-                int i;
-                for (i = 0; tags[i] != NULL; i++) {
-                        list = g_slist_append(list, g_strstrip(tags[i]));
-                }
-                tagged = tag_track(user, pass, d->track, d->type, list);
-                g_strfreev(tags);
-                g_slist_free(list);
-                g_free(user);
-                g_free(pass);
-        }
+        tagged = lastfm_ws_tag_track (d->session, d->track, d->type, list);
+
+        /* Cleanup */
+        g_strfreev(tags);
+        g_slist_free(list);
+        lastfm_ws_session_unref(d->session);
         lastfm_track_unref(d->track);
         g_free(d->taglist);
         g_slice_free(tag_data, d);
+
         gdk_threads_enter();
         if (mainwin) {
                 controller_show_banner(tagged ? _("Tags set correctly") :
                                        _("Error tagging"));
         }
         gdk_threads_leave();
+
         return NULL;
 }
 
@@ -1104,17 +1102,19 @@ controller_tag_track                    (void)
         static LastfmTrackComponent type = LASTFM_TRACK_COMPONENT_ARTIST;
         char *tags = NULL;
         LastfmTrack *track;
+        LastfmWsSession *sess;
         gboolean accept;
 
         g_return_if_fail (mainwin && usercfg && nowplaying);
 
         track = lastfm_track_ref (nowplaying);
+        sess = lastfm_ws_session_ref (session);
         if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
                 type = LASTFM_TRACK_COMPONENT_ARTIST;
         }
         accept = tagwin_run(vgl_main_window_get_window(mainwin, FALSE),
                             usercfg->username, &tags,
-                            usertags, session, track, &type);
+                            usertags, sess, track, &type);
         if (accept) {
                 tag_data *d = g_slice_new0(tag_data);
                 if (tags == NULL) {
@@ -1128,6 +1128,7 @@ controller_tag_track                    (void)
                 if (accept) {
                         controller_show_info(_("You must type a list of tags"));
                 }
+                lastfm_ws_session_unref(sess);
                 lastfm_track_unref(track);
         }
 }
