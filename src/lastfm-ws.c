@@ -914,3 +914,16 @@ lastfm_ws_ban_track                     (const LastfmWsSession *session,
                 return FALSE;
         }
 }
+
+gboolean
+lastfm_ws_tag_track                     (const LastfmWsSession *session,
+                                         const LastfmTrack     *track,
+                                         LastfmTrackComponent   type,
+                                         GSList                *tags)
+{
+        g_return_val_if_fail (session && track, FALSE);
+
+        /* Fall back to the old API while the new one isn't implemented */
+        return tag_track (session->username, session->password,
+                          track, type, tags);
+}

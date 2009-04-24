@@ -99,6 +99,12 @@ gboolean
 lastfm_ws_ban_track                     (const LastfmWsSession *session,
                                          const LastfmTrack     *track);
 
+gboolean
+lastfm_ws_tag_track                     (const LastfmWsSession *session,
+                                         const LastfmTrack     *track,
+                                         LastfmTrackComponent   type,
+                                         GSList                *tags);
+
 G_END_DECLS
 
 #endif /* LASTFM_WS_H */

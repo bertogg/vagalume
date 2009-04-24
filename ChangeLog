@@ -1,3 +1,10 @@
+2009-04-24  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/lastfm-ws.h
+	* src/lastfm-ws.c (+lastfm_ws_tag_track):
+	Method to tag tracks using the new API (it's a wrapper for the old
+	API by now).
+
 2009-04-23  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/xmlrpc.h
