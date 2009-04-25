@@ -105,6 +105,11 @@ typedef struct {
         char *dstpath;
 } DownloadData;
 
+typedef struct {
+        LastfmWsSession *session;
+        LastfmTrack *track;
+} AddToPlaylistData;
+
 /*
  * Callback called after check_session() in all cases.
  * data is user-provided data, and must be freed by the caller
@@ -1223,21 +1228,13 @@ controller_recomm_track                 (void)
 gpointer
 add_to_playlist_thread                  (gpointer data)
 {
-        LastfmTrack *t = (LastfmTrack *) data;
-        g_return_val_if_fail(t != NULL, NULL);
+        AddToPlaylistData *d = (AddToPlaylistData *) data;
         gboolean retval = FALSE;
-        char *user = NULL, *pass = NULL;
-        gdk_threads_enter();
-        if (usercfg != NULL) {
-                user = g_strdup(usercfg->username);
-                pass = g_strdup(usercfg->password);
-        }
-        gdk_threads_leave();
-        if (user != NULL && pass != NULL) {
-                retval = add_to_playlist(user, pass, t);
-                g_free(user);
-                g_free(pass);
-        }
+
+        g_return_val_if_fail (d && d->session && d->track, NULL);
+
+        retval = lastfm_ws_add_to_playlist (d->session, d->track);
+
         gdk_threads_enter();
         if (mainwin) {
                 controller_show_banner(retval ?
@@ -1247,7 +1244,11 @@ add_to_playlist_thread                  (gpointer data)
                                                                retval);
         }
         gdk_threads_leave();
-        lastfm_track_unref(t);
+
+        lastfm_ws_session_unref (d->session);
+        lastfm_track_unref (d->track);
+        g_slice_free (AddToPlaylistData, d);
+
         return NULL;
 }
 
@@ -1258,12 +1259,24 @@ add_to_playlist_thread                  (gpointer data)
 void
 controller_add_to_playlist              (void)
 {
-        g_return_if_fail(usercfg != NULL && nowplaying != NULL);
+        LastfmTrack *track;
+        LastfmWsSession *sess;
+
+        g_return_if_fail (session != NULL && nowplaying != NULL);
+
+        track = lastfm_track_ref (nowplaying);
+        sess = lastfm_ws_session_ref (session);
+
         if (controller_confirm_dialog(
                     _("Really add this track to the playlist?"), FALSE)) {
-                LastfmTrack *track = lastfm_track_ref(nowplaying);
-                vgl_main_window_set_track_as_added_to_playlist(mainwin, TRUE);
-                g_thread_create(add_to_playlist_thread,track,FALSE,NULL);
+                AddToPlaylistData *data = g_slice_new (AddToPlaylistData);
+                data->session = session;
+                data->track = track;
+                vgl_main_window_set_track_as_added_to_playlist (mainwin, TRUE);
+                g_thread_create (add_to_playlist_thread, data, FALSE, NULL);
+        } else {
+                lastfm_track_unref (track);
+                lastfm_ws_session_unref (sess);
         }
 }
 

@@ -1,5 +1,11 @@
 2009-04-25  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c
+	(controller_add_to_playlist, add_to_playlist_thread):
+	Use the new lastfm_ws_add_to_playlist() method.
+
+2009-04-25  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.h
 	* src/lastfm-ws.c (+lastfm_ws_add_to_playlist):
 	Method to add a track to a playlist using the new API (it's a
