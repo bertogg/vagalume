@@ -1,5 +1,12 @@
 2009-04-25  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c:
+	Renamed tag_data -> TagData and recomm_data -> RecommData
+	(controller_tag_track):
+	Include session object in TagData struct
+
+2009-04-25  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/xmlrpc.[ch]:
 	Mark xmlrpc.c as legacy API.
 

@@ -84,7 +84,7 @@ typedef struct {
         LastfmTrack *track;
         char *taglist;                /* comma-separated list of tags */
         LastfmTrackComponent type;
-} tag_data;
+} TagData;
 
 typedef struct {
         LastfmWsSession *session;
@@ -92,7 +92,7 @@ typedef struct {
         char *rcpt;                  /* Recipient of the recommendation */
         char *text;                  /* text of the recommendation */
         LastfmTrackComponent type;
-} recomm_data;
+} RecommData;
 
 typedef struct {
         LastfmTrack *track;
@@ -1049,14 +1049,14 @@ controller_ban_track                    (gboolean interactive)
  * Tag a track. This can take some seconds, so it must be called using
  * g_thread_create() to avoid freezing the UI.
  *
- * @param data Pointer to tag_data, with info about the track to be
+ * @param data Pointer to TagData, with info about the track to be
  *             tagged. This data must be freed here
  * @return NULL (this value is not used)
  */
 static gpointer
 tag_track_thread                        (gpointer data)
 {
-        tag_data *d = (tag_data *) data;
+        TagData *d = (TagData *) data;
         gboolean tagged;
         GSList *list = NULL;
         char **tags;
@@ -1076,7 +1076,7 @@ tag_track_thread                        (gpointer data)
         lastfm_ws_session_unref(d->session);
         lastfm_track_unref(d->track);
         g_free(d->taglist);
-        g_slice_free(tag_data, d);
+        g_slice_free(TagData, d);
 
         gdk_threads_enter();
         if (mainwin) {
@@ -1115,10 +1115,11 @@ controller_tag_track                    (void)
                             usercfg->username, &tags,
                             usertags, sess, track, &type);
         if (accept) {
-                tag_data *d = g_slice_new0(tag_data);
+                TagData *d = g_slice_new (TagData);
                 if (tags == NULL) {
                         tags = g_strdup("");
                 }
+                d->session = sess;
                 d->track = track;
                 d->taglist = tags;
                 d->type = type;
@@ -1136,14 +1137,14 @@ controller_tag_track                    (void)
  * Recommend a track. This can take some seconds, so it must be called
  * using g_thread_create() to avoid freezing the UI.
  *
- * @param data Pointer to recomm_data, with info about the track to be
+ * @param data Pointer to RecommData, with info about the track to be
  *             recommended. This data must be freed here
  * @return NULL (this value is not used)
  */
 static gpointer
 recomm_track_thread                     (gpointer data)
 {
-        recomm_data *d = (recomm_data *) data;
+        RecommData *d = (RecommData *) data;
         gboolean retval;
 
         g_return_val_if_fail (d && d->session && d->track &&
@@ -1164,7 +1165,7 @@ recomm_track_thread                     (gpointer data)
         lastfm_ws_session_unref(d->session);
         g_free(d->rcpt);
         g_free(d->text);
-        g_slice_free(recomm_data, d);
+        g_slice_free(RecommData, d);
 
         return NULL;
 }
@@ -1192,7 +1193,7 @@ controller_recomm_track                 (void)
                                &rcpt, &body, friends, track, &type);
         if (accept && rcpt && body && rcpt[0] && body[0]) {
                 g_strstrip(rcpt);
-                recomm_data *d = g_slice_new (recomm_data);
+                RecommData *d = g_slice_new (RecommData);
                 d->session = sess;
                 d->track = track;
                 d->rcpt = rcpt;
