@@ -927,3 +927,13 @@ lastfm_ws_tag_track                     (const LastfmWsSession *session,
         return tag_track (session->username, session->password,
                           track, type, tags);
 }
+
+gboolean
+lastfm_ws_add_to_playlist               (const LastfmWsSession *session,
+                                         const LastfmTrack     *track)
+{
+        g_return_val_if_fail (session && track, FALSE);
+
+        /* Fall back to the old API while the new one isn't implemented */
+        return add_to_playlist (session->username, session->password, track);
+}

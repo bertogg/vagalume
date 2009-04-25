@@ -105,6 +105,10 @@ lastfm_ws_tag_track                     (const LastfmWsSession *session,
                                          LastfmTrackComponent   type,
                                          GSList                *tags);
 
+gboolean
+lastfm_ws_add_to_playlist               (const LastfmWsSession *session,
+                                         const LastfmTrack     *track);
+
 G_END_DECLS
 
 #endif /* LASTFM_WS_H */
