@@ -17,7 +17,6 @@
 #include "vgl-main-window.h"
 #include "radio.h"
 #include "uimisc.h"
-#include "xmlrpc.h"
 #include "util.h"
 
 #if defined(SCR_RESOLUTION_800X480)

@@ -13,7 +13,6 @@
 
 #include "vgl-main-window.h"
 #include "radio.h"
-#include "xmlrpc.h"
 
 #include <glib-object.h>
 

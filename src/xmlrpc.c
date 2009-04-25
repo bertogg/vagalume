@@ -1,6 +1,6 @@
 /*
- * xmlrpc.c -- XMLRPC-based functions to tag artists, tracks, albums,
- *             loves and hates
+ * xmlrpc.c -- Legacy XMLRPC-based functions to tag artists, tracks,
+ *             albums, loves and hates
  *
  * Copyright (C) 2007-2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>

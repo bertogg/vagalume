@@ -80,12 +80,6 @@ static gboolean stop_after_this_track = FALSE;
 static gboolean shutting_down = FALSE;
 
 typedef struct {
-        LastfmTrack *track;
-        RspRating rating;
-        time_t start;
-} rsp_data;
-
-typedef struct {
         LastfmWsSession *session;
         LastfmTrack *track;
         char *taglist;                /* comma-separated list of tags */

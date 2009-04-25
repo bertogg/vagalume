@@ -1,5 +1,14 @@
 2009-04-25  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/xmlrpc.[ch]:
+	Mark xmlrpc.c as legacy API.
+
+	* src/controller.[ch]
+	* src/vgl-main-window.c:
+	Remove unused includes and definitions.
+
+2009-04-25  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c
 	(controller_add_to_playlist, add_to_playlist_thread):
 	Use the new lastfm_ws_add_to_playlist() method.
