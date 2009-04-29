@@ -1746,8 +1746,10 @@ controller_run_app                      (const char *radio_url)
 
         /* --- From here onwards the app shuts down --- */
 
-        lastfm_ws_session_unref (session);
-        session = NULL;
+        if (session) {
+                lastfm_ws_session_unref (session);
+                session = NULL;
+        }
         lastfm_pls_destroy(playlist);
         playlist = NULL;
         if (usercfg != NULL) {
