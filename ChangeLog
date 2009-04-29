@@ -1,3 +1,8 @@
+2009-04-30  Javier Jardon  <javierjc1982@gmail.com>
+
+	* src/vgl-tray-icon.c (ctxt_menu_create):
+	Replace deprecated calls to gtk_menu_append()
+
 2009-04-25  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c:

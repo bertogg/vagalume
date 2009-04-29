@@ -215,9 +215,12 @@ static void
 ctxt_menu_create                        (VglTrayIcon *vti)
 {
         VglTrayIconPrivate *priv = vti->priv;
+        GtkMenuShell *ctxt_menu;
 
         /* Create ctxt_menu and ctxt_menu items */
         priv->ctxt_menu = gtk_menu_new ();
+        ctxt_menu = GTK_MENU_SHELL (priv->ctxt_menu);
+
         priv->menu_item[SETTINGS_ITEM] =
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES,
                                                     NULL);
@@ -248,21 +251,21 @@ ctxt_menu_create                        (VglTrayIcon *vti)
                 gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 
         /* Add items to ctxt_menu */
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[RECOMMEND_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[TAG_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[ADD_TO_PLS_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[LOVE_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[BAN_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[PLAY_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[STOP_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[NEXT_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[SETTINGS_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[ABOUT_ITEM]);
-        gtk_menu_append (priv->ctxt_menu, gtk_separator_menu_item_new ());
-        gtk_menu_append (priv->ctxt_menu, priv->menu_item[QUIT_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[RECOMMEND_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[TAG_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[ADD_TO_PLS_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, gtk_separator_menu_item_new ());
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[LOVE_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[BAN_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, gtk_separator_menu_item_new ());
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[PLAY_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[STOP_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[NEXT_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, gtk_separator_menu_item_new ());
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[SETTINGS_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[ABOUT_ITEM]);
+        gtk_menu_shell_append (ctxt_menu, gtk_separator_menu_item_new ());
+        gtk_menu_shell_append (ctxt_menu, priv->menu_item[QUIT_ITEM]);
 
         /* Connect signals */
         priv->menu_handler_id[SETTINGS_ITEM] =
