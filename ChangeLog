@@ -1,3 +1,11 @@
+2009-05-01  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-main-window.c (vgl_main_window_init):
+	Set border only when using HildonWindow.
+
+	Fixes #4041 (Vagalume UI issue: menu bar not flush with window
+	frame)
+
 2009-04-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c (controller_run_app):

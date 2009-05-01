@@ -1036,12 +1036,13 @@ vgl_main_window_init                    (VglMainWindow *self)
         priv->progressbar_text = g_string_sized_new(30);
         g_string_assign(priv->progressbar_text, " ");
         /* Window */
-#ifndef USE_HILDON_WINDOW
+#ifdef USE_HILDON_WINDOW
+        gtk_container_set_border_width(GTK_CONTAINER(win), 2);
+#else
         gtk_window_set_default_size(win, 500, -1);
 #endif
         gtk_window_add_accel_group(win, accel);
         gtk_window_set_icon_from_file(win, APP_ICON, NULL);
-        gtk_container_set_border_width(GTK_CONTAINER(win), 2);
         /* Boxes */
         vbox = GTK_BOX(gtk_vbox_new(FALSE, 5));
         centralbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
