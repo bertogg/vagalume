@@ -1,5 +1,10 @@
 2009-05-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c (controller_play_radio_by_url_thread):
+	Refactor code a bit.
+
+2009-05-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.h
 	* src/protocol.c
 	(lastfm_session_destroy):

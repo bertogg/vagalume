@@ -1287,19 +1287,15 @@ static gpointer
 controller_play_radio_by_url_thread     (gpointer data)
 {
         char *url = (char *) data;
-        LastfmWsSession *sess;
         gdk_threads_enter();
         if (!VGL_IS_MAIN_WINDOW(mainwin) || session == NULL) {
                 g_critical("Main window destroyed or session not found");
-                gdk_threads_leave();
-                return NULL;
-        }
-        sess = lastfm_ws_session_ref (session);
-        if (url == NULL) {
+        } else if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
         } else {
                 gboolean radio_set;
+                LastfmWsSession *sess = lastfm_ws_session_ref (session);
                 gdk_threads_leave();
                 radio_set = lastfm_ws_radio_tune (sess, url,
                                                   get_language_code ());
@@ -1316,10 +1312,10 @@ controller_play_radio_by_url_thread     (gpointer data)
                                                "or it is only available\n"
                                                "for Last.fm subscribers"));
                 }
+                lastfm_ws_session_unref (sess);
         }
         gdk_threads_leave();
         g_free(url);
-        lastfm_ws_session_unref (sess);
         return NULL;
 }
 
