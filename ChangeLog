@@ -1,3 +1,14 @@
+2009-05-05  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/lastfm-ws.h
+	* src/lastfm-ws.c
+	(lastfm_ws_session_new, lastfm_ws_session_unref)
+	(lastfm_ws_radio_tune, lastfm_ws_radio_get_playlist)
+	* src/controller.c
+	(start_playing_get_pls_thread)
+	(controller_play_radio_by_url_thread):
+	Store radio name in LastfmWsSession object.
+
 2009-05-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-main-window.c (vgl_main_window_init):

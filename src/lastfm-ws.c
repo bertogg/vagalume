@@ -46,8 +46,10 @@ struct _LastfmWsSession {
         char *username;
         char *password;
         char *key;
+        char *radio_name;
         gboolean subscriber;
         LastfmSession *v1sess;
+        GMutex *mutex;
         int refcount;
 };
 
@@ -97,8 +99,10 @@ lastfm_ws_session_new                   (const char    *username,
         session->username   = g_strdup (username);
         session->password   = g_strdup (password);
         session->key        = g_strdup (key);
+        session->radio_name = NULL;
         session->v1sess     = NULL;
         session->subscriber = subscriber;
+        session->mutex      = g_mutex_new ();
         session->refcount   = 1;
 
         return session;
@@ -120,6 +124,8 @@ lastfm_ws_session_unref                 (LastfmWsSession *session)
                 g_free (session->username);
                 g_free (session->password);
                 g_free (session->key);
+                g_free (session->radio_name);
+                g_mutex_free (session->mutex);
                 if (session->v1sess) {
                         lastfm_session_destroy (session->v1sess);
                 }
@@ -397,10 +403,9 @@ lastfm_ws_get_session                   (const char *user,
 }
 
 gboolean
-lastfm_ws_radio_tune                    (const LastfmWsSession  *session,
-                                         const char             *radio_url,
-                                         const char             *lang,
-                                         char                  **radio_title)
+lastfm_ws_radio_tune                    (LastfmWsSession *session,
+                                         const char      *radio_url,
+                                         const char      *lang)
 {
         xmlDoc *doc;
         const xmlNode *node;
@@ -415,13 +420,14 @@ lastfm_ws_radio_tune                    (const LastfmWsSession  *session,
                                 NULL);
 
         if (doc != NULL) {
-                if (radio_title != NULL) {
-                        node = xml_find_node (node, "station");
-                        if (node != NULL) {
-                                node = node->xmlChildrenNode;
-                        }
-                        xml_get_string (doc, node, "name", radio_title);
+                node = xml_find_node (node, "station");
+                if (node != NULL) {
+                        node = node->xmlChildrenNode;
                 }
+                g_mutex_lock (session->mutex);
+                g_free (session->radio_name);
+                xml_get_string (doc, node, "name", &(session->radio_name));
+                g_mutex_unlock (session->mutex);
                 xmlFreeDoc (doc);
                 return TRUE;
         } else {
@@ -431,7 +437,6 @@ lastfm_ws_radio_tune                    (const LastfmWsSession  *session,
 
 LastfmPls *
 lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
-                                         const char            *pls_title,
                                          gboolean               discovery,
                                          gboolean               scrobbling)
 {
@@ -449,7 +454,9 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                                 NULL);
 
         if (doc != NULL) {
-                pls = lastfm_parse_playlist (doc, pls_title);
+                g_mutex_lock (session->mutex);
+                pls = lastfm_parse_playlist (doc, session->radio_name);
+                g_mutex_unlock (session->mutex);
                 xmlFreeDoc (doc);
         }
 

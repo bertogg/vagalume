@@ -42,14 +42,12 @@ lastfm_ws_get_session                   (const char *user,
                                          LastfmErr  *err);
 
 gboolean
-lastfm_ws_radio_tune                    (const LastfmWsSession  *session,
-                                         const char             *radio_url,
-                                         const char             *lang,
-                                         char                  **radio_title);
+lastfm_ws_radio_tune                    (LastfmWsSession *session,
+                                         const char      *radio_url,
+                                         const char      *lang);
 
 LastfmPls *
 lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
-                                         const char            *pls_title,
                                          gboolean               discovery,
                                          gboolean               scrobbling);
 
