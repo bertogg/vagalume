@@ -26,6 +26,7 @@ typedef struct {
         char *id;
         char *base_url;
         char *base_path;
+        LastfmPls *custom_pls;
 } LastfmSession;
 
 LastfmSession *

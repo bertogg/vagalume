@@ -1,5 +1,18 @@
 2009-05-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/protocol.h
+	* src/protocol.c
+	(lastfm_session_destroy):
+	* src/lastfm-ws.c
+	(lastfm_ws_radio_tune, lastfm_ws_radio_get_playlist):
+	Manage custom playlists, storing them temporarily in the legacy
+	LastfmSession object.
+
+	* src/controller.c (controller_play_radio_by_url_thread):
+	Use lastfm_ws_radio_tune() for custom playlists too.
+
+2009-05-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.h
 	* src/lastfm-ws.c
 	(lastfm_ws_session_new, lastfm_ws_session_unref)

@@ -10,6 +10,7 @@
 
 #include "lastfm-ws.h"
 #include "http.h"
+#include "radio.h"
 #include "util.h"
 #include "xmlrpc.h"
 
@@ -412,6 +413,24 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
 
         g_return_val_if_fail (session && radio_url, FALSE);
 
+        /* If this is a custom URL, store the playlist for later */
+        if (session->v1sess) {
+                if (lastfm_radio_url_is_custom (radio_url)) {
+                        LastfmPls *pls = lastfm_request_custom_playlist (
+                                session->v1sess, radio_url);
+                        g_mutex_lock (session->mutex);
+                        lastfm_pls_destroy (session->v1sess->custom_pls);
+                        session->v1sess->custom_pls = pls;
+                        g_mutex_unlock (session->mutex);
+                        return (pls != NULL);
+                } else if (session->v1sess->custom_pls) {
+                        g_mutex_lock (session->mutex);
+                        lastfm_pls_destroy (session->v1sess->custom_pls);
+                        session->v1sess->custom_pls = NULL;
+                        g_mutex_unlock (session->mutex);
+                }
+        }
+
         lastfm_ws_http_request ("radio.tune",
                                 HTTP_REQUEST_POST, TRUE, &doc, &node,
                                 "sk", session->key,
@@ -445,6 +464,16 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
         const xmlNode *node;
 
         g_return_val_if_fail (session, NULL);
+
+        /* If there's a custom playlist available, return it
+           (see lastfm_ws_radio_tune()) */
+        if (session->v1sess && session->v1sess->custom_pls) {
+                g_mutex_lock (session->mutex);
+                pls = session->v1sess->custom_pls;
+                session->v1sess->custom_pls = NULL;
+                g_mutex_unlock (session->mutex);
+                return pls;
+        }
 
         lastfm_ws_http_request ("radio.getPlaylist",
                                 HTTP_REQUEST_GET, TRUE, &doc, &node,

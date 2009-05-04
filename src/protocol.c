@@ -70,6 +70,7 @@ lastfm_session_destroy                  (LastfmSession *session)
         g_free(session->id);
         g_free(session->base_url);
         g_free(session->base_path);
+        lastfm_pls_destroy(session->custom_pls);
         g_slice_free(LastfmSession, session);
 }
 

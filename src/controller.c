@@ -1298,24 +1298,6 @@ controller_play_radio_by_url_thread     (gpointer data)
         if (url == NULL) {
                 g_critical("Attempted to play a NULL radio URL");
                 controller_stop_playing();
-        } else if (lastfm_radio_url_is_custom(url)) {
-                LastfmPls *pls = NULL;
-                LastfmSession *v1 = lastfm_ws_session_get_v1_session (sess);
-                if (v1 != NULL) {
-                        gdk_threads_leave ();
-                        pls = lastfm_request_custom_playlist (v1, url);
-                        gdk_threads_enter ();
-                }
-                if (pls != NULL) {
-                        lastfm_pls_destroy(playlist);
-                        playlist = pls;
-                        g_free (current_radio_url);
-                        current_radio_url = g_strdup (url);
-                        controller_skip_track();
-                } else {
-                        controller_stop_playing();
-                        controller_show_info(_("Invalid radio URL"));
-                }
         } else {
                 gboolean radio_set;
                 gdk_threads_leave();
