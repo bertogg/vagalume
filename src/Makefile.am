@@ -40,9 +40,11 @@ vagalume_SOURCES = \
 
 BUILT_SOURCES = marshal.c marshal.h
 
-marshal.c marshal.h: marshal.list
+marshal.h: marshal.list
 	glib-genmarshal --header \
 		--prefix=vgl_marshal marshal.list > marshal.h
+
+marshal.c: marshal.list
 	glib-genmarshal --body \
 		--prefix=vgl_marshal marshal.list > marshal.c
 

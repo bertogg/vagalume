@@ -1,3 +1,8 @@
+2009-05-07  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/Makefile.am:
+	Create two different targets for marshal.c and marshal.h
+
 2009-05-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c (controller_play_radio_by_url_thread):
