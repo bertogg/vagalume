@@ -61,6 +61,7 @@ binary-arch: build install
 	dh_installmenu
 	dh_desktop
 	dh_gconf
+	dh_icons
 	dh_installman
 	dh_strip
 	dh_compress
