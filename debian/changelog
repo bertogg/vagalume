@@ -1,6 +1,7 @@
 vagalume (0.7.1-2) unstable; urgency=low
 
-  * Use debhelper to update icon cache (Closes: #527321).
+  * Use dh_icons to update icon cache (Closes: #527321).
+  * Depend on debhelper >= 7
 
  -- Alberto Garcia <agarcia@igalia.com>  Fri, 08 May 2009 18:46:35 +0200
 
