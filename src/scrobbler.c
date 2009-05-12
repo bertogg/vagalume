@@ -348,6 +348,7 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
                         sleep_seconds = 5;
                 } else {
                         /* Server down? Try again later */
+                        track = NULL;
                         sleep_seconds = 60;
                 }
         }

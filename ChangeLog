@@ -1,5 +1,10 @@
 2009-05-13  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/scrobbler.c (rsp_scrobbler_thread_scrobble):
+	Sleep between retries when scrobbling doesn't work.
+
+2009-05-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.h
 	* src/controller.c
 	* src/radio.c
