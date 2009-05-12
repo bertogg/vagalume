@@ -1365,7 +1365,7 @@ controller_play_radio_by_url            (const char *url)
 static void
 controller_play_radio_cb                (gpointer userdata)
 {
-        lastfm_radio type = GPOINTER_TO_INT(userdata);
+        LastfmRadio type = GPOINTER_TO_INT (userdata);
         char *url = NULL;
         if (type == LASTFM_RECOMMENDED_RADIO) {
                 url = lastfm_recommended_radio_url(
@@ -1402,7 +1402,7 @@ controller_play_radio_cb                (gpointer userdata)
  * @param type Radio type
  */
 void
-controller_play_radio                   (lastfm_radio type)
+controller_play_radio                   (LastfmRadio type)
 {
         check_session_cb cb;
         cb = (check_session_cb) controller_play_radio_cb;
@@ -1420,7 +1420,7 @@ controller_play_radio                   (lastfm_radio type)
 static void
 controller_play_others_radio_cb         (gpointer userdata)
 {
-        lastfm_radio type = GPOINTER_TO_INT(userdata);
+        LastfmRadio type = GPOINTER_TO_INT (userdata);
         static char *previous = NULL;
         char *url = NULL;
         char *user = ui_input_dialog_with_list(vgl_main_window_get_window(mainwin,
@@ -1481,7 +1481,7 @@ controller_play_usertag_radio_cb        (gpointer userdata)
  * @param type Radio type
  */
 void
-controller_play_others_radio            (lastfm_radio type)
+controller_play_others_radio            (LastfmRadio type)
 {
         check_session_cb cb;
         if (type == LASTFM_USERTAG_RADIO) {

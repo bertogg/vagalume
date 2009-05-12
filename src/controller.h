@@ -95,10 +95,10 @@ void
 controller_play_radio_by_url            (const char *url);
 
 void
-controller_play_radio                   (lastfm_radio type);
+controller_play_radio                   (LastfmRadio type);
 
 void
-controller_play_others_radio            (lastfm_radio type);
+controller_play_others_radio            (LastfmRadio type);
 
 void
 controller_play_radio_ask_url           (void);

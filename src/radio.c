@@ -14,8 +14,8 @@
 #include "radio.h"
 
 char *
-lastfm_radio_url                        (lastfm_radio  type,
-                                         const char   *data)
+lastfm_radio_url                        (LastfmRadio  type,
+                                         const char  *data)
 {
         g_return_val_if_fail(data != NULL, NULL);
         switch (type) {

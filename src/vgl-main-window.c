@@ -575,7 +575,7 @@ static void
 radio_selected                          (GtkWidget *widget,
                                          gpointer   data)
 {
-        lastfm_radio type = GPOINTER_TO_INT(data);
+        LastfmRadio type = GPOINTER_TO_INT (data);
         controller_play_radio(type);
 }
 
@@ -583,7 +583,7 @@ static void
 others_radio_selected                   (GtkWidget *widget,
                                          gpointer   data)
 {
-        lastfm_radio type = GPOINTER_TO_INT(data);
+        LastfmRadio type = GPOINTER_TO_INT (data);
         controller_play_others_radio(type);
 }
 

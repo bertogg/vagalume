@@ -21,11 +21,11 @@ typedef enum {
         LASTFM_RECOMMENDED_RADIO,
         LASTFM_USERPLAYLIST_RADIO,
         LASTFM_USERTAG_RADIO
-} lastfm_radio;
+} LastfmRadio;
 
 char *
-lastfm_radio_url                        (lastfm_radio  type,
-                                         const char   *data);
+lastfm_radio_url                        (LastfmRadio  type,
+                                         const char  *data);
 
 char *
 lastfm_recommended_radio_url            (const char *user,

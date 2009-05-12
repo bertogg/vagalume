@@ -1,3 +1,12 @@
+2009-05-13  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.h
+	* src/controller.c
+	* src/radio.c
+	* src/radio.h
+	* src/vgl-main-window.c:
+	Rename lastfm_radio to LastfmRadio
+
 2009-05-07  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/Makefile.am:
