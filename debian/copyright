@@ -58,6 +58,6 @@ Vagalume also contains a free MD5 implementation that is:
     L. Peter Deutsch
     ghost@aladdin.com
 
-The Debian packaging is (C) 2007-2008, Alberto Garcia Gonzalez
+The Debian packaging is Copyright (C) 2007-2009, Alberto Garcia
 <agarcia@igalia.com> and is licensed under the GPL, see
 `/usr/share/common-licenses/GPL'.
