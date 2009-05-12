@@ -2,6 +2,9 @@ vagalume (0.7.1-2) unstable; urgency=low
 
   * Use dh_icons to update icon cache (Closes: #527321).
   * Depend on debhelper >= 7
+  * Update Standards-Version to 3.8.1
+  * Add ${misc:Depends} to Depends:
+  * Use dh_prep instead of dh_clean -k
 
  -- Alberto Garcia <agarcia@igalia.com>  Fri, 08 May 2009 18:46:35 +0200
 
