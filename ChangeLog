@@ -1,3 +1,8 @@
+2009-05-15  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/scrobbler.c (rsp_scrobbler_thread_scrobble):
+	Discard a track after 50 unsuccessful tries to scrobble it.
+
 2009-05-13  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/scrobbler.c (rsp_scrobbler_thread_scrobble):

@@ -28,6 +28,8 @@ static const char rsp_session_url[] =
        "http://post.audioscrobbler.com/?hs=true&p=1.2"
        "&c=" LASTFM_APP_ID "&v=" LASTFM_APP_VERSION;
 
+#define MAX_SCROBBLE_TRIES 50
+
 typedef enum {
         RSP_RESPONSE_OK,
         RSP_RESPONSE_BADSESSION,
@@ -49,6 +51,7 @@ typedef struct {
         LastfmTrack *track;
         time_t start_time;
         RspRating rating;
+        int tries;
 } RspTrack;
 
 static GCond *rsp_thread_cond = NULL;
@@ -84,6 +87,7 @@ rsp_track_new                           (const char  *user,
         t->track = lastfm_track_ref (track);
         t->start_time = start_time;
         t->rating = rating;
+        t->tries = 0;
         return t;
 }
 
@@ -332,9 +336,14 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
                         lastfm_ws_ban_track (ws_session, track->track);
                 }
 
-                /* Scrobble track */
-                ret = rsp_scrobble (s, track->track,
-                                    track->start_time, track->rating);
+                /* Scrobble track, but don't try too many times */
+                if (track->tries++ >= MAX_SCROBBLE_TRIES) {
+                        g_debug ("Too many failed tries, discarding track");
+                        ret = RSP_RESPONSE_OK;
+                } else {
+                        ret = rsp_scrobble (s, track->track,
+                                            track->start_time, track->rating);
+                }
 
                 if (ret == RSP_RESPONSE_OK) {
                         rsp_track_destroy (track);
