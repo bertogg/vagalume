@@ -174,6 +174,7 @@ http_download_file                      (const char                *url,
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
+        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
         curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
         curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         if (cb != NULL) {
@@ -224,6 +225,7 @@ http_get_buffer                         (const char  *url,
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, &dstbuf);
         hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
+        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
         curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
         curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);
@@ -278,6 +280,7 @@ http_post_buffer                        (const char    *url,
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_POSTFIELDS, postdata);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
+        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
         curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
         curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);

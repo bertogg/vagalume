@@ -1,3 +1,9 @@
+2009-05-16  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/http.c
+	(http_download_file, http_get_buffer, http_post_buffer):
+	Follow HTTP redirections
+
 2009-05-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/scrobbler.c (rsp_scrobbler_thread_scrobble):
