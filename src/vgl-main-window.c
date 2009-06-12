@@ -758,7 +758,7 @@ create_main_menu                        (VglMainWindow *w,
         GtkWidget *play, *stop, *skip, *separ1, *separ2, *separ3;
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkWidget *library, *neigh, *loved, *playlist, *recomm, *usertag;
-        GtkWidget *library2, *neigh2, *loved2, *playlist2, *usertag2;
+        GtkWidget *library2, *neigh2, *loved2, *playlist2, *recomm2, *usertag2;
         GtkWidget *managebmk, *addbmk, *bmkartist, *bmktrack, *bmkradio;
         GtkWidget *about;
 #ifdef USE_HILDON_WINDOW
@@ -854,11 +854,13 @@ create_main_menu                        (VglMainWindow *w,
         neigh2 = gtk_menu_item_new_with_label(_("Neighbours..."));
         loved2 = gtk_menu_item_new_with_label(_("Loved tracks..."));
         playlist2 = gtk_menu_item_new_with_label(_("Playlist..."));
+        recomm2 = gtk_menu_item_new_with_label(_("Recommendations..."));
         usertag2 = gtk_menu_item_new_with_label(_("Music tagged..."));
         gtk_menu_shell_append(othersub, library2);
         gtk_menu_shell_append(othersub, neigh2);
         gtk_menu_shell_append(othersub, loved2);
         gtk_menu_shell_append(othersub, playlist2);
+        gtk_menu_shell_append(othersub, recomm2);
         gtk_menu_shell_append(othersub, usertag2);
         g_signal_connect(G_OBJECT(library2), "activate",
                          G_CALLBACK(others_radio_selected),
@@ -872,6 +874,9 @@ create_main_menu                        (VglMainWindow *w,
         g_signal_connect(G_OBJECT(playlist2), "activate",
                          G_CALLBACK(others_radio_selected),
                          GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
+        g_signal_connect(G_OBJECT(recomm2), "activate",
+                         G_CALLBACK(others_radio_selected),
+                         GINT_TO_POINTER(LASTFM_RECOMMENDED_RADIO));
         g_signal_connect(G_OBJECT(usertag2), "activate",
                          G_CALLBACK(others_radio_selected),
                          GINT_TO_POINTER(LASTFM_USERTAG_RADIO));

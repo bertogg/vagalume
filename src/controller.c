@@ -1430,7 +1430,11 @@ controller_play_others_radio_cb         (gpointer userdata)
                                                friends,
                                                previous);
         if (user != NULL) {
-                url = lastfm_radio_url(type, user);
+                if (type == LASTFM_RECOMMENDED_RADIO) {
+                        url = lastfm_recommended_radio_url (user, 100);
+                } else {
+                        url = lastfm_radio_url (type, user);
+                }
                 controller_play_radio_by_url(url);
                 g_free(url);
                 /* Store the new value for later use */

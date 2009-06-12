@@ -1,3 +1,11 @@
+2009-06-12  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-main-window.c (create_main_menu)
+	* src/controller.c (controller_play_others_radio_cb):
+	Add support for others' recommendations radios.
+
+	Fixes: NB#4072
+
 2009-05-16  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/http.c
