@@ -14,4 +14,4 @@ endif
 makebuilddir/vagalume:: configure
 
 configure: configure.ac Makefile.am src/Makefile.am
-	./autogen.sh
+	NOCONFIGURE=1 ./autogen.sh

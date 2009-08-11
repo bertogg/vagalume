@@ -1,3 +1,13 @@
+2009-08-11  Alberto Garcia  <agarcia@igalia.com>
+
+	* autogen.sh:
+	Run ./configure unless the NOCONFIGURE variable is set.
+	Verbose output.
+
+	* debian/changelog
+	* debian/rules:
+	Run autogen.sh with NOCONFIGURE=1
+
 2009-06-12  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-main-window.c (create_main_menu)

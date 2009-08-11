@@ -7,6 +7,7 @@ vagalume (0.7.1-2) UNRELEASED; urgency=low
   * Moved 'Homepage' field to source paragraph
   * Use DEB_INSTALL_* variables instead of 'dirs' and 'docs' files
   * Updated copyright file to reflect copyright holder change
+  * Run autogen.sh from debian/rules with NOCONFIGURE=1
 
  -- Alberto Garcia <agarcia@igalia.com>  Sat, 01 Nov 2008 02:05:28 +0100
 
