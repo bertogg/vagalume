@@ -402,11 +402,13 @@ controller_open_usercfg                 (void)
         g_return_if_fail(VGL_IS_MAIN_WINDOW(mainwin));
         gboolean userchanged = FALSE;
         gboolean pwchanged = FALSE;
+        gboolean srvchanged = FALSE;
         gboolean changed;
         char *olduser = usercfg != NULL ? g_strdup(usercfg->username) :
                                           g_strdup("");
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
+        VglServer *oldsrv = usercfg ? vgl_server_ref (usercfg->server) : NULL;
 
         changed = ui_usercfg_window(
                 vgl_main_window_get_window(mainwin, FALSE), &usercfg);
@@ -415,10 +417,11 @@ controller_open_usercfg                 (void)
                 vgl_user_cfg_write(usercfg);
                 userchanged = strcmp(olduser, usercfg->username);
                 pwchanged = strcmp(oldpw, usercfg->password);
+                srvchanged = oldsrv != usercfg->server;
                 apply_usercfg();
         }
-        if (userchanged || pwchanged) {
-                if (userchanged) {
+        if (userchanged || pwchanged || srvchanged) {
+                if (userchanged || srvchanged) {
                         set_friend_list(usercfg->username, NULL);
                         set_user_tag_list(usercfg->username, NULL);
                 }
@@ -426,6 +429,9 @@ controller_open_usercfg                 (void)
         }
         g_free(olduser);
         g_free(oldpw);
+        if (oldsrv) {
+                vgl_server_unref (oldsrv);
+        }
 }
 
 /**

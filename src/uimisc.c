@@ -64,6 +64,7 @@ typedef struct {
         GtkDialog *dialog;
         GtkNotebook *nb;
         GtkEntry *user, *pw, *proxy, *dlentry;
+        GtkComboBox *srvcombo;
         GtkWidget *dlbutton, *scrobble, *discovery, *useproxy;
         GtkWidget *dlfreetracks;
         GtkWidget *disableconfdiags;
@@ -439,6 +440,31 @@ change_dir_selected                     (GtkWidget *widget,
         }
 }
 
+static GtkComboBox *
+usercfg_create_server_combobox          (VglUserCfg *cfg)
+{
+        GtkComboBox *combo;
+        GList *srvlist, *iter;
+        int i;
+
+        g_return_val_if_fail (cfg != NULL, NULL);
+
+        combo = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+
+        srvlist = vgl_server_list_get ();
+        for (iter = srvlist, i = 0; iter != NULL; iter = iter->next, i++) {
+                VglServer *srv = iter->data;
+                gtk_combo_box_append_text (combo, srv->name);
+                if (srv == cfg->server) {
+                        gtk_combo_box_set_active (combo, i);
+                }
+
+        }
+        g_list_free (srvlist);
+
+        return combo;
+}
+
 static void
 usercfg_help_button_clicked             (GtkButton  *button,
                                          usercfgwin *win)
@@ -469,17 +495,19 @@ usercfg_add_account_settings            (usercfgwin *win,
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
-        GtkWidget *userlabel, *pwlabel, *scroblabel, *discovlabel;
+        GtkWidget *userlabel, *pwlabel, *srvlabel, *scroblabel, *discovlabel;
         const char *help;
 
         /* Create widgets */
         table = GTK_TABLE (gtk_table_new (4, 2, FALSE));
         userlabel = gtk_label_new(_("Username:"));
         pwlabel = gtk_label_new(_("Password:"));
+        srvlabel = gtk_label_new(_("Service:"));
         scroblabel = gtk_label_new(_("Enable scrobbling:"));
         discovlabel = gtk_label_new(_("Discovery mode:"));
         win->user = GTK_ENTRY(gtk_entry_new());
         win->pw = GTK_ENTRY(gtk_entry_new());
+        win->srvcombo = usercfg_create_server_combobox (cfg);
         win->scrobble = gtk_check_button_new();
         win->discovery = gtk_check_button_new();
 
@@ -511,14 +539,17 @@ usercfg_add_account_settings            (usercfgwin *win,
         /* Pack widgets */
         gtk_table_attach(table, userlabel, 0, 1, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, pwlabel, 0, 1, 1, 2, 0, 0, 5, 5);
-        gtk_table_attach(table, scroblabel, 0, 1, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(table, discovlabel, 0, 1, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(table, srvlabel, 0, 1, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, scroblabel, 0, 1, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(table, discovlabel, 0, 1, 4, 5, 0, 0, 5, 5);
         gtk_table_attach(table, GTK_WIDGET(win->user), 1, 2, 0, 1,
                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
         gtk_table_attach(table, GTK_WIDGET(win->pw), 1, 2, 1, 2,
                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
-        gtk_table_attach(table, win->scrobble, 1, 2, 2, 3, 0, 0, 5, 5);
-        gtk_table_attach(table, win->discovery, 1, 2, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(table, GTK_WIDGET (win->srvcombo),
+                         1, 2, 2, 3, 0, 0, 5, 5);
+        gtk_table_attach(table, win->scrobble, 1, 2, 3, 4, 0, 0, 5, 5);
+        gtk_table_attach(table, win->discovery, 1, 2, 4, 5, 0, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Account")));
 
@@ -798,6 +829,8 @@ ui_usercfg_window                       (GtkWindow   *parent,
                 vgl_user_cfg_set_http_proxy(*cfg, gtk_entry_get_text(win.proxy));
                 vgl_user_cfg_set_download_dir(*cfg,
                                                 gtk_entry_get_text(win.dlentry));
+                vgl_user_cfg_set_server_name(
+                        *cfg, gtk_combo_box_get_active_text (win.srvcombo));
                 (*cfg)->enable_scrobbling = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.scrobble));
                 (*cfg)->discovery_mode = gtk_toggle_button_get_active(

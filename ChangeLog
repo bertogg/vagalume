@@ -1,5 +1,14 @@
 2009-09-04  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c
+	(controller_open_usercfg)
+	* src/uimisc.c
+	(ui_usercfg_window, usercfg_add_account_settings)
+	(+usercfg_create_server_combobox):
+	Add a combo box to the settings dialog to select the server
+
+2009-09-04  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-server.[ch]
 	(vgl_server_new, vgl_server_unref)
 	(vgl_server_list_add, vgl_server_list_init):
