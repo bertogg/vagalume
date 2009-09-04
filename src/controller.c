@@ -30,6 +30,7 @@
 #include "util.h"
 #include "vgl-bookmark-mgr.h"
 #include "vgl-bookmark-window.h"
+#include "vgl-server.h"
 #include "lastfm-ws.h"
 
 #ifdef SET_IM_STATUS
@@ -113,6 +114,7 @@ typedef void (*check_session_cb)(gpointer data);
 typedef struct {
         char *user;
         char *pass;
+        VglServer *srv;
         check_session_cb success_cb;
         check_session_cb failure_cb;
         gpointer cbdata;
@@ -328,13 +330,15 @@ get_user_extradata                      (void)
         gdk_threads_enter();
         char *user = g_strdup(usercfg->username);
         char *pass = g_strdup(usercfg->password);
+        VglServer *srv = vgl_server_ref (usercfg->server);
         gdk_threads_leave();
         if (!user || !pass || user[0] == '\0' || pass[0] == '\0') {
                 finished = TRUE;
         }
         while (!finished) {
                 if (!friends_ok) {
-                        friends_ok = lastfm_ws_get_friends (user, &friends);
+                        friends_ok = lastfm_ws_get_friends (srv, user,
+                                                            &friends);
                         if (friends_ok) {
                                 g_debug("Friend list ready");
                                 gdk_threads_enter();
@@ -345,7 +349,8 @@ get_user_extradata                      (void)
                         }
                 }
                 if (!usertags_ok) {
-                        usertags_ok = lastfm_ws_get_user_tags (user,&usertags);
+                        usertags_ok = lastfm_ws_get_user_tags (srv, user,
+                                                               &usertags);
                         if (usertags_ok) {
                                 g_debug("Tag list ready");
                                 gdk_threads_enter();
@@ -368,6 +373,7 @@ get_user_extradata                      (void)
         }
         g_free(user);
         g_free(pass);
+        vgl_server_unref(srv);
 }
 
 /**
@@ -467,7 +473,7 @@ check_session_thread                    (gpointer userdata)
         LastfmErr err = LASTFM_ERR_NONE;
         LastfmWsSession *s;
         data = (check_session_thread_data *) userdata;
-        s = lastfm_ws_get_session (data->user, data->pass, &err);
+        s = lastfm_ws_get_session (data->srv, data->user, data->pass, &err);
 
         if (s == NULL) {
                 gdk_threads_enter();
@@ -503,6 +509,7 @@ check_session_thread                    (gpointer userdata)
         /* Free memory */
         g_free(data->user);
         g_free(data->pass);
+        vgl_server_unref(data->srv);
         g_slice_free(check_session_thread_data, data);
         if (connected) {
                 get_user_extradata();
@@ -547,6 +554,7 @@ check_session                           (check_session_cb success_cb,
                         data = g_slice_new(check_session_thread_data);
                         data->user = g_strdup(usercfg->username);
                         data->pass = g_strdup(usercfg->password);
+                        data->srv = vgl_server_ref(usercfg->server);
                         data->success_cb = success_cb;
                         data->failure_cb = failure_cb;
                         data->cbdata = cbdata;
@@ -1689,6 +1697,7 @@ controller_run_app                      (const char *radio_url)
         playlist = lastfm_pls_new();
         rsp_init (vgl_controller);
 
+        vgl_server_list_init ();
         check_usercfg(FALSE);
 
         if (!errmsg && !lastfm_audio_init()) {
@@ -1738,6 +1747,7 @@ controller_run_app                      (const char *radio_url)
                 usercfg = NULL;
         }
         lastfm_audio_clear();
+        vgl_server_list_finalize ();
         vgl_bookmark_mgr_save_to_disk (vgl_bookmark_mgr_get_instance (), FALSE);
 
         g_object_unref (vgl_controller);

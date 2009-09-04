@@ -13,12 +13,15 @@
 
 #include <glib.h>
 
+#include "vgl-server.h"
+
 typedef struct {
         char *username; /* Never NULL, even if not defined */
         char *password; /* Never NULL, even if not defined */
         char *http_proxy; /* Never NULL, even if not defined */
         char *download_dir; /* Never NULL */
         char *imstatus_template; /* Never NULL */
+        VglServer *server;
         gboolean use_proxy;
         gboolean discovery_mode;
         gboolean enable_scrobbling;
@@ -53,6 +56,10 @@ vgl_user_cfg_set_http_proxy             (VglUserCfg *cfg,
 void
 vgl_user_cfg_set_download_dir           (VglUserCfg *cfg,
                                          const char *dir);
+
+void
+vgl_user_cfg_set_server_name            (VglUserCfg *cfg,
+                                         const char *name);
 
 void
 vgl_user_cfg_set_imstatus_template      (VglUserCfg *cfg,

@@ -1234,7 +1234,8 @@ get_track_tags_thread                   (gpointer userdata)
 
         lastfm_ws_get_user_track_tags(data->w->ws_session, data->w->track,
                                       data->type, &userlist);
-        lastfm_ws_get_track_tags(data->w->track, data->type, &globallist);
+        lastfm_ws_get_track_tags (data->w->ws_session, data->w->track,
+                                  data->type, &globallist);
 
         gdk_threads_enter();
         usertags = str_glist_join(userlist, ", ");

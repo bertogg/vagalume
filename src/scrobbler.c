@@ -24,10 +24,6 @@
 #include "userconfig.h"
 #include "lastfm-ws.h"
 
-static const char rsp_session_url[] =
-       "http://post.audioscrobbler.com/?hs=true&p=1.2"
-       "&c=" LASTFM_APP_ID "&v=" LASTFM_APP_VERSION;
-
 #define MAX_SCROBBLE_TRIES 50
 
 typedef enum {
@@ -55,6 +51,7 @@ typedef struct {
 } RspTrack;
 
 static GCond *rsp_thread_cond = NULL;
+static VglServer *server = NULL;
 static GMutex *rsp_mutex = NULL;
 static GSList *rsp_queue = NULL;
 static gboolean rsp_initialized = FALSE;
@@ -124,8 +121,8 @@ rsp_session_new                         (const char *username,
         char *buffer = NULL;
         timestamp = g_strdup_printf("%lu", time(NULL));
         auth = compute_auth_token(password, timestamp);
-        url = g_strconcat(rsp_session_url, "&u=", username, "&t=", timestamp,
-                          "&a=", auth, NULL);
+        url = g_strconcat(server->rsp_base_url, "&u=", username,
+                          "&t=", timestamp, "&a=", auth, NULL);
         http_get_buffer(url, &buffer, NULL);
         if (buffer == NULL) {
                 g_warning("Unable to initiate rsp session");
@@ -407,6 +404,7 @@ rsp_scrobbler_thread                    (gpointer data)
         }
         g_string_free (username, TRUE);
         g_string_free (password, TRUE);
+        vgl_server_unref (server);
         g_mutex_free (rsp_mutex);
         g_cond_free (rsp_thread_cond);
         if (global_ws_session) {
@@ -414,6 +412,7 @@ rsp_scrobbler_thread                    (gpointer data)
                 global_ws_session = NULL;
         }
         username = password = NULL;
+        server = NULL;
         rsp_mutex = NULL;
         rsp_thread_cond = NULL;
         return NULL;
@@ -499,6 +498,10 @@ usercfg_changed_cb                      (VglController *ctrl,
                 g_string_assign (password, cfg->password);
                 changed = TRUE;
         }
+        if (server != NULL) {
+                vgl_server_unref (server);
+        }
+        server = vgl_server_ref (cfg->server);
         enable_scrobbling = cfg->enable_scrobbling;
         if (changed && global_rsp_session) {
                 rsp_session_unref (global_rsp_session);

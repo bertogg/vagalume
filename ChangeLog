@@ -1,5 +1,36 @@
 2009-09-04  Alberto Garcia  <agarcia@igalia.com>
 
+	Initial support for different Last.fm-compatible servers.
+
+	* src/Makefile.am
+	* src/vgl-server.[ch]:
+	New class to store server information.
+
+	* src/userconfig.[ch]
+	(vgl_user_cfg_read, vgl_user_cfg_write)
+	(vgl_user_cfg_new, vgl_user_cfg_destroy)
+	(+vgl_user_cfg_set_server, +vgl_user_cfg_set_server_name):
+	Store current server in the VglUserCfg object.
+
+	* src/controller.c
+	(controller_run_app):
+	Initialize the server list on startup, and finalize it on
+	shutdown.
+
+	* src/lastfm-ws.[ch]:
+	Modify all functions to receive a VglServer object, instead of
+	using the hard-coded values for Last.fm
+
+	* src/uimisc.c
+	(get_track_tags_thread)
+	* src/controller.c
+	(get_user_extradata, check_session_thread, check_session)
+	* src/scrobbler.c
+	(rsp_session_new, rsp_scrobbler_thread, usercfg_changed_cb):
+	Adapt functions to use the modified LastfmWs API.
+
+2009-09-04  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.c (lastfm_set_radio):
 	Check for NULL in 'response'
 

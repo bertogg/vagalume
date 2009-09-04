@@ -17,6 +17,8 @@
 
 #include "globaldefs.h"
 #include "userconfig.h"
+#include "lastfm-ws.h"
+#include "scrobbler.h"
 #include "util.h"
 
 #define DEFAULT_IMSTATUS_TEMPLATE \
@@ -115,6 +117,35 @@ vgl_user_cfg_set_password               (VglUserCfg *cfg,
         cfg->password = g_strstrip(g_strdup(password));
 }
 
+static void
+vgl_user_cfg_set_server                 (VglUserCfg *cfg,
+                                         VglServer  *server)
+{
+        g_return_if_fail (cfg != NULL && server != NULL);
+        vgl_server_ref (server);
+        if (cfg->server) {
+                vgl_server_unref (cfg->server);
+        }
+        cfg->server = server;
+}
+
+void
+vgl_user_cfg_set_server_name            (VglUserCfg *cfg,
+                                         const char *name)
+{
+        VglServer *server;
+
+        g_return_if_fail (cfg != NULL && name != NULL);
+
+        server = vgl_server_list_find_by_name (name);
+        if (server) {
+                vgl_user_cfg_set_server (cfg, server);
+                vgl_server_unref (server);
+        } else {
+                g_warning ("No such server: %s", name);
+        }
+}
+
 void
 vgl_user_cfg_set_http_proxy             (VglUserCfg *cfg,
                                          const char *proxy)
@@ -151,6 +182,7 @@ vgl_user_cfg_new                        (void)
         cfg->http_proxy = g_strdup("");
         cfg->download_dir = default_download_dir();
         cfg->imstatus_template = g_strdup(DEFAULT_IMSTATUS_TEMPLATE);
+        cfg->server = vgl_server_get_default ();
         cfg->use_proxy = FALSE;
         cfg->enable_scrobbling = TRUE;
         cfg->discovery_mode = FALSE;
@@ -173,6 +205,7 @@ vgl_user_cfg_destroy                    (VglUserCfg *cfg)
         g_free(cfg->http_proxy);
         g_free(cfg->download_dir);
         g_free(cfg->imstatus_template);
+        vgl_server_unref(cfg->server);
         g_slice_free(VglUserCfg, cfg);
 }
 
@@ -314,6 +347,10 @@ vgl_user_cfg_read                       (void)
                         vgl_user_cfg_set_imstatus_template (cfg, str);
                         g_free (str);
                 }
+                if (xml_get_string (doc, node, "server-name", &str)) {
+                        vgl_user_cfg_set_server_name (cfg, str);
+                        g_free (str);
+                }
                 xml_get_bool (doc, node, "use-proxy", &(cfg->use_proxy));
                 xml_get_bool (doc, node, "discovery-mode",
                               &(cfg->discovery_mode));
@@ -352,12 +389,13 @@ vgl_user_cfg_write                      (VglUserCfg *cfg)
         doc = xmlNewDoc ((xmlChar *) "1.0");
         root = xmlNewNode (NULL, (xmlChar *) "config");
         xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
-        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "2");
+        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "3");
         xmlDocSetRootElement (doc, root);
 
         xml_add_string (root, "username", cfg->username);
         xml_add_string (root, "password", obfuscate_string (cfg->password));
         obfuscate_string (cfg->password);
+        xml_add_string (root, "server-name", cfg->server->name);
         xml_add_string (root, "http-proxy", cfg->http_proxy);
         xml_add_string (root, "download-dir", cfg->download_dir);
         xml_add_string (root, "imstatus-template", cfg->imstatus_template);

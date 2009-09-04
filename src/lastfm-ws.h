@@ -13,6 +13,7 @@
 
 #include "playlist.h"
 #include "protocol.h"
+#include "vgl-server.h"
 
 #include <glib.h>
 
@@ -31,13 +32,16 @@ LastfmSession *
 lastfm_ws_session_get_v1_session        (LastfmWsSession *session);
 
 char *
-lastfm_ws_get_auth_token                (char **auth_url);
+lastfm_ws_get_auth_token                (const VglServer  *srv,
+                                         char            **auth_url);
 
 LastfmWsSession *
-lastfm_ws_get_session_from_token        (const char *token);
+lastfm_ws_get_session_from_token        (VglServer  *srv,
+                                         const char *token);
 
 LastfmWsSession *
-lastfm_ws_get_session                   (const char *user,
+lastfm_ws_get_session                   (VglServer  *srv,
+                                         const char *user,
                                          const char *pass,
                                          LastfmErr  *err);
 
@@ -52,12 +56,14 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                                          gboolean               scrobbling);
 
 gboolean
-lastfm_ws_get_friends                   (const char  *user,
-                                         GList      **friendlist);
+lastfm_ws_get_friends                   (const VglServer  *srv,
+                                         const char       *user,
+                                         GList           **friendlist);
 
 gboolean
-lastfm_ws_get_user_tags                 (const char  *username,
-                                         GList      **taglist);
+lastfm_ws_get_user_tags                 (const VglServer  *srv,
+                                         const char       *username,
+                                         GList           **taglist);
 
 gboolean
 lastfm_ws_get_user_track_tags           (const LastfmWsSession  *session,
@@ -66,9 +72,10 @@ lastfm_ws_get_user_track_tags           (const LastfmWsSession  *session,
                                          GList                 **taglist);
 
 gboolean
-lastfm_ws_get_track_tags                (const LastfmTrack     *track,
-                                         LastfmTrackComponent   type,
-                                         GList                **taglist);
+lastfm_ws_get_track_tags                (const LastfmWsSession  *session,
+                                         const LastfmTrack      *track,
+                                         LastfmTrackComponent    type,
+                                         GList                 **taglist);
 
 gboolean
 lastfm_ws_add_tags                      (const LastfmWsSession *session,
