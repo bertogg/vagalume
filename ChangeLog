@@ -1,3 +1,10 @@
+2009-09-04  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/protocol.[ch]
+	(+lastfm_set_radio, +lastfm_request_playlist):
+	Bring back legacy streaming function for servers such as libre.fm,
+	which don't support the new ones
+
 2009-08-11  Alberto Garcia  <agarcia@igalia.com>
 
 	* autogen.sh:
