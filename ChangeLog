@@ -1,5 +1,10 @@
 2009-09-04  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/protocol.c (lastfm_set_radio):
+	Check for NULL in 'response'
+
+2009-09-04  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.[ch]
 	(+lastfm_set_radio, +lastfm_request_playlist):
 	Bring back legacy streaming function for servers such as libre.fm,

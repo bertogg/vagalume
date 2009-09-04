@@ -449,7 +449,7 @@ lastfm_set_radio                        (LastfmSession  *s,
         if (buffer != NULL) {
                 GHashTable *ht = lastfm_parse_handshake (buffer);
                 const char *response = g_hash_table_lookup (ht, "response");
-                retval = g_str_equal (response, "OK");
+                retval = response && g_str_equal (response, "OK");
                 title = g_strdup (g_hash_table_lookup (ht, "stationname"));
                 g_hash_table_destroy (ht);
         }
