@@ -22,6 +22,7 @@
 #include "audio.h"
 #include "controller.h"
 #include "http.h"
+#include "util.h"
 
 #ifdef MAEMO
 static const char *default_decoders[] = { NULL };
@@ -347,7 +348,10 @@ lastfm_audio_play                       (const char *url,
         pipe(http_pipe);
         data = g_slice_new(get_audio_thread_data);
         data->session_id = g_strdup(session_id);
-        data->url = g_strdup(url);
+        /* This is a hack to make Jamendo stream music in MP3, which is
+           the only format that Vagalume currently supports */
+        data->url = string_replace (url, "streamencoding=ogg2",
+                                    "streamencoding=mp31");
         http_thread = g_thread_create(get_audio_thread, data, TRUE, NULL);
         g_object_set(G_OBJECT(source), "fd", http_pipe[0], NULL);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);

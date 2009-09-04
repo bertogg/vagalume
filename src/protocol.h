@@ -32,6 +32,7 @@ typedef struct {
 LastfmSession *
 lastfm_session_new                      (const char *username,
                                          const char *password,
+                                         const char *handshake_url,
                                          LastfmErr  *err);
 
 LastfmPls *

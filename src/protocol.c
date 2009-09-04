@@ -15,9 +15,6 @@
 #include "protocol.h"
 #include "globaldefs.h"
 
-static const char handshake_url[] =
-       "http://ws.audioscrobbler.com/radio/handshake.php"
-       "?version=1.5&platform=" APP_OS_LC;
 static const char custom_pls_path[] =
        "/1.0/webclient/getresourceplaylist.php";
 static const xmlChar free_track_rel[] =
@@ -84,9 +81,10 @@ lastfm_session_destroy                  (LastfmSession *session)
 LastfmSession *
 lastfm_session_new                      (const char *username,
                                          const char *password,
+                                         const char *handshake_url,
                                          LastfmErr  *err)
 {
-        g_return_val_if_fail(username != NULL && password != NULL, NULL);
+        g_return_val_if_fail (username && password && handshake_url, NULL);
         char *buffer = NULL;
         char *md5password = get_md5_hash(password);
         char *url = g_strconcat(handshake_url, "&username=", username,

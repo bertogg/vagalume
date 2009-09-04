@@ -19,8 +19,10 @@ typedef struct {
         const char *name;
         const char *ws_base_url;
         const char *rsp_base_url;
+        const char *old_hs_url;
         const char *api_key;
         const char *api_secret;
+        gboolean old_str_api;
         /* Private */
         int refcount;
 } VglServer;
@@ -42,7 +44,8 @@ vgl_server_list_add                     (const char *name,
                                          const char *ws_base_url,
                                          const char *rsp_base_url,
                                          const char *api_key,
-                                         const char *api_secret);
+                                         const char *api_secret,
+                                         gboolean    old_streaming_api);
 
 gboolean
 vgl_server_list_remove                  (const char *name);

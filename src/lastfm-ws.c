@@ -385,7 +385,8 @@ lastfm_ws_get_session                   (VglServer  *srv,
         }
 
         if (retvalue) {
-                retvalue->v1sess = lastfm_session_new (user, pass, err);
+                retvalue->v1sess = lastfm_session_new (user, pass,
+                                                       srv->old_hs_url, err);
         } else {
                 g_warning ("Unable to get session");
         }
@@ -423,6 +424,13 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
                         session->v1sess->custom_pls = NULL;
                         g_mutex_unlock (session->mutex);
                 }
+                if (session->srv->old_str_api) {
+                        g_free (session->radio_name);
+                        session->radio_name = NULL;
+                        return lastfm_set_radio (session->v1sess,
+                                                 radio_url,
+                                                 &(session->radio_name));
+                }
         }
 
         lastfm_ws_http_request (session->srv, "radio.tune",
@@ -459,14 +467,20 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
 
         g_return_val_if_fail (session, NULL);
 
-        /* If there's a custom playlist available, return it
-           (see lastfm_ws_radio_tune()) */
-        if (session->v1sess && session->v1sess->custom_pls) {
-                g_mutex_lock (session->mutex);
-                pls = session->v1sess->custom_pls;
-                session->v1sess->custom_pls = NULL;
-                g_mutex_unlock (session->mutex);
-                return pls;
+        if (session->v1sess) {
+                /* If there's a custom playlist available, return it
+                   (see lastfm_ws_radio_tune()) */
+                if (session->v1sess->custom_pls) {
+                        g_mutex_lock (session->mutex);
+                        pls = session->v1sess->custom_pls;
+                        session->v1sess->custom_pls = NULL;
+                        g_mutex_unlock (session->mutex);
+                }
+                if (session->srv->old_str_api) {
+                        return lastfm_request_playlist (session->v1sess,
+                                                        discovery,
+                                                        session->radio_name);
+                }
         }
 
         lastfm_ws_http_request (session->srv, "radio.getPlaylist",
