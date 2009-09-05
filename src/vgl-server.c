@@ -16,6 +16,15 @@ static gboolean initialized = FALSE;
 #define RSP_PARAMS "?hs=true&p=1.2&c=" LASTFM_APP_ID "&v=" LASTFM_APP_VERSION
 #define HANDSHAKE_PARAMS "radio/handshake.php?version=1.5&platform=" APP_OS_LC
 
+typedef struct {
+        const char *name;
+        const char *ws_base_url;
+        const char *rsp_base_url;
+        const char *api_key;
+        const char *api_secret;
+        const gboolean old_str_api;
+} VglServerData;
+
 /*
  * This list contains the API key and secret, used to identify the
  * Last.fm client.
@@ -32,12 +41,11 @@ static gboolean initialized = FALSE;
  * Other services (e.g. Libre.fm) don't check the API key, so any
  * random value is allowed.
  */
-static const VglServer default_srv_list[] = {
+static const VglServerData default_srv_list[] = {
         {
                 "Last.fm",
                 "http://ws.audioscrobbler.com/",
                 "http://post.audioscrobbler.com/",
-                NULL,
                 "c00772ea9e00787179ce56e53bc51ec7",
                 "10d704729842d9ef0129694be78d529a",
                 FALSE
@@ -46,7 +54,6 @@ static const VglServer default_srv_list[] = {
                 "Libre.fm",
                 "http://alpha.libre.fm/",
                 "http://turtle.libre.fm/",
-                NULL,
                 "db2c2184ad684eac4adce3ed1bb4a3a0",
                 "14dbb2640e6856bd56d2179db4dcc0ff",
                 TRUE
@@ -175,7 +182,7 @@ vgl_server_list_init                    (void)
         initialized = TRUE;
 
         for (i = 0; i < G_N_ELEMENTS (default_srv_list); i++) {
-                const VglServer *s = default_srv_list+i;
+                const VglServerData *s = default_srv_list+i;
                 vgl_server_list_add (s->name,
                                      s->ws_base_url, s->rsp_base_url,
                                      s->api_key, s->api_secret,
