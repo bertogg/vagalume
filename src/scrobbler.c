@@ -33,13 +33,12 @@ typedef enum {
 } RspResponse;
 
 typedef struct {
+        VglObject parent;
         const char *id;
         const char *np_url;
         const char *post_url;
         const char *user;
         const char *pass;
-        /* Private */
-        int refcount;
 } RspSession;
 
 typedef struct {
@@ -89,25 +88,13 @@ rsp_track_new                           (const char  *user,
 }
 
 static void
-rsp_session_unref                       (RspSession *s)
+rsp_session_destroy                     (RspSession *s)
 {
-        g_return_if_fail (s != NULL);
-        if (g_atomic_int_dec_and_test (&(s->refcount))) {
-                g_free ((gpointer) s->id);
-                g_free ((gpointer) s->np_url);
-                g_free ((gpointer) s->post_url);
-                g_free ((gpointer) s->user);
-                g_free ((gpointer) s->pass);
-                g_slice_free (RspSession, s);
-        }
-}
-
-static RspSession *
-rsp_session_ref                         (RspSession *s)
-{
-        g_return_val_if_fail (s != NULL, NULL);
-        g_atomic_int_inc (&(s->refcount));
-        return s;
+        g_free ((gpointer) s->id);
+        g_free ((gpointer) s->np_url);
+        g_free ((gpointer) s->post_url);
+        g_free ((gpointer) s->user);
+        g_free ((gpointer) s->pass);
 }
 
 static RspSession *
@@ -132,9 +119,9 @@ rsp_session_new                         (const char *username,
                         /* Split in 5 parts and not 4 to prevent
                            trailing garbage from going to r[3] */
                         char **r = g_strsplit(buffer, "\n", 5);
-                        s = g_slice_new0(RspSession);
+                        s = vgl_object_new (RspSession, (GDestroyNotify)
+                                            rsp_session_destroy);
                         if (r[0] && r[1] && r[2] && r[3]) {
-                                s->refcount = 1;
                                 s->id = g_strdup(r[1]);
                                 s->np_url = g_strdup(r[2]);
                                 s->post_url = g_strdup(r[3]);
@@ -147,7 +134,7 @@ rsp_session_new                         (const char *username,
                         g_warning("Error building rsp session");
                         if (err != NULL) *err = LASTFM_ERR_LOGIN;
                         if (s) {
-                                rsp_session_unref (s);
+                                vgl_object_unref (s);
                                 s = NULL;
                         }
                 } else if (err != NULL) {
@@ -265,7 +252,7 @@ rsp_global_session_clear                (const RspSession *session)
         g_mutex_lock (rsp_mutex);
         if (global_rsp_session != NULL &&
             g_str_equal (global_rsp_session->id, session->id)) {
-                rsp_session_unref (global_rsp_session);
+                vgl_object_unref (global_rsp_session);
                 global_rsp_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);
@@ -278,7 +265,7 @@ rsp_session_get_or_renew                (void)
 
         g_mutex_lock (rsp_mutex);
         if (global_rsp_session) {
-                session = rsp_session_ref (global_rsp_session);
+                session = vgl_object_ref (global_rsp_session);
         } else {
                 char *user = g_strdup (username->str);
                 char *pass = g_strdup (password->str);
@@ -289,9 +276,9 @@ rsp_session_get_or_renew                (void)
                 g_mutex_lock (rsp_mutex);
                 if (session) {
                         if (global_rsp_session) {
-                                rsp_session_unref (global_rsp_session);
+                                vgl_object_unref (global_rsp_session);
                         }
-                        global_rsp_session = rsp_session_ref (session);
+                        global_rsp_session = vgl_object_ref (session);
                 }
         }
         g_mutex_unlock (rsp_mutex);
@@ -366,7 +353,7 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
         }
 
         if (s != NULL) {
-                rsp_session_unref (s);
+                vgl_object_unref (s);
         }
 
         if (ws_session != NULL) {
@@ -442,7 +429,7 @@ set_nowplaying_thread                   (gpointer data)
                 RspResponse ret = rsp_set_nowplaying (session, track);
                 if (ret == RSP_RESPONSE_BADSESSION) {
                         rsp_global_session_clear (session);
-                        rsp_session_unref (session);
+                        vgl_object_unref (session);
                         session = rsp_session_get_or_renew ();
                         if (session) {
                                 rsp_set_nowplaying (session, track);
@@ -451,7 +438,7 @@ set_nowplaying_thread                   (gpointer data)
         }
 
         if (session) {
-                rsp_session_unref (session);
+                vgl_object_unref (session);
         }
 
         vgl_object_unref (track);
@@ -504,7 +491,7 @@ usercfg_changed_cb                      (VglController *ctrl,
         server = vgl_object_ref (cfg->server);
         enable_scrobbling = cfg->enable_scrobbling;
         if (changed && global_rsp_session) {
-                rsp_session_unref (global_rsp_session);
+                vgl_object_unref (global_rsp_session);
                 global_rsp_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);

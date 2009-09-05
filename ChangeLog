@@ -1,5 +1,10 @@
 2009-09-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/scrobbler.c:
+	Make RspSession a VglObject
+
+2009-09-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c
 	* src/imstatus.c
 	* src/playlist.[ch]
