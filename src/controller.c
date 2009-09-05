@@ -330,7 +330,7 @@ get_user_extradata                      (void)
         gdk_threads_enter();
         char *user = g_strdup(usercfg->username);
         char *pass = g_strdup(usercfg->password);
-        VglServer *srv = vgl_server_ref (usercfg->server);
+        VglServer *srv = vgl_object_ref (usercfg->server);
         gdk_threads_leave();
         if (!user || !pass || user[0] == '\0' || pass[0] == '\0') {
                 finished = TRUE;
@@ -373,7 +373,7 @@ get_user_extradata                      (void)
         }
         g_free(user);
         g_free(pass);
-        vgl_server_unref(srv);
+        vgl_object_unref(srv);
 }
 
 /**
@@ -408,7 +408,7 @@ controller_open_usercfg                 (void)
                                           g_strdup("");
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
-        VglServer *oldsrv = usercfg ? vgl_server_ref (usercfg->server) : NULL;
+        VglServer *oldsrv = usercfg ? vgl_object_ref (usercfg->server) : NULL;
 
         changed = ui_usercfg_window(
                 vgl_main_window_get_window(mainwin, FALSE), &usercfg);
@@ -430,7 +430,7 @@ controller_open_usercfg                 (void)
         g_free(olduser);
         g_free(oldpw);
         if (oldsrv) {
-                vgl_server_unref (oldsrv);
+                vgl_object_unref (oldsrv);
         }
 }
 
@@ -515,7 +515,7 @@ check_session_thread                    (gpointer userdata)
         /* Free memory */
         g_free(data->user);
         g_free(data->pass);
-        vgl_server_unref(data->srv);
+        vgl_object_unref(data->srv);
         g_slice_free(check_session_thread_data, data);
         if (connected) {
                 get_user_extradata();
@@ -560,7 +560,7 @@ check_session                           (check_session_cb success_cb,
                         data = g_slice_new(check_session_thread_data);
                         data->user = g_strdup(usercfg->username);
                         data->pass = g_strdup(usercfg->password);
-                        data->srv = vgl_server_ref(usercfg->server);
+                        data->srv = vgl_object_ref(usercfg->server);
                         data->success_cb = success_cb;
                         data->failure_cb = failure_cb;
                         data->cbdata = cbdata;

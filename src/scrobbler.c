@@ -404,7 +404,7 @@ rsp_scrobbler_thread                    (gpointer data)
         }
         g_string_free (username, TRUE);
         g_string_free (password, TRUE);
-        vgl_server_unref (server);
+        vgl_object_unref (server);
         g_mutex_free (rsp_mutex);
         g_cond_free (rsp_thread_cond);
         if (global_ws_session) {
@@ -499,9 +499,9 @@ usercfg_changed_cb                      (VglController *ctrl,
                 changed = TRUE;
         }
         if (server != NULL) {
-                vgl_server_unref (server);
+                vgl_object_unref (server);
         }
-        server = vgl_server_ref (cfg->server);
+        server = vgl_object_ref (cfg->server);
         enable_scrobbling = cfg->enable_scrobbling;
         if (changed && global_rsp_session) {
                 rsp_session_unref (global_rsp_session);

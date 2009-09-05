@@ -62,6 +62,17 @@ static const VglServerData default_srv_list[] = {
 
 static GList *srv_list = NULL;
 
+static void
+vgl_server_destroy                      (VglServer *srv)
+{
+        g_free ((gpointer) srv->name);
+        g_free ((gpointer) srv->ws_base_url);
+        g_free ((gpointer) srv->rsp_base_url);
+        g_free ((gpointer) srv->old_hs_url);
+        g_free ((gpointer) srv->api_key);
+        g_free ((gpointer) srv->api_secret);
+}
+
 static VglServer *
 vgl_server_new                          (const char *name,
                                          const char *ws_base_url,
@@ -75,7 +86,7 @@ vgl_server_new                          (const char *name,
         g_return_val_if_fail (name && ws_base_url && rsp_base_url &&
                               api_key && api_secret, NULL);
 
-        srv = g_slice_new (VglServer);
+        srv = vgl_object_new (VglServer, (GDestroyNotify) vgl_server_destroy);
 
         srv->name         = g_strdup (name);
         srv->ws_base_url  = g_strconcat (ws_base_url, "2.0/", NULL);
@@ -85,34 +96,7 @@ vgl_server_new                          (const char *name,
         srv->api_secret   = g_strdup (api_secret);
         srv->old_str_api  = old_streaming_api;
 
-        srv->refcount     = 1;
-
         return srv;
-}
-
-VglServer *
-vgl_server_ref                          (VglServer *srv)
-{
-        g_return_val_if_fail (srv != NULL, NULL);
-        g_atomic_int_inc (&(srv->refcount));
-        return srv;
-}
-
-void
-vgl_server_unref                        (VglServer *srv)
-{
-        g_return_if_fail (srv != NULL);
-
-        if (g_atomic_int_dec_and_test (&(srv->refcount))) {
-                g_free ((gpointer) srv->name);
-                g_free ((gpointer) srv->ws_base_url);
-                g_free ((gpointer) srv->rsp_base_url);
-                g_free ((gpointer) srv->old_hs_url);
-                g_free ((gpointer) srv->api_key);
-                g_free ((gpointer) srv->api_secret);
-
-                g_slice_free (VglServer, srv);
-        }
 }
 
 gboolean
@@ -147,7 +131,7 @@ vgl_server_list_find_by_name            (const char *name)
         for (iter = srv_list; iter != NULL; iter = iter->next) {
                 VglServer *srv = iter->data;
                 if (g_str_equal (name, srv->name)) {
-                        return vgl_server_ref (srv);
+                        return vgl_object_ref (srv);
                 }
         }
 
@@ -164,7 +148,7 @@ vgl_server_list_remove                  (const char *name)
         for (iter = srv_list; iter != NULL; iter = iter->next) {
                 VglServer *srv = iter->data;
                 if (g_str_equal (name, srv->name)) {
-                        vgl_server_unref (srv);
+                        vgl_object_unref (srv);
                         srv_list = g_list_delete_link (srv_list, iter);
                         return TRUE;
                 }
@@ -196,7 +180,7 @@ vgl_server_list_finalize                (void)
 {
         g_return_if_fail (initialized);
 
-        g_list_foreach (srv_list, (GFunc) vgl_server_unref, NULL);
+        g_list_foreach (srv_list, (GFunc) vgl_object_unref, NULL);
         g_list_free (srv_list);
 
         srv_list = NULL;
@@ -217,5 +201,5 @@ vgl_server_get_default                  (void)
         g_return_val_if_fail (initialized, NULL);
         g_return_val_if_fail (srv_list, NULL);
 
-        return vgl_server_ref (srv_list->data);
+        return vgl_object_ref (srv_list->data);
 }

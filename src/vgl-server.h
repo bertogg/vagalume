@@ -11,11 +11,12 @@
 #ifndef VGL_SERVER_H
 #define VGL_SERVER_H
 
-#include <glib.h>
+#include "vgl-object.h"
 
 G_BEGIN_DECLS
 
 typedef struct {
+        VglObject parent;
         const char *name;
         const char *ws_base_url;
         const char *rsp_base_url;
@@ -23,8 +24,6 @@ typedef struct {
         const char *api_key;
         const char *api_secret;
         gboolean old_str_api;
-        /* Private */
-        int refcount;
 } VglServer;
 
 void
@@ -52,12 +51,6 @@ vgl_server_list_remove                  (const char *name);
 
 VglServer *
 vgl_server_get_default                  (void);
-
-VglServer *
-vgl_server_ref                          (VglServer *srv);
-
-void
-vgl_server_unref                        (VglServer *srv);
 
 G_END_DECLS
 

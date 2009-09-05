@@ -1,5 +1,14 @@
 2009-09-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c
+	* src/lastfm-ws.c
+	* src/scrobbler.c
+	* src/userconfig.c
+	* src/vgl-server.[ch]:
+	Make VglServer a VglObject
+
+2009-09-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/Makefile.am
 	* src/vgl-object.[ch]:
 	VglObject, a very minimalistic implementation of ref-counted

@@ -85,7 +85,7 @@ lastfm_ws_session_new                   (const char *username,
         session->username   = g_strdup (username);
         session->password   = g_strdup (password);
         session->key        = g_strdup (key);
-        session->srv        = vgl_server_ref (srv);
+        session->srv        = vgl_object_ref (srv);
         session->radio_name = NULL;
         session->v1sess     = NULL;
         session->subscriber = subscriber;
@@ -111,7 +111,7 @@ lastfm_ws_session_unref                 (LastfmWsSession *session)
                 g_free (session->username);
                 g_free (session->password);
                 g_free (session->key);
-                vgl_server_unref (session->srv);
+                vgl_object_unref (session->srv);
                 g_free (session->radio_name);
                 g_mutex_free (session->mutex);
                 if (session->v1sess) {
