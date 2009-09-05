@@ -41,6 +41,7 @@ typedef enum {
 } tagcombo_state;
 
 typedef struct {
+        VglObject parent;
         GtkWindow *window;
         GtkEntry *entry;
         GtkComboBox *selcombo;
@@ -57,7 +58,6 @@ typedef struct {
         GtkTreeModel *nonemodel;
         GtkTreeModel *retrmodel;
         tagcombo_state artist_state, track_state, album_state;
-        int refcount;
 } tagwin;
 
 typedef struct {
@@ -1215,7 +1215,6 @@ artist_track_album_combo_get_selected   (GtkComboBox *combo)
 static void
 tagwin_destroy                          (tagwin *w)
 {
-        g_return_if_fail(w != NULL);
         gtk_widget_destroy(GTK_WIDGET(w->window));
         vgl_object_unref(w->track);
         vgl_object_unref(w->ws_session);
@@ -1228,31 +1227,12 @@ tagwin_destroy                          (tagwin *w)
         if (w->poptags_album) g_object_unref(w->poptags_album);
         if (w->nonemodel) g_object_unref(w->nonemodel);
         if (w->retrmodel) g_object_unref(w->retrmodel);
-        g_slice_free(tagwin, w);
 }
 
 static tagwin *
 tagwin_create                           (void)
 {
-        tagwin *w = g_slice_new0(tagwin);
-        w->refcount = 1;
-        return w;
-}
-
-static tagwin *
-tagwin_ref                              (tagwin *w)
-{
-        g_return_val_if_fail (w != NULL && w->refcount > 0, NULL);
-        w->refcount++;
-        return w;
-}
-
-static void
-tagwin_unref                            (tagwin *w)
-{
-        g_return_if_fail (w != NULL && w->refcount > 0);
-        w->refcount--;
-        if (w->refcount == 0) tagwin_destroy(w);
+        return vgl_object_new (tagwin, (GDestroyNotify) tagwin_destroy);
 }
 
 static gpointer
@@ -1296,7 +1276,7 @@ get_track_tags_thread                   (gpointer userdata)
                 g_return_val_if_reached(NULL);
         }
         tagwin_selcombo_changed(data->w->selcombo, data->w);
-        tagwin_unref(data->w);
+        vgl_object_unref (data->w);
         gdk_threads_leave();
 
         g_list_foreach(userlist, (GFunc) g_free, NULL);
@@ -1368,7 +1348,7 @@ tagwin_selcombo_changed                 (GtkComboBox *combo,
         }
         if (oldstate == TAGCOMBO_STATE_NULL) {
                 get_track_tags_data *data = g_slice_new(get_track_tags_data);
-                data->w = tagwin_ref(w);
+                data->w = vgl_object_ref (w);
                 data->type = type;
                 g_thread_create(get_track_tags_thread, data, FALSE, NULL);
         }
@@ -1563,7 +1543,7 @@ tagwin_run                              (GtkWindow             *parent,
                 retvalue = FALSE;
         }
         gtk_widget_hide(GTK_WIDGET(t->window));
-        tagwin_unref(t);
+        vgl_object_unref(t);
         return retvalue;
 }
 

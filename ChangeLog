@@ -1,5 +1,10 @@
 2009-09-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/uimisc.c:
+	Make tagwin a VglObject
+
+2009-09-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/scrobbler.c:
 	Make RspSession a VglObject
 
