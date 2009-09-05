@@ -1,5 +1,5 @@
 /*
- * vgl-object.h -- Very minimalistic implementation of ref-counted objects
+ * vgl-object.h -- Very minimalist implementation of ref-counted objects
  *
  * Copyright (C) 2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
