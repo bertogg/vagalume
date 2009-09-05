@@ -36,6 +36,7 @@ vagalume_SOURCES = \
 	vgl-bookmark-mgr.c vgl-bookmark-mgr.h \
 	vgl-bookmark-window.c vgl-bookmark-window.h \
 	vgl-main-window.c vgl-main-window.h \
+	vgl-object.c vgl-object.h \
 	vgl-server.c vgl-server.h \
 	xmlrpc.c xmlrpc.h
 

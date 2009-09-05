@@ -1,5 +1,12 @@
 2009-09-05  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/Makefile.am
+	* src/vgl-object.[ch]:
+	VglObject, a very minimalistic implementation of ref-counted
+	objects.
+
+2009-09-05  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-server.c:
 	Define VglServerData struct for storing built-in server
 	information.
