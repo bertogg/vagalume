@@ -11,26 +11,12 @@
 #include "playlist.h"
 
 /**
- * Creates a new LastfmTrack object
- * @return The new track
- */
-LastfmTrack *
-lastfm_track_new                        (void)
-{
-        LastfmTrack *track = g_slice_new0(LastfmTrack);
-        track->refcount = 1;
-        track->mutex = g_mutex_new();
-        return track;
-}
-
-/**
  * Destroy a LastfmTrack object freeing all its allocated memory
  * @param track Track to be destroyed, or NULL
  */
 static void
 lastfm_track_destroy                    (LastfmTrack *track)
 {
-        if (track == NULL) return;
         g_mutex_free(track->mutex);
         g_free ((gpointer) track->stream_url);
         g_free ((gpointer) track->title);
@@ -44,34 +30,20 @@ lastfm_track_destroy                    (LastfmTrack *track)
         g_free ((gpointer) track->image_data);
         g_free ((gpointer) track->trackauth);
         g_free ((gpointer) track->free_track_url);
-        g_slice_free(LastfmTrack, track);
 }
 
 /**
- * Increments the reference counter of a LastfmTrack object
- * @param track The track
- * @return The same track
+ * Creates a new LastfmTrack object
+ * @return The new track
  */
 LastfmTrack *
-lastfm_track_ref                        (LastfmTrack *track)
+lastfm_track_new                        (void)
 {
-        g_return_val_if_fail(track != NULL, NULL);
-        g_atomic_int_inc (&(track->refcount));
+        LastfmTrack *track;
+        track = vgl_object_new (LastfmTrack,
+                                (GDestroyNotify) lastfm_track_destroy);
+        track->mutex = g_mutex_new();
         return track;
-}
-
-/**
- * Decrements the reference counter of a LastfmTrack object. If it
- * reaches 0, then the track is destroyed
- * @param track The track
- */
-void
-lastfm_track_unref                      (LastfmTrack *track)
-{
-        g_return_if_fail(track != NULL);
-        if (g_atomic_int_dec_and_test (&(track->refcount))) {
-                lastfm_track_destroy(track);
-        }
 }
 
 /**
@@ -113,7 +85,7 @@ lastfm_pls_size                         (LastfmPls *pls)
  * the track from the playlist (as it can only be played once).
  * @param pls The playlist
  * @return The next track (or NULL if the list is empty). It should be
- * unref'ed with lastfm_track_unref() when no longer used.
+ * unref'ed with vgl_object_unref() when no longer used.
  */
 LastfmTrack *
 lastfm_pls_get_track                    (LastfmPls *pls)
@@ -162,7 +134,7 @@ lastfm_pls_clear                        (LastfmPls *pls)
         g_return_if_fail (pls != NULL);
         LastfmTrack *track;
         while ((track = lastfm_pls_get_track(pls)) != NULL) {
-                lastfm_track_unref(track);
+                vgl_object_unref (track);
         }
 }
 

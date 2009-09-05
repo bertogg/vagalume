@@ -597,7 +597,7 @@ notify_playback_thread                  (VglTrayIconPlaybackData *d)
 
         /* Cleanup */
         g_object_unref(d->vti);
-        if (d->track != NULL) lastfm_track_unref(d->track);
+        if (d->track != NULL) vgl_object_unref(d->track);
         g_slice_free(VglTrayIconPlaybackData, d);
 
         return NULL;
@@ -611,6 +611,6 @@ vgl_tray_icon_notify_playback           (VglTrayIcon *vti,
         VglTrayIconPlaybackData *data;
         data = g_slice_new(VglTrayIconPlaybackData);
         data->vti = g_object_ref(vti);
-        data->track = track ? lastfm_track_ref(track) : NULL;
+        data->track = track ? vgl_object_ref(track) : NULL;
         g_thread_create((GThreadFunc)notify_playback_thread,data,FALSE,NULL);
 }

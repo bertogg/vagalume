@@ -11,7 +11,7 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include <glib.h>
+#include "vgl-object.h"
 
 typedef enum {
         LASTFM_TRACK_COMPONENT_ARTIST,
@@ -20,6 +20,7 @@ typedef enum {
 } LastfmTrackComponent;
 
 typedef struct {
+        VglObject parent;
         const char *stream_url;
         const char *title;
         guint id;
@@ -38,7 +39,6 @@ typedef struct {
         const char *free_track_url;
         gboolean dl_in_progress;
         /* Private */
-        int refcount;
         GMutex *mutex;
 } LastfmTrack;
 
@@ -49,12 +49,6 @@ typedef struct {
 
 LastfmTrack *
 lastfm_track_new                        (void);
-
-LastfmTrack *
-lastfm_track_ref                        (LastfmTrack *track);
-
-void
-lastfm_track_unref                      (LastfmTrack *track);
 
 void
 lastfm_track_set_cover_image            (LastfmTrack *track,

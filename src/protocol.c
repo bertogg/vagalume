@@ -270,7 +270,7 @@ lastfm_parse_track                      (xmlDoc     *doc,
                 lastfm_pls_add_track(pls, track);
                 retval = TRUE;
         }
-        if (!retval) lastfm_track_unref(track);
+        if (!retval) vgl_object_unref (track);
         return retval;
 }
 

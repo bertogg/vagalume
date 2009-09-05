@@ -67,7 +67,7 @@ rsp_track_destroy                       (RspTrack *track)
 {
         g_return_if_fail (track != NULL);
         g_free (track->username);
-        lastfm_track_unref (track->track);
+        vgl_object_unref (track->track);
         g_slice_free (RspTrack, track);
 }
 
@@ -81,7 +81,7 @@ rsp_track_new                           (const char  *user,
         g_return_val_if_fail (username && track && start_time > 0, NULL);
         t = g_slice_new (RspTrack);
         t->username = g_strdup (user);
-        t->track = lastfm_track_ref (track);
+        t->track = vgl_object_ref (track);
         t->start_time = start_time;
         t->rating = rating;
         t->tries = 0;
@@ -454,7 +454,7 @@ set_nowplaying_thread                   (gpointer data)
                 rsp_session_unref (session);
         }
 
-        lastfm_track_unref (track);
+        vgl_object_unref (track);
         return NULL;
 }
 
@@ -553,7 +553,7 @@ track_started_cb                        (VglController *ctrl,
         g_mutex_unlock (rsp_mutex);
         if (enable_scrobbling) {
                 g_thread_create (set_nowplaying_thread,
-                                 lastfm_track_ref (track), FALSE, NULL);
+                                 vgl_object_ref (track), FALSE, NULL);
         }
 }
 

@@ -1,7 +1,7 @@
 /*
  * imstatus.c -- set IM status to current track
  *
- * Copyright (C) 2008 Igalia, S.L.
+ * Copyright (C) 2008, 2009 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *          Tim Wegener <twegener@fastmail.fm>
  *
@@ -337,7 +337,7 @@ im_set_status_idle                      (gpointer data)
 
         /* Cleanup */
         g_string_free (msg, TRUE);
-        lastfm_track_unref (track);
+        vgl_object_unref (track);
 
         return FALSE;
 }
@@ -394,7 +394,7 @@ usercfg_changed_cb                      (VglController *ctrl,
 
                 g_idle_add (im_clear_status_idle, NULL);
                 if (np != NULL) {
-                        g_idle_add (im_set_status_idle, lastfm_track_ref (np));
+                        g_idle_add (im_set_status_idle, vgl_object_ref (np));
                 }
         }
 }
@@ -411,7 +411,7 @@ track_started_cb                        (VglController *ctrl,
                                          LastfmTrack   *track,
                                          gpointer       data)
 {
-        g_idle_add (im_set_status_idle, lastfm_track_ref (track));
+        g_idle_add (im_set_status_idle, vgl_object_ref (track));
 }
 
 static void
