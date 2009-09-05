@@ -1218,7 +1218,7 @@ tagwin_destroy                          (tagwin *w)
         g_return_if_fail(w != NULL);
         gtk_widget_destroy(GTK_WIDGET(w->window));
         lastfm_track_unref(w->track);
-        lastfm_ws_session_unref(w->ws_session);
+        vgl_object_unref(w->ws_session);
         g_free(w->user);
         g_free(w->tags_artist);
         g_free(w->tags_track);
@@ -1534,7 +1534,7 @@ tagwin_run                              (GtkWindow             *parent,
 
         t = tagwin_create();
         t->track = lastfm_track_ref(track);
-        t->ws_session = lastfm_ws_session_ref(ws_session);
+        t->ws_session = vgl_object_ref(ws_session);
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
         t->selcombo = selcombo;

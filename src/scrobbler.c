@@ -313,7 +313,7 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
 
         g_mutex_lock (rsp_mutex);
         if (global_ws_session != NULL) {
-                ws_session = lastfm_ws_session_ref (global_ws_session);
+                ws_session = vgl_object_ref (global_ws_session);
         }
         g_mutex_unlock (rsp_mutex);
 
@@ -370,7 +370,7 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
         }
 
         if (ws_session != NULL) {
-                lastfm_ws_session_unref (ws_session);
+                vgl_object_unref (ws_session);
         }
 }
 
@@ -408,7 +408,7 @@ rsp_scrobbler_thread                    (gpointer data)
         g_mutex_free (rsp_mutex);
         g_cond_free (rsp_thread_cond);
         if (global_ws_session) {
-                lastfm_ws_session_unref (global_ws_session);
+                vgl_object_unref (global_ws_session);
                 global_ws_session = NULL;
         }
         username = password = NULL;
@@ -465,9 +465,9 @@ connected_cb                            (VglController   *ctrl,
 {
         g_mutex_lock (rsp_mutex);
         if (global_ws_session) {
-                lastfm_ws_session_unref (global_ws_session);
+                vgl_object_unref (global_ws_session);
         }
-        global_ws_session = lastfm_ws_session_ref (session);
+        global_ws_session = vgl_object_ref (session);
         g_mutex_unlock (rsp_mutex);
 }
 
@@ -477,7 +477,7 @@ disconnected_cb                         (VglController   *ctrl,
 {
         g_mutex_lock (rsp_mutex);
         if (global_ws_session) {
-                lastfm_ws_session_unref (global_ws_session);
+                vgl_object_unref (global_ws_session);
                 global_ws_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);

@@ -22,12 +22,6 @@ G_BEGIN_DECLS
 /* Opaque type that represents a Last.fm Web Services session */
 typedef struct _LastfmWsSession         LastfmWsSession;
 
-LastfmWsSession *
-lastfm_ws_session_ref                   (LastfmWsSession *session);
-
-void
-lastfm_ws_session_unref                 (LastfmWsSession *session);
-
 LastfmSession *
 lastfm_ws_session_get_v1_session        (LastfmWsSession *session);
 

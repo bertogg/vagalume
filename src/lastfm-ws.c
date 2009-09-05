@@ -27,6 +27,7 @@ typedef enum {
 } HttpRequestType;
 
 struct _LastfmWsSession {
+        VglObject parent;
         char *username;
         char *password;
         char *key;
@@ -35,7 +36,6 @@ struct _LastfmWsSession {
         gboolean subscriber;
         LastfmSession *v1sess;
         GMutex *mutex;
-        int refcount;
 };
 
 /* Name/value pairs for URL parameters */
@@ -69,6 +69,20 @@ lastfm_ws_parameter_destroy             (LastfmWsParameter *param)
         g_slice_free (LastfmWsParameter, param);
 }
 
+static void
+lastfm_ws_session_destroy               (LastfmWsSession *session)
+{
+        g_free (session->username);
+        g_free (session->password);
+        g_free (session->key);
+        vgl_object_unref (session->srv);
+        g_free (session->radio_name);
+        g_mutex_free (session->mutex);
+        if (session->v1sess) {
+                lastfm_session_destroy (session->v1sess);
+        }
+}
+
 static LastfmWsSession *
 lastfm_ws_session_new                   (const char *username,
                                          const char *password,
@@ -80,7 +94,8 @@ lastfm_ws_session_new                   (const char *username,
 
         g_return_val_if_fail (username && key && srv, NULL);
 
-        session = g_slice_new (LastfmWsSession);
+        session = vgl_object_new (LastfmWsSession,
+                                  (GDestroyNotify) lastfm_ws_session_destroy);
 
         session->username   = g_strdup (username);
         session->password   = g_strdup (password);
@@ -90,35 +105,8 @@ lastfm_ws_session_new                   (const char *username,
         session->v1sess     = NULL;
         session->subscriber = subscriber;
         session->mutex      = g_mutex_new ();
-        session->refcount   = 1;
 
         return session;
-}
-
-LastfmWsSession *
-lastfm_ws_session_ref                   (LastfmWsSession *session)
-{
-        g_return_val_if_fail (session != NULL, NULL);
-        g_atomic_int_inc (&(session->refcount));
-        return session;
-}
-
-void
-lastfm_ws_session_unref                 (LastfmWsSession *session)
-{
-        g_return_if_fail (session != NULL);
-        if (g_atomic_int_dec_and_test (&(session->refcount))) {
-                g_free (session->username);
-                g_free (session->password);
-                g_free (session->key);
-                vgl_object_unref (session->srv);
-                g_free (session->radio_name);
-                g_mutex_free (session->mutex);
-                if (session->v1sess) {
-                        lastfm_session_destroy (session->v1sess);
-                }
-                g_slice_free (LastfmWsSession, session);
-        }
 }
 
 LastfmSession *
