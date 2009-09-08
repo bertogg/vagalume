@@ -1,3 +1,8 @@
+2009-09-08  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c (vgl_controller_class_init):
+	Use an int marshaller for the track-stopped signal
+
 2009-09-05  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c:

@@ -1810,7 +1810,7 @@ vgl_controller_class_init               (VglControllerClass *klass)
                               G_OBJECT_CLASS_TYPE (klass),
                               G_SIGNAL_RUN_FIRST,
                               0, NULL, NULL,
-                              g_cclosure_marshal_VOID__ENUM,
+                              g_cclosure_marshal_VOID__INT,
                               G_TYPE_NONE, 1, G_TYPE_INT);
 
         signals[PLAYER_STOPPED] =
