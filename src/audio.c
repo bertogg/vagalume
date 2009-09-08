@@ -146,6 +146,7 @@ bus_call                                (GstBus     *bus,
         case GST_MESSAGE_TAG:
         case GST_MESSAGE_CLOCK_PROVIDE:
         case GST_MESSAGE_NEW_CLOCK:
+        case GST_MESSAGE_STREAM_STATUS:
 #if GST_VERSION_MICRO >= 13
         case GST_MESSAGE_ASYNC_DONE:
 #endif
