@@ -107,7 +107,7 @@ static const char *artists[] = {
         NULL
 };
 
-static const char appdescr[] = N_("A Last.fm client for Gnome and Maemo");
+static const char appdescr[] = N_("Client for Last.fm and compatible services");
 static const char copyright[] = "(c) 2007-2009 Igalia, S.L.";
 static const char website[] = "http://vagalume.igalia.com/";
 static const char license[] =
@@ -554,9 +554,10 @@ usercfg_add_account_settings            (usercfgwin *win,
                                  gtk_label_new(_("Account")));
 
         /* Set help */
-        help = _("* Username and password:\nFrom your Last.fm account.\n\n"
+        help = _("* Username and password:\nFrom your account.\n\n"
+                 "* Service:\nLast.fm-compatible service to connect to.\n\n"
                  "* Scrobbling:\nDisplay the music that you listen to on "
-                 "your Last.fm profile.\n\n"
+                 "your profile.\n\n"
                  "* Discovery mode:\nDon't play music you've already listened "
                  "to. Requires a Last.fm subscription.");
         g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
@@ -642,7 +643,7 @@ usercfg_add_download_settings           (usercfgwin *win,
         /* Set help */
         help = _("* Download directory:\nWhere to download mp3 files. "
                  "Note that you can only download those songs "
-                 "marked as freely downloadable by Last.fm.");
+                 "marked as freely downloadable by the server.");
         g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 }
 

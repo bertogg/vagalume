@@ -1,3 +1,19 @@
+2009-09-14  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/uimisc.c (usercfg_add_account_settings):
+	Document the new 'service' configuration option.
+
+	* src/uimisc.c
+	(usercfg_add_download_settings)
+	* src/controller.c
+	(check_session_thread, check_session):
+	Change references to Last.fm for more generic messages.
+
+	* README
+	* debian/control.*
+	* vagalume.1:
+	Explain that Vagalume supports Last.fm-compatible services.
+
 2009-09-08  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c (bus_call):

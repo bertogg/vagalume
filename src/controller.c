@@ -485,8 +485,12 @@ check_session_thread                    (gpointer userdata)
                 gdk_threads_enter();
                 controller_disconnect();
                 if (err == LASTFM_ERR_LOGIN) {
-                        controller_show_warning(_("Unable to login to Last.fm\n"
-                                                  "Check username and password"));
+                        char *text = g_strdup_printf (
+                                _("Unable to login to %s\n"
+                                  "Check username and password"),
+                                data->srv->name);
+                        controller_show_warning (text);
+                        g_free (text);
                 } else {
                         controller_show_warning(_("Network connection error"));
                 }
@@ -570,9 +574,9 @@ check_session                           (check_session_cb success_cb,
                                 NULL, NULL);
                 } else {
                         controller_disconnect();
-                        controller_show_warning(_("You need to enter your "
-                                                  "Last.fm\nusername and "
-                                                  "password to be able\n"
+                        controller_show_warning(_("You need to enter your\n"
+                                                  "username and password\n"
+                                                  "to be able "
                                                   "to use this program."));
                         if (failure_cb != NULL) (*failure_cb)(cbdata);
                 }

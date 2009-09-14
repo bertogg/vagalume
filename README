@@ -1,5 +1,5 @@
-Vagalume - A Last.fm client for Gnome and Maemo
------------------------------------------------
+Vagalume - Client for Last.fm and compatible services
+-----------------------------------------------------
 
 Vagalume is a Last.fm client based on Gnome, and specially designed to
 work in the Maemo platform. It is known to work in Nokia devices with
@@ -40,6 +40,7 @@ Vagalume has the following features:
    * The user can tag artists, tracks and albums
    * The user can send recommendations to other users
    * The user can add tracks to their playlist
+   * Support for any server compatible with the Last.fm protocol
 
 --------------------------------------------------------
 

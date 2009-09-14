@@ -14,6 +14,9 @@ Description: GTK+-based client for the Last.fm online radio service
  as scrobbling, tags, recommendations, etc. Vagalume is also designed
  to work in the Maemo platform, used by some Nokia devices such as the
  Nokia 770, N800 and N810
+ .
+ Vagalume also supports other Last.fm-compatible services such as
+ Libre.fm
 XB-Maemo-Icon-26:
  iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
  WXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH1wseDjI3W6pL/gAABelJREFUSMe9lktsXFcdxn/3fe/M
