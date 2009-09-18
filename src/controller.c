@@ -584,25 +584,41 @@ check_session                           (check_session_cb success_cb,
 }
 
 /**
- * Set the album cover image. This must be done in a thread to avoid
- * freezing the UI.
+ * Set the album cover image.
+ * @param data A pointer to the LastfmTrack
+ * @return FALSE (to remove the idle handler)
+ */
+static gboolean
+set_album_cover_idle                    (gpointer data)
+{
+        LastfmTrack *track = data;
+        if (mainwin && nowplaying == track) {
+                vgl_main_window_set_album_cover (mainwin,
+                                                 track->image_data,
+                                                 track->image_data_size);
+        }
+        return FALSE;
+}
+
+/**
+ * Retrieve the album cover image. This must be done in a thread to
+ * avoid freezing the UI.
  * @param data A pointer to the LastfmTrack
  * @return NULL (not used)
  */
 static gpointer
 set_album_cover_thread                  (gpointer data)
 {
-        LastfmTrack *t = (LastfmTrack *) data;
-        g_return_val_if_fail(t != NULL && t->image_url != NULL, NULL);
-        lastfm_get_track_cover_image(t);
-        if (t->image_data == NULL) g_warning("Error getting cover image");
-        gdk_threads_enter();
-        if (mainwin && nowplaying == t) {
-                vgl_main_window_set_album_cover(mainwin, t->image_data,
-                                        t->image_data_size);
+        LastfmTrack *track = data;
+        g_return_val_if_fail (track != NULL && track->image_url != NULL, NULL);
+
+        lastfm_get_track_cover_image (track);
+        if (track->image_data == NULL) {
+                g_warning ("Error getting cover image");
         }
-        gdk_threads_leave();
-        vgl_object_unref(t);
+
+        gdk_threads_add_idle_full (G_PRIORITY_DEFAULT, set_album_cover_idle,
+                                   track, vgl_object_unref);
         return NULL;
 }
 
@@ -651,11 +667,13 @@ controller_show_cover                   (void)
         if (showing_cover || nowplaying == NULL ||
             vgl_main_window_is_hidden(mainwin)) return;
         showing_cover = TRUE;
-        if (nowplaying->image_url != NULL) {
-                g_thread_create(set_album_cover_thread,
-                                vgl_object_ref (nowplaying), FALSE, NULL);
+        if (nowplaying->image_url != NULL && nowplaying->image_data == NULL) {
+                g_thread_create (set_album_cover_thread,
+                                 vgl_object_ref (nowplaying), FALSE, NULL);
         } else {
-                vgl_main_window_set_album_cover(mainwin, NULL, 0);
+                vgl_main_window_set_album_cover (mainwin,
+                                                 nowplaying->image_data,
+                                                 nowplaying->image_data_size);
         }
 }
 

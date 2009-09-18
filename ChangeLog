@@ -1,3 +1,12 @@
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c
+	(+set_album_cover_idle, set_album_cover_thread):
+	Set the album cover in the main window using an idle handler.
+	(controller_show_cover):
+	Don't create a thread to download the album cover if it's already
+	available.
+
 2009-09-14  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/uimisc.c (usercfg_add_account_settings):
