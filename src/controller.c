@@ -101,6 +101,11 @@ typedef struct {
 
 typedef struct {
         LastfmWsSession *session;
+        gboolean discovery;
+} GetPlaylistData;
+
+typedef struct {
+        LastfmWsSession *session;
         LastfmTrack *track;
 } AddToPlaylistData;
 
@@ -625,31 +630,47 @@ set_album_cover_thread                  (gpointer data)
 /**
  * Get a new playlist and append it to the end of the current
  * one. Show an error if no playlist is found, start playing
- * otherwise. This can take a bit, so it is done in a separate thread
- * to avoid freezing the UI.
+ * otherwise.
  *
- * @param data A copy of the LastfmWsSession used to get the new
+ * @param data A pointer to the new playlist, or NULL
+ * @return FALSE (to remove the idle handler)
+ */
+static gboolean
+start_playing_get_pls_idle              (gpointer data)
+{
+        LastfmPls *pls = data;
+        if (pls == NULL) {
+                controller_stop_playing ();
+                controller_show_info (_("No more content to play"));
+        } else {
+                lastfm_pls_merge (playlist, pls);
+                lastfm_pls_destroy (pls);
+                controller_start_playing ();
+        }
+        return FALSE;
+}
+
+/**
+ * Get a new playlist. This can take a bit, so it is done in a
+ * separate thread to avoid freezing the UI.
+ *
+ * @param data A pointer to the LastfmWsSession used to get the new
  *             playlist.
  * @return NULL (not used)
  */
 static gpointer
 start_playing_get_pls_thread            (gpointer data)
 {
-        LastfmWsSession *s = (LastfmWsSession *) data;
-        g_return_val_if_fail(s != NULL && usercfg != NULL, NULL);
+        GetPlaylistData *d = data;
         LastfmPls *pls;
-        pls = lastfm_ws_radio_get_playlist (s, usercfg->discovery_mode, TRUE);
-        gdk_threads_enter();
-        if (pls == NULL) {
-                controller_stop_playing();
-                controller_show_info(_("No more content to play"));
-        } else {
-                lastfm_pls_merge(playlist, pls);
-                lastfm_pls_destroy(pls);
-                controller_start_playing();
-        }
-        gdk_threads_leave();
-        vgl_object_unref (s);
+        g_return_val_if_fail (d != NULL && d->session != NULL, NULL);
+
+        pls = lastfm_ws_radio_get_playlist (d->session, d->discovery, TRUE);
+        gdk_threads_add_idle (start_playing_get_pls_idle, pls);
+
+        vgl_object_unref (d->session);
+        g_slice_free (GetPlaylistData, d);
+
         return NULL;
 }
 
@@ -713,8 +734,11 @@ controller_start_playing_cb             (gpointer userdata)
         vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_CONNECTING,
                                    NULL, NULL);
         if (lastfm_pls_size(playlist) == 0) {
-                LastfmWsSession *s = vgl_object_ref (session);
-                g_thread_create(start_playing_get_pls_thread,s,FALSE,NULL);
+                GetPlaylistData *data = g_slice_new (GetPlaylistData);
+                data->session = vgl_object_ref (session);
+                data->discovery = usercfg->discovery_mode;
+                g_thread_create (start_playing_get_pls_thread,
+                                 data, FALSE, NULL);
                 return;
         }
         track = lastfm_pls_get_track(playlist);

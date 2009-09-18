@@ -1,6 +1,15 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
+	(+start_playing_get_pls_idle, start_playing_get_pls_thread):
+	Use an idle handler to start/stop playing after retrieving a new
+	playlist.
+	(controller_start_playing_cb):
+	Pass the 'discovery mode' setting directly to the new thread.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c
 	(+add_to_playlist_idle, add_to_playlist_thread):
 	Use an idle handler to update the UI after adding a track to the
 	user's playlist.
