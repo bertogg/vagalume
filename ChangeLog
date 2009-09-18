@@ -1,5 +1,18 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/dlwin.c
+	(+update_window):
+	Install a timeout handler to update the progressbar every 100
+	miliseconds, instead of doing it everytime curl returns new data.
+	(+dlwin_progress_cb, +dlwin_destroy, -dlwin_cleanup)
+	(dlwin_download_file_thread, +dlwin_download_file_idle)
+	(dlwin_download_file):
+	Make dlwin a VglObject.
+	Use an idle handler to run the callback and update the window
+	after the download has finished.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.c (lastfm_ws_radio_get_playlist):
 	Regression fix: return custom playlist if available.
 

@@ -12,95 +12,111 @@
 #include "globaldefs.h"
 #include "dlwin.h"
 #include "http.h"
+#include "vgl-object.h"
 
 #include <gtk/gtk.h>
 #include <unistd.h>
 #include <string.h>
 
 typedef struct {
+        VglObject parent;
         GtkWidget *window;
         GtkWidget *button;
         GtkProgressBar *progressbar;
         char *url;
         char *dstpath;
-        gboolean finished;
+        double dlnow;
+        double dltotal;
+        gboolean win_needs_update;
+        gboolean success;
+        guint timeout_id;
         dlwin_cb callback;
         gpointer cbdata;
 } dlwin;
+
+static gboolean
+update_window                           (gpointer data)
+{
+        dlwin *w = data;
+        if (w->window && w->win_needs_update) {
+                const int bufsize = 30;
+                char text[bufsize];
+                guint now = w->dlnow / 1024;
+                guint total = w->dltotal / 1024;
+                double fraction = w->dlnow / w->dltotal;
+                fraction = CLAMP (fraction, 0, 1);
+                snprintf(text, bufsize, "%u / %u KB", now, total);
+                gtk_progress_bar_set_text(w->progressbar, text);
+                gtk_progress_bar_set_fraction(w->progressbar, fraction);
+                w->win_needs_update = FALSE;
+        }
+        return TRUE;
+}
 
 static gboolean
 dlwin_progress_cb                       (gpointer data,
                                          double   dltotal,
                                          double   dlnow)
 {
-        dlwin *w = (dlwin *) data;
-        g_return_val_if_fail (w != NULL, FALSE);
-        if (!w->finished && w->window) {
-                const int bufsize = 30;
-                char text[bufsize];
-                guint now = dlnow / 1024;
-                guint total = dltotal / 1024;
-                double fraction = dlnow / dltotal;
-                fraction = CLAMP (fraction, 0, 1);
-                snprintf(text, bufsize, "%u / %u KB", now, total);
-                gdk_threads_enter();
-                gtk_progress_bar_set_text(w->progressbar, text);
-                gtk_progress_bar_set_fraction(w->progressbar, fraction);
-                gdk_threads_leave();
-        }
-        return !w->finished;
+        dlwin *w = data;
+        gdk_threads_enter ();
+        w->dlnow = dlnow;
+        w->dltotal = dltotal;
+        w->win_needs_update = TRUE;
+        gdk_threads_leave ();
+        return (w->window != NULL);
 }
 
 static void
-dlwin_cleanup                           (dlwin *w)
+dlwin_destroy                           (gpointer data)
 {
+        dlwin *w = data;
         g_free (w->url);
         g_free (w->dstpath);
-        g_slice_free (dlwin, w);
 }
 
-static void
-dlwin_destroyed_cb                      (GtkObject *object,
-                                         dlwin     *w)
+static gboolean
+dlwin_download_file_idle                (gpointer data)
 {
-        if (w->finished) {
-                dlwin_cleanup (w);
-        } else {
-                w->window = NULL;
-                w->finished = TRUE;
+        dlwin *w = data;
+
+        if (w->callback) {
+                w->callback (w->success, w->cbdata);
         }
+
+        /* Remove the timeout handler */
+        g_source_remove (w->timeout_id);
+
+        if (w->window) {
+                update_window (w);
+                gtk_progress_bar_set_text (w->progressbar,
+                                           w->success ?
+                                           _("Download complete!") :
+                                           _("Download error!"));
+                gtk_button_set_label (GTK_BUTTON (w->button),
+                                      _("C_lose"));
+        }
+
+        vgl_object_unref (w);
+
+        return FALSE;
 }
 
 static gpointer
 dlwin_download_file_thread              (gpointer data)
 {
-        gboolean success;
         dlwin *w = (dlwin *) data;
 
         /* Remove the file if it exists and then download it */
         unlink(w->dstpath);
-        success = http_download_file(w->url, w->dstpath, dlwin_progress_cb, w);
+        w->success = http_download_file (w->url, w->dstpath,
+                                         dlwin_progress_cb, w);
 
         /* Remove if the download was unsuccessful */
-        if (!success)
+        if (!w->success)
                 unlink (w->dstpath);
 
-        if (w->callback) {
-                w->callback (success, w->cbdata);
-        }
-
-        gdk_threads_enter();
-        if (w->window) {
-                gtk_progress_bar_set_text (w->progressbar,
-                                           success ?
-                                           _("Download complete!") :
-                                           _("Download error!"));
-                gtk_button_set_label (GTK_BUTTON (w->button), _("C_lose"));
-                w->finished = TRUE;
-        } else {
-                dlwin_cleanup (w);
-        }
-        gdk_threads_leave();
+        gdk_threads_add_idle (dlwin_download_file_idle, w);
 
         return NULL;
 }
@@ -120,10 +136,13 @@ dlwin_download_file                     (const char *url,
 
         g_return_if_fail (url && filename && dstpath);
 
-        w = g_slice_new(dlwin);
-        w->finished = FALSE;
+        w = vgl_object_new (dlwin, dlwin_destroy);
         w->url = g_strdup(url);
         w->dstpath = g_strdup(dstpath);
+        w->dlnow = 0.0;
+        w->dltotal = 0.0;
+        w->success = FALSE;
+        w->win_needs_update = FALSE;
         w->callback = cb;
         w->cbdata = cbdata;
 
@@ -151,11 +170,17 @@ dlwin_download_file                     (const char *url,
         gtk_widget_set_size_request (w->button, 300, 80);
 #endif
 
+        g_object_add_weak_pointer (G_OBJECT (w->window),
+                                   (gpointer) &(w->window));
         g_signal_connect_swapped (G_OBJECT (w->button), "clicked",
                                   G_CALLBACK (gtk_widget_destroy), w->window);
-        g_signal_connect (G_OBJECT (w->window), "destroy",
-                          G_CALLBACK (dlwin_destroyed_cb), w);
+        g_signal_connect_swapped (G_OBJECT (w->window), "destroy",
+                                  G_CALLBACK (vgl_object_unref), w);
 
+        w->timeout_id = gdk_threads_add_timeout_full
+                (G_PRIORITY_DEFAULT_IDLE, 200, update_window,
+                 vgl_object_ref (w), vgl_object_unref);
         gtk_widget_show_all(w->window);
-        g_thread_create(dlwin_download_file_thread, w, FALSE, NULL);
+        g_thread_create (dlwin_download_file_thread,
+                         vgl_object_ref (w), FALSE, NULL);
 }
