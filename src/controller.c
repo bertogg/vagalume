@@ -32,6 +32,7 @@
 #include "vgl-bookmark-window.h"
 #include "vgl-server.h"
 #include "lastfm-ws.h"
+#include "compat.h"
 
 #ifdef SET_IM_STATUS
 #include "imstatus.h"

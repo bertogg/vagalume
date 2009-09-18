@@ -18,6 +18,7 @@
 #include "radio.h"
 #include "uimisc.h"
 #include "util.h"
+#include "compat.h"
 
 #if defined(SCR_RESOLUTION_800X480)
 #        define ALBUM_COVER_SIZE 200

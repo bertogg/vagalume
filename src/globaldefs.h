@@ -33,9 +33,4 @@
 
 #define THEME_ICONS_DIR APP_DATA_DIR "/icons"
 
-#ifndef HAVE_GDK_THREADS_ADD_TIMEOUT_SECONDS
-#        define gdk_threads_add_timeout_seconds(A,B,C) \
-                gdk_threads_add_timeout ((A)*1000,B,C)
-#endif
-
 #endif

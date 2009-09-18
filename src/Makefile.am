@@ -18,6 +18,7 @@ vagalume_CFLAGS= $(EXTRA_CFLAGS) -DAPP_DATA_DIR=\"$(appdatadir)\" \
 
 vagalume_SOURCES = \
 	audio.c audio.h \
+	compat.c compat.h \
 	connection.h \
 	controller.c controller.h \
 	dlwin.c dlwin.h \

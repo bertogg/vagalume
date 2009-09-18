@@ -13,6 +13,7 @@
 #include "dlwin.h"
 #include "http.h"
 #include "vgl-object.h"
+#include "compat.h"
 
 #include <gtk/gtk.h>
 #include <unistd.h>

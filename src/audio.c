@@ -23,6 +23,7 @@
 #include "controller.h"
 #include "http.h"
 #include "util.h"
+#include "compat.h"
 
 #ifdef MAEMO
 static const char *default_decoders[] = { NULL };

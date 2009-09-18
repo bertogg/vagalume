@@ -12,6 +12,7 @@
 #include "config.h"
 #include "uimisc.h"
 #include "util.h"
+#include "compat.h"
 
 #include <string.h>
 #include <gtk/gtk.h>

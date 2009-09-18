@@ -18,6 +18,7 @@
 #include "util.h"
 #include "uimisc.h"
 #include "scrobbler.h"
+#include "compat.h"
 
 #define TOOLTIP_DEFAULT_STRING _(" Stopped ")
 #define TOOLTIP_FORMAT_STRING  _(" Now playing: \n %s \n   by  %s ")

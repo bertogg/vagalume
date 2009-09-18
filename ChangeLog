@@ -1,5 +1,15 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* configure.ac
+	* src/Makefile.am
+	* src/compat.[ch]
+	Implementations of gdk_threads_add_* for old systems.
+
+	* src/*.c
+	Include "compat.h" when needed.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.c (lastfm_ws_get_friends)
 	* src/audio.c (audio_mixer_init):
 	Use g_ascii_strcasecmp() instead of strcasecmp()
