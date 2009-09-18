@@ -1,6 +1,15 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
+	(+controller_play_radio_by_url_idle)
+	(controller_play_radio_by_url_thread)
+	(controller_play_radio_by_url_cb):
+	Use a thread to make the HTTP request for setting a new radio
+	station, but do everything else in the main loop.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c
 	(+start_playing_get_pls_idle, start_playing_get_pls_thread):
 	Use an idle handler to start/stop playing after retrieving a new
 	playlist.

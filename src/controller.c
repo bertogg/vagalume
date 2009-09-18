@@ -109,6 +109,12 @@ typedef struct {
         LastfmTrack *track;
 } AddToPlaylistData;
 
+typedef struct {
+        LastfmWsSession *session;
+        char *url;
+        gboolean radio_set;
+} PlayRadioByUrlData;
+
 /*
  * Callback called after check_session() in all cases.
  * data is user-provided data, and must be freed by the caller
@@ -1353,47 +1359,49 @@ controller_add_to_playlist              (void)
 }
 
 /**
+ * Idle handler to start/stop playback after a new radio has been set
+ *
+ * @param data Pointer to a PlayRadioByUrlData struct
+ * @return FALSE (to remove the idle handler)
+ */
+static gboolean
+controller_play_radio_by_url_idle       (gpointer data)
+{
+        PlayRadioByUrlData *d = data;
+        if (d->radio_set) {
+                g_free (current_radio_url);
+                current_radio_url = d->url;
+                lastfm_pls_clear (playlist);
+                controller_skip_track ();
+        } else {
+                controller_stop_playing ();
+                controller_show_info (_("Invalid radio URL. Either\n"
+                                        "this radio doesn't exist\n"
+                                        "or it is only available\n"
+                                        "for Last.fm subscribers"));
+                g_free (d->url);
+        }
+        vgl_object_unref (d->session);
+        g_slice_free (PlayRadioByUrlData, d);
+        return FALSE;
+}
+
+/**
  * Start playing a radio by its URL, stopping the current track if
  * necessary
  *
  * This is a thread created from controller_play_radio_by_url_cb()
  *
- * @param data The URL of the radio to be played (freed by this function)
+ * @param data Pointer to a PlayRadioByUrlData struct
  * @return NULL (not used)
  */
 static gpointer
 controller_play_radio_by_url_thread     (gpointer data)
 {
-        char *url = (char *) data;
-        gdk_threads_enter();
-        if (!VGL_IS_MAIN_WINDOW(mainwin) || session == NULL) {
-                g_critical("Main window destroyed or session not found");
-        } else if (url == NULL) {
-                g_critical("Attempted to play a NULL radio URL");
-                controller_stop_playing();
-        } else {
-                gboolean radio_set;
-                LastfmWsSession *sess = vgl_object_ref (session);
-                gdk_threads_leave();
-                radio_set = lastfm_ws_radio_tune (sess, url,
-                                                  get_language_code ());
-                gdk_threads_enter();
-                if (radio_set) {
-                        g_free (current_radio_url);
-                        current_radio_url = g_strdup (url);
-                        lastfm_pls_clear(playlist);
-                        controller_skip_track();
-                } else {
-                        controller_stop_playing();
-                        controller_show_info(_("Invalid radio URL. Either\n"
-                                               "this radio doesn't exist\n"
-                                               "or it is only available\n"
-                                               "for Last.fm subscribers"));
-                }
-                vgl_object_unref (sess);
-        }
-        gdk_threads_leave();
-        g_free(url);
+        PlayRadioByUrlData *d = data;
+        d->radio_set = lastfm_ws_radio_tune (d->session, d->url,
+                                             get_language_code ());
+        gdk_threads_add_idle (controller_play_radio_by_url_idle, d);
         return NULL;
 }
 
@@ -1402,15 +1410,25 @@ controller_play_radio_by_url_thread     (gpointer data)
  * necessary
  *
  * This is the success callback of controller_play_radio_by_url().
- * This just creates a thread, the actual code is in
- * controller_play_radio_by_url_thread()
  *
- * @param url The URL of the radio to be played (freed by this function)
+ * @param url The URL of the radio to be played
  */
 static void
 controller_play_radio_by_url_cb         (char *url)
 {
-        g_thread_create(controller_play_radio_by_url_thread, url, FALSE, NULL);
+        if (!VGL_IS_MAIN_WINDOW (mainwin) || session == NULL) {
+                g_critical ("Main window destroyed or session not found");
+                g_free (url);
+        } else if (url == NULL) {
+                g_critical ("Attempted to play a NULL radio URL");
+                controller_stop_playing ();
+        } else {
+                PlayRadioByUrlData *data = g_slice_new (PlayRadioByUrlData);
+                data->session = vgl_object_ref (session);
+                data->url = url;
+                g_thread_create (controller_play_radio_by_url_thread,
+                                 data, FALSE, NULL);
+        }
 }
 
 /**
