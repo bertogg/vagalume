@@ -816,6 +816,21 @@ controller_disconnect                   (void)
 }
 
 /**
+ * Idle handler to call controller_show_banner()
+ *
+ * @param data The banner text
+ * @return FALSE (to remove the idle handler)
+ */
+static gboolean
+show_banner_idle                        (gpointer data)
+{
+        if (mainwin) {
+                controller_show_banner ((const char *) data);
+        }
+        return FALSE;
+}
+
+/**
  * Download a file in background. Must be called using g_thread_create()
  */
 static gpointer
@@ -835,14 +850,11 @@ download_track_thread                   (gpointer userdata)
                 text = g_strdup_printf (_("Error downloading %s - %s"),
                                         d->track->artist, d->track->title);
         }
+        gdk_threads_add_idle_full (G_PRIORITY_DEFAULT, show_banner_idle,
+                                   text, g_free);
 
         d->track->dl_in_progress = FALSE;
 
-        gdk_threads_enter ();
-        controller_show_banner (text);
-        gdk_threads_leave ();
-
-        g_free (text);
         vgl_object_unref (d->track);
         g_free (d->dstpath);
         g_slice_free (DownloadData, d);
@@ -1092,6 +1104,7 @@ static gpointer
 tag_track_thread                        (gpointer data)
 {
         TagData *d = (TagData *) data;
+        const char *text;
         gboolean tagged;
         GSList *list = NULL;
         char **tags;
@@ -1113,12 +1126,8 @@ tag_track_thread                        (gpointer data)
         g_free(d->taglist);
         g_slice_free(TagData, d);
 
-        gdk_threads_enter();
-        if (mainwin) {
-                controller_show_banner(tagged ? _("Tags set correctly") :
-                                       _("Error tagging"));
-        }
-        gdk_threads_leave();
+        text = tagged ? _("Tags set correctly") : _("Error tagging");
+        gdk_threads_add_idle (show_banner_idle, (char *) text);
 
         return NULL;
 }
@@ -1180,6 +1189,7 @@ static gpointer
 recomm_track_thread                     (gpointer data)
 {
         RecommData *d = (RecommData *) data;
+        const char *text;
         gboolean retval;
 
         g_return_val_if_fail (d && d->session && d->track &&
@@ -1188,13 +1198,10 @@ recomm_track_thread                     (gpointer data)
         retval = lastfm_ws_share_track (d->session, d->track, d->text,
                                         d->type, d->rcpt);
 
-        gdk_threads_enter();
-        if (mainwin) {
-                controller_show_banner(retval ?
-                                       _("Recommendation sent") :
-                                       _("Error sending recommendation"));
-        }
-        gdk_threads_leave();
+        text = retval ?
+                _("Recommendation sent") :
+                _("Error sending recommendation");
+        gdk_threads_add_idle (show_banner_idle, (char *) text);
 
         vgl_object_unref(d->track);
         vgl_object_unref(d->session);
