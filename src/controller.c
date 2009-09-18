@@ -1255,32 +1255,43 @@ controller_recomm_track                 (void)
 }
 
 /**
+ * Idle handler to update the UI after adding a track to the user's
+ * playlist.
+ *
+ * @param data Boolean to tell whether the track was added or not
+ * @return FALSE (to remove the idle handler)
+ */
+static gboolean
+add_to_playlist_idle                    (gpointer data)
+{
+        if (mainwin) {
+                gboolean added = GPOINTER_TO_INT (data);
+                controller_show_banner (added ?
+                                        _("Track added to playlist") :
+                                        _("Error adding track to playlist"));
+                vgl_main_window_set_track_as_added_to_playlist (mainwin,
+                                                                added);
+        }
+        return FALSE;
+}
+
+/**
  * Add a track to the user's playlist. This can take some seconds, so
  * it must be called using g_thread_create() to avoid freezing the UI.
  *
- * @param data Pointer to the LastfmTrack to add. This data must be
- *             freed here
+ * @param data Pointer to an AddToPlaylistData structure.
  * @return NULL (this value is not used)
  */
-gpointer
+static gpointer
 add_to_playlist_thread                  (gpointer data)
 {
         AddToPlaylistData *d = (AddToPlaylistData *) data;
-        gboolean retval = FALSE;
+        gboolean added;
 
         g_return_val_if_fail (d && d->session && d->track, NULL);
 
-        retval = lastfm_ws_add_to_playlist (d->session, d->track);
-
-        gdk_threads_enter();
-        if (mainwin) {
-                controller_show_banner(retval ?
-                                       _("Track added to playlist") :
-                                       _("Error adding track to playlist"));
-                vgl_main_window_set_track_as_added_to_playlist(mainwin,
-                                                               retval);
-        }
-        gdk_threads_leave();
+        added = lastfm_ws_add_to_playlist (d->session, d->track);
+        gdk_threads_add_idle (add_to_playlist_idle, GINT_TO_POINTER (added));
 
         vgl_object_unref (d->session);
         vgl_object_unref (d->track);

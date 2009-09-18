@@ -1,6 +1,13 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/controller.c
+	(+add_to_playlist_idle, add_to_playlist_thread):
+	Use an idle handler to update the UI after adding a track to the
+	user's playlist.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c
 	(+show_banner_idle, download_track_thread, tag_track_thread)
 	(recomm_track_thread):
 	Use an idle handler to show information banners.
