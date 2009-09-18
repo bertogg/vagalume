@@ -1,5 +1,12 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/uimisc.c
+	(+get_track_tags_idle, get_track_tags_thread)
+	(tagwin_selcombo_changed):
+	Use an idle handler to fill the combos in the tagging window.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c
 	(+check_session_idle, check_session_thread, check_session):
 	Use an idle hander for everything done after creating a new

@@ -89,7 +89,9 @@ typedef struct {
 typedef struct {
         tagwin *w;
         LastfmTrackComponent type;
-} get_track_tags_data;
+        GList *userlist;
+        GList *globallist;
+} GetTrackTagsData;
 
 enum {
         ARTIST_TRACK_ALBUM_TYPE = 0,
@@ -1236,25 +1238,15 @@ tagwin_create                           (void)
         return vgl_object_new (tagwin, (GDestroyNotify) tagwin_destroy);
 }
 
-static gpointer
-get_track_tags_thread                   (gpointer userdata)
+static gboolean
+get_track_tags_idle                     (gpointer userdata)
 {
-        get_track_tags_data *data = (get_track_tags_data *) userdata;
-        g_return_val_if_fail(data && data->w && data->w->track, NULL);
+        GetTrackTagsData *data = userdata;
         GtkTreeModel *model = NULL;
-        char *usertags;
-        GList *userlist = NULL;
-        GList *globallist = NULL;
+        char *usertags = str_glist_join (data->userlist, ", ");
 
-        lastfm_ws_get_user_track_tags(data->w->ws_session, data->w->track,
-                                      data->type, &userlist);
-        lastfm_ws_get_track_tags (data->w->ws_session, data->w->track,
-                                  data->type, &globallist);
-
-        gdk_threads_enter();
-        usertags = str_glist_join(userlist, ", ");
-        if (globallist != NULL) {
-                model = ui_create_options_list(globallist);
+        if (data->globallist != NULL) {
+                model = ui_create_options_list (data->globallist);
         }
         switch (data->type) {
         case LASTFM_TRACK_COMPONENT_ARTIST:
@@ -1273,18 +1265,35 @@ get_track_tags_thread                   (gpointer userdata)
                 data->w->album_state = TAGCOMBO_STATE_READY;
                 break;
         default:
-                gdk_threads_leave();
-                g_return_val_if_reached(NULL);
+                g_return_val_if_reached (FALSE);
         }
-        tagwin_selcombo_changed(data->w->selcombo, data->w);
-        vgl_object_unref (data->w);
-        gdk_threads_leave();
 
-        g_list_foreach(userlist, (GFunc) g_free, NULL);
-        g_list_free(userlist);
-        g_list_foreach(globallist, (GFunc) g_free, NULL);
-        g_list_free(globallist);
-        g_slice_free(get_track_tags_data, data);
+        tagwin_selcombo_changed (data->w->selcombo, data->w);
+
+        g_list_foreach (data->userlist, (GFunc) g_free, NULL);
+        g_list_free (data->userlist);
+        g_list_foreach (data->globallist, (GFunc) g_free, NULL);
+        g_list_free (data->globallist);
+        vgl_object_unref (data->w);
+        g_slice_free (GetTrackTagsData, data);
+
+        return FALSE;
+}
+
+static gpointer
+get_track_tags_thread                   (gpointer userdata)
+{
+        GetTrackTagsData *data = userdata;
+
+        g_return_val_if_fail (data && data->w && data->w->track, NULL);
+
+        lastfm_ws_get_user_track_tags(data->w->ws_session, data->w->track,
+                                      data->type, &(data->userlist));
+        lastfm_ws_get_track_tags (data->w->ws_session, data->w->track,
+                                  data->type, &(data->globallist));
+
+        gdk_threads_add_idle (get_track_tags_idle, data);
+
         return NULL;
 }
 
@@ -1348,9 +1357,10 @@ tagwin_selcombo_changed                 (GtkComboBox *combo,
                 gtk_entry_set_text(w->entry, _("retrieving..."));
         }
         if (oldstate == TAGCOMBO_STATE_NULL) {
-                get_track_tags_data *data = g_slice_new(get_track_tags_data);
+                GetTrackTagsData *data = g_slice_new (GetTrackTagsData);
                 data->w = vgl_object_ref (w);
                 data->type = type;
+                data->userlist = data->globallist = NULL;
                 g_thread_create(get_track_tags_thread, data, FALSE, NULL);
         }
 }
