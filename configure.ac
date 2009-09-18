@@ -94,12 +94,12 @@ else
 fi
 echo $have_gtk_2_12
 
-# g_timeout_add_seconds requires glib 2.14
-echo -n "checking for glib >= 2.14... "
-if $PKG_CONFIG --atleast-version=2.14 glib-2.0; then
+# g_timeout_add_seconds requires gtk 2.14
+echo -n "checking for Gtk2 >= 2.14... "
+if $PKG_CONFIG --atleast-version=2.14 gtk+-2.0; then
    have_timeout_seconds="yes"
-   AC_DEFINE([HAVE_G_TIMEOUT_ADD_SECONDS],[1],
-             [Defined if g_timeout_add_seconds() exists])
+   AC_DEFINE([HAVE_GDK_THREADS_ADD_TIMEOUT_SECONDS],[1],
+             [Defined if gdk_threads_add_timeout_seconds() exists])
 else
    have_timeout_seconds="no"
 fi

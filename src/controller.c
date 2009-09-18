@@ -730,7 +730,7 @@ controller_audio_started_cb             (void)
         controller_update_progress (track);
         showing_cover = FALSE;
         controller_show_cover();
-        g_timeout_add_seconds (1, controller_update_progress, track);
+        gdk_threads_add_timeout_seconds (1, controller_update_progress, track);
         g_signal_emit (vgl_controller, signals[TRACK_STARTED], 0, nowplaying);
 }
 
@@ -1085,7 +1085,7 @@ controller_set_stop_after               (void)
                 /* Set new values */
                 if (stopafter == STOP_AFTER_N_MINUTES) {
                         g_return_if_fail (minutes > 0);
-                        source_id = g_timeout_add_seconds
+                        source_id = gdk_threads_add_timeout_seconds
                                 (minutes * 60, stop_after_timeout, &source_id);
                         source_stop_at = time (NULL) + minutes * 60;
                 } else if (stopafter == STOP_AFTER_THIS_TRACK) {

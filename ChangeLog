@@ -1,5 +1,20 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-main-window.c
+	(vgl_main_window_show_status_msg):
+	Use gdk_threads_add_timeout() to add timeouts.
+
+	* src/controller.c
+	(controller_audio_started_cb, controller_set_stop_after):
+	Use gdk_threads_add_timeout_seconds() to add timeouts.
+
+	* configure.ac
+	* src/globaldefs.h:
+	Compatibility macro for old versions of GTK without
+	gdk_threads_add_timeout_seconds()
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-tray-icon.c
 	(-notify_playback_thread, +notify_playback_idle)
 	(show_notification, -get_album_cover_icon)

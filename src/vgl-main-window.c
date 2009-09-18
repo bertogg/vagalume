@@ -306,7 +306,7 @@ vgl_main_window_show_status_msg         (VglMainWindow *w,
         d = g_slice_new(remove_status_msg_data);
         d->win = w;
         d->msgid = priv->lastmsg_id;
-        g_timeout_add(1500, remove_status_msg, d);
+        gdk_threads_add_timeout (1500, remove_status_msg, d);
 }
 
 void
