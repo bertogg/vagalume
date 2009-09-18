@@ -1,5 +1,11 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/lastfm-ws.c (lastfm_ws_get_friends)
+	* src/audio.c (audio_mixer_init):
+	Use g_ascii_strcasecmp() instead of strcasecmp()
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/dlwin.c
 	(+update_window):
 	Install a timeout handler to update the progressbar every 100

@@ -268,7 +268,7 @@ audio_mixer_init                        (VglMixer *mixer)
                 /* Look for the PCM track */
                 for (i = tracks; i != NULL && track == NULL; i = i->next) {
                         GstMixerTrack *t = GST_MIXER_TRACK (i->data);
-                        if (!strcasecmp (t->label, "PCM")) {
+                        if (!g_ascii_strcasecmp (t->label, "PCM")) {
                                 track = t;
                         }
                 }

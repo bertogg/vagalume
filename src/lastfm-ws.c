@@ -524,7 +524,8 @@ lastfm_ws_get_friends                   (const VglServer  *srv,
                         node = node->next;
                 }
                 if (list != NULL) {
-                        list = g_list_sort (list, (GCompareFunc) strcasecmp);
+                        list = g_list_sort (list,
+                                            (GCompareFunc) g_ascii_strcasecmp);
                 }
                 xmlFreeDoc (doc);
         }
