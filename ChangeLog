@@ -1,5 +1,10 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/dbus.c:
+	Use the gdk_threads_* API to install all idle handlers.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/audio.c
 	(+audio_started_cb_handler, +gst_eos_handler, bus_call):
 	Run the GStreamer EOS and state changed handlers from the main

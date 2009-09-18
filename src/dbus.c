@@ -48,9 +48,7 @@ playurl_handler_idle                    (gpointer data)
 {
         g_return_val_if_fail(data != NULL, FALSE);
         char *url = (char *) data;
-        gdk_threads_enter();
         controller_play_radio_by_url(url);
-        gdk_threads_leave();
         g_free(url);
         return FALSE;
 }
@@ -58,27 +56,21 @@ playurl_handler_idle                    (gpointer data)
 static gboolean
 play_handler_idle                       (gpointer data)
 {
-        gdk_threads_enter();
         controller_start_playing();
-        gdk_threads_leave();
         return FALSE;
 }
 
 static gboolean
 stop_handler_idle                       (gpointer data)
 {
-        gdk_threads_enter();
         controller_stop_playing();
-        gdk_threads_leave();
         return FALSE;
 }
 
 static gboolean
 skip_handler_idle                       (gpointer data)
 {
-        gdk_threads_enter();
         controller_skip_track();
-        gdk_threads_leave();
         return FALSE;
 }
 
@@ -86,9 +78,7 @@ static gboolean
 lovetrack_handler_idle                  (gpointer data)
 {
         gboolean interactive = (gboolean)GPOINTER_TO_INT(data);
-        gdk_threads_enter();
         controller_love_track(interactive);
-        gdk_threads_leave();
         return FALSE;
 }
 
@@ -96,9 +86,7 @@ static gboolean
 bantrack_handler_idle                   (gpointer data)
 {
         gboolean interactive = (gboolean)GPOINTER_TO_INT(data);
-        gdk_threads_enter();
         controller_ban_track(interactive);
-        gdk_threads_leave();
         return FALSE;
 }
 
@@ -106,9 +94,7 @@ static gboolean
 showwindow_handler_idle                 (gpointer data)
 {
         gboolean show = GPOINTER_TO_INT(data);
-        gdk_threads_enter();
         controller_show_mainwin(show);
-        gdk_threads_leave();
         return FALSE;
 }
 
@@ -116,9 +102,7 @@ static gboolean
 volumechange_handler_idle               (gpointer data)
 {
         gint volchange = GPOINTER_TO_INT(data);
-        gdk_threads_enter();
         controller_increase_volume(volchange);
-        gdk_threads_leave();
         return FALSE;
 }
 
@@ -126,9 +110,7 @@ static gboolean
 volumeset_handler_idle                  (gpointer data)
 {
         gint vol = GPOINTER_TO_INT(data);
-        gdk_threads_enter();
         controller_set_volume(vol);
-        gdk_threads_leave();
         return FALSE;
 }
 
@@ -138,9 +120,7 @@ requeststatus_handler_idle              (gpointer data)
         LastfmTrack *current_track = NULL;
 
         current_track = controller_get_current_track();
-        gdk_threads_enter();
         lastfm_dbus_notify_playback(current_track);
-        gdk_threads_leave();
 
         return FALSE;
 }
@@ -165,9 +145,7 @@ gsd_mp_keys_handler_idle                (gpointer data)
         }
 
         if (key_handler) {
-                gdk_threads_enter();
                 key_handler ();
-                gdk_threads_leave();
         }
 
         /* Free passed memory */
@@ -227,9 +205,7 @@ release_media_player_keys               (void)
 static gboolean
 closeapp_handler_idle                   (gpointer data)
 {
-        gdk_threads_enter();
         controller_quit_app();
-        gdk_threads_leave();
         return FALSE;
 }
 
@@ -348,35 +324,37 @@ dbus_req_handler                        (DBusConnection *connection,
                                       DBUS_TYPE_STRING,
                                       &url,
                                       DBUS_TYPE_INVALID);
-                g_idle_add(playurl_handler_idle, g_strdup(url));
+                gdk_threads_add_idle (playurl_handler_idle, g_strdup(url));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_PLAY)) {
-                g_idle_add(play_handler_idle, NULL);
+                gdk_threads_add_idle (play_handler_idle, NULL);
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_STOP)) {
-                g_idle_add(stop_handler_idle, NULL);
+                gdk_threads_add_idle (stop_handler_idle, NULL);
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_SKIP)) {
-                g_idle_add(skip_handler_idle, NULL);
+                gdk_threads_add_idle (skip_handler_idle, NULL);
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_LOVETRACK)) {
                 gboolean interactive = method_is_interactive (message);
-                g_idle_add (lovetrack_handler_idle,
-                            GINT_TO_POINTER (interactive));
+                gdk_threads_add_idle (lovetrack_handler_idle,
+                                      GINT_TO_POINTER (interactive));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_BANTRACK)) {
                 gboolean interactive = method_is_interactive (message);
-                g_idle_add (bantrack_handler_idle,
-                            GINT_TO_POINTER (interactive));
+                gdk_threads_add_idle (bantrack_handler_idle,
+                                      GINT_TO_POINTER (interactive));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_SHOWWINDOW)) {
-                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
+                gdk_threads_add_idle (showwindow_handler_idle,
+                                      GINT_TO_POINTER(TRUE));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_HIDEWINDOW)) {
-                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(FALSE));
+                gdk_threads_add_idle (showwindow_handler_idle,
+                                      GINT_TO_POINTER(FALSE));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                 APP_DBUS_METHOD_CLOSEAPP)) {
-                g_idle_add(closeapp_handler_idle, NULL);
+                gdk_threads_add_idle (closeapp_handler_idle, NULL);
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_VOLUMEUP)) {
                 guint32 inc;
@@ -385,8 +363,8 @@ dbus_req_handler                        (DBusConnection *connection,
                 if (inc == G_MAXUINT32) {
                         inc = 5;
                 }
-                g_idle_add (volumechange_handler_idle,
-                            GINT_TO_POINTER ((gint) inc));
+                gdk_threads_add_idle (volumechange_handler_idle,
+                                      GINT_TO_POINTER ((gint) inc));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_VOLUMEDOWN)) {
                 guint32 inc;
@@ -395,26 +373,27 @@ dbus_req_handler                        (DBusConnection *connection,
                 if (inc == G_MAXUINT32) {
                         inc = 5;
                 }
-                g_idle_add (volumechange_handler_idle,
-                            GINT_TO_POINTER ((gint) -inc));
+                gdk_threads_add_idle (volumechange_handler_idle,
+                                      GINT_TO_POINTER ((gint) -inc));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_SETVOLUME)) {
                 guint32 vol;
                 dbus_message_get_args(message, NULL, DBUS_TYPE_UINT32,
                                       &vol, DBUS_TYPE_INVALID);
                 if (vol != G_MAXUINT32) {
-                        g_idle_add (volumeset_handler_idle,
-                                    GINT_TO_POINTER ((gint) vol));
+                        gdk_threads_add_idle (volumeset_handler_idle,
+                                              GINT_TO_POINTER ((gint) vol));
                 } else {
                         g_debug ("No parameter received for "
                                  APP_DBUS_METHOD_SETVOLUME);
                 }
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_TOPAPP)) {
-                g_idle_add(showwindow_handler_idle, GINT_TO_POINTER(TRUE));
+                gdk_threads_add_idle (showwindow_handler_idle,
+                                      GINT_TO_POINTER(TRUE));
         } else if (dbus_message_is_method_call(message, APP_DBUS_IFACE,
                                                APP_DBUS_METHOD_REQUEST_STATUS)) {
-                g_idle_add(requeststatus_handler_idle, NULL);
+                gdk_threads_add_idle (requeststatus_handler_idle, NULL);
         } else {
                 result = DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
         }
@@ -433,8 +412,8 @@ dbus_req_handler                        (DBusConnection *connection,
 
                 if (app_name != NULL && key_pressed != NULL &&
                     g_str_equal (app_name, APP_NAME)) {
-                        g_idle_add(gsd_mp_keys_handler_idle,
-                                   g_strdup (key_pressed));
+                        gdk_threads_add_idle (gsd_mp_keys_handler_idle,
+                                              g_strdup (key_pressed));
                 }
                 result = DBUS_HANDLER_RESULT_HANDLED;
         }
