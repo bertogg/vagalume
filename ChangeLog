@@ -1,5 +1,14 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-tray-icon.c
+	(-notify_playback_thread, +notify_playback_idle)
+	(show_notification, -get_album_cover_icon)
+	Use an idle handler to show the tray icon notification.
+	(+download_cover_thread):
+	Use a thread only if the album cover needs to be downloaded.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/uimisc.c
 	(+get_track_tags_idle, get_track_tags_thread)
 	(tagwin_selcombo_changed):

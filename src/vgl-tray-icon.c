@@ -456,28 +456,6 @@ get_default_album_cover_icon            (void)
         return g_object_ref (pixbuf);
 }
 
-static GdkPixbuf *
-get_album_cover_icon                    (LastfmTrack *track)
-{
-        g_return_val_if_fail(track != NULL && track->image_url != NULL, NULL);
-        GdkPixbuf *pixbuf = NULL;
-
-        /* This can take some time, so release the GDK lock */
-        gdk_threads_leave();
-        lastfm_get_track_cover_image(track);
-        gdk_threads_enter();
-
-        if (track->image_data != NULL) {
-                pixbuf = get_pixbuf_from_image(track->image_data,
-                                               track->image_data_size,
-                                               NOTIFICATION_ICON_SIZE);
-        } else {
-                g_debug("Error getting cover image");
-        }
-
-        return pixbuf;
-}
-
 typedef struct {
         LastfmTrack *track;
         VglTrayIcon *vti;
@@ -495,9 +473,11 @@ show_notification                       (VglTrayIcon *vti,
         gchar *notification_body = NULL;
         int i;
 
-        if (track->image_url != NULL) {
+        if (track->image_data != NULL) {
                 /* Set album image as icon if specified */
-                icon = get_album_cover_icon (track);
+                icon = get_pixbuf_from_image (track->image_data,
+                                              track->image_data_size,
+                                              NOTIFICATION_ICON_SIZE);
         }
 
         /* Set summary text (title) */
@@ -561,13 +541,14 @@ show_notification                       (VglTrayIcon *vti,
         g_free (notification_body);
 }
 
-static gpointer
-notify_playback_thread                  (VglTrayIconPlaybackData *d)
+static gboolean
+notify_playback_idle                    (gpointer userdata)
 {
-        g_return_val_if_fail(d != NULL, NULL);
+        VglTrayIconPlaybackData *d = userdata;
         VglTrayIconPrivate *priv;
 
-        gdk_threads_enter();
+        g_return_val_if_fail (d != NULL, FALSE);
+
         /* Set the now_playing private attribute and update panel */
         priv = d->vti->priv;
         priv->now_playing = (d->track != NULL);
@@ -593,13 +574,26 @@ notify_playback_thread                  (VglTrayIconPlaybackData *d)
                 gtk_status_icon_set_tooltip (priv->tray_icon,
                                              TOOLTIP_DEFAULT_STRING);
         }
-        gdk_threads_leave();
 
         /* Cleanup */
         g_object_unref(d->vti);
         if (d->track != NULL) vgl_object_unref(d->track);
         g_slice_free(VglTrayIconPlaybackData, d);
 
+        return FALSE;
+}
+
+static gpointer
+download_cover_thread                   (gpointer userdata)
+{
+        VglTrayIconPlaybackData *data = userdata;
+
+        lastfm_get_track_cover_image (data->track);
+        if (data->track->image_data == NULL) {
+                g_debug ("Error getting cover image");
+        }
+
+        gdk_threads_add_idle (notify_playback_idle, data);
         return NULL;
 }
 
@@ -609,8 +603,17 @@ vgl_tray_icon_notify_playback           (VglTrayIcon *vti,
 {
         g_return_if_fail(VGL_IS_TRAY_ICON(vti));
         VglTrayIconPlaybackData *data;
+        gboolean dl_cover;
+
         data = g_slice_new(VglTrayIconPlaybackData);
         data->vti = g_object_ref(vti);
         data->track = track ? vgl_object_ref(track) : NULL;
-        g_thread_create((GThreadFunc)notify_playback_thread,data,FALSE,NULL);
+
+        dl_cover = track && track->image_url && track->image_data == NULL;
+
+        if (vti->priv->show_notifications && dl_cover) {
+                g_thread_create (download_cover_thread, data, FALSE, NULL);
+        } else {
+                gdk_threads_add_idle (notify_playback_idle, data);
+        }
 }
