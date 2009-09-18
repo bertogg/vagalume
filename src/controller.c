@@ -126,10 +126,12 @@ typedef struct {
         char *user;
         char *pass;
         VglServer *srv;
+        LastfmWsSession *session;
+        LastfmErr err;
         check_session_cb success_cb;
         check_session_cb failure_cb;
         gpointer cbdata;
-} check_session_thread_data;
+} CheckSessionData;
 
 /**
  * Show an error dialog with an OK button
@@ -470,32 +472,20 @@ check_usercfg                           (gboolean ask)
 }
 
 /**
- * Check if there's a Last.fm session opened. If not, try to create
- * one.
- * This is done in a thread to avoid freezing the UI. After this, the
- * callback supplied to check_session() will be called, see below for
- * details
+ * Proceed after creating (or trying to create) a new Last.fm session.
  *
- * @param userdata A check_session_thread_data, containing the
- *                 callback and other info necessary for creating
- *                 a new session.
- * @return NULL (not used)
+ * @param userdata A pointer to a CheckSessionData struct
+ * @return FALSE (to remove the idle handler)
  */
-static gpointer
-check_session_thread                    (gpointer userdata)
+static gboolean
+check_session_idle                      (gpointer userdata)
 {
-        g_return_val_if_fail(userdata != NULL, NULL);
-        check_session_thread_data *data;
-        gboolean connected = FALSE;
-        LastfmErr err = LASTFM_ERR_NONE;
-        LastfmWsSession *s;
-        data = (check_session_thread_data *) userdata;
-        s = lastfm_ws_get_session (data->srv, data->user, data->pass, &err);
+        CheckSessionData *data = userdata;
+        const gboolean success = data->session != NULL;
 
-        if (s == NULL) {
-                gdk_threads_enter();
+        if (!success) {
                 controller_disconnect();
-                if (err == LASTFM_ERR_LOGIN) {
+                if (data->err == LASTFM_ERR_LOGIN) {
                         char *text = g_strdup_printf (
                                 _("Unable to login to %s\n"
                                   "Check username and password"),
@@ -505,36 +495,55 @@ check_session_thread                    (gpointer userdata)
                 } else {
                         controller_show_warning(_("Network connection error"));
                 }
-                gdk_threads_leave();
         } else {
-                gdk_threads_enter();
                 if (session) {
                         vgl_object_unref (session);
                 }
-                session = s;
-                g_signal_emit (vgl_controller, signals[CONNECTED], 0, s);
+                session = data->session;
+                g_signal_emit (vgl_controller, signals[CONNECTED], 0,
+                               data->session);
                 vgl_main_window_set_state (mainwin,
                                            VGL_MAIN_WINDOW_STATE_STOPPED,
                                            NULL, NULL);
-                gdk_threads_leave();
-                connected = TRUE;
         }
+
         /* Call the callback */
-        gdk_threads_enter();
-        if (connected && data->success_cb != NULL) {
-                (*(data->success_cb))(data->cbdata);
-        } else if (!connected && data->failure_cb != NULL) {
-                (*(data->failure_cb))(data->cbdata);
+        if (success && data->success_cb != NULL) {
+                (*(data->success_cb)) (data->cbdata);
+        } else if (!success && data->failure_cb != NULL) {
+                (*(data->failure_cb)) (data->cbdata);
         }
-        gdk_threads_leave();
+
         /* Free memory */
-        g_free(data->user);
-        g_free(data->pass);
-        vgl_object_unref(data->srv);
-        g_slice_free(check_session_thread_data, data);
-        if (connected) {
+        g_free (data->user);
+        g_free (data->pass);
+        vgl_object_unref (data->srv);
+        g_slice_free (CheckSessionData, data);
+
+        return FALSE;
+}
+
+/**
+ * Create a new Last.fm session. This is done in a thread to avoid
+ * freezing the UI.
+ *
+ * @param userdata A pointer to a CheckSessionData struct
+ * @return NULL (not used)
+ */
+static gpointer
+check_session_thread                    (gpointer userdata)
+{
+        CheckSessionData *data = userdata;
+        g_return_val_if_fail (data != NULL, NULL);
+
+        data->session = lastfm_ws_get_session (data->srv, data->user,
+                                               data->pass, &(data->err));
+        if (data->session != NULL) {
                 get_user_extradata();
         }
+
+        gdk_threads_add_idle (check_session_idle, data);
+
         return NULL;
 }
 
@@ -571,11 +580,13 @@ check_session                           (check_session_cb success_cb,
         } else {
                 check_usercfg (TRUE);
                 if (usercfg != NULL) {
-                        check_session_thread_data *data;
-                        data = g_slice_new(check_session_thread_data);
+                        CheckSessionData *data;
+                        data = g_slice_new (CheckSessionData);
                         data->user = g_strdup(usercfg->username);
                         data->pass = g_strdup(usercfg->password);
                         data->srv = vgl_object_ref(usercfg->server);
+                        data->session = NULL;
+                        data->err = LASTFM_ERR_NONE;
                         data->success_cb = success_cb;
                         data->failure_cb = failure_cb;
                         data->cbdata = cbdata;

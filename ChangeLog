@@ -1,5 +1,12 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.c
+	(+check_session_idle, check_session_thread, check_session):
+	Use an idle hander for everything done after creating a new
+	session.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/dbus.c:
 	Use the gdk_threads_* API to install all idle handlers.
 
