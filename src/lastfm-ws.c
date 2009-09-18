@@ -463,6 +463,7 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                         pls = session->v1sess->custom_pls;
                         session->v1sess->custom_pls = NULL;
                         g_mutex_unlock (session->mutex);
+                        return pls;
                 }
                 if (session->srv->old_str_api) {
                         return lastfm_request_playlist (session->v1sess,

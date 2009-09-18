@@ -1,5 +1,10 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/lastfm-ws.c (lastfm_ws_radio_get_playlist):
+	Regression fix: return custom playlist if available.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-main-window.c
 	(vgl_main_window_show_status_msg):
 	Use gdk_threads_add_timeout() to add timeouts.
