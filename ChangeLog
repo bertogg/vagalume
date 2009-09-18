@@ -1,5 +1,12 @@
 2009-09-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/audio.c
+	(+audio_started_cb_handler, +gst_eos_handler, bus_call):
+	Run the GStreamer EOS and state changed handlers from the main
+	loop.
+
+2009-09-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c
 	(+controller_play_radio_by_url_idle)
 	(controller_play_radio_by_url_thread)

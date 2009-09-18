@@ -102,6 +102,27 @@ get_audio_thread                        (gpointer userdata)
 }
 
 static gboolean
+audio_started_cb_handler                (gpointer data)
+{
+        GCallback callback = data;
+        (*callback) ();
+        return FALSE;
+}
+
+static gboolean
+gst_eos_handler                         (gpointer data)
+{
+        if (failed_tracks == 3) {
+                g_atomic_int_set (&failed_tracks, 0);
+                controller_stop_playing ();
+                controller_show_warning ("Connection error");
+        } else {
+                controller_skip_track ();
+        }
+        return FALSE;
+}
+
+static gboolean
 bus_call                                (GstBus     *bus,
                                          GstMessage *msg,
                                          gpointer    data)
@@ -120,26 +141,17 @@ bus_call                                (GstBus     *bus,
         } /* No, I haven't forgotten the break here */
         case GST_MESSAGE_EOS:
                 g_main_loop_quit (loop);
-                gdk_threads_enter ();
-                if (failed_tracks == 3) {
-                        g_atomic_int_set (&failed_tracks, 0);
-                        controller_stop_playing();
-                        controller_show_warning("Connection error");
-                } else {
-                        controller_skip_track();
-                }
-                gdk_threads_leave ();
+                gdk_threads_add_idle (gst_eos_handler, NULL);
                 break;
         case GST_MESSAGE_STATE_CHANGED:
                 if (audio_started_callback != NULL) {
                         GstState st;
                         gst_message_parse_state_changed(msg, NULL, &st, NULL);
                         if (st == GST_STATE_PLAYING) {
-                                gdk_threads_enter();
-                                (*audio_started_callback)();
+                                gdk_threads_add_idle (audio_started_cb_handler,
+                                                      audio_started_callback);
                                 audio_started_callback = NULL;
                                 audio_started = TRUE;
-                                gdk_threads_leave();
                         }
                 }
                 break;
