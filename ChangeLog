@@ -1,5 +1,11 @@
 2009-09-19  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/dlwin.c (dlwin_download_file):
+	Make sure that the 'text' string is NULL-terminated when the
+	number of characters exceeds the buffer size.
+
+2009-09-19  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/audio.c (bus_call, lastfm_audio_init, lastfm_audio_clear)
 	Remove unused GMainLoop.
 
