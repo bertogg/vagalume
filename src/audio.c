@@ -59,7 +59,6 @@ static int http_pipe[2] = { -1, -1 };
 static GThread *http_thread = NULL;
 static gboolean audio_started = FALSE;
 static GCallback audio_started_callback = NULL;
-static GMainLoop *loop = NULL;
 
 static void
 close_previous_playback                 (void)
@@ -141,7 +140,6 @@ bus_call                                (GstBus     *bus,
                 g_atomic_int_inc (&failed_tracks);
         } /* No, I haven't forgotten the break here */
         case GST_MESSAGE_EOS:
-                g_main_loop_quit (loop);
                 gdk_threads_add_idle (gst_eos_handler, NULL);
                 break;
         case GST_MESSAGE_STATE_CHANGED:
@@ -305,7 +303,6 @@ lastfm_audio_init                       (void)
         GstBus *bus;
         /* initialize GStreamer */
         gst_init (NULL, NULL);
-        loop = g_main_loop_new (NULL, FALSE);
 
         /* set up */
 #ifdef HAVE_GST_MIXER
@@ -407,7 +404,6 @@ lastfm_audio_clear                      (void)
         g_free (mixer.vols);
         memset (&mixer, 0, sizeof (mixer));
 #endif
-        g_main_loop_unref(loop);
 }
 
 int
