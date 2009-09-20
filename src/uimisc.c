@@ -42,7 +42,7 @@ typedef enum {
 } tagcombo_state;
 
 typedef struct {
-        VglObject parent;
+        GObject parent;
         GtkWindow *window;
         GtkEntry *entry;
         GtkComboBox *selcombo;
@@ -60,6 +60,7 @@ typedef struct {
         GtkTreeModel *retrmodel;
         tagcombo_state artist_state, track_state, album_state;
 } tagwin;
+VGL_DEFINE_TYPE (tagwin, tagwin, tagwin_destroy)
 
 typedef struct {
         GtkDialog *dialog;
@@ -1225,8 +1226,8 @@ static void
 tagwin_destroy                          (tagwin *w)
 {
         gtk_widget_destroy(GTK_WIDGET(w->window));
-        vgl_object_unref(w->track);
-        vgl_object_unref(w->ws_session);
+        g_object_unref(w->track);
+        g_object_unref(w->ws_session);
         g_free(w->user);
         g_free(w->tags_artist);
         g_free(w->tags_track);
@@ -1236,12 +1237,6 @@ tagwin_destroy                          (tagwin *w)
         if (w->poptags_album) g_object_unref(w->poptags_album);
         if (w->nonemodel) g_object_unref(w->nonemodel);
         if (w->retrmodel) g_object_unref(w->retrmodel);
-}
-
-static tagwin *
-tagwin_create                           (void)
-{
-        return vgl_object_new (tagwin, (GDestroyNotify) tagwin_destroy);
 }
 
 static gboolean
@@ -1280,7 +1275,7 @@ get_track_tags_idle                     (gpointer userdata)
         g_list_free (data->userlist);
         g_list_foreach (data->globallist, (GFunc) g_free, NULL);
         g_list_free (data->globallist);
-        vgl_object_unref (data->w);
+        g_object_unref (data->w);
         g_slice_free (GetTrackTagsData, data);
 
         return FALSE;
@@ -1364,7 +1359,7 @@ tagwin_selcombo_changed                 (GtkComboBox *combo,
         }
         if (oldstate == TAGCOMBO_STATE_NULL) {
                 GetTrackTagsData *data = g_slice_new (GetTrackTagsData);
-                data->w = vgl_object_ref (w);
+                data->w = g_object_ref (w);
                 data->type = type;
                 data->userlist = data->globallist = NULL;
                 g_thread_create(get_track_tags_thread, data, FALSE, NULL);
@@ -1529,9 +1524,9 @@ tagwin_run                              (GtkWindow             *parent,
         gtk_container_add(GTK_CONTAINER(alig), globalcombo);
         gtk_table_attach_defaults(table, alig, 1, 2, 3, 4);
 
-        t = tagwin_create();
-        t->track = vgl_object_ref(track);
-        t->ws_session = vgl_object_ref(ws_session);
+        t = tagwin_empty_new ();
+        t->track = g_object_ref(track);
+        t->ws_session = g_object_ref(ws_session);
         t->window = GTK_WINDOW(dialog);
         t->entry = GTK_ENTRY(entry);
         t->selcombo = selcombo;
@@ -1560,7 +1555,7 @@ tagwin_run                              (GtkWindow             *parent,
                 retvalue = FALSE;
         }
         gtk_widget_hide(GTK_WIDGET(t->window));
-        vgl_object_unref(t);
+        g_object_unref(t);
         return retvalue;
 }
 

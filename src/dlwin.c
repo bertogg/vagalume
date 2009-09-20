@@ -20,7 +20,7 @@
 #include <string.h>
 
 typedef struct {
-        VglObject parent;
+        GObject parent;
         GtkWidget *window;
         GtkWidget *button;
         GtkProgressBar *progressbar;
@@ -34,6 +34,7 @@ typedef struct {
         dlwin_cb callback;
         gpointer cbdata;
 } dlwin;
+VGL_DEFINE_TYPE (dlwin, dlwin, dlwin_destroy)
 
 static gboolean
 update_window                           (gpointer data)
@@ -69,9 +70,8 @@ dlwin_progress_cb                       (gpointer data,
 }
 
 static void
-dlwin_destroy                           (gpointer data)
+dlwin_destroy                           (dlwin *w)
 {
-        dlwin *w = data;
         g_free (w->url);
         g_free (w->dstpath);
 }
@@ -98,7 +98,7 @@ dlwin_download_file_idle                (gpointer data)
                                       _("C_lose"));
         }
 
-        vgl_object_unref (w);
+        g_object_unref (w);
 
         return FALSE;
 }
@@ -137,7 +137,7 @@ dlwin_download_file                     (const char *url,
 
         g_return_if_fail (url && filename && dstpath);
 
-        w = vgl_object_new (dlwin, dlwin_destroy);
+        w = dlwin_empty_new ();
         w->url = g_strdup(url);
         w->dstpath = g_strdup(dstpath);
         w->dlnow = 0.0;
@@ -178,12 +178,12 @@ dlwin_download_file                     (const char *url,
         g_signal_connect_swapped (G_OBJECT (w->button), "clicked",
                                   G_CALLBACK (gtk_widget_destroy), w->window);
         g_signal_connect_swapped (G_OBJECT (w->window), "destroy",
-                                  G_CALLBACK (vgl_object_unref), w);
+                                  G_CALLBACK (g_object_unref), w);
 
         w->timeout_id = gdk_threads_add_timeout_full
                 (G_PRIORITY_DEFAULT_IDLE, 200, update_window,
-                 vgl_object_ref (w), vgl_object_unref);
+                 g_object_ref (w), g_object_unref);
         gtk_widget_show_all(w->window);
         g_thread_create (dlwin_download_file_thread,
-                         vgl_object_ref (w), FALSE, NULL);
+                         g_object_ref (w), FALSE, NULL);
 }

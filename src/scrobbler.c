@@ -33,13 +33,14 @@ typedef enum {
 } RspResponse;
 
 typedef struct {
-        VglObject parent;
+        GObject parent;
         const char *id;
         const char *np_url;
         const char *post_url;
         const char *user;
         const char *pass;
 } RspSession;
+VGL_DEFINE_TYPE (RspSession, rsp_session, rsp_session_destroy)
 
 typedef struct {
         char *username;
@@ -66,7 +67,7 @@ rsp_track_destroy                       (RspTrack *track)
 {
         g_return_if_fail (track != NULL);
         g_free (track->username);
-        vgl_object_unref (track->track);
+        g_object_unref (track->track);
         g_slice_free (RspTrack, track);
 }
 
@@ -80,7 +81,7 @@ rsp_track_new                           (const char  *user,
         g_return_val_if_fail (username && track && start_time > 0, NULL);
         t = g_slice_new (RspTrack);
         t->username = g_strdup (user);
-        t->track = vgl_object_ref (track);
+        t->track = g_object_ref (track);
         t->start_time = start_time;
         t->rating = rating;
         t->tries = 0;
@@ -119,8 +120,7 @@ rsp_session_new                         (const char *username,
                         /* Split in 5 parts and not 4 to prevent
                            trailing garbage from going to r[3] */
                         char **r = g_strsplit(buffer, "\n", 5);
-                        s = vgl_object_new (RspSession, (GDestroyNotify)
-                                            rsp_session_destroy);
+                        s = rsp_session_empty_new ();
                         if (r[0] && r[1] && r[2] && r[3]) {
                                 s->id = g_strdup(r[1]);
                                 s->np_url = g_strdup(r[2]);
@@ -134,7 +134,7 @@ rsp_session_new                         (const char *username,
                         g_warning("Error building rsp session");
                         if (err != NULL) *err = LASTFM_ERR_LOGIN;
                         if (s) {
-                                vgl_object_unref (s);
+                                g_object_unref (s);
                                 s = NULL;
                         }
                 } else if (err != NULL) {
@@ -252,7 +252,7 @@ rsp_global_session_clear                (const RspSession *session)
         g_mutex_lock (rsp_mutex);
         if (global_rsp_session != NULL &&
             g_str_equal (global_rsp_session->id, session->id)) {
-                vgl_object_unref (global_rsp_session);
+                g_object_unref (global_rsp_session);
                 global_rsp_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);
@@ -265,7 +265,7 @@ rsp_session_get_or_renew                (void)
 
         g_mutex_lock (rsp_mutex);
         if (global_rsp_session) {
-                session = vgl_object_ref (global_rsp_session);
+                session = g_object_ref (global_rsp_session);
         } else {
                 char *user = g_strdup (username->str);
                 char *pass = g_strdup (password->str);
@@ -276,9 +276,9 @@ rsp_session_get_or_renew                (void)
                 g_mutex_lock (rsp_mutex);
                 if (session) {
                         if (global_rsp_session) {
-                                vgl_object_unref (global_rsp_session);
+                                g_object_unref (global_rsp_session);
                         }
-                        global_rsp_session = vgl_object_ref (session);
+                        global_rsp_session = g_object_ref (session);
                 }
         }
         g_mutex_unlock (rsp_mutex);
@@ -300,7 +300,7 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
 
         g_mutex_lock (rsp_mutex);
         if (global_ws_session != NULL) {
-                ws_session = vgl_object_ref (global_ws_session);
+                ws_session = g_object_ref (global_ws_session);
         }
         g_mutex_unlock (rsp_mutex);
 
@@ -353,11 +353,11 @@ rsp_scrobbler_thread_scrobble           (RspTrack *track)
         }
 
         if (s != NULL) {
-                vgl_object_unref (s);
+                g_object_unref (s);
         }
 
         if (ws_session != NULL) {
-                vgl_object_unref (ws_session);
+                g_object_unref (ws_session);
         }
 }
 
@@ -391,11 +391,11 @@ rsp_scrobbler_thread                    (gpointer data)
         }
         g_string_free (username, TRUE);
         g_string_free (password, TRUE);
-        vgl_object_unref (server);
+        g_object_unref (server);
         g_mutex_free (rsp_mutex);
         g_cond_free (rsp_thread_cond);
         if (global_ws_session) {
-                vgl_object_unref (global_ws_session);
+                g_object_unref (global_ws_session);
                 global_ws_session = NULL;
         }
         username = password = NULL;
@@ -429,7 +429,7 @@ set_nowplaying_thread                   (gpointer data)
                 RspResponse ret = rsp_set_nowplaying (session, track);
                 if (ret == RSP_RESPONSE_BADSESSION) {
                         rsp_global_session_clear (session);
-                        vgl_object_unref (session);
+                        g_object_unref (session);
                         session = rsp_session_get_or_renew ();
                         if (session) {
                                 rsp_set_nowplaying (session, track);
@@ -438,10 +438,10 @@ set_nowplaying_thread                   (gpointer data)
         }
 
         if (session) {
-                vgl_object_unref (session);
+                g_object_unref (session);
         }
 
-        vgl_object_unref (track);
+        g_object_unref (track);
         return NULL;
 }
 
@@ -452,9 +452,9 @@ connected_cb                            (VglController   *ctrl,
 {
         g_mutex_lock (rsp_mutex);
         if (global_ws_session) {
-                vgl_object_unref (global_ws_session);
+                g_object_unref (global_ws_session);
         }
-        global_ws_session = vgl_object_ref (session);
+        global_ws_session = g_object_ref (session);
         g_mutex_unlock (rsp_mutex);
 }
 
@@ -464,7 +464,7 @@ disconnected_cb                         (VglController   *ctrl,
 {
         g_mutex_lock (rsp_mutex);
         if (global_ws_session) {
-                vgl_object_unref (global_ws_session);
+                g_object_unref (global_ws_session);
                 global_ws_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);
@@ -486,12 +486,12 @@ usercfg_changed_cb                      (VglController *ctrl,
                 changed = TRUE;
         }
         if (server != NULL) {
-                vgl_object_unref (server);
+                g_object_unref (server);
         }
-        server = vgl_object_ref (cfg->server);
+        server = g_object_ref (cfg->server);
         enable_scrobbling = cfg->enable_scrobbling;
         if (changed && global_rsp_session) {
-                vgl_object_unref (global_rsp_session);
+                g_object_unref (global_rsp_session);
                 global_rsp_session = NULL;
         }
         g_mutex_unlock (rsp_mutex);
@@ -540,7 +540,7 @@ track_started_cb                        (VglController *ctrl,
         g_mutex_unlock (rsp_mutex);
         if (enable_scrobbling) {
                 g_thread_create (set_nowplaying_thread,
-                                 vgl_object_ref (track), FALSE, NULL);
+                                 g_object_ref (track), FALSE, NULL);
         }
 }
 

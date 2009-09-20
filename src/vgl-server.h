@@ -16,7 +16,7 @@
 G_BEGIN_DECLS
 
 typedef struct {
-        VglObject parent;
+        GObject parent;
         const char *name;
         const char *ws_base_url;
         const char *rsp_base_url;

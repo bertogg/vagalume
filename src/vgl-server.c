@@ -13,6 +13,8 @@
 #include "userconfig.h"
 #include "util.h"
 
+VGL_DEFINE_TYPE (VglServer, vgl_server, vgl_server_destroy)
+
 static gboolean initialized = FALSE;
 
 #define DEFAULT_SERVER_LIST APP_DATA_DIR "/servers.xml"
@@ -47,7 +49,7 @@ vgl_server_new                          (const char *name,
         g_return_val_if_fail (name && ws_base_url && rsp_base_url &&
                               api_key && api_secret, NULL);
 
-        srv = vgl_object_new (VglServer, (GDestroyNotify) vgl_server_destroy);
+        srv = vgl_server_empty_new ();
 
         srv->name         = g_strdup (name);
         srv->ws_base_url  = g_strconcat (ws_base_url, "2.0/", NULL);
@@ -80,7 +82,7 @@ vgl_server_list_add                     (const char *name,
         srv = vgl_server_list_find_by_name (name);
         if (srv != NULL) {
                 g_debug ("Trying to add %s server again, ignoring...", name);
-                vgl_object_unref (srv);
+                g_object_unref (srv);
                 return FALSE;
         }
 
@@ -102,7 +104,7 @@ vgl_server_list_find_by_name            (const char *name)
         for (iter = srv_list; iter != NULL; iter = iter->next) {
                 VglServer *srv = iter->data;
                 if (g_str_equal (name, srv->name)) {
-                        return vgl_object_ref (srv);
+                        return g_object_ref (srv);
                 }
         }
 
@@ -119,7 +121,7 @@ vgl_server_list_remove                  (const char *name)
         for (iter = srv_list; iter != NULL; iter = iter->next) {
                 VglServer *srv = iter->data;
                 if (g_str_equal (name, srv->name)) {
-                        vgl_object_unref (srv);
+                        g_object_unref (srv);
                         srv_list = g_list_delete_link (srv_list, iter);
                         return TRUE;
                 }
@@ -227,7 +229,7 @@ vgl_server_list_finalize                (void)
 {
         g_return_if_fail (initialized);
 
-        g_list_foreach (srv_list, (GFunc) vgl_object_unref, NULL);
+        g_list_foreach (srv_list, (GFunc) g_object_unref, NULL);
         g_list_free (srv_list);
 
         srv_list = NULL;
@@ -247,5 +249,5 @@ vgl_server_get_default                  (void)
 {
         g_return_val_if_fail (initialized, NULL);
 
-        return srv_list ? vgl_object_ref (srv_list->data) : NULL;
+        return srv_list ? g_object_ref (srv_list->data) : NULL;
 }

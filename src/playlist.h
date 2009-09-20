@@ -20,7 +20,7 @@ typedef enum {
 } LastfmTrackComponent;
 
 typedef struct {
-        VglObject parent;
+        GObject parent;
         const char *stream_url;
         const char *title;
         guint id;

@@ -122,9 +122,9 @@ vgl_user_cfg_set_server                 (VglUserCfg *cfg,
                                          VglServer  *server)
 {
         g_return_if_fail (cfg != NULL && server != NULL);
-        vgl_object_ref (server);
+        g_object_ref (server);
         if (cfg->server) {
-                vgl_object_unref (cfg->server);
+                g_object_unref (cfg->server);
         }
         cfg->server = server;
 }
@@ -140,7 +140,7 @@ vgl_user_cfg_set_server_name            (VglUserCfg *cfg,
         server = vgl_server_list_find_by_name (name);
         if (server) {
                 vgl_user_cfg_set_server (cfg, server);
-                vgl_object_unref (server);
+                g_object_unref (server);
         } else {
                 g_warning ("No such server: %s", name);
         }
@@ -205,7 +205,7 @@ vgl_user_cfg_destroy                    (VglUserCfg *cfg)
         g_free(cfg->http_proxy);
         g_free(cfg->download_dir);
         g_free(cfg->imstatus_template);
-        vgl_object_unref(cfg->server);
+        g_object_unref(cfg->server);
         g_slice_free(VglUserCfg, cfg);
 }
 

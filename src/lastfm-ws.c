@@ -27,7 +27,7 @@ typedef enum {
 } HttpRequestType;
 
 struct _LastfmWsSession {
-        VglObject parent;
+        GObject parent;
         char *username;
         char *password;
         char *key;
@@ -37,6 +37,7 @@ struct _LastfmWsSession {
         LastfmSession *v1sess;
         GMutex *mutex;
 };
+VGL_DEFINE_TYPE (LastfmWsSession, lastfm_ws_session, lastfm_ws_session_destroy)
 
 /* Name/value pairs for URL parameters */
 typedef struct {
@@ -75,7 +76,7 @@ lastfm_ws_session_destroy               (LastfmWsSession *session)
         g_free (session->username);
         g_free (session->password);
         g_free (session->key);
-        vgl_object_unref (session->srv);
+        g_object_unref (session->srv);
         g_free (session->radio_name);
         g_mutex_free (session->mutex);
         if (session->v1sess) {
@@ -94,13 +95,12 @@ lastfm_ws_session_new                   (const char *username,
 
         g_return_val_if_fail (username && key && srv, NULL);
 
-        session = vgl_object_new (LastfmWsSession,
-                                  (GDestroyNotify) lastfm_ws_session_destroy);
+        session = lastfm_ws_session_empty_new ();
 
         session->username   = g_strdup (username);
         session->password   = g_strdup (password);
         session->key        = g_strdup (key);
-        session->srv        = vgl_object_ref (srv);
+        session->srv        = g_object_ref (srv);
         session->radio_name = NULL;
         session->v1sess     = NULL;
         session->subscriber = subscriber;

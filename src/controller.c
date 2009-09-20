@@ -259,7 +259,7 @@ controller_update_progress              (gpointer data)
                 }
                 return TRUE;
         } else {
-                vgl_object_unref(tr);
+                g_object_unref (tr);
                 return FALSE;
         }
 }
@@ -319,7 +319,7 @@ static void
 controller_set_nowplaying               (LastfmTrack *track)
 {
         if (nowplaying != NULL) {
-                vgl_object_unref (nowplaying);
+                g_object_unref (nowplaying);
         }
         nowplaying = track;
         nowplaying_rating = RSP_RATING_NONE;
@@ -344,7 +344,7 @@ get_user_extradata                      (void)
         gdk_threads_enter();
         char *user = g_strdup(usercfg->username);
         char *pass = g_strdup(usercfg->password);
-        VglServer *srv = vgl_object_ref (usercfg->server);
+        VglServer *srv = g_object_ref (usercfg->server);
         gdk_threads_leave();
         if (!user || !pass || user[0] == '\0' || pass[0] == '\0') {
                 finished = TRUE;
@@ -387,7 +387,7 @@ get_user_extradata                      (void)
         }
         g_free(user);
         g_free(pass);
-        vgl_object_unref(srv);
+        g_object_unref(srv);
 }
 
 /**
@@ -422,7 +422,7 @@ controller_open_usercfg                 (void)
                                           g_strdup("");
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
-        VglServer *oldsrv = usercfg ? vgl_object_ref (usercfg->server) : NULL;
+        VglServer *oldsrv = usercfg ? g_object_ref (usercfg->server) : NULL;
 
         changed = ui_usercfg_window(
                 vgl_main_window_get_window(mainwin, FALSE), &usercfg);
@@ -444,7 +444,7 @@ controller_open_usercfg                 (void)
         g_free(olduser);
         g_free(oldpw);
         if (oldsrv) {
-                vgl_object_unref (oldsrv);
+                g_object_unref (oldsrv);
         }
 }
 
@@ -498,7 +498,7 @@ check_session_idle                      (gpointer userdata)
                 }
         } else {
                 if (session) {
-                        vgl_object_unref (session);
+                        g_object_unref (session);
                 }
                 session = data->session;
                 g_signal_emit (vgl_controller, signals[CONNECTED], 0,
@@ -518,7 +518,7 @@ check_session_idle                      (gpointer userdata)
         /* Free memory */
         g_free (data->user);
         g_free (data->pass);
-        vgl_object_unref (data->srv);
+        g_object_unref (data->srv);
         g_slice_free (CheckSessionData, data);
 
         return FALSE;
@@ -588,7 +588,7 @@ check_session                           (check_session_cb success_cb,
                         data = g_slice_new (CheckSessionData);
                         data->user = g_strdup(usercfg->username);
                         data->pass = g_strdup(usercfg->password);
-                        data->srv = vgl_object_ref(usercfg->server);
+                        data->srv = g_object_ref(usercfg->server);
                         data->session = NULL;
                         data->err = LASTFM_ERR_NONE;
                         data->success_cb = success_cb;
@@ -644,7 +644,7 @@ set_album_cover_thread                  (gpointer data)
         }
 
         gdk_threads_add_idle_full (G_PRIORITY_DEFAULT, set_album_cover_idle,
-                                   track, vgl_object_unref);
+                                   track, g_object_unref);
         return NULL;
 }
 
@@ -689,7 +689,7 @@ start_playing_get_pls_thread            (gpointer data)
         pls = lastfm_ws_radio_get_playlist (d->session, d->discovery, TRUE);
         gdk_threads_add_idle (start_playing_get_pls_idle, pls);
 
-        vgl_object_unref (d->session);
+        g_object_unref (d->session);
         g_slice_free (GetPlaylistData, d);
 
         return NULL;
@@ -711,7 +711,7 @@ controller_show_cover                   (void)
         showing_cover = TRUE;
         if (nowplaying->image_url != NULL && nowplaying->image_data == NULL) {
                 g_thread_create (set_album_cover_thread,
-                                 vgl_object_ref (nowplaying), FALSE, NULL);
+                                 g_object_ref (nowplaying), FALSE, NULL);
         } else {
                 vgl_main_window_set_album_cover (mainwin,
                                                  nowplaying->image_data,
@@ -730,7 +730,7 @@ controller_audio_started_cb             (void)
         LastfmTrack *track;
         vgl_main_window_set_state (mainwin, VGL_MAIN_WINDOW_STATE_PLAYING,
                                    nowplaying, current_radio_url);
-        track = vgl_object_ref (nowplaying);
+        track = g_object_ref (nowplaying);
         controller_update_progress (track);
         showing_cover = FALSE;
         controller_show_cover();
@@ -756,7 +756,7 @@ controller_start_playing_cb             (gpointer userdata)
                                    NULL, NULL);
         if (lastfm_pls_size(playlist) == 0) {
                 GetPlaylistData *data = g_slice_new (GetPlaylistData);
-                data->session = vgl_object_ref (session);
+                data->session = g_object_ref (session);
                 data->discovery = usercfg->discovery_mode;
                 g_thread_create (start_playing_get_pls_thread,
                                  data, FALSE, NULL);
@@ -852,7 +852,7 @@ void
 controller_disconnect                   (void)
 {
         if (session != NULL) {
-                vgl_object_unref (session);
+                g_object_unref (session);
                 session = NULL;
         }
         lastfm_pls_clear(playlist);
@@ -900,7 +900,7 @@ download_track_thread                   (gpointer userdata)
 
         d->track->dl_in_progress = FALSE;
 
-        vgl_object_unref (d->track);
+        g_object_unref (d->track);
         g_free (d->dstpath);
         g_slice_free (DownloadData, d);
 
@@ -916,7 +916,7 @@ download_track_dlwin_cb                 (gboolean success,
 {
         LastfmTrack *track = (LastfmTrack *) userdata;
         track->dl_in_progress = FALSE;
-        vgl_object_unref (track);
+        g_object_unref (track);
 }
 
 /**
@@ -929,7 +929,7 @@ void
 controller_download_track               (gboolean background)
 {
         g_return_if_fail(nowplaying && nowplaying->free_track_url && usercfg);
-        LastfmTrack *t = vgl_object_ref (nowplaying);
+        LastfmTrack *t = g_object_ref (nowplaying);
 
         if (t->dl_in_progress) {
                 const char *msg = _("Track already being downloaded");
@@ -961,7 +961,7 @@ controller_download_track               (gboolean background)
                                 char *banner;
                                 DownloadData *dldata;
                                 dldata = g_slice_new (DownloadData);
-                                dldata->track = vgl_object_ref (t);
+                                dldata->track = g_object_ref (t);
                                 dldata->dstpath = g_strdup (dstpath);
                                 g_thread_create (download_track_thread,
                                                  dldata, FALSE, NULL);
@@ -974,13 +974,13 @@ controller_download_track               (gboolean background)
                                 dlwin_download_file (t->free_track_url,
                                                      filename, dstpath,
                                                      download_track_dlwin_cb,
-                                                     vgl_object_ref (t));
+                                                     g_object_ref (t));
                         }
                 }
                 g_free(filename);
                 g_free(dstpath);
         }
-        vgl_object_unref(t);
+        g_object_unref (t);
 }
 
 /**
@@ -1166,8 +1166,8 @@ tag_track_thread                        (gpointer data)
         /* Cleanup */
         g_strfreev(tags);
         g_slist_free(list);
-        vgl_object_unref(d->session);
-        vgl_object_unref(d->track);
+        g_object_unref(d->session);
+        g_object_unref(d->track);
         g_free(d->taglist);
         g_slice_free(TagData, d);
 
@@ -1195,8 +1195,8 @@ controller_tag_track                    (void)
 
         g_return_if_fail (mainwin && usercfg && nowplaying);
 
-        track = vgl_object_ref (nowplaying);
-        sess = vgl_object_ref (session);
+        track = g_object_ref (nowplaying);
+        sess = g_object_ref (session);
         if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
                 type = LASTFM_TRACK_COMPONENT_ARTIST;
         }
@@ -1217,8 +1217,8 @@ controller_tag_track                    (void)
                 if (accept) {
                         controller_show_info(_("You must type a list of tags"));
                 }
-                vgl_object_unref(sess);
-                vgl_object_unref(track);
+                g_object_unref (sess);
+                g_object_unref (track);
         }
 }
 
@@ -1248,8 +1248,8 @@ recomm_track_thread                     (gpointer data)
                 _("Error sending recommendation");
         gdk_threads_add_idle (show_banner_idle, (char *) text);
 
-        vgl_object_unref(d->track);
-        vgl_object_unref(d->session);
+        g_object_unref(d->track);
+        g_object_unref(d->session);
         g_free(d->rcpt);
         g_free(d->text);
         g_slice_free(RecommData, d);
@@ -1269,8 +1269,8 @@ controller_recomm_track                 (void)
         char *body = NULL;
         /* Keep this static to remember the previous value */
         static LastfmTrackComponent type = LASTFM_TRACK_COMPONENT_TRACK;
-        LastfmTrack *track = vgl_object_ref(nowplaying);
-        LastfmWsSession *sess = vgl_object_ref (session);
+        LastfmTrack *track = g_object_ref (nowplaying);
+        LastfmWsSession *sess = g_object_ref (session);
         gboolean accept;
         if (track->album[0] == '\0' && type == LASTFM_TRACK_COMPONENT_ALBUM) {
                 type = LASTFM_TRACK_COMPONENT_ARTIST;
@@ -1292,8 +1292,8 @@ controller_recomm_track                 (void)
                         controller_show_info(_("You must type a user name\n"
                                                "and a recommendation message."));
                 }
-                vgl_object_unref(track);
-                vgl_object_unref(sess);
+                g_object_unref(track);
+                g_object_unref(sess);
                 g_free(rcpt);
                 g_free(body);
         }
@@ -1338,8 +1338,8 @@ add_to_playlist_thread                  (gpointer data)
         added = lastfm_ws_add_to_playlist (d->session, d->track);
         gdk_threads_add_idle (add_to_playlist_idle, GINT_TO_POINTER (added));
 
-        vgl_object_unref (d->session);
-        vgl_object_unref (d->track);
+        g_object_unref (d->session);
+        g_object_unref (d->track);
         g_slice_free (AddToPlaylistData, d);
 
         return NULL;
@@ -1357,8 +1357,8 @@ controller_add_to_playlist              (void)
 
         g_return_if_fail (session != NULL && nowplaying != NULL);
 
-        track = vgl_object_ref (nowplaying);
-        sess = vgl_object_ref (session);
+        track = g_object_ref (nowplaying);
+        sess = g_object_ref (session);
 
         if (controller_confirm_dialog(
                     _("Really add this track to the playlist?"), FALSE)) {
@@ -1368,8 +1368,8 @@ controller_add_to_playlist              (void)
                 vgl_main_window_set_track_as_added_to_playlist (mainwin, TRUE);
                 g_thread_create (add_to_playlist_thread, data, FALSE, NULL);
         } else {
-                vgl_object_unref (track);
-                vgl_object_unref (sess);
+                g_object_unref (track);
+                g_object_unref (sess);
         }
 }
 
@@ -1396,7 +1396,7 @@ controller_play_radio_by_url_idle       (gpointer data)
                                         "for Last.fm subscribers"));
                 g_free (d->url);
         }
-        vgl_object_unref (d->session);
+        g_object_unref (d->session);
         g_slice_free (PlayRadioByUrlData, d);
         return FALSE;
 }
@@ -1439,7 +1439,7 @@ controller_play_radio_by_url_cb         (char *url)
                 controller_stop_playing ();
         } else {
                 PlayRadioByUrlData *data = g_slice_new (PlayRadioByUrlData);
-                data->session = vgl_object_ref (session);
+                data->session = g_object_ref (session);
                 data->url = url;
                 g_thread_create (controller_play_radio_by_url_thread,
                                  data, FALSE, NULL);
@@ -1843,7 +1843,7 @@ controller_run_app                      (const char *radio_url)
         /* --- From here onwards the app shuts down --- */
 
         if (session) {
-                vgl_object_unref (session);
+                g_object_unref (session);
                 session = NULL;
         }
         lastfm_pls_destroy(playlist);

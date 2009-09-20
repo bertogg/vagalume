@@ -14,8 +14,6 @@
 #include <glib.h>
 #include <glib-object.h>
 
-G_BEGIN_DECLS
-
 /*
  * This is a very minimalist object implementation based on GObject.
  *
@@ -123,30 +121,5 @@ G_BEGIN_DECLS
 #define VGL_DEFINE_TYPE(TN, t_n, DESTROY_FUNC)                        \
         VGL_DEFINE_TYPE_HEADER_FULL(TN, t_n, static)                  \
         VGL_DEFINE_TYPE_CODE(TN, t_n, DESTROY_FUNC)
-
-
-typedef struct {
-        int header;
-        volatile int refcount;
-        int objsize;
-        GDestroyNotify destroy_func;
-} VglObject;
-
-gpointer
-vgl_object_new_with_size                (int            objsize,
-                                         GDestroyNotify destroy_func);
-
-gpointer
-vgl_object_ref                          (gpointer ptr);
-
-void
-vgl_object_unref                        (gpointer ptr);
-
-
-#define vgl_object_new(type,func) \
-((type *) \
-vgl_object_new_with_size                (sizeof (type), func))
-
-G_END_DECLS
 
 #endif /* VGL_OBJECT_H */

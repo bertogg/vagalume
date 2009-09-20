@@ -10,6 +10,8 @@
 
 #include "playlist.h"
 
+VGL_DEFINE_TYPE (LastfmTrack, lastfm_track, lastfm_track_destroy)
+
 /**
  * Destroy a LastfmTrack object freeing all its allocated memory
  * @param track Track to be destroyed, or NULL
@@ -40,8 +42,7 @@ LastfmTrack *
 lastfm_track_new                        (void)
 {
         LastfmTrack *track;
-        track = vgl_object_new (LastfmTrack,
-                                (GDestroyNotify) lastfm_track_destroy);
+        track = lastfm_track_empty_new ();
         track->mutex = g_mutex_new();
         return track;
 }
@@ -85,7 +86,7 @@ lastfm_pls_size                         (LastfmPls *pls)
  * the track from the playlist (as it can only be played once).
  * @param pls The playlist
  * @return The next track (or NULL if the list is empty). It should be
- * unref'ed with vgl_object_unref() when no longer used.
+ * unref'ed when no longer used.
  */
 LastfmTrack *
 lastfm_pls_get_track                    (LastfmPls *pls)
@@ -134,7 +135,7 @@ lastfm_pls_clear                        (LastfmPls *pls)
         g_return_if_fail (pls != NULL);
         LastfmTrack *track;
         while ((track = lastfm_pls_get_track(pls)) != NULL) {
-                vgl_object_unref (track);
+                g_object_unref (track);
         }
 }
 
