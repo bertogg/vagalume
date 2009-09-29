@@ -23,6 +23,7 @@ typedef struct {
         const char *api_key;
         const char *api_secret;
         const gboolean old_str_api;
+        const gboolean free_streams;
 } VglServerData;
 
 /*
@@ -48,6 +49,7 @@ static const VglServerData default_srv_list[] = {
                 "http://post.audioscrobbler.com/",
                 "c00772ea9e00787179ce56e53bc51ec7",
                 "10d704729842d9ef0129694be78d529a",
+                FALSE,
                 FALSE
         },
         {
@@ -56,6 +58,7 @@ static const VglServerData default_srv_list[] = {
                 "http://turtle.libre.fm/",
                 "db2c2184ad684eac4adce3ed1bb4a3a0",
                 "14dbb2640e6856bd56d2179db4dcc0ff",
+                TRUE,
                 TRUE
         }
 };
@@ -79,7 +82,8 @@ vgl_server_new                          (const char *name,
                                          const char *rsp_base_url,
                                          const char *api_key,
                                          const char *api_secret,
-                                         gboolean    old_streaming_api)
+                                         gboolean    old_streaming_api,
+                                         gboolean    free_streams)
 {
         VglServer *srv;
 
@@ -95,6 +99,7 @@ vgl_server_new                          (const char *name,
         srv->api_key      = g_strdup (api_key);
         srv->api_secret   = g_strdup (api_secret);
         srv->old_str_api  = old_streaming_api;
+        srv->free_streams = free_streams;
 
         return srv;
 }
@@ -105,7 +110,8 @@ vgl_server_list_add                     (const char *name,
                                          const char *rsp_base_url,
                                          const char *api_key,
                                          const char *api_secret,
-                                         gboolean    old_streaming_api)
+                                         gboolean    old_streaming_api,
+                                         gboolean    free_streams)
 {
         VglServer *srv;
 
@@ -113,8 +119,8 @@ vgl_server_list_add                     (const char *name,
         g_return_val_if_fail (name && ws_base_url && rsp_base_url &&
                               api_key && api_secret, FALSE);
 
-        srv = vgl_server_new (name, ws_base_url, rsp_base_url,
-                              api_key, api_secret, old_streaming_api);
+        srv = vgl_server_new (name, ws_base_url, rsp_base_url, api_key,
+                              api_secret, old_streaming_api, free_streams);
         srv_list = g_list_append (srv_list, srv);
 
         return TRUE;
@@ -170,7 +176,7 @@ vgl_server_list_init                    (void)
                 vgl_server_list_add (s->name,
                                      s->ws_base_url, s->rsp_base_url,
                                      s->api_key, s->api_secret,
-                                     s->old_str_api);
+                                     s->old_str_api, s->free_streams);
                 g_debug ("Added server: %s", s->name);
         }
 }

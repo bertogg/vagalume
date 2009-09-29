@@ -1,5 +1,25 @@
 2009-09-29  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-server.h
+	* src/vgl-server.c
+	(vgl_server_new, vgl_server_list_add, vgl_server_list_init):
+	Add 'free_streams' attribute to VglServer to tell which servers
+	only stream music that is freely downloadable.
+
+	* src/protocol.h
+	* src/protocol.c
+	(lastfm_session_new, lastfm_parse_playlist)
+	(lastfm_request_playlist, lastfm_request_custom_playlist)
+	* src/lastfm-ws.c
+	(lastfm_ws_get_session, lastfm_ws_radio_get_playlist):
+	Add a 'free_stream' attribute to the legacy LastfmSession object.
+
+	* src/protocol.c
+	(lastfm_parse_track):
+	Set track->free_track_url if that server streams only free music.
+
+2009-09-29  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/protocol.c (lastfm_parse_track)
 	* src/audio.c (lastfm_audio_play):
 	Change the Jamendo stream URLs to MP3 when the playlist is being

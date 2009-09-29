@@ -27,13 +27,15 @@ typedef struct {
         char *base_url;
         char *base_path;
         LastfmPls *custom_pls;
+        gboolean free_streams;
 } LastfmSession;
 
 LastfmSession *
 lastfm_session_new                      (const char *username,
                                          const char *password,
                                          const char *handshake_url,
-                                         LastfmErr  *err);
+                                         LastfmErr  *err,
+                                         gboolean    free_streams);
 
 LastfmPls *
 lastfm_request_playlist                 (LastfmSession *s,
@@ -41,8 +43,9 @@ lastfm_request_playlist                 (LastfmSession *s,
                                          const char    *pls_title);
 
 LastfmPls *
-lastfm_parse_playlist                   (xmlDoc        *doc,
-                                         const char    *default_pls_title);
+lastfm_parse_playlist                   (xmlDoc     *doc,
+                                         const char *default_pls_title,
+                                         gboolean    free_streams);
 
 LastfmPls *
 lastfm_request_custom_playlist          (LastfmSession *s,

@@ -82,7 +82,8 @@ LastfmSession *
 lastfm_session_new                      (const char *username,
                                          const char *password,
                                          const char *handshake_url,
-                                         LastfmErr  *err)
+                                         LastfmErr  *err,
+                                         gboolean    free_streams)
 {
         g_return_val_if_fail (username && password && handshake_url, NULL);
         char *buffer = NULL;
@@ -107,6 +108,7 @@ lastfm_session_new                      (const char *username,
         s->id = g_strdup(g_hash_table_lookup(response, "session"));
         s->base_url = g_strdup(g_hash_table_lookup(response, "base_url"));
         s->base_path = g_strdup(g_hash_table_lookup(response, "base_path"));
+        s->free_streams = free_streams;
 
         g_hash_table_destroy(response);
 
@@ -232,7 +234,8 @@ lastfm_parse_track                      (xmlDoc     *doc,
                                          xmlNode    *node,
                                          LastfmPls  *pls,
                                          const char *pls_title,
-                                         gboolean    new_format)
+                                         gboolean    new_format,
+                                         gboolean    free_streams)
 {
         g_return_val_if_fail (doc && node && pls, FALSE);
 
@@ -278,6 +281,10 @@ lastfm_parse_track                      (xmlDoc     *doc,
                         g_free ((char *) track->stream_url);
                         track->stream_url = newstr;
                 }
+                if (free_streams) {
+                        g_free ((char *) track->free_track_url);
+                        track->free_track_url = g_strdup (track->stream_url);
+                }
                 lastfm_pls_add_track(pls, track);
                 retval = TRUE;
         }
@@ -293,8 +300,9 @@ lastfm_parse_track                      (xmlDoc     *doc,
  * @return A new playlist, or NULL if none was found
  */
 LastfmPls *
-lastfm_parse_playlist                   (xmlDoc        *doc,
-                                         const char    *default_pls_title)
+lastfm_parse_playlist                   (xmlDoc     *doc,
+                                         const char *default_pls_title,
+                                         gboolean    free_streams)
 {
         const xmlNode *tracklist, *node, *root;
         gboolean new_format = FALSE;
@@ -337,7 +345,8 @@ lastfm_parse_playlist                   (xmlDoc        *doc,
                 pls = lastfm_pls_new();
                 while (node != NULL) {
                         lastfm_parse_track (doc, node->xmlChildrenNode,
-                                            pls, pls_title, new_format);
+                                            pls, pls_title, new_format,
+                                            free_streams);
                         node = xml_find_node (node->next, "track");
                 }
                 if (lastfm_pls_size (pls) == 0) {
@@ -378,7 +387,8 @@ lastfm_request_playlist                 (LastfmSession *s,
         if (buffer != NULL) {
                 xmlDoc *doc = xmlParseMemory(buffer, bufsize);
                 if (doc != NULL) {
-                        pls = lastfm_parse_playlist (doc, pls_title);
+                        pls = lastfm_parse_playlist (doc, pls_title,
+                                                     s->free_streams);
                         xmlFree (doc);
                 } else {
                         g_warning ("Playlist is not an XML document");
@@ -413,7 +423,8 @@ lastfm_request_custom_playlist          (LastfmSession *s,
         if (buffer != NULL) {
                 xmlDoc *doc = xmlParseMemory(buffer, bufsize);
                 if (doc != NULL) {
-                        pls = lastfm_parse_playlist (doc, NULL);
+                        pls = lastfm_parse_playlist (doc, NULL,
+                                                     s->free_streams);
                         xmlFree (doc);
                 } else {
                         g_warning ("Playlist is not an XML document");

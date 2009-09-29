@@ -374,7 +374,8 @@ lastfm_ws_get_session                   (VglServer  *srv,
 
         if (retvalue) {
                 retvalue->v1sess = lastfm_session_new (user, pass,
-                                                       srv->old_hs_url, err);
+                                                       srv->old_hs_url, err,
+                                                       srv->free_streams);
         } else {
                 g_warning ("Unable to get session");
         }
@@ -481,7 +482,8 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
 
         if (doc != NULL) {
                 g_mutex_lock (session->mutex);
-                pls = lastfm_parse_playlist (doc, session->radio_name);
+                pls = lastfm_parse_playlist (doc, session->radio_name,
+                                             session->srv->free_streams);
                 g_mutex_unlock (session->mutex);
                 xmlFreeDoc (doc);
         }

@@ -24,6 +24,7 @@ typedef struct {
         const char *api_key;
         const char *api_secret;
         gboolean old_str_api;
+        gboolean free_streams;
 } VglServer;
 
 void
@@ -44,7 +45,8 @@ vgl_server_list_add                     (const char *name,
                                          const char *rsp_base_url,
                                          const char *api_key,
                                          const char *api_secret,
-                                         gboolean    old_streaming_api);
+                                         gboolean    old_streaming_api,
+                                         gboolean    free_streams);
 
 gboolean
 vgl_server_list_remove                  (const char *name);
