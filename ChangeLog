@@ -1,3 +1,8 @@
+2009-09-29  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/controller.c (check_session_thread):
+	Add idle handler _before_ getting the extra data.
+
 2009-09-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/dlwin.c (dlwin_download_file):

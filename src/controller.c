@@ -534,16 +534,19 @@ check_session_idle                      (gpointer userdata)
 static gpointer
 check_session_thread                    (gpointer userdata)
 {
+        gboolean success;
         CheckSessionData *data = userdata;
         g_return_val_if_fail (data != NULL, NULL);
 
         data->session = lastfm_ws_get_session (data->srv, data->user,
                                                data->pass, &(data->err));
-        if (data->session != NULL) {
-                get_user_extradata();
-        }
+        success = (data->session != NULL);
 
         gdk_threads_add_idle (check_session_idle, data);
+
+        if (success) {
+                get_user_extradata();
+        }
 
         return NULL;
 }
