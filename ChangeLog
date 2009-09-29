@@ -1,5 +1,12 @@
 2009-09-29  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/protocol.c (lastfm_parse_track)
+	* src/audio.c (lastfm_audio_play):
+	Change the Jamendo stream URLs to MP3 when the playlist is being
+	parsed.
+
+2009-09-29  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.c (check_session_thread):
 	Add idle handler _before_ getting the extra data.
 

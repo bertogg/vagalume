@@ -261,11 +261,22 @@ lastfm_parse_track                      (xmlDoc     *doc,
         } else if (!track->artist || track->artist[0] == '\0') {
                 g_debug("Found track with no artist, discarding it");
         } else {
+                const char *oggparam = "streamencoding=ogg2";
+                const char *mp3param = "streamencoding=mp31";
                 if (track->album_artist == NULL ||
                     !strcmp (track->artist, track->album_artist)) {
                         /* Don't waste memory */
                         g_free ((gpointer) track->album_artist);
                         track->album_artist = track->artist;
+                }
+                /* This is a hack to make Jamendo stream music in MP3,
+                   which is the only format that Vagalume currently
+                   supports */
+                if (strstr (track->stream_url, oggparam)) {
+                        char *newstr = string_replace (track->stream_url,
+                                                       oggparam, mp3param);
+                        g_free ((char *) track->stream_url);
+                        track->stream_url = newstr;
                 }
                 lastfm_pls_add_track(pls, track);
                 retval = TRUE;
