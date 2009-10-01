@@ -1288,7 +1288,7 @@
 
 	* configure.ac: Add configure setting to disable D-BUS support.
 
-	(thanks, Bernhard Fröhlich)
+	(thanks, Bernhard FrÃ¶hlich)
 
 2008-09-02  Alberto Garcia  <agarcia@igalia.com>
 
@@ -2270,7 +2270,7 @@
 	* configure.ac
 	* po/fi.po
 	* src/mainwin.c
-	Added Finnish translation (by Janne Mäkinen)
+	Added Finnish translation (by Janne MÃ¤kinen)
 
 2008-05-12  Alberto Garcia  <agarcia@igalia.com>
 
@@ -3447,7 +3447,7 @@
 
 	* src/audio.c
 	Add the 'audioconvert' GstElement to the pipeline. Solves the
-	"Internal data flow error" with some sinks (thanks, Robert-André
+	"Internal data flow error" with some sinks (thanks, Robert-AndrÃ©
 	Mauchin!)
 
 2008-02-08  Alberto Garcia  <agarcia@igalia.com>
