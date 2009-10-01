@@ -17,7 +17,7 @@ G_BEGIN_DECLS
 
 typedef struct {
         int header;
-        int refcount;
+        volatile int refcount;
         int objsize;
         GDestroyNotify destroy_func;
 } VglObject;
