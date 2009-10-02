@@ -6,6 +6,7 @@ List of features that need to be implemented (in no particular order):
 * History
 * Add a volume bar to control the volume graphically
 * Support changing the popularity of recommendations
+* Support multi-artist and multi-tag radios
 * Configuration setting to select different decoder/sinks
 * Drop down of favourite artists for similar artists radio
 * Add links to launch browser to go to last.fm page
