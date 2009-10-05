@@ -4,13 +4,13 @@
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
 #
-# Pēteris Caune <cuu508@gmail.com>, 2008.
+# Pēteris Caune <cuu508@gmail.com>, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-10-02 18:39+0200\n"
-"PO-Revision-Date: 2008-08-13 03:03+0200\n"
+"PO-Revision-Date: 2009-10-06 01:01+0200\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,19 +20,19 @@ msgstr ""
 
 #: ../data/vagalume.desktop.in.in.h:1
 msgid "Vagalume Last.fm Client"
-msgstr ""
+msgstr "Vagalume Last.fm klients"
 
 #: ../src/connection.c:58
 msgid "Error initializing internet connection manager"
 msgstr "Kļūda inicializējot tīkla savienojumu pārvaldnieku"
 
 #: ../src/controller.c:491
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to login to %s\n"
 "Check username and password"
 msgstr ""
-"Neizdodas pieslēgties Last.fm\n"
+"Neizdodas pieslēgties %s\n"
 "Pārbaudiet lietotājvārdu un paroli"
 
 #: ../src/controller.c:497
@@ -40,13 +40,12 @@ msgid "Network connection error"
 msgstr "Tīkla savienojuma kļūda"
 
 #: ../src/controller.c:603
-#, fuzzy
 msgid ""
 "You need to enter your\n"
 "username and password\n"
 "to be able to use this program."
 msgstr ""
-"Nepieciešams norādīt Last.fm\n"
+"Nepieciešams norādīt\n"
 "lietotājvārdu un paroli lai varētu lietot\n"
 "šo programmu."
 
@@ -55,18 +54,18 @@ msgid "No more content to play"
 msgstr "Nav vairāk ko spēlēt."
 
 #: ../src/controller.c:891
-#, fuzzy, c-format
+#, c-format
 msgid "Downloaded %s - %s"
-msgstr "Lejupielādē %s"
+msgstr "Lejupielādēts %s - %s"
 
 #: ../src/controller.c:895
-#, fuzzy, c-format
+#, c-format
 msgid "Error downloading %s - %s"
-msgstr "Lejupielādē %s"
+msgstr "Kļūda lejupielādējot %s - %s"
 
 #: ../src/controller.c:935
 msgid "Track already being downloaded"
-msgstr ""
+msgstr "Ieraksts jau tiek lejupielādēts"
 
 #: ../src/controller.c:940
 msgid "Download this track?"
@@ -77,9 +76,9 @@ msgid "File exists. Overwrite?"
 msgstr "Fails eksistē. Pārrakstīt?"
 
 #: ../src/controller.c:969
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s - %s"
-msgstr "Lejupielādē %s"
+msgstr "Lejupielādē %s - %s"
 
 #: ../src/controller.c:1011
 msgid "Artist added to bookmarks"
@@ -90,14 +89,12 @@ msgid "Track added to bookmarks"
 msgstr "Ieraksts pievienots grāmatzīmēm"
 
 #: ../src/controller.c:1024
-#, fuzzy
 msgid "Current radio added to bookmarks"
-msgstr "Pievienots grāmatzīmēm"
+msgstr "Pašreizējais radio pievienots grāmatzīmēm"
 
 #: ../src/controller.c:1027
-#, fuzzy
 msgid "Bookmark added"
-msgstr "Grāmatzīmes nosaukums"
+msgstr "Grāmatzīme pievienota"
 
 #: ../src/controller.c:1113
 msgid "Really mark track as loved?"
@@ -258,7 +255,7 @@ msgid "_Cancel"
 msgstr "_Atcelt"
 
 #: ../src/main.c:73
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage:\n"
 "  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
@@ -268,11 +265,13 @@ msgid ""
 "  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
-"Lietošana: %s [-c converter] [-d decoder] [-s sink] [lastfm radio adrese]\n"
+"Lietošana: \n"
+"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio adrese]\n"
 "\n"
 "  converter: GStreamer konvertators (noklusētais: '%s', 'none' lai "
 "atslēgtu)\n"
 "  decoder:   GStreamer dekoderis (noklusētais: '%s')\n"
+"  mixer:       GStreamer mikseris (noklusētais: '%s')\n"
 "  sink:      GStreamer mērķis (noklusētais: '%s')\n"
 
 #: ../src/main.c:92
@@ -287,11 +286,11 @@ msgstr "Lietošana: %s [lastfm radio adrese]\n"
 
 #: ../src/protocol.c:245
 msgid "(unknown radio)"
-msgstr ""
+msgstr "(nezināms radio)"
 
 #: ../src/uimisc.c:113
 msgid "Client for Last.fm and compatible services"
-msgstr ""
+msgstr "Last.fm un savietojamu servisu klients"
 
 #: ../src/uimisc.c:230
 msgid "German"
@@ -323,7 +322,7 @@ msgstr "Latviešu"
 
 #: ../src/uimisc.c:234
 msgid "Polish"
-msgstr ""
+msgstr "Poļu"
 
 #: ../src/uimisc.c:235
 msgid "Portuguese"
@@ -371,7 +370,7 @@ msgstr "Parole:"
 
 #: ../src/uimisc.c:508
 msgid "Service:"
-msgstr ""
+msgstr "Serviss:"
 
 #: ../src/uimisc.c:509
 msgid "Enable scrobbling:"
@@ -387,7 +386,6 @@ msgstr "Konts"
 
 #. Set help
 #: ../src/uimisc.c:560
-#, fuzzy
 msgid ""
 "* Username and password:\n"
 "From your account.\n"
@@ -402,10 +400,13 @@ msgid ""
 "Don't play music you've already listened to. Requires a Last.fm subscription."
 msgstr ""
 "* Lietotājvārds un parole:\n"
-"No jūsu Last.fm konta.\n"
+"No jūsu konta.\n"
+"\n"
+"* Serviss:\n"
+"Ar Last.fm savietojams serviss.\n"
 "\n"
 "* Dziesmu reģistrēšana:\n"
-"Rādīt noklausītās dziesmas Last.fm profilā.\n"
+"Rādīt noklausītās dziesmas jūsu profilā.\n"
 "\n"
 "* Atklājumu režīms:\n"
 "Nespēlēt mūziku, kas jau ir dzirdēta. Nepieciešams Last.fm abonements."
@@ -441,7 +442,7 @@ msgstr ""
 
 #: ../src/uimisc.c:621
 msgid "Automatically download free tracks"
-msgstr ""
+msgstr "Automātiski lejupielādēt brīvos ierakstus"
 
 #: ../src/uimisc.c:644
 msgid "Download"
@@ -449,7 +450,6 @@ msgstr "Lejupielādēt"
 
 #. Set help
 #: ../src/uimisc.c:647
-#, fuzzy
 msgid ""
 "* Download directory:\n"
 "Where to download mp3 files. Note that you can only download those songs "
@@ -457,7 +457,7 @@ msgid ""
 msgstr ""
 "* Lejupielādes mape:\n"
 "Kur saglabāt mp3 failus. Ievērojiet, ka saglabāt var tikai tās dziesmas, "
-"kuras Last.fm piedāvā kā brīvi lejupielādējamas."
+"kuras atzīmētas kā brīvi lejupielādējamas."
 
 #: ../src/uimisc.c:666
 msgid "IM message template:"
@@ -485,7 +485,6 @@ msgstr "Atjaunināt IM statusu"
 
 #. Set help
 #: ../src/uimisc.c:704
-#, fuzzy
 msgid ""
 "Vagalume can update the status message of your IM client each time a new "
 "song starts. The template can contain the following keywords:\n"
@@ -500,6 +499,7 @@ msgstr ""
 "\n"
 "{artist}: Izpildītāja vārds\n"
 "{title}: Dziesmas nosaukums\n"
+"{station}: Radio stacija\n"
 "{version}: Vagalume versija"
 
 #: ../src/uimisc.c:734
@@ -555,19 +555,19 @@ msgstr "Lietotāja uzstādījumi"
 #. Create all widgets
 #: ../src/uimisc.c:970
 msgid "Stop automatically"
-msgstr ""
+msgstr "Apturēt atskaņošanu automātiski"
 
 #: ../src/uimisc.c:971
 msgid "When do you want to stop playback?"
-msgstr ""
+msgstr "Kad vēlaties apturēt atskaņošanu?"
 
 #: ../src/uimisc.c:972
 msgid "minutes"
-msgstr ""
+msgstr "minūtes"
 
 #: ../src/uimisc.c:980
 msgid "Don't stop"
-msgstr ""
+msgstr "Neapturēt"
 
 #: ../src/uimisc.c:981
 msgid "Stop after this track"
@@ -575,18 +575,16 @@ msgstr "Apturēt atskaņošanu pēc šī ieraksta"
 
 #. Translators: the full text is "Stop after ____ minutes"
 #: ../src/uimisc.c:983
-#, fuzzy
 msgid "Stop after"
-msgstr "Apturēt atskaņošanu pēc šī ieraksta"
+msgstr "Apturēt pēc"
 
 #: ../src/uimisc.c:1112
 msgid "User tag radio"
-msgstr ""
+msgstr "Lietotāja iezīmes radio"
 
 #: ../src/uimisc.c:1114
-#, fuzzy
 msgid "Tag:"
-msgstr "Pievienot tagu..."
+msgstr "Pievienot iezīmi..."
 
 #: ../src/uimisc.c:1168
 msgid "Artist: "
@@ -656,29 +654,24 @@ msgid "Recommendation message"
 msgstr "Rekomendācijas ziņa"
 
 #: ../src/uimisc.h:20
-#, fuzzy
 msgid "_Recommend to..."
-msgstr "Rekomendēt..."
+msgstr "_Rekomendēt..."
 
 #: ../src/uimisc.h:21
-#, fuzzy
 msgid "_Tags..."
-msgstr "Tagi..."
+msgstr "_Iezīmes..."
 
 #: ../src/uimisc.h:22
-#, fuzzy
 msgid "_Add to playlist"
-msgstr "Pievienot repertuāram"
+msgstr "_Pievienot repertuāram"
 
 #: ../src/uimisc.h:23
-#, fuzzy
 msgid "_Love this track"
-msgstr "Atzīmēt šo ierakstu kā mīļu"
+msgstr "_Atzīmēt šo ierakstu kā mīļu"
 
 #: ../src/uimisc.h:24
-#, fuzzy
 msgid "_Ban this track"
-msgstr "Aizliegt šo ierakstu"
+msgstr "Ai_zliegt šo ierakstu"
 
 #. Configure widgets
 #: ../src/vgl-bookmark-window.c:302
@@ -833,9 +826,8 @@ msgid "Playlist..."
 msgstr "Repertuārs..."
 
 #: ../src/vgl-main-window.c:858
-#, fuzzy
 msgid "Recommendations..."
-msgstr "Rekomendācija nosūtīta"
+msgstr "Rekomendācijas..."
 
 #. Actions
 #: ../src/vgl-main-window.c:886
@@ -843,18 +835,16 @@ msgid "_Actions"
 msgstr "_Darbības"
 
 #: ../src/vgl-main-window.c:894
-#, fuzzy
 msgid "Stop after ..."
-msgstr "Apturēt atskaņošanu pēc šī ieraksta"
+msgstr "Apturēt pēc ..."
 
 #: ../src/vgl-main-window.c:945
 msgid "_Bookmarks"
 msgstr "_Grāmatzīmes"
 
 #: ../src/vgl-main-window.c:948
-#, fuzzy
 msgid "Add bookmark..."
-msgstr "Pievienot grāmatzīmi"
+msgstr "Pievienot grāmatzīmi..."
 
 #: ../src/vgl-main-window.c:950
 msgid "Manage bookmarks..."
@@ -869,9 +859,8 @@ msgid "Bookmark this track..."
 msgstr "Pievienot šo ierakstu grāmatzīmēm..."
 
 #: ../src/vgl-main-window.c:953
-#, fuzzy
 msgid "Bookmark this radio..."
-msgstr "Pievienot šo ierakstu grāmatzīmēm..."
+msgstr "Pievienot šo radio grāmatzīmēm..."
 
 #. Help
 #: ../src/vgl-main-window.c:979
