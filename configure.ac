@@ -99,13 +99,13 @@ echo $have_gtk_2_12
 # g_timeout_add_seconds requires gtk 2.14
 echo -n "checking for Gtk2 >= 2.14... "
 if $PKG_CONFIG --atleast-version=2.14 gtk+-2.0; then
-   have_timeout_seconds="yes"
+   have_gtk_2_14="yes"
    AC_DEFINE([HAVE_GDK_THREADS_ADD_TIMEOUT_SECONDS],[1],
              [Defined if gdk_threads_add_timeout_seconds() exists])
 else
-   have_timeout_seconds="no"
+   have_gtk_2_14="no"
 fi
-echo $have_timeout_seconds
+echo $have_gtk_2_14
 
 # GChecksum requires glib 2.16
 echo -n "checking for glib >= 2.16... "
@@ -252,7 +252,11 @@ if test "$PLATFORM" = "maemo"; then
    elif test "$libossovers" = "1"; then
       PLATFORMVERS=3
    elif test "$libossovers" = "2"; then
-      PLATFORMVERS=4
+      if test "$have_gtk_2_14" = "yes"; then
+         PLATFORMVERS=5
+      else
+         PLATFORMVERS=4
+      fi
    else
       AC_MSG_ERROR([Unknown Maemo version])
    fi
@@ -329,8 +333,10 @@ if test "$PLATFORM" = "maemo"; then
       AC_DEFINE([MAEMO2], [], [Defined if building for Maemo 2 (gregale)])
    elif test "$PLATFORMVERS" = "3"; then
       AC_DEFINE([MAEMO3], [], [Defined if building for Maemo 3 (bora)])
-   else
+   elif test "$PLATFORMVERS" = "4"; then
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
+   else
+      AC_DEFINE([MAEMO5], [], [Defined if building for Maemo 5 (fremantle)])
    fi
 
    if test "$PLATFORMVERS" -le "4"; then

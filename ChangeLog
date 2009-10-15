@@ -1,5 +1,10 @@
 2009-10-08  Alberto Garcia  <agarcia@igalia.com>
 
+	* configure.ac:
+	Detect Maemo 5
+
+2009-10-08  Alberto Garcia  <agarcia@igalia.com>
+
 	* configure.ac
 	* src/audio.c:
 	Use #ifdef HAVE_DSPMP3SINK rather than #ifdef MAEMO in audio.c
