@@ -2,35 +2,34 @@
 # Copyright (C) 2007,2008 Alberto Garcia Gonzalez
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
-# Rodrigo Flores <rodrigomarquesflores@gmail.com>, 2008.
-#
+# Rodrigo Flores <rodrigomarquesflores@gmail.com>, 2008, 2009
 msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.5.1-1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-10-02 18:39+0200\n"
-"PO-Revision-Date: 2008-07-25 01:07+0200\n"
-"Last-Translator: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
-"Language-Team: Rodrigo Flores <rodrigomarquesflores@gmail.com>\n"
+"PO-Revision-Date: 2009-10-15 20:30+0200\n"
+"Last-Translator: Rodrigo Flores <mail@rodrigoflores.org>\n"
+"Language-Team: Rodrigo Flores <mail@rodrigoflores.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../data/vagalume.desktop.in.in.h:1
 msgid "Vagalume Last.fm Client"
-msgstr ""
+msgstr "Cliente do Last.fm Vagalume"
 
 #: ../src/connection.c:58
 msgid "Error initializing internet connection manager"
-msgstr "Erro ao iniciar o gerenciador de conexões da internet"
+msgstr "Erro ao inicializar o gerenciador de conexões da internet"
 
 #: ../src/controller.c:491
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to login to %s\n"
 "Check username and password"
 msgstr ""
-"Não foi possível fazer login no Last.fm\n"
+"Não foi possível fazer login no %s\n"
 "Verifique o nome de usuário e senha"
 
 #: ../src/controller.c:497
@@ -38,33 +37,32 @@ msgid "Network connection error"
 msgstr "Erro de conexão da rede"
 
 #: ../src/controller.c:603
-#, fuzzy
 msgid ""
 "You need to enter your\n"
 "username and password\n"
 "to be able to use this program."
 msgstr ""
 "Você deve digitar seu nome de usuário\n"
-"e senha do Last.fm para poder utilizar\n"
-"este programa."
+"e senha para poder utilizar este \n"
+"programa."
 
 #: ../src/controller.c:665
 msgid "No more content to play"
 msgstr "Sem mais conteúdo para reproduzir"
 
 #: ../src/controller.c:891
-#, fuzzy, c-format
+#, c-format
 msgid "Downloaded %s - %s"
-msgstr "Fazendo o download de %s"
+msgstr "Download realizado %s - %s"
 
 #: ../src/controller.c:895
-#, fuzzy, c-format
+#, c-format
 msgid "Error downloading %s - %s"
-msgstr "Fazendo o download de %s"
+msgstr "Erro ao fazer download de %s - %s"
 
 #: ../src/controller.c:935
 msgid "Track already being downloaded"
-msgstr ""
+msgstr "Download da faixa sendo realizado"
 
 #: ../src/controller.c:940
 msgid "Download this track?"
@@ -75,9 +73,9 @@ msgid "File exists. Overwrite?"
 msgstr "O arquivo existe. Sobrescrevê-lo?"
 
 #: ../src/controller.c:969
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s - %s"
-msgstr "Fazendo o download de %s"
+msgstr "Fazendo o download de %s - %s"
 
 #: ../src/controller.c:1011
 msgid "Artist added to bookmarks"
@@ -88,14 +86,12 @@ msgid "Track added to bookmarks"
 msgstr "Faixa adicionada aos marcadores"
 
 #: ../src/controller.c:1024
-#, fuzzy
 msgid "Current radio added to bookmarks"
-msgstr "Artista adicionado aos marcadores"
+msgstr "Rádio atual adicionada aos marcadores"
 
 #: ../src/controller.c:1027
-#, fuzzy
 msgid "Bookmark added"
-msgstr "Nome do marcador"
+msgstr "Marcador adicionado"
 
 #: ../src/controller.c:1113
 msgid "Really mark track as loved?"
@@ -160,9 +156,10 @@ msgid ""
 "or it is only available\n"
 "for Last.fm subscribers"
 msgstr ""
-"URL de rádio inválido. Ou esta\n"
-"rádio não existe ou é somente disponível\n"
-"para quem tem conta no Last.fm"
+"URL de rádio inválido.\n"
+"Ou esta rádio não existe\n"
+"ou é somente disponível para\n"
+"quem tem conta no Last.fm"
 
 #: ../src/controller.c:1489 ../src/controller.c:1644
 msgid "Enter tag"
@@ -214,7 +211,7 @@ msgstr "Um URL de uma rádio do Last.fm deve começar com lastfm://"
 
 #: ../src/controller.c:1771
 msgid "Unable to initialize DBUS"
-msgstr "Não foi possível iniciar DBUS"
+msgstr "Não foi possível iniciar o DBUS"
 
 #: ../src/controller.c:1807
 msgid "Error initializing audio system"
@@ -255,7 +252,7 @@ msgid "_Cancel"
 msgstr "_Cancelar"
 
 #: ../src/main.c:73
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage:\n"
 "  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
@@ -265,12 +262,14 @@ msgid ""
 "  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
-"Uso: %s [-c conversor] [-d decodificador] [-s sink] [lastfm rádio url]\n"
+"Uso:\n"
+"  %s [-c conversor] [-d decodificador] [-m mixer] [-s sink] [lastfm rádio url]\n"
 "\n"
-"  conversor:     conversor do GStreamer (padrão: '%s', 'none' para "
+"  conversor:     conversor do GStreamer (padrão: \"%s\", 'none' para "
 "desabilitar)\n"
-"  decodificador: decodificador do GStreamer (padrão: '%s')\n"
-"  sink:          sink do GStreamer (padrão: '%s')\n"
+"  decodificador: decodificador do GStreamer (padrão: \"%s\")\n"
+"  mixer:         mixer do GStreamer (padrão: \"%s\")\n"
+"  sink:          sink do GStreamer (padrão: \"%s\")\n"
 
 #: ../src/main.c:92
 #, c-format
@@ -284,11 +283,11 @@ msgstr "Uso: %s [lastfm rádio endereço]\n"
 
 #: ../src/protocol.c:245
 msgid "(unknown radio)"
-msgstr ""
+msgstr "(rádio desconhecida)"
 
 #: ../src/uimisc.c:113
 msgid "Client for Last.fm and compatible services"
-msgstr ""
+msgstr "Cliente para o Last.fm e serviços compatíveis"
 
 #: ../src/uimisc.c:230
 msgid "German"
@@ -320,7 +319,7 @@ msgstr "Lituano"
 
 #: ../src/uimisc.c:234
 msgid "Polish"
-msgstr ""
+msgstr "Polonês"
 
 #: ../src/uimisc.c:235
 msgid "Portuguese"
@@ -368,7 +367,7 @@ msgstr "Senha:"
 
 #: ../src/uimisc.c:508
 msgid "Service:"
-msgstr ""
+msgstr "Serviço:"
 
 #: ../src/uimisc.c:509
 msgid "Enable scrobbling:"
@@ -384,7 +383,6 @@ msgstr "Conta"
 
 #. Set help
 #: ../src/uimisc.c:560
-#, fuzzy
 msgid ""
 "* Username and password:\n"
 "From your account.\n"
@@ -399,10 +397,13 @@ msgid ""
 "Don't play music you've already listened to. Requires a Last.fm subscription."
 msgstr ""
 "* Nome de usuário e senha:\n"
-"Da sua conta do Last.fm.\n"
+"Da sua conta.\n"
+"\n"
+"* Service:\n"
+"Serviço compatível ao Last.fm para se conectar.\n"
 "\n"
 "* Scrobbling:\n"
-"Mostra a música que você ouve no seu perfil do Last.fm.\n"
+"Mostra a música que você ouve no seu perfil.\n"
 "\n"
 "* Discovery mode:\n"
 "Não reproduz a música que você já ouviu. Requer uma conta do Last.fm."
@@ -430,7 +431,7 @@ msgid ""
 "Only the hostname (can be an IP address) is required."
 msgstr ""
 "* Utilizar proxy HTTP:\n"
-"Permite este a utilizar um proxy HTTP.\n"
+"Permite utilizar um proxy HTTP.\n"
 "\n"
 "* Endereço do proxy:\n"
 "usuário:senha@nome da máquina:porta\n"
@@ -438,7 +439,7 @@ msgstr ""
 
 #: ../src/uimisc.c:621
 msgid "Automatically download free tracks"
-msgstr ""
+msgstr "Faça automaticamente o download de faixas gratuitas"
 
 #: ../src/uimisc.c:644
 msgid "Download"
@@ -446,7 +447,6 @@ msgstr "Download"
 
 #. Set help
 #: ../src/uimisc.c:647
-#, fuzzy
 msgid ""
 "* Download directory:\n"
 "Where to download mp3 files. Note that you can only download those songs "
@@ -454,7 +454,7 @@ msgid ""
 msgstr ""
 "* Diretório de Download:\n"
 "Onde fazer o download de arquivos mp3. Perceba que você só poderá fazer "
-"odownload de músicas marcadas como Download Gratuito pelo Last.fm."
+"o download de músicas marcadas como Download Gratuito pelo Last.fm."
 
 #: ../src/uimisc.c:666
 msgid "IM message template:"
@@ -482,7 +482,6 @@ msgstr "Atualizar o status do MI:"
 
 #. Set help
 #: ../src/uimisc.c:704
-#, fuzzy
 msgid ""
 "Vagalume can update the status message of your IM client each time a new "
 "song starts. The template can contain the following keywords:\n"
@@ -493,10 +492,11 @@ msgid ""
 "{version}: Vagalume version"
 msgstr ""
 "O Vagalume pode atualizar a mensagem de status do seu cliente de MI toda vez "
-"que uma música começa. O modelo pode conter as seguintespalavras chave:\n"
+"que uma música começa. O modelo pode conter as seguintes palavras chave:\n"
 "\n"
 "{artist}: Nome do artista\n"
 "{title}: Nome da música\n"
+"{station}: Estação de rádio\n"
 "{version}: versão do Vagalume"
 
 #: ../src/uimisc.c:734
@@ -552,19 +552,19 @@ msgstr "Configurações do usuário"
 #. Create all widgets
 #: ../src/uimisc.c:970
 msgid "Stop automatically"
-msgstr ""
+msgstr "Parar automaticamente"
 
 #: ../src/uimisc.c:971
 msgid "When do you want to stop playback?"
-msgstr ""
+msgstr "Quando você quer parar a reprodução?"
 
 #: ../src/uimisc.c:972
 msgid "minutes"
-msgstr ""
+msgstr "minutos"
 
 #: ../src/uimisc.c:980
 msgid "Don't stop"
-msgstr ""
+msgstr "Não parar"
 
 #: ../src/uimisc.c:981
 msgid "Stop after this track"
@@ -572,18 +572,16 @@ msgstr "Parar depois desta faixa"
 
 #. Translators: the full text is "Stop after ____ minutes"
 #: ../src/uimisc.c:983
-#, fuzzy
 msgid "Stop after"
-msgstr "Parar depois desta faixa"
+msgstr "Parar depois de"
 
 #: ../src/uimisc.c:1112
 msgid "User tag radio"
-msgstr ""
+msgstr "Etiqueta de rádio do usuário"
 
 #: ../src/uimisc.c:1114
-#, fuzzy
 msgid "Tag:"
-msgstr "Etiqueta..."
+msgstr "Etiqueta:"
 
 #: ../src/uimisc.c:1168
 msgid "Artist: "
@@ -653,29 +651,24 @@ msgid "Recommendation message"
 msgstr "Mensagem de recomendação"
 
 #: ../src/uimisc.h:20
-#, fuzzy
 msgid "_Recommend to..."
-msgstr "Recomendar..."
+msgstr "_Recomendar a..."
 
 #: ../src/uimisc.h:21
-#, fuzzy
 msgid "_Tags..."
-msgstr "Etiquetas..."
+msgstr "E_tiquetas..."
 
 #: ../src/uimisc.h:22
-#, fuzzy
 msgid "_Add to playlist"
-msgstr "Adicionar à lista de reprodução"
+msgstr "_Adicionar à lista de reprodução"
 
 #: ../src/uimisc.h:23
-#, fuzzy
 msgid "_Love this track"
 msgstr "Marcar esta faixa como preferida"
 
 #: ../src/uimisc.h:24
-#, fuzzy
 msgid "_Ban this track"
-msgstr "Banir esta faixa"
+msgstr "_Banir esta faixa"
 
 #. Configure widgets
 #: ../src/vgl-bookmark-window.c:302
@@ -783,7 +776,7 @@ msgstr "Música etiquetada..."
 
 #: ../src/vgl-main-window.c:798
 msgid "Artists similar to..."
-msgstr "Artistas semalhantes a..."
+msgstr "Artistas semelhantes a..."
 
 #: ../src/vgl-main-window.c:799
 msgid "Enter URL..."
@@ -830,9 +823,8 @@ msgid "Playlist..."
 msgstr "Lista de Reprodução..."
 
 #: ../src/vgl-main-window.c:858
-#, fuzzy
 msgid "Recommendations..."
-msgstr "Recomendação enviada"
+msgstr "Recomendações..."
 
 #. Actions
 #: ../src/vgl-main-window.c:886
@@ -840,18 +832,16 @@ msgid "_Actions"
 msgstr "_Ações"
 
 #: ../src/vgl-main-window.c:894
-#, fuzzy
 msgid "Stop after ..."
-msgstr "Parar depois desta faixa"
+msgstr "Parar depois ..."
 
 #: ../src/vgl-main-window.c:945
 msgid "_Bookmarks"
 msgstr "_Marcadores"
 
 #: ../src/vgl-main-window.c:948
-#, fuzzy
 msgid "Add bookmark..."
-msgstr "Adicionar marcador"
+msgstr "Adicionar marcador..."
 
 #: ../src/vgl-main-window.c:950
 msgid "Manage bookmarks..."
@@ -866,7 +856,6 @@ msgid "Bookmark this track..."
 msgstr "Marcar esta faixa..."
 
 #: ../src/vgl-main-window.c:953
-#, fuzzy
 msgid "Bookmark this radio..."
 msgstr "Marcar esta faixa..."
 
