@@ -25,7 +25,7 @@
 #include "util.h"
 #include "compat.h"
 
-#ifdef MAEMO
+#ifdef HAVE_DSPMP3SINK
 static const char *default_decoders[] = { NULL };
 static const char *default_sinks[] = { "dspmp3sink", NULL };
 static const char *default_converters[] = { NULL };
@@ -201,7 +201,7 @@ audio_element_create                    (const char **elem_names,
         return retval;
 }
 
-#ifndef MAEMO
+#ifndef HAVE_DSPMP3SINK
 static GstElement *
 audio_decoder_create                    (void)
 {
@@ -310,7 +310,7 @@ lastfm_audio_init                       (void)
 #endif
         pipeline = gst_pipeline_new (NULL);
         source = gst_element_factory_make ("fdsrc", NULL);
-#ifdef MAEMO
+#ifdef HAVE_DSPMP3SINK
         decoder = source; /* Unused, this is only for the assertions */
 #else
         decoder = audio_decoder_create();
@@ -325,7 +325,7 @@ lastfm_audio_init                       (void)
         gst_bus_add_watch (bus, bus_call, NULL);
         gst_object_unref (bus);
 
-#ifdef MAEMO
+#ifdef HAVE_DSPMP3SINK
         gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
         gst_element_link_many (source, sink, NULL);
         lastfm_audio_set_volume(80);
@@ -363,7 +363,7 @@ lastfm_audio_play                       (const char *url,
         http_thread = g_thread_create(get_audio_thread, data, TRUE, NULL);
         g_object_set(G_OBJECT(source), "fd", http_pipe[0], NULL);
         gst_element_set_state(pipeline, GST_STATE_PLAYING);
-#ifdef MAEMO
+#ifdef HAVE_DSPMP3SINK
         /* It seems that dspmp3sink ignores the previous volume level
          * when playing a new song. Workaround: change it and then
          * restore the original value */
@@ -422,7 +422,7 @@ int
 lastfm_audio_get_volume                 (void)
 {
         int vol = 0;
-#ifdef MAEMO
+#ifdef HAVE_DSPMP3SINK
         g_return_val_if_fail(sink != NULL, 0);
         g_return_val_if_fail(g_object_class_find_property(
                                      G_OBJECT_GET_CLASS(sink), "volume"), 0);
@@ -449,7 +449,7 @@ lastfm_audio_get_volume                 (void)
 void
 lastfm_audio_set_volume                 (int vol)
 {
-#ifdef MAEMO
+#ifdef HAVE_DSPMP3SINK
         g_return_if_fail(sink != NULL);
         g_return_if_fail(g_object_class_find_property(
                                  G_OBJECT_GET_CLASS(sink),"volume"));

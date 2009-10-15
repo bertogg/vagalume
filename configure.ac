@@ -333,6 +333,10 @@ if test "$PLATFORM" = "maemo"; then
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
    fi
 
+   if test "$PLATFORMVERS" -le "4"; then
+      AC_DEFINE([HAVE_DSPMP3SINK], [1], [Defined if using dspmp3sink])
+   fi
+
    VAGALUME_CONF_FULLPATH="/home/user/$VAGALUME_CONFIG_DIR"
    AC_SUBST(VAGALUME_CONF_FULLPATH)
 
