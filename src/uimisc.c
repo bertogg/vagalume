@@ -805,8 +805,13 @@ ui_usercfg_window                       (GtkWindow   *parent,
         win.helpbtn = gtk_button_new_from_stock(GTK_STOCK_HELP);
         gtk_box_pack_start(GTK_BOX(win.dialog->action_area), win.helpbtn,
                            FALSE, FALSE, 0);
+#ifdef MAEMO5
+        gtk_box_reorder_child (GTK_BOX (win.dialog->action_area),
+                               win.helpbtn, 0);
+#else
         gtk_button_box_set_child_secondary (
                 GTK_BUTTON_BOX (win.dialog->action_area), win.helpbtn, TRUE);
+#endif /* MAEMO5 */
 
         usercfg_add_account_settings(&win, *cfg);
         usercfg_add_connection_settings(&win, *cfg);

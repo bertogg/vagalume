@@ -1,3 +1,8 @@
+2009-10-22  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/uimisc.c (ui_usercfg_window):
+	Change position of 'Help' button in Maemo 5
+
 2009-10-15  Rodrigo Flores <rodrigomarquesflores@gmail.com>
 
 	* po/pt_BR.po: Updated Portuguese (Brazilian) translation
