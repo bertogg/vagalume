@@ -1,3 +1,14 @@
+2009-10-24  Alberto Garcia  <agarcia@igalia.com>
+
+	* Makefile.am
+	* data/servers.xml
+	* src/vgl-server.[ch]:
+	Read the list of servers from a config file rather than having
+	them hardcoded in the source code.
+
+	* src/controller.c (controller_run_app):
+	Show a fatal error if there are no servers defined.
+
 2009-10-24  Andrea Grandi  <a.grandi@gmail.com>
 
 	* po/it.po: Updated Italian translation

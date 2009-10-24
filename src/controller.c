@@ -1800,8 +1800,13 @@ controller_run_app                      (const char *radio_url)
         playlist = lastfm_pls_new();
         rsp_init (vgl_controller);
 
-        vgl_server_list_init ();
-        check_usercfg(FALSE);
+        if (!errmsg && !vgl_server_list_init()) {
+                errmsg = _("Error reading the server list file");
+        }
+
+        if (!errmsg) {
+                check_usercfg(FALSE);
+        }
 
         if (!errmsg && !lastfm_audio_init()) {
                 controller_show_error(_("Error initializing audio system"));

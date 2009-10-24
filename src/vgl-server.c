@@ -10,58 +10,15 @@
 
 #include "vgl-server.h"
 #include "globaldefs.h"
+#include "userconfig.h"
+#include "util.h"
 
 static gboolean initialized = FALSE;
 
+#define DEFAULT_SERVER_LIST APP_DATA_DIR "/servers.xml"
+
 #define RSP_PARAMS "?hs=true&p=1.2&c=" LASTFM_APP_ID "&v=" LASTFM_APP_VERSION
 #define HANDSHAKE_PARAMS "radio/handshake.php?version=1.5&platform=" APP_OS_LC
-
-typedef struct {
-        const char *name;
-        const char *ws_base_url;
-        const char *rsp_base_url;
-        const char *api_key;
-        const char *api_secret;
-        const gboolean old_str_api;
-        const gboolean free_streams;
-} VglServerData;
-
-/*
- * This list contains the API key and secret, used to identify the
- * Last.fm client.
- *
- * Note that these values are specific to Vagalume and meant to be
- * secret, but since this is an open source program we can't really
- * hide them. Please do not use them in other applications.
- *
- * To obtain a free Last.fm API key and secret for your app (or for
- * testing purposes) follow this link:
- *
- * http://www.last.fm/api/account
- *
- * Other services (e.g. Libre.fm) don't check the API key, so any
- * random value is allowed.
- */
-static const VglServerData default_srv_list[] = {
-        {
-                "Last.fm",
-                "http://ws.audioscrobbler.com/",
-                "http://post.audioscrobbler.com/",
-                "c00772ea9e00787179ce56e53bc51ec7",
-                "10d704729842d9ef0129694be78d529a",
-                FALSE,
-                FALSE
-        },
-        {
-                "Libre.fm",
-                "http://alpha.libre.fm/",
-                "http://turtle.libre.fm/",
-                "db2c2184ad684eac4adce3ed1bb4a3a0",
-                "14dbb2640e6856bd56d2179db4dcc0ff",
-                TRUE,
-                TRUE
-        }
-};
 
 static GList *srv_list = NULL;
 
@@ -119,6 +76,14 @@ vgl_server_list_add                     (const char *name,
         g_return_val_if_fail (name && ws_base_url && rsp_base_url &&
                               api_key && api_secret, FALSE);
 
+        /* Do nothing if there's already a server with the same name */
+        srv = vgl_server_list_find_by_name (name);
+        if (srv != NULL) {
+                g_debug ("Trying to add %s server again, ignoring...", name);
+                vgl_object_unref (srv);
+                return FALSE;
+        }
+
         srv = vgl_server_new (name, ws_base_url, rsp_base_url, api_key,
                               api_secret, old_streaming_api, free_streams);
         srv_list = g_list_append (srv_list, srv);
@@ -163,22 +128,98 @@ vgl_server_list_remove                  (const char *name)
         return FALSE;
 }
 
-void
+static void
+parse_server                            (xmlDoc  *doc,
+                                         xmlNode *node)
+{
+        char *name, *ws_base_url, *rsp_base_url, *key, *secret;
+        gboolean old_str_api, free_streams;
+
+        xml_get_string (doc, node, "name", &name);
+        xml_get_string (doc, node, "ws_base_url", &ws_base_url);
+        xml_get_string (doc, node, "rsp_base_url", &rsp_base_url);
+        xml_get_string (doc, node, "api_key", &key);
+        xml_get_string (doc, node, "api_secret", &secret);
+        xml_get_bool (doc, node, "old_streaming_api", &old_str_api);
+        xml_get_bool (doc, node, "free_streams", &free_streams);
+
+        if ( name &&  ws_base_url &&  rsp_base_url &&  key &&  secret &&
+            *name && *ws_base_url && *rsp_base_url && *key && *secret) {
+                vgl_server_list_add (name, ws_base_url, rsp_base_url,
+                                     key, secret, old_str_api, free_streams);
+                g_debug ("Added server: %s", name);
+        } else {
+                g_warning ("Error parsing server: %s",
+                           (name && *name) ? name : "(unknown)");
+        }
+
+        g_free (name);
+        g_free (ws_base_url);
+        g_free (rsp_base_url);
+        g_free (key);
+        g_free (secret);
+}
+
+static void
+parse_server_file                       (const char *filename)
+{
+        xmlDoc *doc = NULL;
+        xmlNode *root = NULL;
+        xmlNode *node = NULL;
+
+        if (file_exists (filename)) {
+                doc = xmlParseFile (filename);
+        }
+
+        if (doc != NULL) {
+                xmlChar *version;
+                root = xmlDocGetRootElement (doc);
+                version = xmlGetProp (root, (xmlChar *) "version");
+                if (version == NULL ||
+                    !xmlStrEqual (root->name, (xmlChar *) "servers")) {
+                        g_warning ("Error parsing servers file");
+                } else if (!xmlStrEqual (version, (xmlChar *) "1")) {
+                        g_warning ("This servers file is version %s, but "
+                                   "Vagalume " APP_VERSION " can only "
+                                   "read version 1", version);
+                } else {
+                        node = (xmlNode *) xml_find_node (
+                                root->xmlChildrenNode, "server");
+                }
+                if (version != NULL) xmlFree (version);
+        }
+
+        if (node != NULL) {
+                g_debug ("Parsing server file %s", filename);
+        } else {
+                g_debug ("Unable to read %s, skipping", filename);
+        }
+
+        while (node != NULL) {
+                parse_server (doc, node->xmlChildrenNode);
+                node = (xmlNode *) xml_find_node (node->next, "server");
+        }
+
+        if (doc != NULL) xmlFreeDoc (doc);
+}
+
+gboolean
 vgl_server_list_init                    (void)
 {
-        int i;
-
-        g_return_if_fail (!initialized);
+        const char *cfgdir;
+        g_return_val_if_fail (!initialized, srv_list != NULL);
         initialized = TRUE;
 
-        for (i = 0; i < G_N_ELEMENTS (default_srv_list); i++) {
-                const VglServerData *s = default_srv_list+i;
-                vgl_server_list_add (s->name,
-                                     s->ws_base_url, s->rsp_base_url,
-                                     s->api_key, s->api_secret,
-                                     s->old_str_api, s->free_streams);
-                g_debug ("Added server: %s", s->name);
+        cfgdir = vgl_user_cfg_get_cfgdir ();
+        if (cfgdir != NULL) {
+                char *filename = g_strconcat (cfgdir, "/servers.xml", NULL);
+                parse_server_file (filename);
+                g_free (filename);
         }
+
+        parse_server_file (DEFAULT_SERVER_LIST);
+
+        return (srv_list != NULL);
 }
 
 void
@@ -205,7 +246,6 @@ VglServer *
 vgl_server_get_default                  (void)
 {
         g_return_val_if_fail (initialized, NULL);
-        g_return_val_if_fail (srv_list, NULL);
 
-        return vgl_object_ref (srv_list->data);
+        return srv_list ? vgl_object_ref (srv_list->data) : NULL;
 }

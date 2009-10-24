@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This is the default list of servers that Vagalume can stream music
+  from.
+
+  Apart from the server address and some extra information, there is
+  an API key and an API secret for each one. These values are used to
+  identify the Last.fm client.
+
+  IMPORTANT: these values are specific to Vagalume and meant to be
+  secret, but since this is an open source program we can't really
+  hide them. Please do not use them in other applications or in
+  modified versions of Vagalume.
+
+  To obtain a free Last.fm API key and secret for your app (or for
+  testing purposes) follow this link:
+
+  http://www.last.fm/api/account
+
+  Other services such as Libre.fm don't check the API key, so any
+  random value is allowed.
+
+  ~/.vagalume/servers.xml will also be parsed if it exists.
+  If two servers with the same name are defined in both files, the one
+  defined in this file will be ignored.
+-->
+
+<servers version="1" revision="1">
+  <server>
+    <name>Last.fm</name>
+    <ws_base_url>http://ws.audioscrobbler.com/</ws_base_url>
+    <rsp_base_url>http://post.audioscrobbler.com/</rsp_base_url>
+    <api_key>c00772ea9e00787179ce56e53bc51ec7</api_key>
+    <api_secret>10d704729842d9ef0129694be78d529a</api_secret>
+    <old_streaming_api>0</old_streaming_api>
+    <free_streams>0</free_streams>
+  </server>
+  <server>
+    <name>Libre.fm</name>
+    <ws_base_url>http://alpha.libre.fm/</ws_base_url>
+    <rsp_base_url>http://turtle.libre.fm/</rsp_base_url>
+    <api_key>db2c2184ad684eac4adce3ed1bb4a3a0</api_key>
+    <api_secret>14dbb2640e6856bd56d2179db4dcc0ff</api_secret>
+    <old_streaming_api>1</old_streaming_api>
+    <free_streams>1</free_streams>
+  </server>
+</servers>

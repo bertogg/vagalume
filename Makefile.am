@@ -38,7 +38,7 @@ manpages = vagalume.1
 
 pixmap_DATA = data/icons/vagalume.xpm
 icon48_DATA = data/icons/48x48/*
-appdata_DATA = data/cover/$(SCR_RESOLUTION)/cover.png
+appdata_DATA = data/cover/$(SCR_RESOLUTION)/cover.png data/servers.xml
 
 desktopentry_DATA = data/vagalume.desktop
 @INTLTOOL_DESKTOP_RULE@

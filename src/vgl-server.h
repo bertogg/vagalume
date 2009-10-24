@@ -27,7 +27,7 @@ typedef struct {
         gboolean free_streams;
 } VglServer;
 
-void
+gboolean
 vgl_server_list_init                    (void);
 
 void
