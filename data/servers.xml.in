@@ -27,6 +27,7 @@
 -->
 
 <servers version="1" revision="1">
+  <!-- BEGIN_LAST_FM -->
   <server>
     <name>Last.fm</name>
     <ws_base_url>http://ws.audioscrobbler.com/</ws_base_url>
@@ -36,6 +37,7 @@
     <old_streaming_api>0</old_streaming_api>
     <free_streams>0</free_streams>
   </server>
+  <!-- END_LAST_FM -->
   <server>
     <name>Libre.fm</name>
     <ws_base_url>http://alpha.libre.fm/</ws_base_url>

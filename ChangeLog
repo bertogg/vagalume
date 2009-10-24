@@ -1,5 +1,12 @@
 2009-10-24  Alberto Garcia  <agarcia@igalia.com>
 
+	* configure.ac
+	* data/servers.xml.in
+	* src/Makefile.am:
+	Disable the Last.fm server in Maemo 5.
+
+2009-10-24  Alberto Garcia  <agarcia@igalia.com>
+
 	* Makefile.am
 	* data/servers.xml
 	* src/vgl-server.[ch]:

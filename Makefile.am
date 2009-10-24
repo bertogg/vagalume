@@ -17,6 +17,7 @@ MAINTAINERCLEANFILES = \
 	config.sub \
 	config.sub.cdbs-orig \
 	configure \
+	data/servers.xml \
 	data/vagalume.desktop \
 	data/vagalume.desktop.in \
 	data/vagalume.service \
@@ -83,6 +84,15 @@ data/vagalume.desktop.in: Makefile data/vagalume.desktop.in.in
 	$(edit) data/vagalume.desktop.in.in > data/vagalume.desktop.in
 	if test -f "data/vagalume.desktop.$(PLATFORM)" ; then \
 	   cat "data/vagalume.desktop.$(PLATFORM)" >> data/vagalume.desktop.in ; \
+	fi
+
+data/servers.xml: Makefile data/servers.xml.in
+	rm -f data/servers.xml
+	if test "x$(DISABLE_LAST_FM)" = "xyes"; then \
+	   sed '/BEGIN_LAST_FM/,/END_LAST_FM/d' \
+	      data/servers.xml.in > data/servers.xml ; \
+	else \
+	   grep -v '_LAST_FM' data/servers.xml.in > data/servers.xml ; \
 	fi
 
 install-exec-hook:

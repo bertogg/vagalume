@@ -337,6 +337,8 @@ if test "$PLATFORM" = "maemo"; then
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
    else
       AC_DEFINE([MAEMO5], [], [Defined if building for Maemo 5 (fremantle)])
+      # Sorry, no Last.fm allowed on mobile phones
+      AC_SUBST(DISABLE_LAST_FM, "yes")
    fi
 
    if test "$PLATFORMVERS" -le "4"; then
