@@ -299,32 +299,37 @@ if test "$PLATFORM" = "maemo"; then
    fi
 
    # These are optional and only required for the Maemo status bar plugin
-   echo "Checking dependencies to compile the Maemo status bar plugin"
-   have_sb_plugin="yes"
-   PKG_CHECK_MODULES(hildondesktop, libhildondesktop, [], [have_sb_plugin="no"])
-   PKG_CHECK_MODULES(hildonwm, libhildonwm, [], [have_sb_plugin="no"])
-   PKG_CHECK_MODULES(gconf2, gconf-2.0, [], [have_sb_plugin="no"])
-   PKG_CHECK_MODULES(dbus, dbus-1, [], [have_sb_plugin="no"])
-
-   if test "$have_sb_plugin" = "yes"; then
-      SBPLUGIN_CFLAGS="$Gtk2_CFLAGS $hildon_CFLAGS $libosso_CFLAGS \
-                       $hildondesktop_CFLAGS $hildonwm_CFLAGS \
-                       $gconf2_CFLAGS $dbus_CFLAGS"
-      SBPLUGIN_LIBS="$Gtk2_LIBS $hildon_LIBS $libosso_LIBS \
-                     $hildondesktop_LIBS $hildonwm_LIBS \
-                     $gconf2_LIBS $dbus_LIBS"
-      sbplugindesktopentrydir=`$PKG_CONFIG osso-af-settings \
-                               --variable=statusbardesktopentrydir`
-      sbplugindir=`$PKG_CONFIG osso-af-settings --variable=hildondesktoplibdir`
-
-      if test "x$sbplugindesktopentrydir" = "x"; then
-         AC_MSG_ERROR([Unable to find .desktop directory])
-      elif test "x$sbplugindir" = "x"; then
-         AC_MSG_ERROR([Unable to find hildon desktop libs directory])
-      fi
-      echo "All required libs found: compiling Maemo status bar plugin"
+   if test "x$PLATFORMVERS" = "x5"; then
+      echo "The Maemo status bar plugin is not available in Maemo 5"
+      have_sb_plugin="no"
    else
-      echo "Some libs are missing: Unable to compile Maemo status bar plugin"
+      echo "Checking dependencies to compile the Maemo status bar plugin"
+      have_sb_plugin="yes"
+      PKG_CHECK_MODULES(hildondesktop, libhildondesktop, [], [have_sb_plugin="no"])
+      PKG_CHECK_MODULES(hildonwm, libhildonwm, [], [have_sb_plugin="no"])
+      PKG_CHECK_MODULES(gconf2, gconf-2.0, [], [have_sb_plugin="no"])
+      PKG_CHECK_MODULES(dbus, dbus-1, [], [have_sb_plugin="no"])
+
+      if test "$have_sb_plugin" = "yes"; then
+         SBPLUGIN_CFLAGS="$Gtk2_CFLAGS $hildon_CFLAGS $libosso_CFLAGS \
+                          $hildondesktop_CFLAGS $hildonwm_CFLAGS \
+                          $gconf2_CFLAGS $dbus_CFLAGS"
+         SBPLUGIN_LIBS="$Gtk2_LIBS $hildon_LIBS $libosso_LIBS \
+                        $hildondesktop_LIBS $hildonwm_LIBS \
+                        $gconf2_LIBS $dbus_LIBS"
+         sbplugindesktopentrydir=`$PKG_CONFIG osso-af-settings \
+                                  --variable=statusbardesktopentrydir`
+         sbplugindir=`$PKG_CONFIG osso-af-settings --variable=hildondesktoplibdir`
+
+         if test "x$sbplugindesktopentrydir" = "x"; then
+            AC_MSG_ERROR([Unable to find .desktop directory])
+         elif test "x$sbplugindir" = "x"; then
+            AC_MSG_ERROR([Unable to find hildon desktop libs directory])
+         fi
+         echo "All required libs found: compiling Maemo status bar plugin"
+      else
+         echo "Some libs are missing: Unable to compile Maemo status bar plugin"
+      fi
    fi
 
    AC_DEFINE([MAEMO], [], [Defined if building for Maemo])
