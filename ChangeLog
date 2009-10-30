@@ -1,5 +1,10 @@
 2009-10-30  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/audio.c:
+	Set GStreamer elements to play MP3 in Maemo 5.
+
+2009-10-30  Alberto Garcia  <agarcia@igalia.com>
+
 	* configure.ac:
 	Disable the Maemo status bar plugin in Maemo 5.
 

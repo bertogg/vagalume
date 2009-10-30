@@ -29,6 +29,10 @@
 static const char *default_decoders[] = { NULL };
 static const char *default_sinks[] = { "dspmp3sink", NULL };
 static const char *default_converters[] = { NULL };
+#elsif defined(MAEMO5)
+static const char *default_decoders[] = { "mp3parse", NULL };
+static const char *default_sinks[] = { "pulsesink", NULL };
+static const char *default_converters[] = { "nokiamp3dec", NULL };
 #else
 static const char *default_decoders[] = { "mad", "flump3dec", NULL };
 static const char *default_sinks[] = { "gconfaudiosink", NULL };
