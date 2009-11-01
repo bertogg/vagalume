@@ -1,3 +1,9 @@
+2009-11-01  Alberto Garcia  <agarcia@igalia.com>
+
+	* configure.ac
+	* src/util.c (get_md5_hash):
+	Drop support for libgcrypt.
+
 2009-10-30  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/audio.c:

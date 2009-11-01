@@ -121,10 +121,6 @@ AC_CHECK_LIB(c, getopt,
    AC_DEFINE([HAVE_GETOPT],[1],[Defined if getopt() exists]),
    have_getopt="no")
 
-# Check if libgcrypt is installed
-AC_CHECK_LIB(gcrypt, gcry_md_hash_buffer,
-   have_libgcrypt="yes", have_libgcrypt="no")
-
 # Check if libcurl has curl_easy_escape()
 AC_CHECK_LIB(curl, curl_easy_escape,
    AC_DEFINE([HAVE_CURL_EASY_ESCAPE],[1],[If curl_easy_escape() exists]),
@@ -170,42 +166,6 @@ elif test "$use_dbus_glib" = "yes"; then
    EXTRA_CFLAGS="$EXTRA_CFLAGS $dbus_glib_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $dbus_glib_LIBS"
 fi
-
-# Check whether to use libgcrypt
-AC_ARG_ENABLE(libgcrypt, [
-  --enable-libgcrypt      use libgcrypt if glib doesn't support MD5
-                          checksums (default in Gnome if libgcrypt exists)
-  --disable-libgcrypt     prefer internal MD5 implementation over libgcrypt
-                          (default in Maemo)],
-  use_libgcrypt=$enableval, use_libgcrypt=default)
-
-# If neither --enable nor --disable have been specified, select the default
-if test "$use_libgcrypt" = "default"; then
-   if test "$PLATFORM" = "gnome"; then
-      use_libgcrypt="$have_libgcrypt"
-   else
-      use_libgcrypt="no"
-   fi
-fi
-
-# Decide the actual MD5 implementation to be used
-if test "$have_gchecksum" = "yes"; then
-   AC_DEFINE([HAVE_GCHECKSUM],[1],[Defined if GChecksum exists])
-   use_libgcrypt="no"
-   md5_method="glib"
-elif test "$use_libgcrypt" = "yes" -a "$have_libgcrypt" = "no"; then
-   AC_MSG_ERROR([ligcrypt not found, install it or use --disable-libgcrypt])
-elif test "$use_libgcrypt" = "yes"; then
-   AC_DEFINE([HAVE_LIBGCRYPT],[1],[Defined if compiling with libgcrypt])
-   EXTRA_LIBS="$EXTRA_LIBS -lgcrypt"
-   md5_method="libgcrypt"
-else
-   use_internalmd5="yes"
-   md5_method="internal implementation"
-fi
-echo "Using $md5_method to compute md5sums"
-AM_CONDITIONAL(USE_INTERNAL_MD5, test "x$use_internalmd5" = "xyes")
-AM_CONDITIONAL(USE_LIBGCRYPT, test "x$use_libgcrypt" = "xyes")
 
 # Check whether to use the "Set IM status" feature
 AC_ARG_ENABLE(im-status, [
@@ -434,6 +394,14 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 ### Everything has been checked, now define Automake variables ###
 ##################################################################
 AM_CONDITIONAL(MAEMO_PLATFORM, test "$PLATFORM" = "maemo")
+
+AM_CONDITIONAL(USE_INTERNAL_MD5, test "x$have_gchecksum" != "xyes")
+if test "$have_gchecksum" = "yes"; then
+   AC_DEFINE([HAVE_GCHECKSUM],[1],[Defined if GLib has support for GChecksum])
+   md5_method="glib"
+else
+   md5_method="internal implementation"
+fi
 
 if test "$scr_resolution" = "desktop"; then
    AC_DEFINE([SCR_RESOLUTION_DESKTOP], [1], [Compiled for a desktop system])

@@ -12,11 +12,7 @@
 #include "http.h"
 
 #ifndef HAVE_GCHECKSUM
-#   ifdef HAVE_LIBGCRYPT
-#      include <gcrypt.h>
-#   else
-#      include "md5/md5.h"
-#   endif
+#   include "md5/md5.h"
 #endif
 
 #include <string.h>
@@ -39,14 +35,10 @@ get_md5_hash                            (const char *str)
         unsigned char digest[digestlen];
         guint i;
 
-#   ifdef HAVE_LIBGCRYPT
-        gcry_md_hash_buffer(GCRY_MD_MD5, digest, str, strlen(str));
-#   else
         md5_state_t state;
         md5_init(&state);
         md5_append(&state, (const md5_byte_t *)str, strlen(str));
         md5_finish(&state, digest);
-#   endif /* HAVE_LIBGCRYPT */
         char *hexdigest = g_malloc(digestlen*2 + 1);
         for (i = 0; i < digestlen; i++) {
                 sprintf(hexdigest + 2*i, "%02x", digest[i]);
