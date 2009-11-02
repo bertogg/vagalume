@@ -9,7 +9,11 @@ if pkg-config --exists libosso; then # Compile for Maemo
     elif test "$libossovers" = "1"; then
         MAEMOVERS=3
     elif test "$libossovers" = "2"; then
-        MAEMOVERS=4
+        if ! pkg-config --atleast-version 2.14 gtk+-2.0; then
+            MAEMOVERS=4
+        else
+            MAEMOVERS=5
+        fi
     else
         echo "Unknown maemo version"
         exit 1

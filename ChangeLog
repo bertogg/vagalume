@@ -1,3 +1,9 @@
+2009-11-03  Alberto Garcia  <agarcia@igalia.com>
+
+	* build-package.sh
+	* debian/control.maemo5:
+	Added control file for Maemo 5.
+
 2009-11-01  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac
