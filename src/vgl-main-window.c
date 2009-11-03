@@ -1042,7 +1042,9 @@ vgl_main_window_init                    (VglMainWindow *self)
         priv->progressbar_text = g_string_sized_new(30);
         g_string_assign(priv->progressbar_text, " ");
         /* Window */
-#ifdef USE_HILDON_WINDOW
+#if defined(MAEMO5)
+        gtk_container_set_border_width(GTK_CONTAINER(win), 10);
+#elif defined(USE_HILDON_WINDOW)
         gtk_container_set_border_width(GTK_CONTAINER(win), 2);
 #else
         gtk_window_set_default_size(win, 500, -1);
@@ -1097,6 +1099,10 @@ vgl_main_window_init                    (VglMainWindow *self)
         priv->progressbar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
         gtk_progress_set_text_alignment(GTK_PROGRESS(priv->progressbar),
                                         0.5, 0.5);
+#ifdef MAEMO5
+        gtk_widget_set_name ((GtkWidget *) priv->progressbar,
+                             "small-progress-bar");
+#endif
         /* Layout */
         gtk_misc_set_alignment(GTK_MISC(priv->playlist), 0, 0.5);
         gtk_misc_set_alignment(GTK_MISC(priv->artist), 0, 0.5);

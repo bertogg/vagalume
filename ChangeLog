@@ -1,5 +1,10 @@
 2009-11-03  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/vgl-main-window.c (vgl_main_window_init):
+	Maemo 5: make the progress bar smaller and the border thicker.
+
+2009-11-03  Alberto Garcia  <agarcia@igalia.com>
+
 	* Makefile.am
 	* configure.ac:
 	Install small icons under icons/hicolor/scalable/apps in Maemo 5
