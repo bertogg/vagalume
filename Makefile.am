@@ -59,17 +59,15 @@ icon26dir = $(datadir)/icons/hicolor/26x26/apps
 icon26_DATA = data/icons/26x26/*
 iconscalabledir = $(datadir)/icons/hicolor/scalable/apps
 iconscalable_DATA = data/icons/scalable/*
-themebigicondir = $(appdatadir)/icons/hicolor/scalable/apps
 themebigicon_DATA = data/buttons/big/*.png
-themesmallicondir = $(appdatadir)/icons/hicolor/50x50/apps
 themesmallicon_DATA = data/buttons/small/*.png
 backupconfdir = @BACKUP_CONFIGURATION_DIR@
 backupconf_DATA = data/vagalume.conf
 restoresettingsexecscriptdir = @RESTORE_SETTINGS_SCRIPTS_DIR@
 restoresettingsexecscript_SCRIPTS = data/vagalume-rfs.sh
 else
-themeicondir = $(appdatadir)/icons/hicolor/scalable/actions
-themeicon_DATA = data/buttons/big/*.svg data/buttons/small/*.svg
+themebigicon_DATA = data/buttons/big/*.svg
+themesmallicon_DATA = data/buttons/small/*.svg
 man1_MANS = $(manpages)
 endif
 

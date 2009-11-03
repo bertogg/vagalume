@@ -15,6 +15,9 @@ IT_PROG_INTLTOOL([0.35.0], [no-xml])
 
 # Some variables
 VAGALUME_CONFIG_DIR=".vagalume"
+appdatadir="\${datadir}/vagalume"
+themebigicondir="\${appdatadir}/icons/hicolor/scalable/apps"
+themesmallicondir="\${appdatadir}/icons/hicolor/scalable/apps"
 
 # Defines for config.h
 AC_DEFINE_UNQUOTED([KERNEL_NAME],"`uname -s`",[Name of the kernel])
@@ -308,6 +311,7 @@ if test "$PLATFORM" = "maemo"; then
 
    if test "$PLATFORMVERS" -le "4"; then
       AC_DEFINE([HAVE_DSPMP3SINK], [1], [Defined if using dspmp3sink])
+      themesmallicondir="\${appdatadir}/icons/hicolor/50x50/apps"
    fi
 
    VAGALUME_CONF_FULLPATH="/home/user/$VAGALUME_CONFIG_DIR"
@@ -450,7 +454,9 @@ if test "$have_gst_mixer" = "yes"; then
    EXTRA_LIBS="$EXTRA_LIBS $Gst_mixer_LIBS"
 fi
 
-AC_SUBST(appdatadir, "\${datadir}/vagalume")
+AC_SUBST(appdatadir)
+AC_SUBST(themebigicondir)
+AC_SUBST(themesmallicondir)
 AC_SUBST(pixmapdir, "\${datadir}/pixmaps")
 AC_SUBST(icon48dir, "\${datadir}/icons/hicolor/48x48/apps")
 AC_SUBST(serviceentrydir)

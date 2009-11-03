@@ -1,5 +1,11 @@
 2009-11-03  Alberto Garcia  <agarcia@igalia.com>
 
+	* Makefile.am
+	* configure.ac:
+	Install small icons under icons/hicolor/scalable/apps in Maemo 5
+
+2009-11-03  Alberto Garcia  <agarcia@igalia.com>
+
 	* build-package.sh
 	* debian/control.maemo5:
 	Added control file for Maemo 5.
