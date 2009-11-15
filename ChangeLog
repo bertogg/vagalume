@@ -1,5 +1,16 @@
 2009-11-15  Alberto Garcia  <agarcia@igalia.com>
 
+	* data/cover/*/cover.png
+	* data/cover/cover.svg
+	New CD case image to place the album cover artwork.
+	Image designed by Otto Krüja.
+
+	* src/vgl-main-window.c (vgl_main_window_init)
+	(vgl_main_window_set_state, vgl_main_window_set_album_cover):
+	Replace the old cover frame with the CD case.
+
+2009-11-15  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-main-window.c:
 	Remove old copyright line
 

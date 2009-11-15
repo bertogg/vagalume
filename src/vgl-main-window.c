@@ -20,23 +20,25 @@
 #include "compat.h"
 
 #if defined(SCR_RESOLUTION_800X480)
-#        define ALBUM_COVER_SIZE 200
-#        define COVER_FRAME_SIZE 230
+#        define COVER_FRAME_HEIGHT 215
+#        define COVER_FRAME_WIDTH 230
 #        define BIGBUTTON_IMG_SIZE 64
 #        define SMALLBUTTON_IMG_SIZE 50
 #elif defined(SCR_RESOLUTION_1024X600)
-#        define ALBUM_COVER_SIZE 230
-#        define COVER_FRAME_SIZE 250
+#        define COVER_FRAME_HEIGHT 233
+#        define COVER_FRAME_WIDTH 250
 #        define BIGBUTTON_IMG_SIZE 98
 #        define SMALLBUTTON_IMG_SIZE 82
 #else
-#        define ALBUM_COVER_SIZE 110
-#        define COVER_FRAME_SIZE 130
+#        define COVER_FRAME_HEIGHT 121
+#        define COVER_FRAME_WIDTH 130
 #        define BIGBUTTON_IMG_SIZE 48
 #        define SMALLBUTTON_IMG_SIZE 24
 #endif
 
-#define BIGBUTTON_SIZE ((COVER_FRAME_SIZE - 5) / 2)
+#define ALBUM_COVER_PADDING 2
+#define ALBUM_COVER_SIZE (COVER_FRAME_HEIGHT - 2 * ALBUM_COVER_PADDING)
+#define BIGBUTTON_SIZE ((COVER_FRAME_WIDTH - 5) / 2)
 
 #ifdef USE_HILDON_WINDOW
 #        define PARENT_CLASS_TYPE HILDON_TYPE_WINDOW
@@ -180,7 +182,6 @@ vgl_main_window_set_album_cover         (VglMainWindow *w,
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         GdkPixbuf *pixbuf = get_pixbuf_from_image(data, size, ALBUM_COVER_SIZE);
         gtk_image_set_from_pixbuf (GTK_IMAGE (w->priv->album_cover), pixbuf);
-        gtk_widget_set_sensitive (w->priv->album_cover, TRUE);
         if (pixbuf != NULL) g_object_unref(pixbuf);
 }
 
@@ -440,7 +441,7 @@ vgl_main_window_set_state               (VglMainWindow      *w,
                 gtk_widget_set_sensitive (priv->addplbutton, FALSE);
                 gtk_widget_set_sensitive (priv->settings, FALSE);
                 gtk_window_set_title(GTK_WINDOW(w), APP_NAME);
-                gtk_widget_set_sensitive(priv->album_cover, FALSE);
+                vgl_main_window_set_album_cover (w, NULL, 0);
                 break;
         default:
                 g_critical("Unknown ui state received: %d", state);
@@ -1089,9 +1090,12 @@ vgl_main_window_init                    (VglMainWindow *self)
         image_box_style->bg_pixmap_name[GTK_STATE_INSENSITIVE] = image_box_bg;
         gtk_widget_modify_style(image_box, image_box_style);
         gtk_widget_set_size_request(GTK_WIDGET(image_box),
-                                    COVER_FRAME_SIZE, COVER_FRAME_SIZE);
+                                    COVER_FRAME_WIDTH, COVER_FRAME_HEIGHT);
         priv->album_cover = gtk_image_new();
         gtk_container_add(GTK_CONTAINER(image_box), priv->album_cover);
+        gtk_misc_set_alignment (GTK_MISC (priv->album_cover), 1.0, 0.5);
+        gtk_misc_set_padding (GTK_MISC (priv->album_cover),
+                              ALBUM_COVER_PADDING, ALBUM_COVER_PADDING);
         /* Menu */
         menu = create_main_menu(self, accel);
         /* Progress bar */
