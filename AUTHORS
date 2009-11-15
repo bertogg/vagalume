@@ -8,8 +8,11 @@ Mario Sanchez Prada <msanchez@igalia.com>
 * vagalumectl and D-BUS enhancements
 * Other minor changes
 
+Otto Krüja <ottokrueja@gmx.net>
+* Icons
+
 Felipe Erias Morandeira <femorandeira@igalia.com>
-* Icons, UI enhancements
+* UI improvements and original Vagalume icon
 
 Xabier Rodríguez Calvar <xrcalvar@igalia.com>
 * Help with ConIc support, Maemo hw event handlers and backup

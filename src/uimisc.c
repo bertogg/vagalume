@@ -106,7 +106,7 @@ static const char *authors[] = {
         NULL
 };
 static const char *artists[] = {
-        "Felipe Erias Morandeira\n<femorandeira@igalia.com>",
+        "Otto Krüja\n<ottokrueja@gmx.net>",
         NULL
 };
 
