@@ -10,7 +10,7 @@ Package: vagalume
 Architecture: any
 Depends: ${shlibs:Depends}, librsvg2-common, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good, gstreamer0.10-plugins-ugly | gstreamer0.10-fluendo-mp3
 Recommends: dbus
-Description: GTK+-based client for the Last.fm online radio service
+Description: GTK+-based client for Last.fm and compatible radio services
  Vagalume is a Last.fm client designed for the GNOME desktop
  environment. It's small and provides the basic Last.fm features, such
  as scrobbling, tags, recommendations, etc. Vagalume is also designed

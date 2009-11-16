@@ -8,7 +8,7 @@ Standards-Version: 3.7.3
 Package: vagalume
 Architecture: any
 Depends: ${shlibs:Depends}, gstreamer0.10-mpegaudioparse-maemo, gstreamer0.10-nokia-speech
-Description: GTK+-based client for the Last.fm online radio service
+Description: Client for Last.fm and compatible radio services
  Vagalume is a Last.fm client designed for the GNOME desktop
  environment. It's small and provides the basic Last.fm features, such
  as scrobbling, tags, recommendations, etc. Vagalume is also designed
