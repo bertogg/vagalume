@@ -57,7 +57,7 @@ static VglMixer mixer = { 0 };
 static const char *default_mixers[] = { NULL };
 #endif
 
-static int failed_tracks = 0;
+static volatile gboolean http_req_success = FALSE;
 
 static int http_pipe[2] = { -1, -1 };
 static GThread *http_thread = NULL;
@@ -84,24 +84,19 @@ get_audio_thread                        (gpointer userdata)
         get_audio_thread_data *data = (get_audio_thread_data *) userdata;
         GSList *headers = NULL;
         char *cookie = NULL;
-        gboolean transfer_ok;
+        http_req_success = FALSE;
         if (data->session_id != NULL) {
                 cookie = g_strconcat("Cookie: Session=", data->session_id,
                                      NULL);
                 headers = g_slist_append(headers, cookie);
         }
-        transfer_ok = http_get_to_fd(data->url, http_pipe[1], headers);
-        if (!audio_started) transfer_ok = FALSE;
+        http_req_success = http_get_to_fd (data->url, http_pipe[1], headers);
+        if (!audio_started) http_req_success = FALSE;
         g_free(data->url);
         g_free(data->session_id);
         g_free(cookie);
         g_slice_free(get_audio_thread_data, data);
         g_slist_free(headers);
-        if (transfer_ok) {
-                g_atomic_int_set (&failed_tracks, 0);
-        } else {
-                g_atomic_int_inc (&failed_tracks);
-        }
         return NULL;
 }
 
@@ -116,8 +111,12 @@ audio_started_cb_handler                (gpointer data)
 static gboolean
 gst_eos_handler                         (gpointer data)
 {
-        if (failed_tracks == 3) {
-                g_atomic_int_set (&failed_tracks, 0);
+        static int failed_tracks = 0;
+        if (http_req_success) {
+                failed_tracks = 0;
+                controller_skip_track ();
+        } else if (++failed_tracks == 3) {
+                failed_tracks = 0;
                 controller_stop_playing ();
                 controller_show_warning ("Connection error");
         } else {
@@ -141,7 +140,6 @@ bus_call                                (GstBus     *bus,
 
                 g_warning ("Error: %s", err->message);
                 g_error_free (err);
-                g_atomic_int_inc (&failed_tracks);
         } /* No, I haven't forgotten the break here */
         case GST_MESSAGE_EOS:
                 gdk_threads_add_idle (gst_eos_handler, NULL);

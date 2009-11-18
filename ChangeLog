@@ -1,5 +1,10 @@
 2009-11-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/audio.c (get_audio_thread, gst_eos_handler, bus_call):
+	Change method use to compute the number of failed tracks.
+
+2009-11-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/http.c (+create_curl_handle, http_get_to_fd)
 	(http_download_file, http_get_buffer, http_post_buffer):
 	Set a connection timeout to all HTTP calls.
