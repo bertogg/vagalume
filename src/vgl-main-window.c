@@ -1030,7 +1030,7 @@ vgl_main_window_init                    (VglMainWindow *self)
 {
         VglMainWindowPrivate *priv = VGL_MAIN_WINDOW_GET_PRIVATE(self);
         GtkWindow *win = GTK_WINDOW(self);
-        GtkBox *vbox, *centralbox;
+        GtkBox *mainvbox, *vbox, *centralbox;
         GtkBox *image_box_holder, *image_box_holder2, *labelbox;
         GtkBox *buttonshbox, *secondary_bbox, *secondary_bar_vbox;
         GtkWidget *menu;
@@ -1042,16 +1042,13 @@ vgl_main_window_init                    (VglMainWindow *self)
         priv->progressbar_text = g_string_sized_new(30);
         g_string_assign(priv->progressbar_text, " ");
         /* Window */
-#if defined(MAEMO5)
-        gtk_container_set_border_width(GTK_CONTAINER(win), 10);
-#elif defined(USE_HILDON_WINDOW)
-        gtk_container_set_border_width(GTK_CONTAINER(win), 2);
-#else
+#ifndef USE_HILDON_WINDOW
         gtk_window_set_default_size(win, 500, -1);
 #endif
         gtk_window_add_accel_group(win, accel);
         gtk_window_set_icon_from_file(win, APP_ICON, NULL);
         /* Boxes */
+        mainvbox = GTK_BOX(gtk_vbox_new(FALSE, 5));
         vbox = GTK_BOX(gtk_vbox_new(FALSE, 5));
         centralbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         image_box_holder = GTK_BOX(gtk_hbox_new(FALSE, 0));
@@ -1060,6 +1057,11 @@ vgl_main_window_init                    (VglMainWindow *self)
         buttonshbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         secondary_bbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         secondary_bar_vbox = GTK_BOX(gtk_vbox_new(FALSE, 2));
+#if defined(MAEMO5)
+        gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
+#else
+        gtk_container_set_border_width (GTK_CONTAINER (vbox), 2);
+#endif
         /* Buttons */
         priv->playbutton = image_button_new(&play_button);
         priv->stopbutton = image_button_new(&stop_button);
@@ -1147,12 +1149,13 @@ vgl_main_window_init                    (VglMainWindow *self)
                            GTK_WIDGET(image_box_holder2), FALSE, FALSE, 0);
         gtk_box_pack_start(centralbox, GTK_WIDGET(labelbox), TRUE, TRUE, 0);
 
-        gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(vbox));
+        gtk_box_pack_end (mainvbox, GTK_WIDGET (vbox), TRUE, TRUE, 0);
+        gtk_container_add (GTK_CONTAINER (win), GTK_WIDGET (mainvbox));
 
 #ifdef USE_HILDON_WINDOW
         hildon_window_set_menu(HILDON_WINDOW(win), GTK_MENU(menu));
 #else
-        gtk_box_pack_start(vbox, menu, FALSE, FALSE, 0);
+        gtk_box_pack_end (mainvbox, GTK_WIDGET (menu), FALSE, FALSE, 0);
 #endif
         gtk_box_pack_start(vbox, priv->playlist, FALSE, FALSE, 0);
         gtk_box_pack_start(vbox, gtk_hseparator_new(), FALSE, FALSE, 0);
@@ -1193,7 +1196,7 @@ vgl_main_window_init                    (VglMainWindow *self)
         g_signal_connect(G_OBJECT(win), "window_state_event",
                          G_CALLBACK(window_state_cb), self);
         /* Initial state */
-        gtk_widget_show_all(GTK_WIDGET(vbox));
+        gtk_widget_show_all (GTK_WIDGET (mainvbox));
         vgl_main_window_set_state(self, VGL_MAIN_WINDOW_STATE_DISCONNECTED,
                                   NULL, NULL);
 }
