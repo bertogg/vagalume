@@ -1,3 +1,10 @@
+2009-11-18  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/vgl-main-window.c (vgl_main_window_finalize)
+	* src/vgl-bookmark-window.c (vgl_bookmark_window_finalize)
+	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_finalize):
+	Remove unneeded calls to g_signal_handlers_destroy()
+
 2009-11-17  Janne Mäkinen  <janne.makinen@surffi.fi>
 
 	* po/fi.po: Updated Finnish translation.

@@ -1204,7 +1204,6 @@ vgl_main_window_finalize                (GObject *object)
         VglMainWindowPrivate *priv = VGL_MAIN_WINDOW (object)->priv;
         g_debug("Destroying main window ...");
         g_string_free(priv->progressbar_text, TRUE);
-        g_signal_handlers_destroy(object);
         G_OBJECT_CLASS(vgl_main_window_parent_class)->finalize(object);
 }
 

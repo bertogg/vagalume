@@ -255,7 +255,6 @@ vgl_bookmark_window_finalize            (GObject *object)
         g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_ADDED]);
         g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_CHANGED]);
         g_signal_handler_disconnect (priv->mgr, priv->sig[BMK_REMOVED]);
-        g_signal_handlers_destroy(object);
         G_OBJECT_CLASS(vgl_bookmark_window_parent_class)->finalize(object);
 }
 

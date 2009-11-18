@@ -226,7 +226,6 @@ vgl_bookmark_mgr_finalize               (GObject *object)
         g_list_foreach(priv->bookmarks, (GFunc) vgl_bookmark_destroy, NULL);
         g_list_free(priv->bookmarks);
 
-        g_signal_handlers_destroy(object);
         G_OBJECT_CLASS(vgl_bookmark_mgr_parent_class)->finalize(object);
 }
 
