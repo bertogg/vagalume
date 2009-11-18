@@ -1,5 +1,12 @@
 2009-11-18  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/http.c (+create_curl_handle, http_get_to_fd)
+	(http_download_file, http_get_buffer, http_post_buffer):
+	Set a connection timeout to all HTTP calls.
+	Prevent CURL from emitting signals.
+
+2009-11-18  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/vgl-main-window.c (vgl_main_window_finalize)
 	* src/vgl-bookmark-window.c (vgl_bookmark_window_finalize)
 	* src/vgl-bookmark-mgr.c (vgl_bookmark_mgr_finalize):

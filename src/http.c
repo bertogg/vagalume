@@ -88,6 +88,18 @@ http_copy_buffer                        (void   *src,
         return datasize;
 }
 
+static CURL *
+create_curl_handle                      (void)
+{
+        CURL *handle = curl_easy_init ();
+        curl_easy_setopt (handle, CURLOPT_NOSIGNAL, 1);
+        curl_easy_setopt (handle, CURLOPT_FOLLOWLOCATION, 1);
+        curl_easy_setopt (handle, CURLOPT_LOW_SPEED_LIMIT, 1);
+        curl_easy_setopt (handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
+        curl_easy_setopt (handle, CURLOPT_CONNECTTIMEOUT, http_timeout);
+        return handle;
+}
+
 gboolean
 http_get_to_fd                          (const char   *url,
                                          int           fd,
@@ -95,7 +107,7 @@ http_get_to_fd                          (const char   *url,
 {
         g_return_val_if_fail(url != NULL && fd > 0, FALSE);
         CURLcode retcode;
-        CURL *handle = curl_easy_init();
+        CURL *handle;
         FILE *f = fdopen(fd, "w");
         struct curl_slist *hdrs = NULL;
 
@@ -112,13 +124,11 @@ http_get_to_fd                          (const char   *url,
                         hdrs = curl_slist_append(hdrs, iter->data);
                 }
         }
+        handle = create_curl_handle ();
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
-        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
@@ -158,7 +168,7 @@ http_download_file                      (const char                *url,
         g_return_val_if_fail(url != NULL && filename != NULL, FALSE);
         http_dl_progress_wrapper_data *wrapdata = NULL;
         CURLcode retcode;
-        CURL *handle = NULL;
+        CURL *handle;
         FILE *f = NULL;
         if (!file_exists(filename)) {
                 f = fopen(filename, "wb");
@@ -170,13 +180,10 @@ http_download_file                      (const char                *url,
                 return FALSE;
         }
 
-        handle = curl_easy_init();
+        handle = create_curl_handle ();
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
-        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         if (cb != NULL) {
                 wrapdata = g_slice_new(http_dl_progress_wrapper_data);
                 wrapdata->cb = cb;
@@ -219,15 +226,12 @@ http_get_buffer                         (const char  *url,
                 g_debug("Requesting URL %spasswordmd5=<hidden>", newurl);
                 g_free(newurl);
         }
-        handle = curl_easy_init();
+        handle = create_curl_handle ();
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, http_copy_buffer);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, &dstbuf);
         hdrs = curl_slist_append(hdrs, "User-Agent: " APP_FULLNAME);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
-        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
@@ -260,7 +264,7 @@ http_post_buffer                        (const char    *url,
         CURLcode retcode;
         CURL *handle;
         struct curl_slist *hdrs = NULL;
-        handle = curl_easy_init();
+        handle = create_curl_handle ();
 
         if (retbuf != NULL) {
                 curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION,
@@ -280,9 +284,6 @@ http_post_buffer                        (const char    *url,
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_POSTFIELDS, postdata);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, hdrs);
-        curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1);
-        curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         retcode = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
         if (hdrs != NULL) curl_slist_free_all(hdrs);
