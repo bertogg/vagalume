@@ -1,3 +1,7 @@
+2009-11-20  Amador Loureiro Blanco  <dorfun@adorfunteca.org>
+
+	* po/gl.po: Updated Galician translation.
+
 2009-11-18  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/vgl-main-window.c (vgl_main_window_init):
