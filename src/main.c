@@ -33,6 +33,10 @@
 #   include <dbus/dbus-glib.h>
 #endif
 
+#ifdef MAEMO5
+#   include <hildon/hildon.h>
+#endif
+
 int
 main                                    (int    argc,
                                          char **argv)
@@ -46,7 +50,11 @@ main                                    (int    argc,
         dbus_g_thread_init ();
 #endif
         gdk_threads_enter ();
+#ifdef MAEMO5
+        hildon_gtk_init (&argc, &argv);
+#else
         gtk_init (&argc, &argv);
+#endif /* MAEMO5 */
         g_set_application_name(APP_NAME);
 
         bindtextdomain (GETTEXT_PACKAGE, VAGALUME_LOCALE_DIR);

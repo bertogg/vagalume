@@ -1,3 +1,7 @@
+2009-12-03  Alberto Garcia  <agarcia@igalia.com>
+
+	* src/main.c (main): Call hildon_gtk_init() in Maemo 5
+
 2009-11-20  Amador Loureiro Blanco  <dorfun@adorfunteca.org>
 
 	* po/gl.po: Updated Galician translation.
