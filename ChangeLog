@@ -1,3 +1,8 @@
+2009-12-10  Otto Krüja  <ottokrueja@gmx.net>
+
+	* data/icons/*/*:
+	Make the corners of the Vagalume icon rounded.
+
 2009-12-03  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/main.c (main): Call hildon_gtk_init() in Maemo 5
