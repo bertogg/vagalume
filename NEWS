@@ -1,3 +1,22 @@
+0.8 (13 Dec 2009)
+  * Implemented the Last.fm Web Services API v2.0
+  * Support for Libre.fm and other Last.fm-compatible services
+  * Support for Maemo 5 (Nokia N900)
+  * New icon that replaces the classic Vagalume logo
+  * New CD case image to place the album cover artwork
+  * New feature to stop playback after a given time ("sleep timer")
+  * New menu option to play any user's tag radio
+  * New "Add bookmark" and "Bookmark this radio" menu entries
+  * New configuration setting to download free tracks automatically
+  * Add {station} keyword to the IM status template
+  * Use system-wide Gnome audio settings
+  * Mixer support to change the volume in non-Maemo targets
+  * Added Polish translation
+  * Autocompletion support for combo box entries
+  * Make url and email clickable on the about dialog
+  * vagalumectl: new commands to show and hide the player window
+  * Fix some timeout problems in HTTP requests
+
 0.7.1 (26 Feb 2009)
   * Fix problem that prevents Vagalume from playing Last.fm streams
   * Display names of radio stations correctly

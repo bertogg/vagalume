@@ -1,3 +1,9 @@
+2009-12-11  Alberto Garcia  <agarcia@igalia.com>
+
+	* debian/changelog:
+	* configure.ac
+	* NEWS: Updated for the upcoming v0.8 release
+
 2009-12-10  Otto Krüja  <ottokrueja@gmx.net>
 
 	* data/icons/*/*:

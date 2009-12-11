@@ -1,4 +1,4 @@
-vagalume (0.7.1-2) UNRELEASED; urgency=low
+vagalume (0.8-1) unstable; urgency=low
 
   * Switched to cdbs
   * Added watch file
@@ -10,7 +10,7 @@ vagalume (0.7.1-2) UNRELEASED; urgency=low
   * Run autogen.sh from debian/rules with NOCONFIGURE=1
   * Updated package description in control file
 
- -- Alberto Garcia <agarcia@igalia.com>  Sat, 01 Nov 2008 02:05:28 +0100
+ -- Alberto Garcia <agarcia@igalia.com>  Fri, 11 Dec 2009 01:42:53 +0100
 
 vagalume (0.7.1-1) unstable; urgency=low
 
