@@ -1,5 +1,10 @@
 2009-12-11  Alberto Garcia  <agarcia@igalia.com>
 
+	* debian/control.maemo[2345]:
+	Update control files to use the new Vagalume icon
+
+2009-12-11  Alberto Garcia  <agarcia@igalia.com>
+
 	* debian/changelog:
 	* configure.ac
 	* NEWS: Updated for the upcoming v0.8 release
