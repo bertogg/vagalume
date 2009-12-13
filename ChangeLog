@@ -1,5 +1,12 @@
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>
 
+	* Makefile.am
+	* configure.ac:
+	Use just 'Vagalume' in the 'Name' field of the vagalume.desktop
+	file in Maemo 5, since longer names don't fit.
+
+2009-12-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/http.c: Increase HTTP timeout
 
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>

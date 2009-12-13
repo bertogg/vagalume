@@ -464,6 +464,7 @@ AC_SUBST(desktopentrydir)
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(PLATFORM)
+AC_SUBST(PLATFORMVERS)
 
 ############################
 ### Produce output files ###
