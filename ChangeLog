@@ -1,5 +1,9 @@
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/http.c: Increase HTTP timeout
+
+2009-12-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/uimisc.[ch]:
 	(-flush_ui_events) Remove unused function
 

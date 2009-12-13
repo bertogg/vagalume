@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 /* HTTP connections will abort after this time */
-const int http_timeout = 10;
+static const int http_timeout = 20;
 
 typedef struct {
         char *buffer;
