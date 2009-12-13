@@ -110,7 +110,4 @@ GtkWidget *
 ui_menu_item_create_from_icon           (const gchar *icon_name,
                                          const gchar *label);
 
-void
-flush_ui_events                         (void);
-
 #endif

@@ -145,12 +145,6 @@ static const char translators_tpl[] =
 "%s (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
 "%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
 
-void
-flush_ui_events                         (void)
-{
-        while (gtk_events_pending()) gtk_main_iteration();
-}
-
 /* Don't use gtk_button_new() in Nokia 770 or icons won't appear */
 GtkWidget *
 compat_gtk_button_new                   (void)
