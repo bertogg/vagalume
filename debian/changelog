@@ -1,5 +1,6 @@
 vagalume (0.8-1) unstable; urgency=low
 
+  * New upstream release
   * Switched to cdbs
   * Added watch file
   * Added intltool and libgstreamer-plugins-base0.10-dev to Build-Depends
