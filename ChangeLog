@@ -1,5 +1,9 @@
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>
 
+	=== Released Vagalume 0.8 ===
+
+2009-12-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/dlwin.c
 	* src/protocol.c
 	* src/compat.c: Fix compilation warnings
