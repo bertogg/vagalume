@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Vagalume en Galego 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-10-02 18:39+0200\n"
-"PO-Revision-Date: 2009-11-19 22:39+0100\n"
+"PO-Revision-Date: 2009-12-13 22:34+0100\n"
 "Last-Translator: Amador Loureiro Blanco <dorfun@adorfunteca.org>\n"
 "Language-Team: Vagalume en Galego <dorfun@adorfunteca.org>\n"
 "MIME-Version: 1.0\n"
@@ -576,7 +576,7 @@ msgstr "Parar despois desta pista"
 #. Translators: the full text is "Stop after ____ minutes"
 #: ../src/uimisc.c:983
 msgid "Stop after"
-msgstr "Parar despois"
+msgstr "Parar despois de"
 
 #: ../src/uimisc.c:1112
 msgid "User tag radio"

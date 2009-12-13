@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-10-02 18:39+0200\n"
-"PO-Revision-Date: 2009-10-15 20:26+0200\n"
+"PO-Revision-Date: 2009-12-13 22:32+0100\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -572,7 +572,7 @@ msgstr "Parar depois desta música"
 #. Translators: the full text is "Stop after ____ minutes"
 #: ../src/uimisc.c:983
 msgid "Stop after"
-msgstr "Parar depois"
+msgstr "Parar depois de"
 
 #: ../src/uimisc.c:1112
 msgid "User tag radio"

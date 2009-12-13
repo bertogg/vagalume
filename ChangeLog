@@ -1,5 +1,10 @@
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>
 
+	* po/gl.po
+	* po/pt.po: Minor translation fixes
+
+2009-12-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/controller.[ch]
 	* src/uimisc.[ch]
 	* src/uimisc.c
