@@ -389,24 +389,50 @@ ui_menu_item_create_from_icon           (const gchar *icon_name,
         return item;
 }
 
+static GtkWidget *
+create_file_chooser_dialog              (GtkWindow            *parent,
+                                         const char           *title,
+                                         GtkFileChooserAction  action)
+{
+        GtkWidget *dialog;
+#ifdef MAEMO
+        dialog = hildon_file_chooser_dialog_new (parent, action);
+        gtk_window_set_title (GTK_WINDOW (dialog), title);
+#else
+        dialog = gtk_file_chooser_dialog_new (
+                title, parent, action,
+                GTK_STOCK_OK, GTK_RESPONSE_OK,
+                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                NULL);
+#endif
+        gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (dialog), TRUE);
+        return dialog;
+}
+
+char *
+ui_select_servers_file                  (GtkWindow *parent)
+{
+        GtkWidget *dialog;
+        char *file = NULL;
+        dialog = create_file_chooser_dialog (
+                parent, _("Select server file to import"),
+                GTK_FILE_CHOOSER_ACTION_OPEN);
+        if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK) {
+                file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        }
+        gtk_widget_destroy (dialog);
+        return file;
+}
+
 static char *
 ui_select_download_dir                  (GtkWindow  *parent,
                                          const char *curdir)
 {
         GtkWidget *dialog;
         char *dir = NULL;
-#ifdef MAEMO
-        dialog = hildon_file_chooser_dialog_new(
-                parent, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-#else
-        dialog = gtk_file_chooser_dialog_new(
-                _("Select download directory"), parent,
-                GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                GTK_STOCK_OK, GTK_RESPONSE_OK,
-                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                NULL);
-#endif
-        gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+        dialog = create_file_chooser_dialog (
+                parent, _("Select download directory"),
+                GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
         if (curdir != NULL) {
                 gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog),
                                               curdir);
@@ -441,7 +467,7 @@ static GtkComboBox *
 usercfg_create_server_combobox          (VglUserCfg *cfg)
 {
         GtkComboBox *combo;
-        GList *srvlist, *iter;
+        const GList *srvlist, *iter;
         int i;
 
         g_return_val_if_fail (cfg != NULL, NULL);
@@ -450,14 +476,13 @@ usercfg_create_server_combobox          (VglUserCfg *cfg)
 
         srvlist = vgl_server_list_get ();
         for (iter = srvlist, i = 0; iter != NULL; iter = iter->next, i++) {
-                VglServer *srv = iter->data;
+                const VglServer *srv = iter->data;
                 gtk_combo_box_append_text (combo, srv->name);
                 if (srv == cfg->server) {
                         gtk_combo_box_set_active (combo, i);
                 }
 
         }
-        g_list_free (srvlist);
 
         return combo;
 }

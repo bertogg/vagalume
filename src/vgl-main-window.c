@@ -695,6 +695,13 @@ open_user_settings                      (GtkWidget *widget,
 }
 
 static void
+import_servers_file                     (GtkWidget *widget,
+                                         gpointer   data)
+{
+        controller_import_servers_file ();
+}
+
+static void
 apply_icon_theme                        (GtkIconTheme *icon_theme,
                                          GtkButton    *button)
 {
@@ -755,7 +762,7 @@ create_main_menu                        (VglMainWindow *w,
         GtkWidget *group, *globaltag, *similarartist, *urlradio;
         GtkMenuShell *lastfmsub, *radiosub, *actionssub, *bmksub, *helpsub;
         GtkMenuShell *usersub, *othersub;
-        GtkWidget *settings, *quit;
+        GtkWidget *settings, *import, *quit;
         GtkWidget *play, *stop, *skip, *separ1, *separ2, *separ3;
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
         GtkWidget *library, *neigh, *loved, *playlist, *recomm, *usertag;
@@ -773,10 +780,12 @@ create_main_menu                        (VglMainWindow *w,
         lastfmsub = GTK_MENU_SHELL(gtk_menu_new());
         settings = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES,
                                                        NULL);
+        import = gtk_menu_item_new_with_mnemonic(_("_Import servers file..."));
         quit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel);
         gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
         gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
         gtk_menu_shell_append(lastfmsub, settings);
+        gtk_menu_shell_append(lastfmsub, import);
 #ifndef USE_HILDON_WINDOW
         separ1 = gtk_separator_menu_item_new();
         gtk_menu_shell_append(lastfmsub, separ1);
@@ -784,6 +793,8 @@ create_main_menu                        (VglMainWindow *w,
 #endif
         g_signal_connect(G_OBJECT(settings), "activate",
                          G_CALLBACK(open_user_settings), NULL);
+        g_signal_connect(G_OBJECT(import), "activate",
+                         G_CALLBACK(import_servers_file), NULL);
         g_signal_connect(G_OBJECT(quit), "activate",
                          G_CALLBACK(close_app), NULL);
 

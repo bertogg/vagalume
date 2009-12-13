@@ -26,6 +26,8 @@ static void
 vgl_server_destroy                      (VglServer *srv)
 {
         g_free ((gpointer) srv->name);
+        g_free ((gpointer) srv->orig_ws_url);
+        g_free ((gpointer) srv->orig_rsp_url);
         g_free ((gpointer) srv->ws_base_url);
         g_free ((gpointer) srv->rsp_base_url);
         g_free ((gpointer) srv->old_hs_url);
@@ -50,6 +52,8 @@ vgl_server_new                          (const char *name,
         srv = vgl_object_new (VglServer, (GDestroyNotify) vgl_server_destroy);
 
         srv->name         = g_strdup (name);
+        srv->orig_ws_url  = g_strdup (ws_base_url);
+        srv->orig_rsp_url = g_strdup (rsp_base_url);
         srv->ws_base_url  = g_strconcat (ws_base_url, "2.0/", NULL);
         srv->rsp_base_url = g_strconcat (rsp_base_url, RSP_PARAMS, NULL);
         srv->old_hs_url   = g_strconcat (ws_base_url, HANDSHAKE_PARAMS, NULL);
@@ -61,77 +65,104 @@ vgl_server_new                          (const char *name,
         return srv;
 }
 
-gboolean
-vgl_server_list_add                     (const char *name,
-                                         const char *ws_base_url,
-                                         const char *rsp_base_url,
-                                         const char *api_key,
-                                         const char *api_secret,
-                                         gboolean    old_streaming_api,
-                                         gboolean    free_streams)
+static VglServer *
+vgl_server_find_by_name                 (GList      *l,
+                                         const char *name)
 {
-        VglServer *srv;
-
-        g_return_val_if_fail (initialized, FALSE);
-        g_return_val_if_fail (name && ws_base_url && rsp_base_url &&
-                              api_key && api_secret, FALSE);
-
-        /* Do nothing if there's already a server with the same name */
-        srv = vgl_server_list_find_by_name (name);
-        if (srv != NULL) {
-                g_debug ("Trying to add %s server again, ignoring...", name);
-                vgl_object_unref (srv);
-                return FALSE;
-        }
-
-        srv = vgl_server_new (name, ws_base_url, rsp_base_url, api_key,
-                              api_secret, old_streaming_api, free_streams);
-        srv_list = g_list_append (srv_list, srv);
-
-        return TRUE;
-}
-
-VglServer *
-vgl_server_list_find_by_name            (const char *name)
-{
-        GList *iter;
-
-        g_return_val_if_fail (initialized, NULL);
-        g_return_val_if_fail (name != NULL, NULL);
-
-        for (iter = srv_list; iter != NULL; iter = iter->next) {
-                VglServer *srv = iter->data;
+        for (; l != NULL; l = l->next) {
+                VglServer *srv = l->data;
                 if (g_str_equal (name, srv->name)) {
-                        return vgl_object_ref (srv);
+                        return srv;
                 }
         }
 
         return NULL;
 }
 
-gboolean
-vgl_server_list_remove                  (const char *name)
+static char *
+get_user_servers_file                   (void)
 {
-        GList *iter;
-
-        g_return_val_if_fail (name != NULL, FALSE);
-
-        for (iter = srv_list; iter != NULL; iter = iter->next) {
-                VglServer *srv = iter->data;
-                if (g_str_equal (name, srv->name)) {
-                        vgl_object_unref (srv);
-                        srv_list = g_list_delete_link (srv_list, iter);
-                        return TRUE;
-                }
+        const char *cfgdir;
+        cfgdir = vgl_user_cfg_get_cfgdir ();
+        if (cfgdir != NULL) {
+                return g_strconcat (cfgdir, "/servers.xml", NULL);
         }
-
-        return FALSE;
+        return NULL;
 }
 
 static void
+write_user_servers_file                 (GList *l)
+{
+        char *filename;
+        xmlDoc *doc;
+        xmlNode *root;
+
+        doc = xmlNewDoc ((xmlChar *) "1.0");
+        root = xmlNewNode (NULL, (xmlChar *) "servers");
+        xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
+        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "1");
+        xmlDocSetRootElement (doc, root);
+
+        for (; l != NULL; l = l->next) {
+                const VglServer *srv = l->data;
+                xmlNode *node = xmlNewNode (NULL, (xmlChar *) "server");
+                xmlAddChild (root, node);
+                xml_add_string (node, "name", srv->name);
+                xml_add_string (node, "ws_base_url", srv->orig_ws_url);
+                xml_add_string (node, "rsp_base_url", srv->orig_rsp_url);
+                xml_add_string (node, "api_key", srv->api_key);
+                xml_add_string (node, "api_secret", srv->api_secret);
+                xml_add_string (node, "old_streaming_api",
+                                srv->old_str_api ? "1" : "0");
+                xml_add_string (node, "free_streams",
+                                srv->free_streams ? "1" : "0");
+        }
+
+        filename = get_user_servers_file ();
+        if (xmlSaveFormatFileEnc (filename, doc, "UTF-8", 1) == -1) {
+                g_critical ("Error writing %s", filename);
+        }
+        g_free (filename);
+
+        xmlFreeDoc (doc);
+}
+
+static GList *
+remove_duplicates                       (GList *l)
+{
+        GList *dest = NULL;
+        GList *iter;
+
+        for (iter = l; iter != NULL; iter = iter->next) {
+                VglServer *srv = iter->data;
+                if (vgl_server_find_by_name (dest, srv->name)) {
+                        g_debug ("Found duplicate server %s, ignoring...",
+                                 srv->name);
+                } else {
+                        dest = g_list_append (dest, vgl_object_ref (srv));
+                }
+        }
+
+        g_list_foreach (l, (GFunc) vgl_object_unref, NULL);
+        g_list_free (l);
+
+        return dest;
+}
+
+VglServer *
+vgl_server_list_find_by_name            (const char *name)
+{
+        g_return_val_if_fail (initialized, NULL);
+        g_return_val_if_fail (name != NULL, NULL);
+
+        return vgl_server_find_by_name (srv_list, name);
+}
+
+static VglServer *
 parse_server                            (xmlDoc  *doc,
                                          xmlNode *node)
 {
+        VglServer *srv = NULL;
         char *name, *ws_base_url, *rsp_base_url, *key, *secret;
         gboolean old_str_api, free_streams;
 
@@ -145,9 +176,9 @@ parse_server                            (xmlDoc  *doc,
 
         if ( name &&  ws_base_url &&  rsp_base_url &&  key &&  secret &&
             *name && *ws_base_url && *rsp_base_url && *key && *secret) {
-                vgl_server_list_add (name, ws_base_url, rsp_base_url,
-                                     key, secret, old_str_api, free_streams);
-                g_debug ("Added server: %s", name);
+                srv = vgl_server_new (name, ws_base_url, rsp_base_url,
+                                      key, secret, old_str_api, free_streams);
+                g_debug ("Parsed server: %s", name);
         } else {
                 g_warning ("Error parsing server: %s",
                            (name && *name) ? name : "(unknown)");
@@ -158,11 +189,14 @@ parse_server                            (xmlDoc  *doc,
         g_free (rsp_base_url);
         g_free (key);
         g_free (secret);
+
+        return srv;
 }
 
-static void
+static GList *
 parse_server_file                       (const char *filename)
 {
+        GList *servers = NULL;
         xmlDoc *doc = NULL;
         xmlNode *root = NULL;
         xmlNode *node = NULL;
@@ -196,28 +230,61 @@ parse_server_file                       (const char *filename)
         }
 
         while (node != NULL) {
-                parse_server (doc, node->xmlChildrenNode);
+                VglServer *srv = parse_server (doc, node->xmlChildrenNode);
+                servers = g_list_append (servers, srv);
                 node = (xmlNode *) xml_find_node (node->next, "server");
         }
 
         if (doc != NULL) xmlFreeDoc (doc);
+
+        return servers;
+}
+
+gboolean
+vgl_server_import_file                  (const char *filename)
+{
+        gboolean found_servers;
+        GList *l;
+
+        g_return_val_if_fail (initialized, FALSE);
+
+        l = parse_server_file (filename);
+        found_servers = (l != NULL);
+
+        if (l != NULL) {
+                char *usercfgfile = get_user_servers_file ();
+                if (usercfgfile) {
+                        l = g_list_concat (l, parse_server_file (usercfgfile));
+                        g_free (usercfgfile);
+                        l = remove_duplicates (l);
+                }
+                write_user_servers_file (l);
+
+                /* Update the global server list with the new info */
+                srv_list = g_list_concat (l, srv_list);
+                srv_list = remove_duplicates (srv_list);
+        } else {
+                g_debug ("No servers found in file %s", filename);
+        }
+
+        return found_servers;
 }
 
 gboolean
 vgl_server_list_init                    (void)
 {
-        const char *cfgdir;
+        char *usercfgfile;
         g_return_val_if_fail (!initialized, srv_list != NULL);
         initialized = TRUE;
 
-        cfgdir = vgl_user_cfg_get_cfgdir ();
-        if (cfgdir != NULL) {
-                char *filename = g_strconcat (cfgdir, "/servers.xml", NULL);
-                parse_server_file (filename);
-                g_free (filename);
-        }
+        usercfgfile = get_user_servers_file ();
+        srv_list = parse_server_file (usercfgfile);
+        g_free (usercfgfile);
 
-        parse_server_file (DEFAULT_SERVER_LIST);
+        srv_list = g_list_concat (srv_list,
+                                  parse_server_file (DEFAULT_SERVER_LIST));
+
+        srv_list = remove_duplicates (srv_list);
 
         return (srv_list != NULL);
 }
@@ -234,12 +301,12 @@ vgl_server_list_finalize                (void)
         initialized = FALSE;
 }
 
-GList *
+const GList *
 vgl_server_list_get                     (void)
 {
         g_return_val_if_fail (initialized, NULL);
 
-        return g_list_copy (srv_list);
+        return srv_list;
 }
 
 VglServer *
@@ -247,5 +314,5 @@ vgl_server_get_default                  (void)
 {
         g_return_val_if_fail (initialized, NULL);
 
-        return srv_list ? vgl_object_ref (srv_list->data) : NULL;
+        return srv_list ? srv_list->data : NULL;
 }

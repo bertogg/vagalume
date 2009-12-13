@@ -140,7 +140,6 @@ vgl_user_cfg_set_server_name            (VglUserCfg *cfg,
         server = vgl_server_list_find_by_name (name);
         if (server) {
                 vgl_user_cfg_set_server (cfg, server);
-                vgl_object_unref (server);
         } else {
                 g_warning ("No such server: %s", name);
         }
@@ -183,6 +182,7 @@ vgl_user_cfg_new                        (void)
         cfg->download_dir = default_download_dir();
         cfg->imstatus_template = g_strdup(DEFAULT_IMSTATUS_TEMPLATE);
         cfg->server = vgl_server_get_default ();
+        if (cfg->server) vgl_object_ref (cfg->server);
         cfg->use_proxy = FALSE;
         cfg->enable_scrobbling = TRUE;
         cfg->discovery_mode = FALSE;

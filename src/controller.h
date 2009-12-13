@@ -134,6 +134,9 @@ void
 controller_open_usercfg                 (void);
 
 void
+controller_import_servers_file          (void);
+
+void
 controller_quit_app                     (void);
 
 void

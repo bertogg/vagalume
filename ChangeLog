@@ -1,5 +1,14 @@
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/controller.[ch]
+	* src/uimisc.[ch]
+	* src/uimisc.c
+	* src/vgl-main-window.c
+	* src/vgl-server.[ch]:
+	New menu entry to import a config file with server info.
+
+2009-12-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* Makefile.am
 	* configure.ac:
 	Use just 'Vagalume' in the 'Name' field of the vagalume.desktop

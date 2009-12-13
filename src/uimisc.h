@@ -86,6 +86,9 @@ ui_input_dialog_with_list               (GtkWindow   *parent,
                                          const GList *elems,
                                          const char  *value);
 
+char *
+ui_select_servers_file                  (GtkWindow *parent);
+
 void
 ui_usertag_dialog                       (GtkWindow    *parent,
                                          char        **user,

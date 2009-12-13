@@ -449,6 +449,42 @@ controller_open_usercfg                 (void)
 }
 
 /**
+ * Import an XML file with server data and merge it with the current
+ * file
+ */
+void
+controller_import_servers_file          (void)
+{
+        char *filename;
+        g_return_if_fail (VGL_IS_MAIN_WINDOW (mainwin));
+        filename = ui_select_servers_file (
+                vgl_main_window_get_window (mainwin, FALSE));
+        if (filename != NULL) {
+                gboolean imported = vgl_server_import_file (filename);
+                if (imported && usercfg != NULL) {
+                        VglServer *srv;
+                        controller_disconnect ();
+                        srv = vgl_server_list_find_by_name (
+                                usercfg->server->name);
+                        g_return_if_fail (srv != NULL);
+                        vgl_object_ref (srv);
+                        vgl_object_unref (usercfg->server);
+                        usercfg->server = srv;
+                }
+                if (imported) {
+                        ui_info_dialog (
+                                vgl_main_window_get_window (mainwin, TRUE),
+                                _("Server info imported correctly"));
+                } else {
+                        ui_warning_dialog (
+                                vgl_main_window_get_window (mainwin, TRUE),
+                                _("No server info found in that file"));
+                }
+                g_free (filename);
+        }
+}
+
+/**
  * Check if the user settings exist (whether they are valid or
  * not). If they don't exist, read the config file or open the
  * settings dialog (if ask == TRUE). This should only return FALSE

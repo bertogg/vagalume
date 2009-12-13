@@ -18,6 +18,8 @@ G_BEGIN_DECLS
 typedef struct {
         VglObject parent;
         const char *name;
+        const char *orig_ws_url;
+        const char *orig_rsp_url;
         const char *ws_base_url;
         const char *rsp_base_url;
         const char *old_hs_url;
@@ -33,23 +35,14 @@ vgl_server_list_init                    (void);
 void
 vgl_server_list_finalize                (void);
 
-GList *
+gboolean
+vgl_server_import_file                  (const char *filename);
+
+const GList *
 vgl_server_list_get                     (void);
 
 VglServer *
 vgl_server_list_find_by_name            (const char *name);
-
-gboolean
-vgl_server_list_add                     (const char *name,
-                                         const char *ws_base_url,
-                                         const char *rsp_base_url,
-                                         const char *api_key,
-                                         const char *api_secret,
-                                         gboolean    old_streaming_api,
-                                         gboolean    free_streams);
-
-gboolean
-vgl_server_list_remove                  (const char *name);
 
 VglServer *
 vgl_server_get_default                  (void);
