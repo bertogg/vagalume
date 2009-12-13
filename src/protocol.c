@@ -9,6 +9,7 @@
  */
 
 #include <glib/gi18n.h>
+#include <string.h>
 
 #include "http.h"
 #include "util.h"

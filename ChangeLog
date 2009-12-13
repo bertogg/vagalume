@@ -1,5 +1,11 @@
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>
 
+	* src/dlwin.c
+	* src/protocol.c
+	* src/compat.c: Fix compilation warnings
+
+2009-12-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* debian/rules: Include gnome.mk from CDBS
 
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>

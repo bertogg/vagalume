@@ -10,6 +10,8 @@
 
 #include "compat.h"
 
+#include <gdk/gdk.h>
+
 #ifndef HAVE_GDK_THREADS_ADD_API
 typedef struct
 {

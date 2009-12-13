@@ -16,6 +16,7 @@
 #include "compat.h"
 
 #include <gtk/gtk.h>
+#include <glib/gstdio.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -109,13 +110,13 @@ dlwin_download_file_thread              (gpointer data)
         dlwin *w = (dlwin *) data;
 
         /* Remove the file if it exists and then download it */
-        unlink(w->dstpath);
+        g_unlink (w->dstpath);
         w->success = http_download_file (w->url, w->dstpath,
                                          dlwin_progress_cb, w);
 
         /* Remove if the download was unsuccessful */
         if (!w->success)
-                unlink (w->dstpath);
+                g_unlink (w->dstpath);
 
         gdk_threads_add_idle (dlwin_download_file_idle, w);
 
