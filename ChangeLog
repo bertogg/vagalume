@@ -1,5 +1,9 @@
 2009-12-13  Alberto Garcia  <agarcia@igalia.com>
 
+	* debian/rules: Include gnome.mk from CDBS
+
+2009-12-13  Alberto Garcia  <agarcia@igalia.com>
+
 	* po/gl.po
 	* po/pt.po: Minor translation fixes
 
