@@ -441,6 +441,12 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
                 xmlFreeDoc (doc);
                 return TRUE;
         } else {
+                /* Fall back to the old streaming API if the new one
+                 * doesn't work */
+                if (session->v1sess) {
+                        session->srv->old_str_api = TRUE;
+                        return lastfm_ws_radio_tune (session, radio_url, lang);
+                }
                 return FALSE;
         }
 }
