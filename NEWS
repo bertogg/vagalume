@@ -1,3 +1,7 @@
+0.8.1 (16 Dec 2009)
+  * Fall back to the old streaming API if the new one doesn't work
+  * Install data files in /opt in the N900, since the rootfs is quite small
+
 0.8 (13 Dec 2009)
   * Implemented the Last.fm Web Services API v2.0
   * Support for Libre.fm and other Last.fm-compatible services

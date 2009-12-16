@@ -1,5 +1,9 @@
 2009-12-16  Alberto Garcia  <agarcia@igalia.com>
 
+	=== Released Vagalume 0.8.1 ===
+
+2009-12-16  Alberto Garcia  <agarcia@igalia.com>
+
 	* configure.ac:
 	Install data files in /opt in the N900, since the rootfs is quite
 	small.
