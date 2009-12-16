@@ -305,6 +305,8 @@ if test "$PLATFORM" = "maemo"; then
       AC_DEFINE([MAEMO4], [], [Defined if building for Maemo 4 (chinook)])
    else
       AC_DEFINE([MAEMO5], [], [Defined if building for Maemo 5 (fremantle)])
+      # Install data in /opt, since the rootfs in the N900 is small
+      appdatadir="/opt/vagalume"
       # Sorry, no Last.fm allowed on mobile phones
       AC_SUBST(DISABLE_LAST_FM, "yes")
    fi
@@ -386,7 +388,6 @@ fi
 ####################
 ### Translations ###
 ####################
-VAGALUME_LOCALE_DIR='$prefix/${DATADIRNAME}/locale'
 AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
 AM_GLIB_GNU_GETTEXT
 

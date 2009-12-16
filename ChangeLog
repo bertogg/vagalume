@@ -1,3 +1,10 @@
+2009-12-16  Alberto Garcia  <agarcia@igalia.com>
+
+	* configure.ac:
+	Install data files in /opt in the N900, since the rootfs is quite
+	small.
+	Remove unnecessary variable.
+
 2009-12-15  Alberto Garcia  <agarcia@igalia.com>
 
 	* src/lastfm-ws.c (lastfm_ws_radio_tune):
