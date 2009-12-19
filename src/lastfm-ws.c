@@ -339,20 +339,21 @@ lastfm_ws_get_session                   (VglServer  *srv,
                                          LastfmErr  *err)
 {
         LastfmWsSession *retvalue = NULL;
-        char *md5pw, *usermd5pw, *authtoken;
+        char *lcuser, *md5pw, *usermd5pw, *authtoken;
         xmlDoc *doc;
         const xmlNode *node;
 
         g_return_val_if_fail (srv && user && pass && err, NULL);
 
+        lcuser = g_ascii_strdown (user, -1);
         md5pw = get_md5_hash (pass);
-        usermd5pw = g_strconcat (user, md5pw, NULL);
+        usermd5pw = g_strconcat (lcuser, md5pw, NULL);
         authtoken = get_md5_hash (usermd5pw);
 
         lastfm_ws_http_request (srv, "auth.getMobileSession",
                                 HTTP_REQUEST_GET, TRUE, &doc, &node,
                                 "authToken", authtoken,
-                                "username", user,
+                                "username", lcuser,
                                 NULL);
 
         if (doc != NULL) {
@@ -365,7 +366,7 @@ lastfm_ws_get_session                   (VglServer  *srv,
                         xml_get_bool (doc, node, "subscriber", &subscriber);
                         if (key && key[0] != '\0') {
                                 retvalue = lastfm_ws_session_new (
-                                        user, pass, key, srv, subscriber);
+                                        lcuser, pass, key, srv, subscriber);
                         }
                         g_free (key);
                 }
@@ -373,13 +374,14 @@ lastfm_ws_get_session                   (VglServer  *srv,
         }
 
         if (retvalue) {
-                retvalue->v1sess = lastfm_session_new (user, pass,
+                retvalue->v1sess = lastfm_session_new (lcuser, pass,
                                                        srv->old_hs_url, err,
                                                        srv->free_streams);
         } else {
                 g_warning ("Unable to get session");
         }
 
+        g_free (lcuser);
         g_free (md5pw);
         g_free (usermd5pw);
         g_free (authtoken);
