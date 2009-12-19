@@ -306,6 +306,7 @@ if test "$PLATFORM" = "maemo"; then
    else
       AC_DEFINE([MAEMO5], [], [Defined if building for Maemo 5 (fremantle)])
       # Install data in /opt, since the rootfs in the N900 is small
+      bindir="/opt/vagalume/bin"
       appdatadir="/opt/vagalume"
       # Sorry, no Last.fm allowed on mobile phones
       AC_SUBST(DISABLE_LAST_FM, "yes")

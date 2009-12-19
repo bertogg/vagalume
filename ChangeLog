@@ -1,5 +1,10 @@
 2009-12-19  Alberto Garcia  <agarcia@igalia.com>
 
+	* configure.ac:
+	Optify the bin directory in Maemo 5
+
+2009-12-19  Alberto Garcia  <agarcia@igalia.com>
+
 	* src/lastfm-ws.c (lastfm_ws_get_session):
 	Convert the user name to lowercase when creating a new session.
 
