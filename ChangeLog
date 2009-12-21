@@ -1,5 +1,10 @@
 2009-12-21  Alberto Garcia  <agarcia@igalia.com>
 
+	* Makefile.am (install-exec-hook):
+	Create symlinks under /usr/bin in Maemo 5
+
+2009-12-21  Alberto Garcia  <agarcia@igalia.com>
+
 	* configure.ac:
 	Optify the locale directory in Maemo 5
 

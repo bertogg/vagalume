@@ -104,4 +104,8 @@ install-exec-hook:
 	   $(mkinstalldirs) "$(DESTDIR)/@CLEAR_DEVICE_SCRIPTS_DIR@" ; \
 	   $(LN_S) "@RESTORE_SETTINGS_SCRIPTS_DIR@/vagalume-rfs.sh" \
 	      "$(DESTDIR)/@CLEAR_DEVICE_SCRIPTS_DIR@/vagalume-cud.sh" ; \
+	   if test "x$(PLATFORMVERS)" = "x5"; then \
+		ln -s /opt/vagalume/bin/vagalume $(DESTDIR)/usr/bin ; \
+		ln -s /opt/vagalume/bin/vagalumectl $(DESTDIR)/usr/bin ; \
+	   fi ; \
 	fi
