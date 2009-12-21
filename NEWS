@@ -1,3 +1,7 @@
+0.8.2 (21 Dec 2009)
+  * Authenticate with the username in lowercase (fixes conn. problems)
+  * Install binaries and translation files in /opt in the N900
+
 0.8.1 (16 Dec 2009)
   * Fall back to the old streaming API if the new one doesn't work
   * Install data files in /opt in the N900, since the rootfs is quite small

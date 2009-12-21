@@ -1,5 +1,9 @@
 2009-12-21  Alberto Garcia  <agarcia@igalia.com>
 
+	=== Released Vagalume 0.8.2 ===
+
+2009-12-21  Alberto Garcia  <agarcia@igalia.com>
+
 	* Makefile.am (install-exec-hook):
 	Create symlinks under /usr/bin in Maemo 5
 
