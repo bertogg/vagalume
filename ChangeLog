@@ -1,3 +1,8 @@
+2009-12-21  Alberto Garcia  <agarcia@igalia.com>
+
+	* configure.ac:
+	Optify the locale directory in Maemo 5
+
 2009-12-19  Alberto Garcia  <agarcia@igalia.com>
 
 	* configure.ac:

@@ -308,6 +308,7 @@ if test "$PLATFORM" = "maemo"; then
       # Install data in /opt, since the rootfs in the N900 is small
       bindir="/opt/vagalume/bin"
       appdatadir="/opt/vagalume"
+      localedir="/opt/vagalume/locale"
       # Sorry, no Last.fm allowed on mobile phones
       AC_SUBST(DISABLE_LAST_FM, "yes")
    fi
@@ -389,7 +390,9 @@ fi
 ####################
 ### Translations ###
 ####################
-AM_GLIB_DEFINE_LOCALEDIR([VAGALUME_LOCALE_DIR])
+vgllocaledir=`eval echo $localedir`
+vgllocaledir=`eval echo $vgllocaledir`
+AC_DEFINE_UNQUOTED(VAGALUME_LOCALE_DIR, "$vgllocaledir", [Locale dir])
 AM_GLIB_GNU_GETTEXT
 
 GETTEXT_PACKAGE=vagalume
@@ -456,6 +459,7 @@ if test "$have_gst_mixer" = "yes"; then
    EXTRA_LIBS="$EXTRA_LIBS $Gst_mixer_LIBS"
 fi
 
+AC_SUBST(AM_MAKEFLAGS, "itlocaledir=\${localedir}")
 AC_SUBST(appdatadir)
 AC_SUBST(themebigicondir)
 AC_SUBST(themesmallicondir)
