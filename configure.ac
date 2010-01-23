@@ -207,6 +207,9 @@ if test "$PLATFORM" = "maemo"; then
    # Disable GStreamer mixer
    have_gst_mixer="no"
 
+   # Disable GIO support
+   have_gio="no"
+
    # Detect the version of the Maemo SDK
    libossovers=`$PKG_CONFIG libosso --modversion | cut -d . -f 1`
 
