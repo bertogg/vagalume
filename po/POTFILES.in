@@ -4,6 +4,8 @@ src/controller.c
 src/dlwin.c
 src/main.c
 src/protocol.c
+src/uimisc-gtk.c
+src/uimisc-hildon22.c
 src/uimisc.c
 src/uimisc.h
 src/vgl-bookmark-window.c

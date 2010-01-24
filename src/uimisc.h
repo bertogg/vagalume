@@ -29,6 +29,8 @@
 #define LOVE_ITEM_ICON_NAME "emblem-favorite"
 #define BAN_ITEM_ICON_NAME "process-stop"
 
+G_BEGIN_DECLS
+
 GtkWidget *
 compat_gtk_button_new                   (void);
 
@@ -112,5 +114,26 @@ ui_confirm_dialog                       (GtkWindow  *parent,
 GtkWidget *
 ui_menu_item_create_from_icon           (const gchar *icon_name,
                                          const gchar *label);
+
+/* Private functions (shaerd between uimisc implementations) */
+
+GtkDialog *
+ui_base_dialog                          (GtkWindow  *parent,
+                                         const char *title);
+
+char *
+ui_select_download_dir                  (GtkWindow  *parent,
+                                         const char *curdir);
+
+GtkTreeModel *
+ui_create_options_list                  (const GList *elems);
+
+typedef enum {
+        TAGCOMBO_STATE_NULL = 0,
+        TAGCOMBO_STATE_LOADING,
+        TAGCOMBO_STATE_READY
+} TagComboState;
+
+G_END_DECLS
 
 #endif

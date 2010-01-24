@@ -53,9 +53,9 @@ marshal.c: marshal.list
 		--prefix=vgl_marshal marshal.list > marshal.c
 
 if HILDON_2_2
-vagalume_SOURCES += vgl-main-menu-hildon22.c
+vagalume_SOURCES += uimisc-hildon22.c vgl-main-menu-hildon22.c
 else
-vagalume_SOURCES += vgl-main-menu-gtk.c
+vagalume_SOURCES += uimisc-gtk.c vgl-main-menu-gtk.c
 endif
 
 if SET_IM_STATUS
