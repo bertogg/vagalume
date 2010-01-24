@@ -7,6 +7,8 @@ src/protocol.c
 src/uimisc.c
 src/uimisc.h
 src/vgl-bookmark-window.c
+src/vgl-main-menu-gtk.c
+src/vgl-main-menu-hildon22.c
 src/vgl-main-window.c
 src/vgl-sb-plugin.c
 src/vgl-tray-icon.c

@@ -36,6 +36,7 @@ vagalume_SOURCES = \
 	util.c util.h \
 	vgl-bookmark-mgr.c vgl-bookmark-mgr.h \
 	vgl-bookmark-window.c vgl-bookmark-window.h \
+	vgl-main-menu.h \
 	vgl-main-window.c vgl-main-window.h \
 	vgl-object.c vgl-object.h \
 	vgl-server.c vgl-server.h \
@@ -50,6 +51,12 @@ marshal.h: marshal.list
 marshal.c: marshal.list
 	glib-genmarshal --body \
 		--prefix=vgl_marshal marshal.list > marshal.c
+
+if HILDON_2_2
+vagalume_SOURCES += vgl-main-menu-hildon22.c
+else
+vagalume_SOURCES += vgl-main-menu-gtk.c
+endif
 
 if SET_IM_STATUS
 vagalume_SOURCES += imstatus.c imstatus.h

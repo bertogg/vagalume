@@ -265,6 +265,16 @@ controller_update_progress              (gpointer data)
 }
 
 /**
+ * Gets the list of friends
+ * @return The list
+ */
+const GList *
+controller_get_friend_list              (void)
+{
+        return friends;
+}
+
+/**
  * Gets the track that is currently being played
  * @return The track
  */

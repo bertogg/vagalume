@@ -183,6 +183,9 @@ controller_show_cover                   (void);
 LastfmTrack *
 controller_get_current_track            (void);
 
+const GList *
+controller_get_friend_list              (void);
+
 void
 controller_close_mainwin                (void);
 

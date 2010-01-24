@@ -407,6 +407,8 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 ##################################################################
 AM_CONDITIONAL(MAEMO_PLATFORM, test "$PLATFORM" = "maemo")
 
+AM_CONDITIONAL(HILDON_2_2, test "$PLATFORM" = "maemo" -a "$PLATFORMVERS" = "5")
+
 AM_CONDITIONAL(USE_INTERNAL_MD5, test "x$have_gchecksum" != "xyes")
 if test "$have_gchecksum" = "yes"; then
    AC_DEFINE([HAVE_GCHECKSUM],[1],[Defined if GLib has support for GChecksum])

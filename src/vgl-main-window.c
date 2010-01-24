@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 #include "controller.h"
+#include "vgl-main-menu.h"
 #include "vgl-main-window.h"
 #include "radio.h"
 #include "uimisc.h"
@@ -52,14 +53,12 @@
 G_DEFINE_TYPE (VglMainWindow, vgl_main_window, PARENT_CLASS_TYPE);
 
 struct _VglMainWindowPrivate {
-        GtkWidget *play, *stop;
         GtkWidget *playbutton, *stopbutton, *skipbutton;
         GtkWidget *lovebutton, *banbutton, *recommendbutton;
         GtkWidget *dloadbutton, *tagbutton, *addplbutton;
         GtkWidget *playlist, *artist, *track, *album;
-        GtkWidget *radiomenu, *actionsmenu, *settings, *love, *dload;
-        GtkWidget *addtopls, *bmkmenu, *bmkartist, *bmktrack, *bmkradio;
         GtkWidget *album_cover;
+        VglMainMenu *menu;
         GtkProgressBar *progressbar;
         GString *progressbar_text;
         gboolean is_fullscreen;
@@ -315,7 +314,7 @@ vgl_main_window_set_track_as_loved      (VglMainWindow *w)
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         gtk_widget_set_sensitive (w->priv->lovebutton, FALSE);
-        gtk_widget_set_sensitive (w->priv->love, FALSE);
+        vgl_main_menu_set_track_as_loved (w->priv->menu);
 }
 
 void
@@ -325,27 +324,7 @@ vgl_main_window_set_track_as_added_to_playlist
 {
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         gtk_widget_set_sensitive (w->priv->addplbutton, !added);
-        gtk_widget_set_sensitive (w->priv->addtopls, !added);
-}
-
-static void
-menu_enable_all_items                   (GtkWidget *menu,
-                                         gboolean   enable)
-{
-        g_return_if_fail(GTK_IS_MENU(menu));
-        GList *l;
-        GList *items = gtk_container_get_children(GTK_CONTAINER(menu));
-        for (l = items; l != NULL; l = g_list_next(l)) {
-                GtkWidget *item, *submenu;
-                item = GTK_WIDGET(l->data);
-                submenu = gtk_menu_item_get_submenu(GTK_MENU_ITEM(item));
-                if (submenu != NULL) {
-                        menu_enable_all_items(submenu, enable);
-                } else {
-                        gtk_widget_set_sensitive(item, enable);
-                }
-        }
-        if (items != NULL) g_list_free(items);
+        vgl_main_menu_set_track_as_added_to_playlist (w->priv->menu, added);
 }
 
 void
@@ -357,6 +336,7 @@ vgl_main_window_set_state               (VglMainWindow      *w,
         g_return_if_fail(VGL_IS_MAIN_WINDOW(w));
         VglMainWindowPrivate *priv = w->priv;
         gboolean dim_labels = FALSE;
+        vgl_main_menu_set_state (priv->menu, state, t, radio_url);
         switch (state) {
         case VGL_MAIN_WINDOW_STATE_DISCONNECTED:
         case VGL_MAIN_WINDOW_STATE_STOPPED:
@@ -366,14 +346,8 @@ vgl_main_window_set_state               (VglMainWindow      *w,
                 gtk_label_set_text(GTK_LABEL(priv->artist), NULL);
                 gtk_label_set_text(GTK_LABEL(priv->track), NULL);
                 gtk_label_set_text(GTK_LABEL(priv->album), NULL);
-                gtk_widget_show (priv->play);
-                gtk_widget_hide (priv->stop);
                 gtk_widget_show (priv->playbutton);
                 gtk_widget_hide (priv->stopbutton);
-                menu_enable_all_items (priv->actionsmenu, FALSE);
-                menu_enable_all_items (priv->radiomenu, TRUE);
-                menu_enable_all_items (priv->bmkmenu, TRUE);
-                gtk_widget_set_sensitive (priv->play, TRUE);
                 gtk_widget_set_sensitive (priv->playbutton, TRUE);
                 gtk_widget_set_sensitive (priv->skipbutton, FALSE);
                 gtk_widget_set_sensitive (priv->lovebutton, FALSE);
@@ -382,9 +356,6 @@ vgl_main_window_set_state               (VglMainWindow      *w,
                 gtk_widget_set_sensitive (priv->dloadbutton, FALSE);
                 gtk_widget_set_sensitive (priv->tagbutton, FALSE);
                 gtk_widget_set_sensitive (priv->addplbutton, FALSE);
-                gtk_widget_set_sensitive (priv->settings, TRUE);
-                gtk_widget_set_sensitive (priv->bmkartist, FALSE);
-                gtk_widget_set_sensitive (priv->bmktrack, FALSE);
                 gtk_window_set_title(GTK_WINDOW(w), APP_NAME);
                 vgl_main_window_set_album_cover(w, NULL, 0);
                 break;
@@ -396,14 +367,8 @@ vgl_main_window_set_state               (VglMainWindow      *w,
                 vgl_main_window_update_track_info(w, t);
                 dim_labels = FALSE;
                 set_progress_bar_text(w, _("Playing..."));
-                gtk_widget_hide (priv->play);
                 gtk_widget_hide (priv->playbutton);
-                gtk_widget_show (priv->stop);
                 gtk_widget_show (priv->stopbutton);
-                menu_enable_all_items (priv->actionsmenu, TRUE);
-                menu_enable_all_items (priv->radiomenu, TRUE);
-                menu_enable_all_items (priv->bmkmenu, TRUE);
-                gtk_widget_set_sensitive (priv->play, FALSE);
                 gtk_widget_set_sensitive (priv->stopbutton, TRUE);
                 gtk_widget_set_sensitive (priv->skipbutton, TRUE);
                 gtk_widget_set_sensitive (priv->lovebutton, TRUE);
@@ -413,24 +378,13 @@ vgl_main_window_set_state               (VglMainWindow      *w,
                                           t->free_track_url != NULL);
                 gtk_widget_set_sensitive (priv->tagbutton, TRUE);
                 gtk_widget_set_sensitive (priv->addplbutton, TRUE);
-                gtk_widget_set_sensitive (priv->love, TRUE);
-                gtk_widget_set_sensitive (priv->settings, TRUE);
-                gtk_widget_set_sensitive (priv->bmkartist, t->artistid > 0);
-                gtk_widget_set_sensitive (priv->bmktrack, t->id > 0);
-                gtk_widget_set_sensitive (priv->dload,
-                                          t->free_track_url != NULL);
                 break;
         case VGL_MAIN_WINDOW_STATE_CONNECTING:
                 dim_labels = TRUE;
                 set_progress_bar_text(w, _("Connecting..."));
                 gtk_label_set_text(GTK_LABEL(priv->playlist), _("Connecting..."));
-                gtk_widget_hide (priv->play);
                 gtk_widget_hide (priv->playbutton);
-                gtk_widget_show (priv->stop);
                 gtk_widget_show (priv->stopbutton);
-                menu_enable_all_items (priv->actionsmenu, FALSE);
-                menu_enable_all_items (priv->radiomenu, FALSE);
-                menu_enable_all_items (priv->bmkmenu, FALSE);
                 gtk_widget_set_sensitive (priv->stopbutton, FALSE);
                 gtk_widget_set_sensitive (priv->skipbutton, FALSE);
                 gtk_widget_set_sensitive (priv->lovebutton, FALSE);
@@ -439,7 +393,6 @@ vgl_main_window_set_state               (VglMainWindow      *w,
                 gtk_widget_set_sensitive (priv->dloadbutton, FALSE);
                 gtk_widget_set_sensitive (priv->tagbutton, FALSE);
                 gtk_widget_set_sensitive (priv->addplbutton, FALSE);
-                gtk_widget_set_sensitive (priv->settings, FALSE);
                 gtk_window_set_title(GTK_WINDOW(w), APP_NAME);
                 vgl_main_window_set_album_cover (w, NULL, 0);
                 break;
@@ -450,7 +403,6 @@ vgl_main_window_set_state               (VglMainWindow      *w,
         if (state == VGL_MAIN_WINDOW_STATE_DISCONNECTED) {
                 gtk_label_set_text(GTK_LABEL(priv->playlist), _("Disconnected"));
         }
-        gtk_widget_set_sensitive (priv->bmkradio, radio_url != NULL);
         gtk_widget_set_sensitive (priv->artist, !dim_labels);
         gtk_widget_set_sensitive (priv->track, !dim_labels);
         gtk_widget_set_sensitive (priv->album, !dim_labels);
@@ -535,34 +487,6 @@ key_press_cb                            (GtkWidget     *widget,
 }
 #endif /* defined(MAEMO) || defined(HAVE_GST_MIXER) */
 
-static void
-play_selected                           (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_start_playing();
-}
-
-static void
-stop_selected                           (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_stop_playing();
-}
-
-static void
-skip_selected                           (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_skip_track();
-}
-
-static void
-close_app                               (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_quit_app();
-}
-
 static gboolean
 delete_event                            (GtkWidget *widget,
                                          GdkEvent  *event,
@@ -570,57 +494,6 @@ delete_event                            (GtkWidget *widget,
 {
         controller_close_mainwin();
         return TRUE;
-}
-
-static void
-radio_selected                          (GtkWidget *widget,
-                                         gpointer   data)
-{
-        LastfmRadio type = GPOINTER_TO_INT (data);
-        controller_play_radio(type);
-}
-
-static void
-others_radio_selected                   (GtkWidget *widget,
-                                         gpointer   data)
-{
-        LastfmRadio type = GPOINTER_TO_INT (data);
-        controller_play_others_radio(type);
-}
-
-static void
-group_radio_selected                    (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_play_group_radio();
-}
-
-static void
-globaltag_radio_selected                (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_play_globaltag_radio();
-}
-
-static void
-similarartist_radio_selected            (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_play_similarartist_radio();
-}
-
-static void
-url_radio_selected                      (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_play_radio_ask_url();
-}
-
-static void
-stop_after_selected                     (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_set_stop_after ();
 }
 
 static void
@@ -638,67 +511,10 @@ ban_track_selected                      (GtkWidget *widget,
 }
 
 static void
-tag_track_selected                      (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_tag_track();
-}
-
-static void
-recomm_track_selected                   (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_recomm_track();
-}
-
-static void
-add_to_playlist_selected                (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_add_to_playlist();
-}
-
-static void
 download_track_selected                 (GtkWidget *widget,
                                          gpointer   data)
 {
         controller_download_track (FALSE);
-}
-
-static void
-manage_bookmarks_selected               (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_manage_bookmarks();
-}
-
-static void
-add_bookmark_selected                   (GtkWidget *widget,
-                                         gpointer   data)
-{
-        BookmarkType type = GPOINTER_TO_INT(data);
-        controller_add_bookmark(type);
-}
-
-static void
-show_about_dialog                       (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_show_about ();
-}
-
-static void
-open_user_settings                      (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_open_usercfg();
-}
-
-static void
-import_servers_file                     (GtkWidget *widget,
-                                         gpointer   data)
-{
-        controller_import_servers_file ();
 }
 
 static void
@@ -752,290 +568,6 @@ image_button_new                        (const button_data *data)
         return button;
 }
 
-static GtkWidget *
-create_main_menu                        (VglMainWindow *w,
-                                         GtkAccelGroup *accel)
-{
-        VglMainWindowPrivate *priv = w->priv;
-        GtkMenuItem *lastfm, *radio, *actions, *bookmarks, *help;
-        GtkMenuItem *user, *others;
-        GtkWidget *group, *globaltag, *similarartist, *urlradio;
-        GtkMenuShell *lastfmsub, *radiosub, *actionssub, *bmksub, *helpsub;
-        GtkMenuShell *usersub, *othersub;
-        GtkWidget *settings, *import, *quit;
-        GtkWidget *play, *stop, *skip, *separ1, *separ2, *separ3;
-        GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
-        GtkWidget *library, *neigh, *loved, *playlist, *recomm, *usertag;
-        GtkWidget *library2, *neigh2, *loved2, *playlist2, *recomm2, *usertag2;
-        GtkWidget *managebmk, *addbmk, *bmkartist, *bmktrack, *bmkradio;
-        GtkWidget *about;
-#ifdef USE_HILDON_WINDOW
-        GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_new());
-#else
-        GtkMenuShell *bar = GTK_MENU_SHELL(gtk_menu_bar_new());
-#endif
-
-        /* Last.fm */
-        lastfm = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Last.fm")));
-        lastfmsub = GTK_MENU_SHELL(gtk_menu_new());
-        settings = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES,
-                                                       NULL);
-        import = gtk_menu_item_new_with_mnemonic(_("_Import servers file..."));
-        quit = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel);
-        gtk_menu_shell_append(bar, GTK_WIDGET(lastfm));
-        gtk_menu_item_set_submenu(lastfm, GTK_WIDGET(lastfmsub));
-        gtk_menu_shell_append(lastfmsub, settings);
-        gtk_menu_shell_append(lastfmsub, import);
-#ifndef USE_HILDON_WINDOW
-        separ1 = gtk_separator_menu_item_new();
-        gtk_menu_shell_append(lastfmsub, separ1);
-        gtk_menu_shell_append(lastfmsub, quit);
-#endif
-        g_signal_connect(G_OBJECT(settings), "activate",
-                         G_CALLBACK(open_user_settings), NULL);
-        g_signal_connect(G_OBJECT(import), "activate",
-                         G_CALLBACK(import_servers_file), NULL);
-        g_signal_connect(G_OBJECT(quit), "activate",
-                         G_CALLBACK(close_app), NULL);
-
-        /* Radio */
-        radio = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("Play _Radio")));
-        radiosub = GTK_MENU_SHELL(gtk_menu_new());
-        user = GTK_MENU_ITEM(gtk_menu_item_new_with_label(_("My radios")));
-        others = GTK_MENU_ITEM(gtk_menu_item_new_with_label(
-                                       _("Others' radios")));
-        group = gtk_menu_item_new_with_label(_("Group radio..."));
-        globaltag = gtk_menu_item_new_with_label(_("Music tagged..."));
-        similarartist = gtk_menu_item_new_with_label(_("Artists similar to..."));
-        urlradio = gtk_menu_item_new_with_label(_("Enter URL..."));
-        gtk_menu_shell_append(bar, GTK_WIDGET(radio));
-        gtk_menu_item_set_submenu(radio, GTK_WIDGET(radiosub));
-        gtk_menu_shell_append(radiosub, GTK_WIDGET(user));
-        gtk_menu_shell_append(radiosub, GTK_WIDGET(others));
-        gtk_menu_shell_append(radiosub, group);
-        gtk_menu_shell_append(radiosub, globaltag);
-        gtk_menu_shell_append(radiosub, similarartist);
-        gtk_menu_shell_append(radiosub, urlradio);
-        g_signal_connect(G_OBJECT(group), "activate",
-                         G_CALLBACK(group_radio_selected), NULL);
-        g_signal_connect(G_OBJECT(globaltag), "activate",
-                         G_CALLBACK(globaltag_radio_selected), NULL);
-        g_signal_connect(G_OBJECT(similarartist), "activate",
-                         G_CALLBACK(similarartist_radio_selected), NULL);
-        g_signal_connect(G_OBJECT(urlradio), "activate",
-                         G_CALLBACK(url_radio_selected), NULL);
-
-        /* Radio -> My radios */
-        usersub = GTK_MENU_SHELL(gtk_menu_new());
-        gtk_menu_item_set_submenu(user, GTK_WIDGET(usersub));
-        library = gtk_menu_item_new_with_label(_("My library"));
-        neigh = gtk_menu_item_new_with_label(_("My neighbours"));
-        loved = gtk_menu_item_new_with_label(_("My loved tracks"));
-        playlist = gtk_menu_item_new_with_label(_("My playlist"));
-        recomm = gtk_menu_item_new_with_label(_("My recommendations"));
-        usertag = gtk_menu_item_new_with_label(_("My music tagged..."));
-        gtk_menu_shell_append(usersub, library);
-        gtk_menu_shell_append(usersub, neigh);
-        gtk_menu_shell_append(usersub, loved);
-        gtk_menu_shell_append(usersub, playlist);
-        gtk_menu_shell_append(usersub, recomm);
-        gtk_menu_shell_append(usersub, usertag);
-        g_signal_connect(G_OBJECT(library), "activate",
-                         G_CALLBACK(radio_selected),
-                         GINT_TO_POINTER(LASTFM_LIBRARY_RADIO));
-        g_signal_connect(G_OBJECT(neigh), "activate",
-                         G_CALLBACK(radio_selected),
-                         GINT_TO_POINTER(LASTFM_NEIGHBOURS_RADIO));
-        g_signal_connect(G_OBJECT(loved), "activate",
-                         G_CALLBACK(radio_selected),
-                         GINT_TO_POINTER(LASTFM_LOVEDTRACKS_RADIO));
-        g_signal_connect(G_OBJECT(playlist), "activate",
-                         G_CALLBACK(radio_selected),
-                         GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
-        g_signal_connect(G_OBJECT(recomm), "activate",
-                         G_CALLBACK(radio_selected),
-                         GINT_TO_POINTER(LASTFM_RECOMMENDED_RADIO));
-        g_signal_connect(G_OBJECT(usertag), "activate",
-                         G_CALLBACK(radio_selected),
-                         GINT_TO_POINTER(LASTFM_USERTAG_RADIO));
-
-        /* Radio -> Others' radios */
-        othersub = GTK_MENU_SHELL(gtk_menu_new());
-        gtk_menu_item_set_submenu(others, GTK_WIDGET(othersub));
-        library2 = gtk_menu_item_new_with_label(_("Library..."));
-        neigh2 = gtk_menu_item_new_with_label(_("Neighbours..."));
-        loved2 = gtk_menu_item_new_with_label(_("Loved tracks..."));
-        playlist2 = gtk_menu_item_new_with_label(_("Playlist..."));
-        recomm2 = gtk_menu_item_new_with_label(_("Recommendations..."));
-        usertag2 = gtk_menu_item_new_with_label(_("Music tagged..."));
-        gtk_menu_shell_append(othersub, library2);
-        gtk_menu_shell_append(othersub, neigh2);
-        gtk_menu_shell_append(othersub, loved2);
-        gtk_menu_shell_append(othersub, playlist2);
-        gtk_menu_shell_append(othersub, recomm2);
-        gtk_menu_shell_append(othersub, usertag2);
-        g_signal_connect(G_OBJECT(library2), "activate",
-                         G_CALLBACK(others_radio_selected),
-                         GINT_TO_POINTER(LASTFM_LIBRARY_RADIO));
-        g_signal_connect(G_OBJECT(neigh2), "activate",
-                         G_CALLBACK(others_radio_selected),
-                         GINT_TO_POINTER(LASTFM_NEIGHBOURS_RADIO));
-        g_signal_connect(G_OBJECT(loved2), "activate",
-                         G_CALLBACK(others_radio_selected),
-                         GINT_TO_POINTER(LASTFM_LOVEDTRACKS_RADIO));
-        g_signal_connect(G_OBJECT(playlist2), "activate",
-                         G_CALLBACK(others_radio_selected),
-                         GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
-        g_signal_connect(G_OBJECT(recomm2), "activate",
-                         G_CALLBACK(others_radio_selected),
-                         GINT_TO_POINTER(LASTFM_RECOMMENDED_RADIO));
-        g_signal_connect(G_OBJECT(usertag2), "activate",
-                         G_CALLBACK(others_radio_selected),
-                         GINT_TO_POINTER(LASTFM_USERTAG_RADIO));
-
-        /* Actions */
-        actions = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Actions")));
-        actionssub = GTK_MENU_SHELL(gtk_menu_new());
-        play = gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_PLAY, NULL);
-        stop = gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_STOP, NULL);
-        skip = gtk_image_menu_item_new_from_stock (GTK_STOCK_MEDIA_NEXT, NULL);
-        separ1 = gtk_separator_menu_item_new();
-        separ2 = gtk_separator_menu_item_new();
-        separ3 = gtk_separator_menu_item_new();
-        stopafter = gtk_menu_item_new_with_label (_("Stop after ..."));
-        love = ui_menu_item_create_from_icon (LOVE_ITEM_ICON_NAME,
-                                              LOVE_ITEM_STRING);
-        ban = ui_menu_item_create_from_icon (BAN_ITEM_ICON_NAME,
-                                             BAN_ITEM_STRING);
-        addtopls = ui_menu_item_create_from_icon (ADD_TO_PLS_ITEM_ICON_NAME,
-                                                  ADD_TO_PLS_ITEM_STRING);
-        dload = ui_menu_item_create_from_icon ("document-save",
-                                               _("Download this track"));
-        tag = ui_menu_item_create_from_icon (TAG_ITEM_ICON_NAME,
-                                             TAG_ITEM_STRING);
-        dorecomm = ui_menu_item_create_from_icon (RECOMMEND_ITEM_ICON_NAME,
-                                                  RECOMMEND_ITEM_STRING);
-        gtk_menu_shell_append(bar, GTK_WIDGET(actions));
-        gtk_menu_item_set_submenu(actions, GTK_WIDGET(actionssub));
-        gtk_menu_shell_append(actionssub, play);
-        gtk_menu_shell_append(actionssub, stop);
-        gtk_menu_shell_append(actionssub, skip);
-        gtk_menu_shell_append(actionssub, separ1);
-        gtk_menu_shell_append(actionssub, dorecomm);
-        gtk_menu_shell_append(actionssub, tag);
-        gtk_menu_shell_append(actionssub, addtopls);
-        gtk_menu_shell_append(actionssub, separ2);
-        gtk_menu_shell_append(actionssub, love);
-        gtk_menu_shell_append(actionssub, ban);
-        gtk_menu_shell_append(actionssub, separ3);
-        gtk_menu_shell_append(actionssub, dload);
-        gtk_menu_shell_append(actionssub, stopafter);
-        g_signal_connect(G_OBJECT(stopafter), "activate",
-                         G_CALLBACK(stop_after_selected), NULL);
-        g_signal_connect(G_OBJECT(play), "activate",
-                         G_CALLBACK(play_selected), NULL);
-        g_signal_connect(G_OBJECT(stop), "activate",
-                         G_CALLBACK(stop_selected), NULL);
-        g_signal_connect(G_OBJECT(skip), "activate",
-                         G_CALLBACK(skip_selected), NULL);
-        g_signal_connect(G_OBJECT(love), "activate",
-                         G_CALLBACK(love_track_selected), NULL);
-        g_signal_connect(G_OBJECT(ban), "activate",
-                         G_CALLBACK(ban_track_selected), NULL);
-        g_signal_connect(G_OBJECT(tag), "activate",
-                         G_CALLBACK(tag_track_selected), NULL);
-        g_signal_connect(G_OBJECT(dorecomm), "activate",
-                         G_CALLBACK(recomm_track_selected), NULL);
-        g_signal_connect(G_OBJECT(addtopls), "activate",
-                         G_CALLBACK(add_to_playlist_selected), NULL);
-        g_signal_connect(G_OBJECT(dload), "activate",
-                         G_CALLBACK(download_track_selected), NULL);
-
-        /* Bookmarks */
-        bookmarks = GTK_MENU_ITEM(
-                gtk_menu_item_new_with_mnemonic(_("_Bookmarks")));
-        bmksub = GTK_MENU_SHELL(gtk_menu_new());
-        addbmk = ui_menu_item_create_from_icon ("gtk-new",
-                                                _("Add bookmark..."));
-        managebmk = ui_menu_item_create_from_icon ("gtk-edit",
-                                                   _("Manage bookmarks..."));
-        bmkartist = gtk_menu_item_new_with_label(_("Bookmark this artist..."));
-        bmktrack = gtk_menu_item_new_with_label(_("Bookmark this track..."));
-        bmkradio = gtk_menu_item_new_with_label(_("Bookmark this radio..."));
-        separ1 = gtk_separator_menu_item_new();
-        gtk_menu_shell_append(bar, GTK_WIDGET(bookmarks));
-        gtk_menu_item_set_submenu(bookmarks, GTK_WIDGET(bmksub));
-        gtk_menu_shell_append(bmksub, addbmk);
-        gtk_menu_shell_append(bmksub, managebmk);
-        gtk_menu_shell_append(bmksub, separ1);
-        gtk_menu_shell_append(bmksub, bmkartist);
-        gtk_menu_shell_append(bmksub, bmktrack);
-        gtk_menu_shell_append(bmksub, bmkradio);
-        g_signal_connect(G_OBJECT(managebmk), "activate",
-                         G_CALLBACK(manage_bookmarks_selected), NULL);
-        g_signal_connect(G_OBJECT(addbmk), "activate",
-                         G_CALLBACK(add_bookmark_selected),
-                         GINT_TO_POINTER(BOOKMARK_TYPE_EMPTY));
-        g_signal_connect(G_OBJECT(bmkartist), "activate",
-                         G_CALLBACK(add_bookmark_selected),
-                         GINT_TO_POINTER(BOOKMARK_TYPE_ARTIST));
-        g_signal_connect(G_OBJECT(bmktrack), "activate",
-                         G_CALLBACK(add_bookmark_selected),
-                         GINT_TO_POINTER(BOOKMARK_TYPE_TRACK));
-        g_signal_connect(G_OBJECT(bmkradio), "activate",
-                         G_CALLBACK(add_bookmark_selected),
-                         GINT_TO_POINTER(BOOKMARK_TYPE_CURRENT_RADIO));
-
-        /* Help */
-        help = GTK_MENU_ITEM(gtk_menu_item_new_with_mnemonic(_("_Help")));
-        helpsub = GTK_MENU_SHELL(gtk_menu_new());
-        about = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, accel);
-        gtk_menu_shell_append(bar, GTK_WIDGET(help));
-        gtk_menu_item_set_submenu(help, GTK_WIDGET(helpsub));
-        gtk_menu_shell_append(helpsub, about);
-        g_signal_connect(G_OBJECT(about), "activate",
-                         G_CALLBACK(show_about_dialog), NULL);
-#ifdef USE_HILDON_WINDOW
-        gtk_menu_shell_append(bar, quit);
-#endif
-
-        /* Keyboard shortcuts */
-        gtk_widget_add_accelerator(play, "activate", accel, GDK_space,
-                                   0, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(stop, "activate", accel, GDK_space,
-                                   0, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(skip, "activate", accel, GDK_Right,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(ban, "activate", accel, GDK_b,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(love, "activate", accel, GDK_l,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(dorecomm, "activate", accel, GDK_r,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(tag, "activate", accel, GDK_t,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(addtopls, "activate", accel, GDK_a,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(settings, "activate", accel, GDK_p,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(quit, "activate", accel, GDK_q,
-                                   GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-
-        priv->play = play;
-        priv->stop = stop;
-        priv->actionsmenu = GTK_WIDGET(actionssub);
-        priv->radiomenu = GTK_WIDGET(radiosub);
-        priv->settings = settings;
-        priv->dload = dload;
-        priv->love = love;
-        priv->addtopls = addtopls;
-        priv->bmkmenu = GTK_WIDGET (bmksub);
-        priv->bmkartist = bmkartist;
-        priv->bmktrack = bmktrack;
-        priv->bmkradio = bmkradio;
-        return GTK_WIDGET(bar);
-}
-
 static void
 vgl_main_window_init                    (VglMainWindow *self)
 {
@@ -1044,7 +576,6 @@ vgl_main_window_init                    (VglMainWindow *self)
         GtkBox *mainvbox, *vbox, *centralbox;
         GtkBox *image_box_holder, *image_box_holder2, *labelbox;
         GtkBox *buttonshbox, *secondary_bbox, *secondary_bar_vbox;
-        GtkWidget *menu;
         GtkWidget* image_box;
         GtkRcStyle* image_box_style;
         char *image_box_bg;
@@ -1110,7 +641,8 @@ vgl_main_window_init                    (VglMainWindow *self)
         gtk_misc_set_padding (GTK_MISC (priv->album_cover),
                               ALBUM_COVER_PADDING, ALBUM_COVER_PADDING);
         /* Menu */
-        menu = create_main_menu(self, accel);
+        priv->menu = vgl_main_menu_new (accel);
+
         /* Progress bar */
         priv->progressbar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
         gtk_progress_set_text_alignment(GTK_PROGRESS(priv->progressbar),
@@ -1163,10 +695,13 @@ vgl_main_window_init                    (VglMainWindow *self)
         gtk_box_pack_end (mainvbox, GTK_WIDGET (vbox), TRUE, TRUE, 0);
         gtk_container_add (GTK_CONTAINER (win), GTK_WIDGET (mainvbox));
 
-#ifdef USE_HILDON_WINDOW
-        hildon_window_set_menu(HILDON_WINDOW(win), GTK_MENU(menu));
+#ifdef MAEMO5
+        hildon_window_set_app_menu (HILDON_WINDOW (win),
+                                    HILDON_APP_MENU (priv->menu));
+#elif defined(USE_HILDON_WINDOW)
+        hildon_window_set_menu (HILDON_WINDOW (win), GTK_MENU (priv->menu));
 #else
-        gtk_box_pack_end (mainvbox, GTK_WIDGET (menu), FALSE, FALSE, 0);
+        gtk_box_pack_end (mainvbox, GTK_WIDGET (priv->menu), FALSE, FALSE, 0);
 #endif
         gtk_box_pack_start(vbox, priv->playlist, FALSE, FALSE, 0);
         gtk_box_pack_start(vbox, gtk_hseparator_new(), FALSE, FALSE, 0);
@@ -1175,23 +710,23 @@ vgl_main_window_init                    (VglMainWindow *self)
 
         /* Signals */
         g_signal_connect(G_OBJECT(priv->playbutton), "clicked",
-                         G_CALLBACK(play_selected), NULL);
+                         G_CALLBACK(controller_start_playing), NULL);
         g_signal_connect(G_OBJECT(priv->skipbutton), "clicked",
-                         G_CALLBACK(skip_selected), NULL);
+                         G_CALLBACK(controller_skip_track), NULL);
         g_signal_connect(G_OBJECT(priv->stopbutton), "clicked",
-                         G_CALLBACK(stop_selected), NULL);
+                         G_CALLBACK(controller_stop_playing), NULL);
         g_signal_connect(G_OBJECT(priv->lovebutton), "clicked",
                          G_CALLBACK(love_track_selected), NULL);
         g_signal_connect(G_OBJECT(priv->banbutton), "clicked",
                          G_CALLBACK(ban_track_selected), NULL);
         g_signal_connect(G_OBJECT(priv->recommendbutton), "clicked",
-                         G_CALLBACK(recomm_track_selected), NULL);
+                         G_CALLBACK(controller_recomm_track), NULL);
         g_signal_connect(G_OBJECT(priv->dloadbutton), "clicked",
                          G_CALLBACK(download_track_selected), NULL);
         g_signal_connect(G_OBJECT(priv->tagbutton), "clicked",
-                         G_CALLBACK(tag_track_selected), NULL);
+                         G_CALLBACK(controller_tag_track), NULL);
         g_signal_connect(G_OBJECT(priv->addplbutton), "clicked",
-                         G_CALLBACK(add_to_playlist_selected), NULL);
+                         G_CALLBACK(controller_add_to_playlist), NULL);
         g_signal_connect(G_OBJECT(win), "destroy",
                          G_CALLBACK(gtk_main_quit), NULL);
         g_signal_connect(G_OBJECT(win), "delete-event",
