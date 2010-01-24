@@ -16,6 +16,10 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#ifdef MAEMO5
+#   include <hildon/hildon.h>
+#endif
+
 enum {
         ID_COLUMN,
         NAME_COLUMN,
@@ -283,7 +287,14 @@ vgl_bookmark_window_init                (VglBookmarkWindow *self)
         /* Create widgets and private data */
         store = gtk_list_store_new(N_COLUMNS, G_TYPE_INT, G_TYPE_STRING,
                                    G_TYPE_STRING);
+#ifdef MAEMO5
+        scrwindow = hildon_pannable_area_new ();
+#else
         scrwindow = gtk_scrolled_window_new(NULL, NULL);
+        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrwindow),
+                                        GTK_POLICY_AUTOMATIC,
+                                        GTK_POLICY_AUTOMATIC);
+#endif /* MAEMO5 */
         priv->treeview = GTK_TREE_VIEW(gtk_tree_view_new());
         priv->playbtn = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
         priv->addbtn = gtk_button_new_from_stock(GTK_STOCK_ADD);
@@ -309,10 +320,6 @@ vgl_bookmark_window_init                (VglBookmarkWindow *self)
         gtk_tree_view_append_column(priv->treeview, col);
         gtk_tree_view_set_reorderable(priv->treeview, TRUE);
         gtk_tree_view_set_search_column(priv->treeview, NAME_COLUMN);
-
-        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrwindow),
-                                       GTK_POLICY_AUTOMATIC,
-                                       GTK_POLICY_AUTOMATIC);
 
         /* Signals */
         g_signal_connect(priv->playbtn, "clicked",
@@ -365,6 +372,15 @@ vgl_bookmark_window_init                (VglBookmarkWindow *self)
         gtk_box_pack_start(action_area, priv->editbtn,  FALSE, FALSE, 0);
         gtk_box_pack_start(action_area, priv->delbtn,   FALSE, FALSE, 0);
         gtk_box_pack_start(action_area, priv->closebtn, FALSE, FALSE, 0);
+
+#ifdef MAEMO5
+        hildon_gtk_tree_view_set_ui_mode (priv->treeview, HILDON_UI_MODE_EDIT);
+        hildon_gtk_widget_set_theme_size (priv->playbtn, FINGER_SIZE);
+        hildon_gtk_widget_set_theme_size (priv->addbtn, FINGER_SIZE);
+        hildon_gtk_widget_set_theme_size (priv->editbtn, FINGER_SIZE);
+        hildon_gtk_widget_set_theme_size (priv->delbtn, FINGER_SIZE);
+        gtk_widget_set_no_show_all (priv->closebtn, TRUE);
+#endif /* MAEMO5 */
 
         gtk_widget_show_all(gtk_bin_get_child(GTK_BIN(self)));
 }

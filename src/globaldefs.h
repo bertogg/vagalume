@@ -33,4 +33,8 @@
 
 #define THEME_ICONS_DIR APP_DATA_DIR "/icons"
 
+#ifdef MAEMO5
+#    define FINGER_SIZE (HILDON_SIZE_FINGER_HEIGHT | HILDON_SIZE_AUTO_WIDTH)
+#endif
+
 #endif
