@@ -1556,6 +1556,8 @@ controller_play_radio                   (LastfmRadio type)
         check_session(cb, NULL, GINT_TO_POINTER(type));
 }
 
+/* controller_play_others_radio() is not needed in Maemo 5 */
+#ifndef MAEMO5
 /**
  * Start playing other user's radio by its type. It will pop up a
  * dialog to ask the user whose radio is going to be played
@@ -1642,6 +1644,44 @@ controller_play_others_radio            (LastfmRadio type)
         }
         check_session(cb, NULL, GINT_TO_POINTER(type));
 }
+#else /* ifndef MAEMO5 */
+
+/**
+ * Start playing other user's radio by its type and user name.
+ *
+ * @param username User name
+ * @param type Radio type
+ */
+void
+controller_play_others_radio_by_user    (const char  *username,
+                                         LastfmRadio  type)
+{
+        char *url = NULL;
+        g_return_if_fail (username != NULL && mainwin != NULL);
+
+        if (type == LASTFM_USERTAG_RADIO) {
+                static char *previous = NULL;
+                char *tag = ui_input_dialog(
+                        vgl_main_window_get_window (mainwin, TRUE),
+                        _("Enter tag"), _("Enter a tag"), previous);
+                if (tag != NULL) {
+                        url = lastfm_usertag_radio_url (username, tag);
+                        g_free (previous);
+                        previous = tag;
+                }
+        } else {
+                if (type == LASTFM_RECOMMENDED_RADIO) {
+                        url = lastfm_recommended_radio_url (username, 100);
+                } else {
+                        url = lastfm_radio_url (type, username);
+                }
+        }
+        if (url != NULL) {
+                controller_play_radio_by_url (url);
+                g_free (url);
+        }
+}
+#endif /* MAEMO5 */
 
 /**
  * Open a dialog asking for a group and play its radio

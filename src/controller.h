@@ -101,6 +101,10 @@ void
 controller_play_others_radio            (LastfmRadio type);
 
 void
+controller_play_others_radio_by_user    (const char  *username,
+                                         LastfmRadio  type);
+
+void
 controller_play_radio_ask_url           (void);
 
 void
