@@ -181,6 +181,9 @@ ui_about_dialog                         (GtkWindow *parent)
                                "license", license, "version", APP_VERSION,
                                "website", website, "artists", artists,
                                "translator-credits", translators,
+#ifdef MAEMO5
+                               "program-name", APP_NAME,
+#endif
                                "logo", logo, NULL);
         g_object_unref (logo);
         g_free (translators);
