@@ -10,7 +10,9 @@
 
 #include "vgl-object.h"
 
+#ifndef G_DISABLE_CAST_CHECKS
 static const int vgl_object_header = 0x12bc0d9a;
+#endif
 
 gpointer
 vgl_object_new_with_size                (int            objsize,
@@ -18,7 +20,9 @@ vgl_object_new_with_size                (int            objsize,
 {
         VglObject *obj    = g_slice_alloc0 (objsize);
 
+#ifndef G_DISABLE_CAST_CHECKS
         obj->header       = vgl_object_header;
+#endif
         obj->refcount     = 1;
         obj->objsize      = objsize;
         obj->destroy_func = destroy_func;
@@ -31,7 +35,9 @@ vgl_object_ref                          (gpointer ptr)
 {
         VglObject *obj = ptr;
         g_return_val_if_fail (ptr != NULL, NULL);
+#ifndef G_DISABLE_CAST_CHECKS
         g_return_val_if_fail (obj->header == vgl_object_header, NULL);
+#endif
         g_atomic_int_inc (&(obj->refcount));
         return obj;
 }
@@ -41,12 +47,16 @@ vgl_object_unref                        (gpointer ptr)
 {
         VglObject *obj = ptr;
         g_return_if_fail (ptr != NULL);
+#ifndef G_DISABLE_CAST_CHECKS
         g_return_if_fail (obj->header == vgl_object_header);
+#endif
         if (g_atomic_int_dec_and_test (&(obj->refcount))) {
                 if (obj->destroy_func) {
                         obj->destroy_func (ptr);
                 }
+#ifndef G_DISABLE_CAST_CHECKS
                 obj->header = 0;
+#endif
                 g_slice_free1 (obj->objsize, obj);
         }
 }

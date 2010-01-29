@@ -16,7 +16,9 @@
 G_BEGIN_DECLS
 
 typedef struct {
+#ifndef G_DISABLE_CAST_CHECKS
         int header;
+#endif
         volatile int refcount;
         int objsize;
         GDestroyNotify destroy_func;

@@ -193,6 +193,16 @@ AC_ARG_ENABLE(tray-icon, [
   --disable-tray-icon     Disable tray icon and libnotify support],
   enable_tray_icon=$enableval, enable_tray_icon=$have_tray_icon)
 
+# Check whether to enable cast checks
+AC_ARG_ENABLE(cast-checks, [
+  --enable-cast-checks    Turn on cast checks
+  --disable-cast-checks   Turn off cast checks (default)],
+  enable_cast_checks=$enableval, enable_cast_checks=no)
+
+if test "x$enable_cast_checks" != "xyes"; then
+   EXTRA_CFLAGS="$EXTRA_CFLAGS -DG_DISABLE_CAST_CHECKS"
+fi
+
 #################################
 ### Platform dependent checks ###
 #################################
