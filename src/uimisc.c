@@ -493,6 +493,9 @@ ui_stop_after_dialog                    (GtkWindow     *parent,
         g_object_unref (model);
         entry = GTK_ENTRY (GTK_BIN (combo)->child);
         gtk_entry_set_width_chars (entry, 4);
+#ifdef MAEMO
+        hildon_gtk_entry_set_input_mode (entry, HILDON_GTK_INPUT_MODE_NUMERIC);
+#endif
 
         /* Set default values */
         if (*stopafter == STOP_AFTER_DONT_STOP) {
