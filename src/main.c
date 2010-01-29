@@ -35,6 +35,8 @@
 
 #ifdef MAEMO5
 #   include <hildon/hildon.h>
+#   undef APP_NAME
+#   define APP_NAME "FMRadio" /* Hack to play music while in silent mode */
 #endif
 
 int
