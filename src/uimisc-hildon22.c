@@ -125,6 +125,7 @@ usercfg_create_im_selector              (VglUserCfg *cfg,
         hildon_touch_selector_set_column_selection_mode (
                 selector, HILDON_TOUCH_SELECTOR_SELECTION_MODE_MULTIPLE);
 
+        hildon_touch_selector_unselect_all (selector, 0);
         model = hildon_touch_selector_get_model (selector, 0);
         gtk_tree_model_get_iter_first (model, &iter);
 
