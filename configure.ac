@@ -330,6 +330,7 @@ if test "$PLATFORM" = "maemo"; then
 
    if test "$PLATFORMVERS" -le "4"; then
       AC_DEFINE([HAVE_DSPMP3SINK], [1], [Defined if using dspmp3sink])
+      enable_volume_key_handler="yes"
       themesmallicondir="\${appdatadir}/icons/hicolor/50x50/apps"
    fi
 
@@ -471,9 +472,15 @@ if test "$have_tray_icon" = "yes"; then
 fi
 
 if test "$have_gst_mixer" = "yes"; then
+   enable_volume_key_handler="yes"
    AC_DEFINE([HAVE_GST_MIXER], [1], [Defined if buiding with GStreamer mixer])
    EXTRA_CFLAGS="$EXTRA_CFLAGS $Gst_mixer_CFLAGS"
    EXTRA_LIBS="$EXTRA_LIBS $Gst_mixer_LIBS"
+fi
+
+if test "$enable_volume_key_handler" = "yes"; then
+   AC_DEFINE([ENABLE_VOLUME_KEY_HANDLER], [1],
+             [Defined if using a handler for volume keys])
 fi
 
 AC_SUBST(AM_MAKEFLAGS, "itlocaledir=\${localedir}")

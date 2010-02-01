@@ -445,7 +445,7 @@ is_topmost_cb                           (GObject       *obj,
 }
 #endif /* MAEMO */
 
-#if defined(MAEMO) || defined(HAVE_GST_MIXER)
+#ifdef ENABLE_VOLUME_KEY_HANDLER
 static gboolean
 key_press_cb                            (GtkWidget     *widget,
                                          GdkEventKey   *event,
@@ -485,7 +485,7 @@ key_press_cb                            (GtkWidget     *widget,
         }
         return FALSE;
 }
-#endif /* defined(MAEMO) || defined(HAVE_GST_MIXER) */
+#endif /* ENABLE_VOLUME_KEY_HANDLER */
 
 static gboolean
 delete_event                            (GtkWidget *widget,
@@ -735,7 +735,7 @@ vgl_main_window_init                    (VglMainWindow *self)
         g_signal_connect(G_OBJECT(win), "notify::is-topmost",
                          G_CALLBACK(is_topmost_cb), self);
 #endif
-#if defined(MAEMO) || defined(HAVE_GST_MIXER)
+#ifdef ENABLE_VOLUME_KEY_HANDLER
         g_signal_connect(G_OBJECT(win), "key_press_event",
                          G_CALLBACK(key_press_cb), self);
 #endif
