@@ -94,6 +94,8 @@ if $PKG_CONFIG --atleast-version=2.12 gtk+-2.0; then
              [Defined if gtk_entry_completion_set_inline_selection () exists])
    AC_DEFINE([HAVE_GDK_THREADS_ADD_API],[1],
              [Defined if gtk_threads_add_* () exists])
+   AC_DEFINE([HAVE_GTK_ABOUT_DIALOG_PROGRAM_NAME],[1],
+             [Defined if GtkAboutDialog:program-name exists])
 else
    have_gtk_2_12="no"
 fi

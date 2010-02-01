@@ -176,14 +176,16 @@ ui_about_dialog                         (GtkWindow *parent)
         gtk_about_dialog_set_email_hook (about_dialog_uri_hook, "mailto:",
                                          NULL);
 #endif
-        gtk_show_about_dialog (parent, "name", APP_NAME, "authors", authors,
+        gtk_show_about_dialog (parent, "authors", authors,
                                "comments", _(appdescr), "copyright", copyright,
                                "license", license, "version", APP_VERSION,
                                "website", website, "artists", artists,
                                "translator-credits", translators,
-#ifdef MAEMO5
+#ifdef HAVE_GTK_ABOUT_DIALOG_PROGRAM_NAME
                                "program-name", APP_NAME,
-#endif
+#else
+                               "name", APP_NAME,
+#endif /* HAVE_GTK_ABOUT_DIALOG_PROGRAM_NAME */
                                "logo", logo, NULL);
         g_object_unref (logo);
         g_free (translators);
