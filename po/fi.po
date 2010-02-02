@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-02 12:00+0100\n"
-"PO-Revision-Date: 2010-02-02 14:15+0200\n"
+"PO-Revision-Date: 2010-02-02 14:46+0200\n"
 "Last-Translator: Janne Mäkinen <janne.makinen@surffi.fi>\n"
 "Language-Team: Finnish\n"
 "MIME-Version: 1.0\n"
@@ -747,7 +747,7 @@ msgstr "Pysäytä toisto tämän kappaleen jälkeen"
 #. Translators: the full text is "Stop after ____ minutes"
 #: ../src/uimisc.c:484
 msgid "Stop after"
-msgstr "Pysäytä toisto tämän kappaleen jälkeen"
+msgstr "Pysäytä kun"
 
 #: ../src/uimisc.h:20
 msgid "_Recommend to..."
@@ -782,7 +782,7 @@ msgstr "_Last.fm"
 
 #: ../src/vgl-main-menu-gtk.c:199
 msgid "_Import servers file..."
-msgstr "_Tuo palvelintiedot tiedostosta..."
+msgstr "_Tuo palvelintiedot..."
 
 #. Radio
 #: ../src/vgl-main-menu-gtk.c:218
@@ -875,7 +875,7 @@ msgstr "_Toiminnot"
 
 #: ../src/vgl-main-menu-gtk.c:321
 msgid "Stop after ..."
-msgstr "Pysäytä toisto tämän kappaleen jälkeen..."
+msgstr "Pysäytä kun..."
 
 #: ../src/vgl-main-menu-gtk.c:329
 #: ../src/vgl-main-window.c:105
@@ -956,7 +956,7 @@ msgstr "Anna kenen tahansa käyttäjän käyttäjätunnus"
 
 #: ../src/vgl-main-menu-hildon22.c:397
 msgid "Import servers file"
-msgstr "Tuo palvelintiedot tiedostosta"
+msgstr "Tuo palvelintiedot"
 
 #: ../src/vgl-main-menu-hildon22.c:402
 msgid "Play radio"
