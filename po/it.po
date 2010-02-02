@@ -3,13 +3,13 @@
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
 #
-# Andrea Grandi <a.grandi@gmail.com>, 2008, 2009.
+# Andrea Grandi <a.grandi@gmail.com>, 2008, 2009, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-02 13:50+0100\n"
-"PO-Revision-Date: 2009-10-23 22:19+0200\n"
+"PO-Revision-Date: 2010-02-02 19:00+0100\n"
 "Last-Translator: Andrea Grandi <a.grandi@gmail.com>\n"
 "Language-Team: Italian <>\n"
 "MIME-Version: 1.0\n"
@@ -28,11 +28,12 @@ msgstr "Errore di inizializzazione del gestore di connessioni"
 
 #: ../src/controller.c:487
 msgid "Server info imported correctly"
-msgstr ""
+msgstr "Informazioni sul server importate correttamente"
 
 #: ../src/controller.c:491
 msgid "No server info found in that file"
 msgstr ""
+"Non è stata trovata alcuna informazione sul server nela file selezionato"
 
 #: ../src/controller.c:537
 #, c-format
@@ -191,9 +192,8 @@ msgid "Play this user's radio"
 msgstr "Suona la radio di questo utente"
 
 #: ../src/controller.c:1676
-#, fuzzy
 msgid "Enter a tag"
-msgstr "Inserire l'etichetta"
+msgstr "Inserire un'etichetta"
 
 #: ../src/controller.c:1707
 msgid "Enter group"
@@ -233,7 +233,7 @@ msgstr "Impossibile inizializzare la libreria DBUS"
 
 #: ../src/controller.c:1890
 msgid "Error reading the server list file"
-msgstr ""
+msgstr "Errore durante la lettura del file con la lista dei server"
 
 #: ../src/controller.c:1898
 msgid "Error initializing audio system"
@@ -593,62 +593,50 @@ msgid "Popular tags for this"
 msgstr "Etichette popolari per questa"
 
 #: ../src/uimisc-hildon22.c:276
-#, fuzzy
 msgid "Username"
-msgstr "Username:"
+msgstr "Username"
 
 #: ../src/uimisc-hildon22.c:287
-#, fuzzy
 msgid "Password"
-msgstr "Password:"
+msgstr "Password"
 
 #: ../src/uimisc-hildon22.c:304
-#, fuzzy
 msgid "Service"
-msgstr "Servizio:"
+msgstr "Servizio"
 
 #: ../src/uimisc-hildon22.c:312
-#, fuzzy
 msgid "Enable scrobbling"
 msgstr "Abilita lo scrobbling"
 
 #: ../src/uimisc-hildon22.c:317
-#, fuzzy
 msgid "Discovery mode"
-msgstr "Modalità discovery:"
+msgstr "Modalità discovery"
 
 #: ../src/uimisc-hildon22.c:333
-#, fuzzy
 msgid "Proxy address"
 msgstr "Indirizzo del Proxy"
 
 #: ../src/uimisc-hildon22.c:351
-#, fuzzy
 msgid "Download directory"
-msgstr "Selezione la directory per il download"
+msgstr "Directory per il download"
 
 #: ../src/uimisc-hildon22.c:386
-#, fuzzy
 msgid "IM message template"
 msgstr "Formato del messaggio di status"
 
 #: ../src/uimisc-hildon22.c:404
-#, fuzzy
 msgid "Disable confirmation dialogs"
-msgstr "Disabilita le finestre di conferma:"
+msgstr "Disabilita le finestre di conferma"
 
 #: ../src/uimisc-hildon22.c:892 ../src/uimisc-hildon22.c:920
 #, c-format
 msgid "%d tags"
-msgstr ""
+msgstr "%d tag"
 
 #. Text entry
 #: ../src/uimisc-hildon22.c:955
-#, fuzzy
 msgid "Enter a comma-separated list of tags"
-msgstr ""
-"Inserire una lista di tag\n"
-"separati dalla virgola"
+msgstr "Inserire una lista di tag separati dalla virgola"
 
 #: ../src/uimisc.c:57
 msgid "Client for Last.fm and compatible services"
@@ -716,7 +704,7 @@ msgstr "Nome di segnalibro non valido"
 
 #: ../src/uimisc.c:376
 msgid "Select server file to import"
-msgstr ""
+msgstr "Seleziona il file con il server da importare"
 
 #. Create all widgets
 #: ../src/uimisc.c:471
@@ -776,7 +764,7 @@ msgstr "_Last.fm"
 
 #: ../src/vgl-main-menu-gtk.c:199
 msgid "_Import servers file..."
-msgstr ""
+msgstr "_Importa il file con i server..."
 
 #. Radio
 #: ../src/vgl-main-menu-gtk.c:218
@@ -858,9 +846,8 @@ msgid "_Actions"
 msgstr "_Azioni"
 
 #: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
-#, fuzzy
 msgid "Stop after..."
-msgstr "Ferma dopo ..."
+msgstr "Ferma dopo..."
 
 #: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
 msgid "Download this track"
@@ -896,57 +883,54 @@ msgid "_Help"
 msgstr "A_iuto"
 
 #: ../src/vgl-main-menu-hildon22.c:221 ../src/vgl-main-menu-hildon22.c:335
-#, fuzzy
 msgid "Select radio"
-msgstr "Radio dei tag utente"
+msgstr "Seleziona radio"
 
 #: ../src/vgl-main-menu-hildon22.c:223
-#, fuzzy, c-format
+#, c-format
 msgid "%s's library"
-msgstr "La mia libreria"
+msgstr "Libreria di %s"
 
 #: ../src/vgl-main-menu-hildon22.c:225
-#, fuzzy, c-format
+#, c-format
 msgid "%s's neighbours"
-msgstr "I miei vicini"
+msgstr "Vicini di %s"
 
 #: ../src/vgl-main-menu-hildon22.c:227
-#, fuzzy, c-format
+#, c-format
 msgid "%s's loved tracks"
-msgstr "Le mie tracce preferite"
+msgstr "Tracce preferite da %s"
 
 #: ../src/vgl-main-menu-hildon22.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "%s's playlist"
-msgstr "La mia playlist"
+msgstr "Playlist di %s"
 
 #: ../src/vgl-main-menu-hildon22.c:231
-#, fuzzy, c-format
+#, c-format
 msgid "%s's recommendations"
-msgstr "Le mie raccomandazioni"
+msgstr "Raccomandazioni di %s"
 
 #: ../src/vgl-main-menu-hildon22.c:233
-#, fuzzy, c-format
+#, c-format
 msgid "%s's music tagged..."
-msgstr "La musica che ho etichettato"
+msgstr "Musica etichettata da %s"
 
 #: ../src/vgl-main-menu-hildon22.c:260
-#, fuzzy
 msgid "Type any user name"
-msgstr "Inserire lo username"
+msgstr "Inserire uno username"
 
 #: ../src/vgl-main-menu-hildon22.c:397
 msgid "Import servers file"
-msgstr ""
+msgstr "Importa il file con i server"
 
 #: ../src/vgl-main-menu-hildon22.c:402
-#, fuzzy
 msgid "Play radio"
-msgstr "Riproduci _Radio"
+msgstr "Riproduci radio"
 
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
-msgstr ""
+msgstr "Persone"
 
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
