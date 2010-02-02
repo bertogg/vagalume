@@ -359,6 +359,7 @@ ui_usercfg_window                       (GtkWindow   *parent,
         autodl = HILDON_CHECK_BUTTON (hildon_check_button_new (FINGER_SIZE));
         g_object_set (autodl, "width-request", 1, NULL);
         gtk_button_set_label (GTK_BUTTON (autodl),
+                              /* Translators: keep this string short!! */
                               _("Automatically download free tracks"));
         gtk_box_pack_start (vbox, GTK_WIDGET (autodl), FALSE, FALSE, 0);
 
