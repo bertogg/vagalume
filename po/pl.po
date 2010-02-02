@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.71\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 12:00+0100\n"
+"POT-Creation-Date: 2010-02-02 13:50+0100\n"
 "PO-Revision-Date: 2009-10-03 11:59+0100\n"
 "Last-Translator: Dawid Pakuła (ZuluS) <zulus@w3des.net>\n"
 "Language-Team: Polish <zulus@w3des.net>\n"
@@ -843,8 +843,9 @@ msgstr "Utwory polecone..."
 msgid "_Actions"
 msgstr "_Akcje"
 
-#: ../src/vgl-main-menu-gtk.c:321
-msgid "Stop after ..."
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+#, fuzzy
+msgid "Stop after..."
 msgstr "Zatrzymaj po ..."
 
 #: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
@@ -932,11 +933,6 @@ msgstr "Odtwórz _Radio"
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
 msgstr ""
-
-#: ../src/vgl-main-menu-hildon22.c:412
-#, fuzzy
-msgid "Stop after..."
-msgstr "Zatrzymaj po ..."
 
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
@@ -1075,6 +1071,9 @@ msgid ""
 msgstr ""
 "przez <i>%s</i>\n"
 "z <i>%s</i>"
+
+#~ msgid "Stop after ..."
+#~ msgstr "Zatrzymaj po ..."
 
 #~ msgid "Invalid radio URL"
 #~ msgstr "Nie poprawny adres radia"

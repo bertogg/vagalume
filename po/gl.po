@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume en Galego 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 12:00+0100\n"
+"POT-Creation-Date: 2010-02-02 13:50+0100\n"
 "PO-Revision-Date: 2009-12-13 22:34+0100\n"
 "Last-Translator: Amador Loureiro Blanco <dorfun@adorfunteca.org>\n"
 "Language-Team: Vagalume en Galego <dorfun@adorfunteca.org>\n"
@@ -858,8 +858,9 @@ msgstr "Recomendacións..."
 msgid "_Actions"
 msgstr "_Accións"
 
-#: ../src/vgl-main-menu-gtk.c:321
-msgid "Stop after ..."
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+#, fuzzy
+msgid "Stop after..."
 msgstr "Parar despois..."
 
 #: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
@@ -947,11 +948,6 @@ msgstr "Reproducir _Radio"
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
 msgstr ""
-
-#: ../src/vgl-main-menu-hildon22.c:412
-#, fuzzy
-msgid "Stop after..."
-msgstr "Parar despois..."
 
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
@@ -1090,6 +1086,9 @@ msgid ""
 msgstr ""
 " por <i>%s</i>\n"
 " do <i>%s</i>"
+
+#~ msgid "Stop after ..."
+#~ msgstr "Parar despois..."
 
 #~ msgid "Invalid radio URL"
 #~ msgstr "O URL da radio non é correcto"

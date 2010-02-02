@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 12:00+0100\n"
+"POT-Creation-Date: 2010-02-02 13:50+0100\n"
 "PO-Revision-Date: 2010-02-02 14:46+0200\n"
 "Last-Translator: Janne Mäkinen <janne.makinen@surffi.fi>\n"
 "Language-Team: Finnish\n"
@@ -171,9 +171,7 @@ msgstr ""
 "tai vain Last.fm-palvelun tilaajat\n"
 "voivat käyttää sitä"
 
-#: ../src/controller.c:1535
-#: ../src/controller.c:1676
-#: ../src/controller.c:1730
+#: ../src/controller.c:1535 ../src/controller.c:1676 ../src/controller.c:1730
 msgid "Enter tag"
 msgstr "Anna leima"
 
@@ -221,8 +219,7 @@ msgstr "Anna radion URL-osoite"
 msgid "Enter the URL of the Last.fm radio"
 msgstr "Anna Last.fm-radion URL-osoite"
 
-#: ../src/controller.c:1786
-#: ../src/uimisc.c:305
+#: ../src/controller.c:1786 ../src/uimisc.c:305
 msgid "Last.fm radio URLs must start with lastfm://"
 msgstr "Last.fm radion URL-osoitteen täytyy alkaa kirjaimilla lastfm://"
 
@@ -309,8 +306,7 @@ msgstr "(tuntematon radio)"
 msgid "User tag radio"
 msgstr "Käyttäjän leimaama radio"
 
-#: ../src/uimisc-gtk.c:113
-#: ../src/uimisc-gtk.c:234
+#: ../src/uimisc-gtk.c:113 ../src/uimisc-gtk.c:234
 msgid "Username:"
 msgstr "Käyttäjätunnus:"
 
@@ -339,8 +335,7 @@ msgid "Discovery mode:"
 msgstr "Discovery-tila:"
 
 #. Account frame
-#: ../src/uimisc-gtk.c:285
-#: ../src/uimisc-hildon22.c:269
+#: ../src/uimisc-gtk.c:285 ../src/uimisc-hildon22.c:269
 msgid "Account"
 msgstr "Käyttäjätili"
 
@@ -371,8 +366,7 @@ msgstr ""
 "* Discovery-tila:\n"
 "Älä soita aikaisemmin kuunneltuja kappaleita. Vaatii Last.fm-tilauksen."
 
-#: ../src/uimisc-gtk.c:308
-#: ../src/uimisc-hildon22.c:328
+#: ../src/uimisc-gtk.c:308 ../src/uimisc-hildon22.c:328
 msgid "Use HTTP proxy"
 msgstr "Käytä HTTP-välityspalvelinta"
 
@@ -381,8 +375,7 @@ msgid "Proxy address:"
 msgstr "Välityspalvelimen osoite:"
 
 #. Connection frame
-#: ../src/uimisc-gtk.c:328
-#: ../src/uimisc-hildon22.c:321
+#: ../src/uimisc-gtk.c:328 ../src/uimisc-hildon22.c:321
 msgid "Connection"
 msgstr "Yhteys"
 
@@ -403,20 +396,17 @@ msgstr ""
 "tunnus:salasana@osoite:portti\n"
 "Vain osoite (voi olla myös IP-osoite) on pakollinen."
 
-#: ../src/uimisc-gtk.c:348
-#: ../src/uimisc.c:392
+#: ../src/uimisc-gtk.c:348 ../src/uimisc.c:392
 msgid "Select download directory"
 msgstr "Valitse hakemisto latauksille"
 
 #. Translators: keep this string short!!
-#: ../src/uimisc-gtk.c:349
-#: ../src/uimisc-hildon22.c:363
+#: ../src/uimisc-gtk.c:349 ../src/uimisc-hildon22.c:363
 msgid "Automatically download free tracks"
 msgstr "Lataa vapaat kappaleet automaattisesti"
 
 #. Download frame
-#: ../src/uimisc-gtk.c:372
-#: ../src/uimisc-hildon22.c:343
+#: ../src/uimisc-gtk.c:372 ../src/uimisc-hildon22.c:343
 msgid "Download"
 msgstr "Lataus"
 
@@ -424,10 +414,12 @@ msgstr "Lataus"
 #: ../src/uimisc-gtk.c:375
 msgid ""
 "* Download directory:\n"
-"Where to download mp3 files. Note that you can only download those songs marked as freely downloadable by the server."
+"Where to download mp3 files. Note that you can only download those songs "
+"marked as freely downloadable by the server."
 msgstr ""
 "* Lataushakemisto:\n"
-"Hakemisto lataamillesi mp3-tiedostoille. Voit ladata vain palvelun vapaasti ladattavaksi merkittyjä kappaleita."
+"Hakemisto lataamillesi mp3-tiedostoille. Voit ladata vain palvelun vapaasti "
+"ladattavaksi merkittyjä kappaleita."
 
 #: ../src/uimisc-gtk.c:394
 msgid "IM message template:"
@@ -450,8 +442,7 @@ msgid "Update Telepathy status:"
 msgstr "Päivitä tila Telepathyyn:"
 
 #. IM status frame
-#: ../src/uimisc-gtk.c:429
-#: ../src/uimisc-hildon22.c:367
+#: ../src/uimisc-gtk.c:429 ../src/uimisc-hildon22.c:367
 #: ../src/uimisc-hildon22.c:378
 msgid "Update IM status"
 msgstr "Päivitä tila pikaviestiohjelmaan"
@@ -459,14 +450,16 @@ msgstr "Päivitä tila pikaviestiohjelmaan"
 #. Set help
 #: ../src/uimisc-gtk.c:432
 msgid ""
-"Vagalume can update the status message of your IM client each time a new song starts. The template can contain the following keywords:\n"
+"Vagalume can update the status message of your IM client each time a new "
+"song starts. The template can contain the following keywords:\n"
 "\n"
 "{artist}: Name of the artist\n"
 "{title}: Song title\n"
 "{station}: Radio station\n"
 "{version}: Vagalume version"
 msgstr ""
-"Vagalume voi päivittää tilan pikaviestiohjelmaasi aina kun uusi kappale alkaa. Viestipohjassa voi olla seuraavat avainsanat:\n"
+"Vagalume voi päivittää tilan pikaviestiohjelmaasi aina kun uusi kappale "
+"alkaa. Viestipohjassa voi olla seuraavat avainsanat:\n"
 "\n"
 "{artist}: Esittäjän nimi\n"
 "{title}: Kappaleen nimi\n"
@@ -516,58 +509,47 @@ msgstr ""
 "Piilota Vagalumen ikkuna sulje-painikkeesta."
 
 #. Misc frame
-#: ../src/uimisc-gtk.c:512
-#: ../src/uimisc-hildon22.c:396
+#: ../src/uimisc-gtk.c:512 ../src/uimisc-hildon22.c:396
 msgid "Misc"
 msgstr "Sekalaiset"
 
 #. Create dialog
-#: ../src/uimisc-gtk.c:531
-#: ../src/uimisc-hildon22.c:256
+#: ../src/uimisc-gtk.c:531 ../src/uimisc-hildon22.c:256
 msgid "User settings"
 msgstr "Käyttäjäasetukset"
 
-#: ../src/uimisc-gtk.c:648
-#: ../src/uimisc-hildon22.c:548
+#: ../src/uimisc-gtk.c:648 ../src/uimisc-hildon22.c:548
 msgid "Artist: "
 msgstr "Esiintyjä:"
 
-#: ../src/uimisc-gtk.c:656
-#: ../src/uimisc-hildon22.c:552
+#: ../src/uimisc-gtk.c:656 ../src/uimisc-hildon22.c:552
 msgid "Track: "
 msgstr "Kappale:"
 
-#: ../src/uimisc-gtk.c:665
-#: ../src/uimisc-hildon22.c:557
+#: ../src/uimisc-gtk.c:665 ../src/uimisc-hildon22.c:557
 msgid "Album: "
 msgstr "Albumi:"
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:718
-#: ../src/uimisc-hildon22.c:639
+#: ../src/uimisc-gtk.c:718 ../src/uimisc-hildon22.c:639
 msgid "Send a recommendation"
 msgstr "Lähetä suositus"
 
-#: ../src/uimisc-gtk.c:724
-#: ../src/uimisc-hildon22.c:645
+#: ../src/uimisc-gtk.c:724 ../src/uimisc-hildon22.c:645
 msgid "Recommend this"
 msgstr "Suosittele tätä"
 
-#: ../src/uimisc-gtk.c:747
-#: ../src/uimisc-hildon22.c:649
+#: ../src/uimisc-gtk.c:747 ../src/uimisc-hildon22.c:649
 msgid "Send recommendation to"
 msgstr "Lähetä suositus henkilölle"
 
 #. Message of the recommendation
-#: ../src/uimisc-gtk.c:755
-#: ../src/uimisc-hildon22.c:656
+#: ../src/uimisc-gtk.c:755 ../src/uimisc-hildon22.c:656
 msgid "Recommendation message"
 msgstr "Suositteluviesti"
 
-#: ../src/uimisc-gtk.c:936
-#: ../src/uimisc-gtk.c:1001
-#: ../src/uimisc-hildon22.c:829
-#: ../src/uimisc-hildon22.c:831
+#: ../src/uimisc-gtk.c:936 ../src/uimisc-gtk.c:1001
+#: ../src/uimisc-hildon22.c:829 ../src/uimisc-hildon22.c:831
 msgid "retrieving..."
 msgstr "noudetaan..."
 
@@ -577,14 +559,12 @@ msgid "(none)"
 msgstr "(ei mitään)"
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:1006
-#: ../src/uimisc-hildon22.c:947
+#: ../src/uimisc-gtk.c:1006 ../src/uimisc-hildon22.c:947
 msgid "Tagging"
 msgstr "Leimaaminen"
 
 #. Combo to select what to tag
-#: ../src/uimisc-gtk.c:1011
-#: ../src/uimisc-hildon22.c:952
+#: ../src/uimisc-gtk.c:1011 ../src/uimisc-hildon22.c:952
 msgid "Tag this"
 msgstr "Leimaa tämä"
 
@@ -598,13 +578,11 @@ msgstr ""
 "lista leimasanoja"
 
 #. Combo boxes
-#: ../src/uimisc-gtk.c:1037
-#: ../src/uimisc-hildon22.c:960
+#: ../src/uimisc-gtk.c:1037 ../src/uimisc-hildon22.c:960
 msgid "Your favourite tags"
 msgstr "Suosituimmat leimasi"
 
-#: ../src/uimisc-gtk.c:1038
-#: ../src/uimisc-hildon22.c:968
+#: ../src/uimisc-gtk.c:1038 ../src/uimisc-hildon22.c:968
 msgid "Popular tags for this"
 msgstr "Suosittuja leimoja tälle kappaleelle"
 
@@ -644,8 +622,7 @@ msgstr "Pikaviestin pohja"
 msgid "Disable confirmation dialogs"
 msgstr "Poista varmistusikkunat käytöstä"
 
-#: ../src/uimisc-hildon22.c:892
-#: ../src/uimisc-hildon22.c:920
+#: ../src/uimisc-hildon22.c:892 ../src/uimisc-hildon22.c:920
 #, c-format
 msgid "%d tags"
 msgstr "%d leimat"
@@ -770,8 +747,7 @@ msgid "_Ban this track"
 msgstr "Estä tämä kappale"
 
 #. Configure widgets
-#: ../src/vgl-bookmark-window.c:312
-#: ../src/vgl-main-menu-hildon22.c:418
+#: ../src/vgl-bookmark-window.c:312 ../src/vgl-main-menu-hildon22.c:418
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
 
@@ -797,54 +773,44 @@ msgstr "Minun radioni"
 msgid "Others' radios"
 msgstr "Muiden radiot"
 
-#: ../src/vgl-main-menu-gtk.c:223
-#: ../src/vgl-main-menu-hildon22.c:339
+#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:339
 msgid "Group radio..."
 msgstr "Ryhmäradio..."
 
-#: ../src/vgl-main-menu-gtk.c:224
-#: ../src/vgl-main-menu-gtk.c:286
+#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:286
 #: ../src/vgl-main-menu-hildon22.c:337
 msgid "Music tagged..."
 msgstr "Leimatut kappaleet..."
 
-#: ../src/vgl-main-menu-gtk.c:225
-#: ../src/vgl-main-menu-hildon22.c:338
+#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:338
 msgid "Artists similar to..."
 msgstr "Samanlaiset esiintyjät kuin..."
 
-#: ../src/vgl-main-menu-gtk.c:226
-#: ../src/vgl-main-menu-hildon22.c:346
+#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:346
 msgid "Enter URL..."
 msgstr "Kirjoita URL-osoite..."
 
-#: ../src/vgl-main-menu-gtk.c:247
-#: ../src/vgl-main-menu-hildon22.c:340
+#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:340
 msgid "My library"
 msgstr "Oma kirjastoni"
 
-#: ../src/vgl-main-menu-gtk.c:248
-#: ../src/vgl-main-menu-hildon22.c:341
+#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:341
 msgid "My neighbours"
 msgstr "Naapurini"
 
-#: ../src/vgl-main-menu-gtk.c:249
-#: ../src/vgl-main-menu-hildon22.c:342
+#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:342
 msgid "My loved tracks"
 msgstr "Pitämäni kappaleet"
 
-#: ../src/vgl-main-menu-gtk.c:250
-#: ../src/vgl-main-menu-hildon22.c:343
+#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:343
 msgid "My playlist"
 msgstr "Soittolistani"
 
-#: ../src/vgl-main-menu-gtk.c:251
-#: ../src/vgl-main-menu-hildon22.c:344
+#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:344
 msgid "My recommendations"
 msgstr "Suositukseni"
 
-#: ../src/vgl-main-menu-gtk.c:252
-#: ../src/vgl-main-menu-hildon22.c:345
+#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:345
 msgid "My music tagged..."
 msgstr "Leimaamani kappaleet..."
 
@@ -873,12 +839,11 @@ msgstr "Suositukset..."
 msgid "_Actions"
 msgstr "_Toiminnot"
 
-#: ../src/vgl-main-menu-gtk.c:321
-msgid "Stop after ..."
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+msgid "Stop after..."
 msgstr "Pysäytä kun..."
 
-#: ../src/vgl-main-menu-gtk.c:329
-#: ../src/vgl-main-window.c:105
+#: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
 msgid "Download this track"
 msgstr "Lataa tämä kappale"
 
@@ -890,23 +855,19 @@ msgstr "_Kirjanmerkit"
 msgid "Add bookmark..."
 msgstr "Lisää kirjanmerkki..."
 
-#: ../src/vgl-main-menu-gtk.c:377
-#: ../src/vgl-main-menu-hildon22.c:120
+#: ../src/vgl-main-menu-gtk.c:377 ../src/vgl-main-menu-hildon22.c:120
 msgid "Manage bookmarks..."
 msgstr "Järjestele kirjanmerkkejä..."
 
-#: ../src/vgl-main-menu-gtk.c:378
-#: ../src/vgl-main-menu-hildon22.c:429
+#: ../src/vgl-main-menu-gtk.c:378 ../src/vgl-main-menu-hildon22.c:429
 msgid "Bookmark this artist..."
 msgstr "Lisää tämä esittäjä kirjanmerkkeihin..."
 
-#: ../src/vgl-main-menu-gtk.c:379
-#: ../src/vgl-main-menu-hildon22.c:436
+#: ../src/vgl-main-menu-gtk.c:379 ../src/vgl-main-menu-hildon22.c:436
 msgid "Bookmark this track..."
 msgstr "Lisää tämä kappale kirjanmerkkeihin..."
 
-#: ../src/vgl-main-menu-gtk.c:380
-#: ../src/vgl-main-menu-hildon22.c:443
+#: ../src/vgl-main-menu-gtk.c:380 ../src/vgl-main-menu-hildon22.c:443
 msgid "Bookmark this radio..."
 msgstr "Lisää tämä radio kirjanmerkkeihin..."
 
@@ -915,8 +876,7 @@ msgstr "Lisää tämä radio kirjanmerkkeihin..."
 msgid "_Help"
 msgstr "_Apua"
 
-#: ../src/vgl-main-menu-hildon22.c:221
-#: ../src/vgl-main-menu-hildon22.c:335
+#: ../src/vgl-main-menu-hildon22.c:221 ../src/vgl-main-menu-hildon22.c:335
 msgid "Select radio"
 msgstr "Valitse radio"
 
@@ -966,10 +926,6 @@ msgstr "Soita radiota"
 msgid "People"
 msgstr "Ihmiset"
 
-#: ../src/vgl-main-menu-hildon22.c:412
-msgid "Stop after..."
-msgstr "Pysäytä kun..."
-
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
 msgstr "Aloita toisto"
@@ -1018,8 +974,7 @@ msgstr "<b>Albumi:</b>\n"
 msgid "<b>Listening to <i>"
 msgstr "<b>Kuunnellaan <i>"
 
-#: ../src/vgl-main-window.c:344
-#: ../src/vgl-main-window.c:345
+#: ../src/vgl-main-window.c:344 ../src/vgl-main-window.c:345
 msgid "Stopped"
 msgstr "Pysäytetty"
 
@@ -1027,8 +982,7 @@ msgstr "Pysäytetty"
 msgid "Playing..."
 msgstr "Soitetaan..."
 
-#: ../src/vgl-main-window.c:384
-#: ../src/vgl-main-window.c:385
+#: ../src/vgl-main-window.c:384 ../src/vgl-main-window.c:385
 msgid "Connecting..."
 msgstr "Yhdistetään..."
 
@@ -1110,18 +1064,26 @@ msgstr ""
 " esittäjä: <i>%s</i>\n"
 " albumi: <i>%s</i>"
 
+#~ msgid "Stop after ..."
+#~ msgstr "Pysäytä kun..."
+
 #~ msgid "Invalid radio URL"
 #~ msgstr "Virheellinen radion URL-osoite"
+
 #~ msgid "A Last.fm client for Gnome and Maemo"
 #~ msgstr "Last.fm-asiakasohjelma Gnomelle ja Maemolle"
+
 #~ msgid "Settings..."
 #~ msgstr "Asetukset..."
+
 #~ msgid "Quit"
 #~ msgstr "Lopeta"
+
 #~ msgid "About..."
 #~ msgstr "Tietoja ohjelmasta..."
+
 #~ msgid "My personal radio"
 #~ msgstr "Henkilökohtainen radioni"
+
 #~ msgid "Personal..."
 #~ msgstr "Henkilökohtainen..."
-

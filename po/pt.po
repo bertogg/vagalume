@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 12:00+0100\n"
+"POT-Creation-Date: 2010-02-02 13:50+0100\n"
 "PO-Revision-Date: 2009-12-13 22:32+0100\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese\n"
@@ -850,8 +850,9 @@ msgstr "Recomendações..."
 msgid "_Actions"
 msgstr "A_cções"
 
-#: ../src/vgl-main-menu-gtk.c:321
-msgid "Stop after ..."
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+#, fuzzy
+msgid "Stop after..."
 msgstr "Parar depois ..."
 
 #: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
@@ -939,11 +940,6 @@ msgstr "Tocar _Rádio"
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
 msgstr ""
-
-#: ../src/vgl-main-menu-hildon22.c:412
-#, fuzzy
-msgid "Stop after..."
-msgstr "Parar depois ..."
 
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
@@ -1082,6 +1078,9 @@ msgid ""
 msgstr ""
 " de <i>%s</i>\n"
 " do <i>%s</i>"
+
+#~ msgid "Stop after ..."
+#~ msgstr "Parar depois ..."
 
 #~ msgid "Invalid radio URL"
 #~ msgstr "URL de rádio inválido"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 12:00+0100\n"
+"POT-Creation-Date: 2010-02-02 13:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -780,8 +780,8 @@ msgstr ""
 msgid "_Actions"
 msgstr ""
 
-#: ../src/vgl-main-menu-gtk.c:321
-msgid "Stop after ..."
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+msgid "Stop after..."
 msgstr ""
 
 #: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
@@ -865,10 +865,6 @@ msgstr ""
 
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
-msgstr ""
-
-#: ../src/vgl-main-menu-hildon22.c:412
-msgid "Stop after..."
 msgstr ""
 
 #: ../src/vgl-main-window.c:81

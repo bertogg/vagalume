@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 12:00+0100\n"
+"POT-Creation-Date: 2010-02-02 13:50+0100\n"
 "PO-Revision-Date: 2009-10-06 01:01+0200\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
@@ -854,8 +854,9 @@ msgstr "Rekomendācijas..."
 msgid "_Actions"
 msgstr "_Darbības"
 
-#: ../src/vgl-main-menu-gtk.c:321
-msgid "Stop after ..."
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+#, fuzzy
+msgid "Stop after..."
 msgstr "Apturēt pēc ..."
 
 #: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
@@ -943,11 +944,6 @@ msgstr "Spēlēt _radio"
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
 msgstr ""
-
-#: ../src/vgl-main-menu-hildon22.c:412
-#, fuzzy
-msgid "Stop after..."
-msgstr "Apturēt pēc ..."
 
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
@@ -1086,6 +1082,9 @@ msgid ""
 msgstr ""
 " no <i>%s</i>\n"
 " no <i>%s</i>"
+
+#~ msgid "Stop after ..."
+#~ msgstr "Apturēt pēc ..."
 
 #~ msgid "Invalid radio URL"
 #~ msgstr "Nederīga radio adrese"

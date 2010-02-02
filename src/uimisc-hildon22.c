@@ -919,7 +919,7 @@ globalbutton_print_func                 (HildonTouchSelector *selector,
                 size = gtk_tree_model_iter_n_children (model, NULL);
                 return g_strdup_printf (_("%d tags"), size);
         } else {
-                return g_strdup ("(retrieving ...)");
+                return g_strdup ("(retrieving...)");
         }
 }
 

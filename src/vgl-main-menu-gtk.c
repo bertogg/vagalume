@@ -318,7 +318,7 @@ vgl_main_menu_new                       (GtkAccelGroup *accel)
         separ1 = gtk_separator_menu_item_new();
         separ2 = gtk_separator_menu_item_new();
         separ3 = gtk_separator_menu_item_new();
-        stopafter = gtk_menu_item_new_with_label (_("Stop after ..."));
+        stopafter = gtk_menu_item_new_with_label (_("Stop after..."));
         love = ui_menu_item_create_from_icon (LOVE_ITEM_ICON_NAME,
                                               LOVE_ITEM_STRING);
         ban = ui_menu_item_create_from_icon (BAN_ITEM_ICON_NAME,

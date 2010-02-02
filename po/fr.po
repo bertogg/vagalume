@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 12:00+0100\n"
+"POT-Creation-Date: 2010-02-02 13:50+0100\n"
 "PO-Revision-Date: 2009-10-15 20:25+0200\n"
 "Last-Translator: Julien Duponchelle <julien@duponchelle.info>\n"
 "Language-Team:  <fr@li.org>\n"
@@ -865,8 +865,9 @@ msgstr "Recommandation..."
 msgid "_Actions"
 msgstr "_Actions"
 
-#: ../src/vgl-main-menu-gtk.c:321
-msgid "Stop after ..."
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+#, fuzzy
+msgid "Stop after..."
 msgstr "Arrêter après ..."
 
 #: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
@@ -954,11 +955,6 @@ msgstr "Écouter une _Radio"
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
 msgstr ""
-
-#: ../src/vgl-main-menu-hildon22.c:412
-#, fuzzy
-msgid "Stop after..."
-msgstr "Arrêter après ..."
 
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
@@ -1097,6 +1093,9 @@ msgid ""
 msgstr ""
 "par <i>%s</i>\n"
 "de <i>%s</i>"
+
+#~ msgid "Stop after ..."
+#~ msgstr "Arrêter après ..."
 
 #~ msgid "Invalid radio URL"
 #~ msgstr "URL de la radio invalide"
