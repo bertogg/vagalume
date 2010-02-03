@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Alberto Garcia <agarcia@igalia.com>
 Build-Depends: debhelper (>= 4), pkg-config, libgstreamer0.10-dev, libcurl4-openssl-dev, libxml2-dev, libosso-dev, libhildonfm2-dev, libconic0-dev, libhildon1-dev, osso-af-settings, intltool, cdbs
 Standards-Version: 3.7.3
+XB-Homepage: http://vagalume.igalia.com/
 XB-Bugtracker: https://bugs.maemo.org/enter_bug.cgi?product=Vagalume
 
 Package: vagalume
@@ -12,9 +13,7 @@ Depends: ${shlibs:Depends}, gstreamer0.10-mpegaudioparse-maemo, gstreamer0.10-no
 Description: Client for Libre.fm-compatible radio services
  Vagalume is a Last.fm/Libre.fm client designed for the GNOME desktop
  environment. It's small and provides the basic Last.fm features, such
- as scrobbling, tags, recommendations, etc. Vagalume is also designed
- to work in the Maemo platform, used by some Nokia devices such as the
- Nokia 770, N800 and N810
+ as scrobbling, tags, recommendations, etc.
  .
  Note that the Last.fm terms of use don't allow streaming music to
  mobile phones, so you are not allowed to use Last.fm in a Nokia N900
@@ -46,9 +45,7 @@ XB-Maemo-Icon-26:
 XB-Description-de_DE: Client für Libre.fm-kompatible Radioservices
  Vagalume ist ein Last.fm/Libre.fm-Client, der für die GNOME Desktop-
  Umgebung entworfen wurde. Er ist klein und bietet die grundlegenden
- Last.fm-Features wie Scrobbling, Tags, Empfehlungen etc. Vagalume ist
- auch für die Maemo Plattform ausgelegt, die auf einigen Nokia-Geräten
- wie dem Nokia 770, N800 und N810 verwendet wird.
+ Last.fm-Features wie Scrobbling, Tags, Empfehlungen etc.
  .
  Die Nutzungsbedingungen von Last.fm untersagen das Streamen von Musik
  auf Mobiltelefone. Es ist daher nicht gestattet, Last.fm am N900 zu

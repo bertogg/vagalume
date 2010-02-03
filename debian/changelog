@@ -1,3 +1,12 @@
+vagalume (0.8.3-1) UNRELEASED; urgency=low
+
+  * New upstream release
+  * Updated package description in debian/control
+  * Added Homepage, XB-Bugtracker, XB-Maemo-Display-Name and
+    XB-Description-de_DE control fields
+
+ -- Alberto Garcia <agarcia@igalia.com>  Wed, 03 Feb 2010 17:59:32 +0100
+
 vagalume (0.8.2-1) unstable; urgency=low
 
   * New upstream release
