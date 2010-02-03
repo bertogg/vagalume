@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Alberto Garcia <agarcia@igalia.com>
 Build-Depends: debhelper (>= 4), pkg-config, libgstreamer0.10-dev, libcurl3-dev, libxml2-dev, libosso-dev, libhildonfm2-dev, libconic0-dev, libhildondesktop-dev, libhildonwm-dev, osso-af-settings, intltool, cdbs
 Standards-Version: 3.7.3
+XB-Bugtracker: https://bugs.maemo.org/enter_bug.cgi?product=Vagalume
 
 Package: vagalume
 Architecture: any
@@ -17,6 +18,7 @@ Description: Client for Last.fm and compatible radio services
  .
  Vagalume also supports other Last.fm-compatible services such as
  Libre.fm
+XB-Maemo-Display-Name: Vagalume
 XB-Maemo-Icon-26:
  iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAAB3RJ
  TUUH2QwKExUn33ekdAAABItJREFUSImdlktsVFUYx3/33HMvM9PHlOkLtIS0oA20lIBogQasiUZQ
