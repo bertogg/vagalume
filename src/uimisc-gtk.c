@@ -10,8 +10,10 @@
 
 #include "uimisc.h"
 #include "util.h"
+#include "compat.h"
 
 #include <glib/gi18n.h>
+#include <string.h>
 
 typedef struct {
         GtkDialog *dialog;

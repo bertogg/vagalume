@@ -38,7 +38,7 @@ vgl_object_ref                          (gpointer ptr)
 #ifndef G_DISABLE_CAST_CHECKS
         g_return_val_if_fail (obj->header == vgl_object_header, NULL);
 #endif
-        g_atomic_int_inc (&(obj->refcount));
+        g_atomic_int_inc ((int *) &(obj->refcount));
         return obj;
 }
 
@@ -50,7 +50,7 @@ vgl_object_unref                        (gpointer ptr)
 #ifndef G_DISABLE_CAST_CHECKS
         g_return_if_fail (obj->header == vgl_object_header);
 #endif
-        if (g_atomic_int_dec_and_test (&(obj->refcount))) {
+        if (g_atomic_int_dec_and_test ((int *) &(obj->refcount))) {
                 if (obj->destroy_func) {
                         obj->destroy_func (ptr);
                 }

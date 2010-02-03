@@ -17,7 +17,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#ifdef MAEMO
+#ifdef MAEMO5
 #        include <hildon/hildon.h>
 #endif
 

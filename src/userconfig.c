@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <glib/gstdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <regex.h>
 #include <libxml/parser.h>

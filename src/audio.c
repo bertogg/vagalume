@@ -42,7 +42,9 @@ static const char *default_converters[] = { "audioconvert", NULL };
 static GstElement *pipeline = NULL;
 static GstElement *source = NULL;
 static GstElement *decoder = NULL;
+#ifndef HAVE_DSPMP3SINK
 static GstElement *convert = NULL;
+#endif
 static GstElement *sink = NULL;
 
 #ifdef HAVE_GST_MIXER
