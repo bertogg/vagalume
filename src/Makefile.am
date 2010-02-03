@@ -1,7 +1,7 @@
 #
 # This file is part of Vagalume and is published under the GNU GPLv3.
 #
-# Copyright (C) 2007-2009 Igalia, S.L.
+# Copyright (C) 2007-2010 Igalia, S.L.
 #
 # See the README file for more details.
 #

@@ -44,7 +44,7 @@ Vagalume has the following features:
 
 --------------------------------------------------------
 
-Vagalume is (c) 2007-2009 Igalia, S.L.
+Vagalume is (c) 2007-2010 Igalia, S.L.
 http://vagalume.igalia.com/
 http://garage.maemo.org/projects/vagalume/
 
@@ -80,3 +80,7 @@ the implementing the Last.fm protocols:
 * The Audioscrobbler Realtime Submission Protocol v1.2
   (c) 2002-2007 Audioscrobbler Ltd.
   http://www.audioscrobbler.net/development/protocol/
+
+* The official Last.fm Web Services API
+  (c) 2010 Last.fm Ltd.
+  http://www.last.fm/api

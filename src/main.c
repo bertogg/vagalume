@@ -1,7 +1,7 @@
 /*
  * main.c -- Main file, basic initialization
  *
- * Copyright (C) 2007-2009 Igalia, S.L.
+ * Copyright (C) 2007-2010 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume.

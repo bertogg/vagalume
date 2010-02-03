@@ -1,7 +1,7 @@
 /*
  * vgl-main-menu-hildon22.c -- Main menu (Hildon 2.2 version)
  *
- * Copyright (C) 2009 Igalia, S.L.
+ * Copyright (C) 2010 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
