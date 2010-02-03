@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-02 13:50+0100\n"
-"PO-Revision-Date: 2009-12-13 22:32+0100\n"
+"PO-Revision-Date: 2010-02-03 20:17+0100\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -403,7 +403,7 @@ msgstr "Selecione a pasta de download"
 #. Translators: keep this string short!!
 #: ../src/uimisc-gtk.c:349 ../src/uimisc-hildon22.c:363
 msgid "Automatically download free tracks"
-msgstr "Fazer download das faixas gratuítas automaticamente"
+msgstr "Descarregar faixas gratuítas automaticamente"
 
 #. Download frame
 #: ../src/uimisc-gtk.c:372 ../src/uimisc-hildon22.c:343
