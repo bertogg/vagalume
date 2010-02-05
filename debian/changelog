@@ -1,38 +1,28 @@
 vagalume (0.8.3-1) unstable; urgency=low
 
   * New upstream release
-  * Updated package description in debian/control
-  * Added Homepage, XB-Bugtracker, XB-Maemo-Display-Name and
-    XB-Description-de_DE control fields
-
- -- Alberto Garcia <agarcia@igalia.com>  Fri, 05 Feb 2010 23:07:12 +0100
-
-vagalume (0.8.2-1) unstable; urgency=low
-
-  * New upstream release
-
- -- Alberto Garcia <agarcia@igalia.com>  Mon, 21 Dec 2009 14:24:20 +0100
-
-vagalume (0.8.1-1) unstable; urgency=low
-
-  * New upstream release
-
- -- Alberto Garcia <agarcia@igalia.com>  Wed, 16 Dec 2009 13:59:51 +0100
-
-vagalume (0.8-1) unstable; urgency=low
-
-  * New upstream release
   * Switched to cdbs
-  * Added watch file
-  * Added intltool and libgstreamer-plugins-base0.10-dev to Build-Depends
-  * Updated Standards-Version to 3.8.0
-  * Moved 'Homepage' field to source paragraph
-  * Use DEB_INSTALL_* variables instead of 'dirs' and 'docs' files
-  * Updated copyright file to reflect copyright holder change
-  * Run autogen.sh from debian/rules with NOCONFIGURE=1
+  * Added cdbs, intltool and libgstreamer-plugins-base0.10-dev to
+    Build-Depends
   * Updated package description in control file
+  * Update Standards-Version to 3.8.4
+  * Updated copyright file to reflect the new project home page and the
+    copyright holder change
+  * Run autogen.sh from debian/rules with NOCONFIGURE=1
+  * Removed control files for Maemo
 
- -- Alberto Garcia <agarcia@igalia.com>  Sun, 13 Dec 2009 23:41:44 +0100
+ -- Alberto Garcia <agarcia@igalia.com>  Sat, 06 Feb 2010 00:23:53 +0100
+
+vagalume (0.7.1-2) unstable; urgency=low
+
+  * Use dh_icons to update icon cache (Closes: #527321).
+  * Depend on debhelper >= 7
+  * Update Standards-Version to 3.8.1
+  * Add ${misc:Depends} to Depends:
+  * Use dh_prep instead of dh_clean -k
+  * Update copyright file
+
+ -- Alberto Garcia <agarcia@igalia.com>  Tue, 12 May 2009 11:00:36 +0200
 
 vagalume (0.7.1-1) unstable; urgency=low
 
