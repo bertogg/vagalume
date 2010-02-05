@@ -4,13 +4,13 @@
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
 #
-# Pēteris Caune <cuu508@gmail.com>, 2008, 2009.
+# Pēteris Caune <cuu508@gmail.com>, 2008, 200, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-02 13:50+0100\n"
-"PO-Revision-Date: 2009-10-06 01:01+0200\n"
+"PO-Revision-Date: 2010-02-05 12:11+0000\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -28,11 +28,11 @@ msgstr "Kļūda inicializējot tīkla savienojumu pārvaldnieku"
 
 #: ../src/controller.c:487
 msgid "Server info imported correctly"
-msgstr ""
+msgstr "Serveru informācija veiksmīgi nolasīta"
 
 #: ../src/controller.c:491
 msgid "No server info found in that file"
-msgstr ""
+msgstr "Šajā failā netika atrasta serveru informācija"
 
 #: ../src/controller.c:537
 #, c-format
@@ -189,7 +189,6 @@ msgid "Play this user's radio"
 msgstr "Spēlēt šī lietotāja radio"
 
 #: ../src/controller.c:1676
-#, fuzzy
 msgid "Enter a tag"
 msgstr "Ievadiet tagu"
 
@@ -231,7 +230,7 @@ msgstr "Neizdevās inicializēt DBUS"
 
 #: ../src/controller.c:1890
 msgid "Error reading the server list file"
-msgstr ""
+msgstr "Kļūda lasot serveru saraksta failu"
 
 #: ../src/controller.c:1898
 msgid "Error initializing audio system"
@@ -590,62 +589,50 @@ msgid "Popular tags for this"
 msgstr "Populāri šī ieraksta tagi"
 
 #: ../src/uimisc-hildon22.c:276
-#, fuzzy
 msgid "Username"
-msgstr "Lietotājvārds:"
+msgstr "Lietotājvārds"
 
 #: ../src/uimisc-hildon22.c:287
-#, fuzzy
 msgid "Password"
-msgstr "Parole:"
+msgstr "Parole"
 
 #: ../src/uimisc-hildon22.c:304
-#, fuzzy
 msgid "Service"
-msgstr "Serviss:"
+msgstr "Serviss"
 
 #: ../src/uimisc-hildon22.c:312
-#, fuzzy
 msgid "Enable scrobbling"
-msgstr "Aktivizēt atskaņoto dziemu reģistrēšanu:"
+msgstr "Aktivizēt atskaņoto dziemu reģistrēšanu"
 
 #: ../src/uimisc-hildon22.c:317
-#, fuzzy
 msgid "Discovery mode"
-msgstr "Atklājumu režīms:"
+msgstr "Atklājumu režīms"
 
 #: ../src/uimisc-hildon22.c:333
-#, fuzzy
 msgid "Proxy address"
-msgstr "Starpniekservera adrese:"
+msgstr "Starpniekservera adrese"
 
 #: ../src/uimisc-hildon22.c:351
-#, fuzzy
 msgid "Download directory"
-msgstr "Izvēlieties lejupielāžu mapi"
+msgstr "Lejupielāžu mape"
 
 #: ../src/uimisc-hildon22.c:386
-#, fuzzy
 msgid "IM message template"
-msgstr "IM ziņas sagatave:"
+msgstr "IM ziņas sagatave"
 
 #: ../src/uimisc-hildon22.c:404
-#, fuzzy
 msgid "Disable confirmation dialogs"
-msgstr "Atslēgt apstiprinājuma dialogus:"
+msgstr "Atslēgt apstiprinājuma dialogus"
 
 #: ../src/uimisc-hildon22.c:892 ../src/uimisc-hildon22.c:920
 #, c-format
 msgid "%d tags"
-msgstr ""
+msgstr "%d tagi"
 
 #. Text entry
 #: ../src/uimisc-hildon22.c:955
-#, fuzzy
 msgid "Enter a comma-separated list of tags"
-msgstr ""
-"Ievadiet ar komatiem \n"
-"atdalītu sarakstu ar tagiem"
+msgstr "Ievadiet ar komatiem atdalītu sarakstu ar tagiem"
 
 #: ../src/uimisc.c:57
 msgid "Client for Last.fm and compatible services"
@@ -713,7 +700,7 @@ msgstr "Nederīgs grāmatzīmes nosaukums"
 
 #: ../src/uimisc.c:376
 msgid "Select server file to import"
-msgstr ""
+msgstr "Izvēlieties serveru failu importēšanai"
 
 #. Create all widgets
 #: ../src/uimisc.c:471
@@ -773,7 +760,7 @@ msgstr "_Last.fm"
 
 #: ../src/vgl-main-menu-gtk.c:199
 msgid "_Import servers file..."
-msgstr ""
+msgstr "_Importēt serveru failu..."
 
 #. Radio
 #: ../src/vgl-main-menu-gtk.c:218
@@ -855,7 +842,6 @@ msgid "_Actions"
 msgstr "_Darbības"
 
 #: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
-#, fuzzy
 msgid "Stop after..."
 msgstr "Apturēt pēc ..."
 
@@ -893,57 +879,54 @@ msgid "_Help"
 msgstr "_Palīdzība"
 
 #: ../src/vgl-main-menu-hildon22.c:221 ../src/vgl-main-menu-hildon22.c:335
-#, fuzzy
 msgid "Select radio"
-msgstr "Lietotāja iezīmes radio"
+msgstr "Izvēlieties radio"
 
 #: ../src/vgl-main-menu-hildon22.c:223
-#, fuzzy, c-format
+#, c-format
 msgid "%s's library"
-msgstr "Mana kolekcija"
+msgstr "%s kolekcija"
 
 #: ../src/vgl-main-menu-hildon22.c:225
-#, fuzzy, c-format
+#, c-format
 msgid "%s's neighbours"
-msgstr "Mani kaimiņi"
+msgstr "%s kaimiņi"
 
 #: ../src/vgl-main-menu-hildon22.c:227
-#, fuzzy, c-format
+#, c-format
 msgid "%s's loved tracks"
-msgstr "Mani iemīļotie ieraksti"
+msgstr "%s iemīļotie ieraksti"
 
 #: ../src/vgl-main-menu-hildon22.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "%s's playlist"
-msgstr "Mans repertuārs"
+msgstr "%s repertuārs"
 
 #: ../src/vgl-main-menu-hildon22.c:231
-#, fuzzy, c-format
+#, c-format
 msgid "%s's recommendations"
-msgstr "Manas rekomendācijas"
+msgstr "%s rekomendācijas"
 
 #: ../src/vgl-main-menu-hildon22.c:233
-#, fuzzy, c-format
+#, c-format
 msgid "%s's music tagged..."
-msgstr "Mana mūzika ar tagiem..."
+msgstr "%s mūzika ar tagiem..."
 
 #: ../src/vgl-main-menu-hildon22.c:260
-#, fuzzy
 msgid "Type any user name"
 msgstr "Ievadiet lietotājvārdu"
 
 #: ../src/vgl-main-menu-hildon22.c:397
 msgid "Import servers file"
-msgstr ""
+msgstr "Importēt serveru failu"
 
 #: ../src/vgl-main-menu-hildon22.c:402
-#, fuzzy
 msgid "Play radio"
-msgstr "Spēlēt _radio"
+msgstr "Spēlēt radio"
 
 #: ../src/vgl-main-menu-hildon22.c:407
 msgid "People"
-msgstr ""
+msgstr "Lietotāji"
 
 #: ../src/vgl-main-window.c:81
 msgid "Start playing"
