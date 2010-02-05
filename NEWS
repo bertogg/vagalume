@@ -1,3 +1,7 @@
+0.8.3 (05 Feb 2010)
+  * Hildon2.2-style UI for Maemo 5 (Nokia N900)
+  * Play music also when in silent mode (Nokia N900)
+
 0.8.2 (21 Dec 2009)
   * Authenticate with the username in lowercase (fixes conn. problems)
   * Install binaries and translation files in /opt in the N900
