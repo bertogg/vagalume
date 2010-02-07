@@ -51,6 +51,9 @@ marshal.c: marshal.list
 	glib-genmarshal --body \
 		--prefix=vgl_marshal marshal.list > marshal.c
 
+%.bp.h:
+	sh gen-bp.sh "$@" > "$@"
+
 if HILDON_2_2
 vagalume_SOURCES += uimisc-hildon22.c vgl-main-menu-hildon22.c
 else
