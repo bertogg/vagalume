@@ -12,27 +12,10 @@
 #define VGL_MAIN_MENU_H
 
 #include "vgl-main-window.h"
+#include "vgl-main-menu.bp.h"
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
-
-#define VGL_TYPE_MAIN_MENU              (vgl_main_menu_get_type())
-#define VGL_MAIN_MENU(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
-                                         VGL_TYPE_MAIN_MENU, VglMainMenu))
-#define VGL_MAIN_MENU_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass),  \
-                                         VGL_TYPE_MAIN_MENU, VglMainMenuClass))
-#define VGL_IS_MAIN_MENU(obj)           (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
-                                         VGL_TYPE_MAIN_MENU))
-#define VGL_IS_MAIN_MENU_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass),  \
-                                         VGL_TYPE_MAIN_MENU))
-#define VGL_MAIN_MENU_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj),  \
-                                         VGL_TYPE_MAIN_MENU, VglMainMenuClass))
-
-typedef struct _VglMainMenu             VglMainMenu;
-typedef struct _VglMainMenuClass        VglMainMenuClass;
-
-GType
-vgl_main_menu_get_type                  (void) G_GNUC_CONST;
 
 VglMainMenu *
 vgl_main_menu_new                       (GtkAccelGroup *accel);

@@ -13,37 +13,9 @@
 
 #include "vgl-main-window.h"
 #include "radio.h"
-
-#include <glib-object.h>
+#include "vgl-controller.bp.h"
 
 G_BEGIN_DECLS
-
-#define VGL_TYPE_CONTROLLER                                             \
-   (vgl_controller_get_type())
-#define VGL_CONTROLLER(obj)                                             \
-   (G_TYPE_CHECK_INSTANCE_CAST ((obj),                                  \
-                                VGL_TYPE_CONTROLLER,                    \
-                                VglController))
-#define VGL_CONTROLLER_CLASS(klass)                                     \
-   (G_TYPE_CHECK_CLASS_CAST ((klass),                                   \
-                             VGL_TYPE_CONTROLLER,                       \
-                             VglControllerClass))
-#define VGL_IS_CONTROLLER(obj)                                          \
-   (G_TYPE_CHECK_INSTANCE_TYPE ((obj),                                  \
-                                VGL_TYPE_CONTROLLER))
-#define VGL_IS_CONTROLLER_CLASS(klass)                                  \
-   (G_TYPE_CHECK_CLASS_TYPE ((klass),                                   \
-                             VGL_TYPE_CONTROLLER))
-#define VGL_CONTROLLER_GET_CLASS(obj)                                   \
-   (G_TYPE_INSTANCE_GET_CLASS ((obj),                                   \
-                               VGL_TYPE_CONTROLLER,                     \
-                               VglControllerClass))
-
-#ifndef __TYPEDEF_VGL_CONTROLLER__
-#define __TYPEDEF_VGL_CONTROLLER__
-typedef struct _VglController      VglController;
-#endif
-typedef struct _VglControllerClass VglControllerClass;
 
 struct _VglControllerClass
 {
@@ -54,8 +26,6 @@ struct _VglController
 {
     GObject parent;
 };
-
-GType vgl_controller_get_type (void) G_GNUC_CONST;
 
 typedef enum {
         STOP_AFTER_DONT_STOP,

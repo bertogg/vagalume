@@ -1,7 +1,7 @@
 /*
  * vgl-bookmark-mgr.h -- Bookmark manager class
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2008, 2010 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
@@ -11,28 +11,9 @@
 #ifndef VGL_BOOKMARK_MGR_H
 #define VGL_BOOKMARK_MGR_H
 
-#include <glib-object.h>
+#include "vgl-bookmark-mgr.bp.h"
 
 G_BEGIN_DECLS
-
-#define VGL_TYPE_BOOKMARK_MGR (vgl_bookmark_mgr_get_type())
-#define VGL_BOOKMARK_MGR(obj)                                        \
-   (G_TYPE_CHECK_INSTANCE_CAST ((obj),                               \
-   VGL_TYPE_BOOKMARK_MGR, VglBookmarkMgr))
-#define VGL_BOOKMARK_MGR_CLASS(klass)                                \
-   (G_TYPE_CHECK_CLASS_CAST ((klass),                                \
-   VGL_TYPE_BOOKMARK_MGR, VglBookmarkMgrClass))
-#define VGL_IS_BOOKMARK_MGR(obj)                                     \
-   (G_TYPE_CHECK_INSTANCE_TYPE ((obj), VGL_TYPE_BOOKMARK_MGR))
-#define VGL_IS_BOOKMARK_MGR_CLASS(klass)                             \
-   (G_TYPE_CHECK_CLASS_TYPE ((klass), VGL_TYPE_BOOKMARK_MGR))
-#define VGL_BOOKMARK_MGR_GET_CLASS(obj)                              \
-   (G_TYPE_INSTANCE_GET_CLASS ((obj),                                \
-   VGL_TYPE_BOOKMARK_MGR, VglBookmarkMgrClass))
-
-typedef struct _VglBookmarkMgr        VglBookmarkMgr;
-typedef struct _VglBookmarkMgrClass   VglBookmarkMgrClass;
-typedef struct _VglBookmarkMgrPrivate VglBookmarkMgrPrivate;
 
 typedef struct {
         int id;
@@ -50,9 +31,6 @@ struct _VglBookmarkMgr
         GObject parent;
         VglBookmarkMgrPrivate *priv;
 };
-
-GType
-vgl_bookmark_mgr_get_type               (void) G_GNUC_CONST;
 
 VglBookmarkMgr *
 vgl_bookmark_mgr_get_instance           (void);

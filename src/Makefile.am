@@ -17,7 +17,7 @@ vagalume_SOURCES = \
 	audio.c audio.h \
 	compat.c compat.h \
 	connection.h \
-	controller.c controller.h \
+	controller.c controller.h vgl-controller.bp.h \
 	dlwin.c dlwin.h \
 	globaldefs.h \
 	http.c http.h \
@@ -30,15 +30,22 @@ vagalume_SOURCES = \
 	uimisc.c uimisc.h \
 	userconfig.c userconfig.h \
 	util.c util.h \
-	vgl-bookmark-mgr.c vgl-bookmark-mgr.h \
-	vgl-bookmark-window.c vgl-bookmark-window.h \
-	vgl-main-menu.h \
-	vgl-main-window.c vgl-main-window.h \
+	vgl-bookmark-mgr.c vgl-bookmark-mgr.h vgl-bookmark-mgr.bp.h \
+	vgl-bookmark-window.c vgl-bookmark-window.h vgl-bookmark-window.bp.h \
+	vgl-main-menu.h vgl-main-menu.bp.h \
+	vgl-main-window.c vgl-main-window.h vgl-main-window.bp.h \
 	vgl-object.c vgl-object.h \
 	vgl-server.c vgl-server.h \
 	xmlrpc.c xmlrpc.h
 
-BUILT_SOURCES = marshal.c marshal.h
+BUILT_SOURCES = marshal.c marshal.h \
+	vgl-bookmark-mgr.bp.h \
+	vgl-bookmark-window.bp.h \
+	vgl-controller.bp.h \
+	vgl-main-menu.bp.h \
+	vgl-main-window.bp.h \
+	vgl-sb-plugin.bp.h \
+	vgl-tray-icon.bp.h
 nodist_vagalume_SOURCES = marshal.c marshal.h
 CLEANFILES = marshal.c marshal.h
 EXTRA_DIST = marshal.list
@@ -69,7 +76,7 @@ vagalume_SOURCES += md5/md5.c md5/md5.h
 endif
 
 if HAVE_TRAY_ICON
-vagalume_SOURCES += vgl-tray-icon.h vgl-tray-icon.c
+vagalume_SOURCES += vgl-tray-icon.h vgl-tray-icon.c vgl-tray-icon.bp.h
 endif
 
 if HAVE_CONIC
@@ -88,7 +95,7 @@ libvagalumesbplugin_la_LDFLAGS = -module -avoid-version
 libvagalumesbplugin_la_SOURCES = \
 	dbus.h \
 	globaldefs.h \
-	vgl-sb-plugin.c vgl-sb-plugin.h
+	vgl-sb-plugin.c vgl-sb-plugin.h	vgl-sb-plugin.bp.h
 
 libvagalumesbplugin_la_LIBADD = $(SBPLUGIN_LIBS)
 

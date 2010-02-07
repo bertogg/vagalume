@@ -1,7 +1,7 @@
 /*
  * vgl-main-window.h -- Main program window
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2008, 2010 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -13,6 +13,8 @@
 
 #include "globaldefs.h"
 #include "playlist.h"
+#include "vgl-main-window.bp.h"
+#include "vgl-controller.bp.h"
 #include <gtk/gtk.h>
 
 #if defined(HILDON_LIBS)
@@ -22,35 +24,6 @@
 #endif
 
 G_BEGIN_DECLS
-
-#define VGL_TYPE_MAIN_WINDOW                                            \
-   (vgl_main_window_get_type())
-#define VGL_MAIN_WINDOW(obj)                                            \
-   (G_TYPE_CHECK_INSTANCE_CAST ((obj),                                  \
-                                VGL_TYPE_MAIN_WINDOW,                   \
-                                VglMainWindow))
-#define VGL_MAIN_WINDOW_CLASS(klass)                                    \
-   (G_TYPE_CHECK_CLASS_CAST ((klass),                                   \
-                             VGL_TYPE_MAIN_WINDOW,                      \
-                             VglMainWindowClass))
-#define VGL_IS_MAIN_WINDOW(obj)                                         \
-   (G_TYPE_CHECK_INSTANCE_TYPE ((obj),                                  \
-                                VGL_TYPE_MAIN_WINDOW))
-#define VGL_IS_MAIN_WINDOW_CLASS(klass)                                 \
-   (G_TYPE_CHECK_CLASS_TYPE ((klass),                                   \
-                             VGL_TYPE_MAIN_WINDOW))
-#define VGL_MAIN_WINDOW_GET_CLASS(obj)                                  \
-   (G_TYPE_INSTANCE_GET_CLASS ((obj),                                   \
-                               VGL_TYPE_MAIN_WINDOW,                    \
-                               VglMainWindowClass))
-
-#ifndef __TYPEDEF_VGL_CONTROLLER__
-#define __TYPEDEF_VGL_CONTROLLER__
-typedef struct _VglController        VglController;
-#endif
-typedef struct _VglMainWindow        VglMainWindow;
-typedef struct _VglMainWindowClass   VglMainWindowClass;
-typedef struct _VglMainWindowPrivate VglMainWindowPrivate;
 
 struct _VglMainWindowClass
 {
@@ -78,9 +51,6 @@ typedef enum {
         VGL_MAIN_WINDOW_STATE_PLAYING,
         VGL_MAIN_WINDOW_STATE_CONNECTING
 } VglMainWindowState;
-
-GType
-vgl_main_window_get_type                (void) G_GNUC_CONST;
 
 GtkWidget *
 vgl_main_window_new                     (VglController *controller);

@@ -1,7 +1,7 @@
 /*
  * vgl-tray-icon.c -- Freedesktop tray icon
  *
- * Copyright (C) 2007-2009, 2011 Igalia, S.L.
+ * Copyright (C) 2007-2011 Igalia, S.L.
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
  *          Alberto Garcia <agarcia@igalia.com>
  *
@@ -30,7 +30,7 @@
 
 #define VGL_TRAY_ICON_GET_PRIVATE(object)      \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
-                                      VGL_TRAY_ICON_TYPE, VglTrayIconPrivate))
+                                      VGL_TYPE_TRAY_ICON, VglTrayIconPrivate))
 
 G_DEFINE_TYPE (VglTrayIcon, vgl_tray_icon, G_TYPE_OBJECT);
 
@@ -422,7 +422,7 @@ vgl_tray_icon_create                    (VglController *controller)
 {
         VglTrayIcon *icon;
         g_return_val_if_fail (VGL_IS_CONTROLLER (controller), NULL);
-        icon = g_object_new (VGL_TRAY_ICON_TYPE, NULL);
+        icon = g_object_new (VGL_TYPE_TRAY_ICON, NULL);
         g_signal_connect (controller, "usercfg-changed",
                           G_CALLBACK (usercfg_changed_cb), icon);
         g_signal_connect (controller, "track-stopped",
