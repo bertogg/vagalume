@@ -259,7 +259,10 @@ people_cb                               (GtkButton *button,
 
         gtk_window_set_title (GTK_WINDOW (d), _("Type any user name"));
 
-        for (; friends != NULL; friends = friends->next) {
+        if (friends == NULL) {
+                /* Hack for libhildon < 2.2.5 */
+                hildon_touch_selector_append_text (sel, "");
+        } else for (; friends != NULL; friends = friends->next) {
                 hildon_touch_selector_append_text (sel, friends->data);
         }
 

@@ -479,7 +479,10 @@ ui_input_dialog_with_list               (GtkWindow   *parent,
 
         selector = HILDON_TOUCH_SELECTOR (
                 hildon_touch_selector_entry_new_text ());
-        for (; elems != NULL; elems = elems->next) {
+        if (elems == NULL) {
+                /* Hack for libhildon < 2.2.5 */
+                hildon_touch_selector_append_text (selector, "");
+        } else for (; elems != NULL; elems = elems->next) {
                 hildon_touch_selector_append_text (selector, elems->data);
         }
 
@@ -518,7 +521,10 @@ ui_picker_button_new_from_list          (const char  *title,
                         HILDON_TOUCH_SELECTOR_SELECTION_MODE_MULTIPLE :
                         HILDON_TOUCH_SELECTOR_SELECTION_MODE_SINGLE);
         }
-        for (; items != NULL; items = items->next) {
+        if (items == NULL && entry) {
+                /* Hack for libhildon < 2.2.5 */
+                hildon_touch_selector_append_text (sel, "");
+        } else for (; items != NULL; items = items->next) {
                 hildon_touch_selector_append_text (sel, items->data);
         }
 
