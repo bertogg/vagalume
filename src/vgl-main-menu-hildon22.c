@@ -113,6 +113,7 @@ bookmarks_selected_cb                   (GtkWidget   *widget,
         dialog = gtk_dialog_new ();
         gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
         gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
+        gtk_window_set_title (GTK_WINDOW (dialog), _("Bookmarks"));
 
         table = gtk_table_new (2, 2, TRUE);
         gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), table);
