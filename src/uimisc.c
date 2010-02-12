@@ -87,7 +87,9 @@ static const char translators_tpl[] =
 "%s (lv)\n* Pēteris Caune <cuu508@gmail.com>\n\n"
 "%s (pl)\n* Dawid Pakuła (ZuLuS) <zulus@w3des.net>\n\n"
 "%s (pt)\n* Marcos Garcia <marcosgg@gmail.com>\n\n"
-"%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>";
+"%s (pt_BR)\n* Rodrigo Flores <rodrigomarquesflores@gmail.com>\n\n"
+"%s (ru)\n* Sergei Ivanov <isn@vu.spb.ru>\n"
+         "* Vitaly Petrov <vit.petrov@vu.spb.ru>";
 
 /* Don't use gtk_button_new() in Nokia 770 or icons won't appear */
 GtkWidget *
@@ -170,7 +172,8 @@ ui_about_dialog                         (GtkWindow *parent)
                                              _("French"),
                                              _("Galician"), _("Italian"),
                                              _("Latvian"), _("Polish"),
-                                             _("Portuguese"), _("Portuguese"));
+                                             _("Portuguese"), _("Portuguese"),
+                                             _("Russian"));
 #ifdef HAVE_GIO
         gtk_about_dialog_set_url_hook (about_dialog_uri_hook, "", NULL);
         gtk_about_dialog_set_email_hook (about_dialog_uri_hook, "mailto:",

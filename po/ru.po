@@ -1,0 +1,1067 @@
+# Russian translation for Vagalume.
+#
+# Vagalume is Copyright (C) 2007-2010 Igalia, S.L.
+#
+# This file is distributed under the same license as the Vagalume package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Vagalume 0.8.3-1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-02-13 00:24+0100\n"
+"PO-Revision-Date: 2010-02-13 00:36+0100\n"
+"Last-Translator: Sergei Ivanov <isn@vu.spb.ru>, Vitaly Petrov <vit.petrov@vu.spb.ru>\n"
+"Language-Team: SUAI Maemo Team, St. Petersburg, Russia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../data/vagalume.desktop.in.in.h:1
+msgid "Vagalume Last.fm Client"
+msgstr "Vagalume Last.fm клиент"
+
+#: ../src/connection.c:58
+msgid "Error initializing internet connection manager"
+msgstr "Ошибка инициализации менеджера подключений к интернету"
+
+#: ../src/controller.c:488
+msgid "Server info imported correctly"
+msgstr "Параметры сервера импортированы"
+
+#: ../src/controller.c:492
+msgid "No server info found in that file"
+msgstr "Не найдено параметров сервера в данном файле"
+
+#: ../src/controller.c:538
+#, c-format
+msgid ""
+"Unable to login to %s\n"
+"Check username and password"
+msgstr ""
+"Невозможно подключиться к %s\n"
+"Проверьте имя пользователя и пароль"
+
+#: ../src/controller.c:544
+msgid "Network connection error"
+msgstr "Ошибка соединения"
+
+#: ../src/controller.c:650
+msgid ""
+"You need to enter your\n"
+"username and password\n"
+"to be able to use this program."
+msgstr ""
+"Для начала работы программы необходимо ввести\n"
+" ваше имя пользователя и пароль Last.fm."
+
+#: ../src/controller.c:712
+msgid "No more content to play"
+msgstr "Закончились треки для воспроизведения"
+
+#: ../src/controller.c:938
+#, c-format
+msgid "Downloaded %s - %s"
+msgstr "Загружено %s - %s"
+
+#: ../src/controller.c:942
+#, c-format
+msgid "Error downloading %s - %s"
+msgstr "Ошибка при загрузке %s - %s"
+
+#: ../src/controller.c:982
+msgid "Track already being downloaded"
+msgstr "Трек уже загружается"
+
+#: ../src/controller.c:987
+msgid "Download this track?"
+msgstr "Загрузить данный трек?"
+
+#: ../src/controller.c:1000
+msgid "File exists. Overwrite?"
+msgstr "Файл уже существует. Перезаписать?"
+
+#: ../src/controller.c:1016
+#, c-format
+msgid "Downloading %s - %s"
+msgstr "Загружается %s - %s"
+
+#: ../src/controller.c:1058
+msgid "Artist added to bookmarks"
+msgstr "Исполнитель добавлен в закладки"
+
+#: ../src/controller.c:1065
+msgid "Track added to bookmarks"
+msgstr "Трек добавлен в закладки"
+
+#: ../src/controller.c:1071
+msgid "Current radio added to bookmarks"
+msgstr "Текущая станция добавлена в закладки"
+
+#: ../src/controller.c:1074
+msgid "Bookmark added"
+msgstr "Закладка добавлена"
+
+#: ../src/controller.c:1160
+msgid "Really mark track as loved?"
+msgstr "Добавить трек в \"Мои любимые треки\"?"
+
+#: ../src/controller.c:1164
+msgid "Marking track as loved"
+msgstr "Добавление трека в \"Мои любимые треки\""
+
+#: ../src/controller.c:1178
+msgid "Really ban this track?"
+msgstr "Отметить данный трек как запрещенный?"
+
+#: ../src/controller.c:1182
+msgid "Banning track"
+msgstr "Отправление трека в \"Запрещенные\""
+
+#: ../src/controller.c:1221
+msgid "Tags set correctly"
+msgstr "Теги установлены корректно"
+
+#: ../src/controller.c:1221
+msgid "Error tagging"
+msgstr "Ошибка тегирования"
+
+#: ../src/controller.c:1265
+msgid "You must type a list of tags"
+msgstr "Необходимо ввести список тегов"
+
+#: ../src/controller.c:1294
+msgid "Recommendation sent"
+msgstr "Отзыв отправлен"
+
+#: ../src/controller.c:1295
+msgid "Error sending recommendation"
+msgstr "Ошибка отправки отзыва"
+
+#: ../src/controller.c:1339
+msgid ""
+"You must type a user name\n"
+"and a recommendation message."
+msgstr ""
+"Необходимо ввести имя пользователя\n"
+"и отзыв."
+
+#: ../src/controller.c:1362
+msgid "Track added to playlist"
+msgstr "Трек добавлен в список воспроизведения"
+
+#: ../src/controller.c:1363
+msgid "Error adding track to playlist"
+msgstr "Ошибка добавления трека в список воспроизведения"
+
+#: ../src/controller.c:1411
+msgid "Really add this track to the playlist?"
+msgstr "Добавить данный трек в список воспроизведения?"
+
+#: ../src/controller.c:1440
+msgid ""
+"Invalid radio URL. Either\n"
+"this radio doesn't exist\n"
+"or it is only available\n"
+"for Last.fm subscribers"
+msgstr ""
+"Неверный URL радио.\n"
+"Или данное радио не существует,\n"
+"или оно доступно только \n"
+"подписчикам Last.fm"
+
+#: ../src/controller.c:1536 ../src/controller.c:1677 ../src/controller.c:1731
+msgid "Enter tag"
+msgstr "Ввод"
+
+#: ../src/controller.c:1536
+msgid "Enter one of your tags"
+msgstr "Введите один из ваших тегов"
+
+#: ../src/controller.c:1588
+msgid "Enter user name"
+msgstr "Введите имя пользователя"
+
+#: ../src/controller.c:1589
+msgid "Play this user's radio"
+msgstr "Воспроизвести радио данного пользователя"
+
+#: ../src/controller.c:1677
+msgid "Enter a tag"
+msgstr "Ввести тег"
+
+#: ../src/controller.c:1708
+msgid "Enter group"
+msgstr "Ввод"
+
+#: ../src/controller.c:1708
+msgid "Enter group name"
+msgstr "Введите имя группы"
+
+#: ../src/controller.c:1731
+msgid "Enter a global tag"
+msgstr "Введите глобальный тег"
+
+#: ../src/controller.c:1755
+msgid "Enter artist"
+msgstr "Ввод"
+
+#: ../src/controller.c:1755
+msgid "Enter an artist's name"
+msgstr "Введите имя исполнителя"
+
+#: ../src/controller.c:1777
+msgid "Enter radio URL"
+msgstr "Ввод"
+
+#: ../src/controller.c:1778
+msgid "Enter the URL of the Last.fm radio"
+msgstr "Введите URL радио Last.fm"
+
+#: ../src/controller.c:1787 ../src/uimisc.c:308
+msgid "Last.fm radio URLs must start with lastfm://"
+msgstr "URL для Last.fm должен начинаться с lastfm://"
+
+#: ../src/controller.c:1858
+msgid "Unable to initialize DBUS"
+msgstr "Не удалось инициализировать шину DBUS"
+
+#: ../src/controller.c:1891
+msgid "Error reading the server list file"
+msgstr "Ошибка при чтении файла со списком серверов"
+
+#: ../src/controller.c:1899
+msgid "Error initializing audio system"
+msgstr "Ошибка инициализации аудиосистемы"
+
+#: ../src/controller.c:1909
+msgid "Unable to initialize OSSO context"
+msgstr "Ошибка инициализации OSSO окружения"
+
+#: ../src/dlwin.c:96
+msgid "Download complete!"
+msgstr "Загрузка завершена!"
+
+#: ../src/dlwin.c:97
+msgid "Download error!"
+msgstr "Ошибка загрузки!"
+
+#: ../src/dlwin.c:99
+msgid "C_lose"
+msgstr "_Закрыть"
+
+#: ../src/dlwin.c:155
+#, c-format
+msgid "Downloading %s"
+msgstr "Загрузка %s"
+
+#: ../src/dlwin.c:158
+#, c-format
+msgid ""
+"Downloading file\n"
+"%s"
+msgstr ""
+"Загрузка файла\n"
+"%s"
+
+#: ../src/dlwin.c:163
+msgid "_Cancel"
+msgstr "_Отмена"
+
+#: ../src/main.c:83
+#, c-format
+msgid ""
+"Usage:\n"
+"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"\n"
+"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
+"  decoder:   GStreamer decoder (default: '%s')\n"
+"  mixer:     GStreamer mixer (default: '%s')\n"
+"  sink:      GStreamer sink (default: '%s')\n"
+msgstr ""
+"Использование: %s [-c Converter] [-d Decoder] [-s Sink] [Last.fm Radio-URL]\n"
+"\n"
+"  Конвертер: GStreamer converter (по умолчанию: '%s', 'none' для "
+"отключения)\n"
+"  Декодер:   GStreamer decoder (по умолчанию: '%s')\n"
+"  Микшер:    GStreamer mixer (по умолчанию: '%s')\n"
+"  Источник:  GStreamer sink (по умолчанию: '%s')\n"
+
+#: ../src/main.c:102
+#, c-format
+msgid "Too many unrecognized options\n"
+msgstr "Слишком много нераспозранных опций\n"
+
+#: ../src/main.c:111
+#, c-format
+msgid "Usage: %s [lastfm radio url]\n"
+msgstr "Использование: %s [URL радио Last.fm]\n"
+
+#: ../src/protocol.c:246
+msgid "(unknown radio)"
+msgstr "(неизвестное радио)"
+
+#: ../src/uimisc-gtk.c:114
+msgid "User tag radio"
+msgstr "Пользовательские теги радиостанции"
+
+#: ../src/uimisc-gtk.c:115 ../src/uimisc-gtk.c:236
+msgid "Username:"
+msgstr "Имя пользователя:"
+
+#: ../src/uimisc-gtk.c:116
+msgid "Tag:"
+msgstr "Тег:"
+
+#: ../src/uimisc-gtk.c:210
+msgid "No help available"
+msgstr "Помощь недоступна"
+
+#: ../src/uimisc-gtk.c:237
+msgid "Password:"
+msgstr "Пароль"
+
+#: ../src/uimisc-gtk.c:238
+msgid "Service:"
+msgstr "Ресурс:"
+
+#: ../src/uimisc-gtk.c:239
+msgid "Enable scrobbling:"
+msgstr "Включить scrobbling:"
+
+#: ../src/uimisc-gtk.c:240
+msgid "Discovery mode:"
+msgstr "Режим обнаружения:"
+
+#. Account frame
+#: ../src/uimisc-gtk.c:287 ../src/uimisc-hildon22.c:269
+msgid "Account"
+msgstr "Учетная запись"
+
+#. Set help
+#: ../src/uimisc-gtk.c:290
+msgid ""
+"* Username and password:\n"
+"From your account.\n"
+"\n"
+"* Service:\n"
+"Last.fm-compatible service to connect to.\n"
+"\n"
+"* Scrobbling:\n"
+"Display the music that you listen to on your profile.\n"
+"\n"
+"* Discovery mode:\n"
+"Don't play music you've already listened to. Requires a Last.fm subscription."
+msgstr ""
+"* Имя пользователя и пароль:\n"
+"Вашей учетной записи Last.fm.\n"
+"\n"
+"* Ресурс:\n"
+"Last.fm-совмесимый ресурс для подключения\n"
+"* Scrobbling:\n"
+"Показать музыку, которую Вы слушали на Last.fm.\n"
+"\n"
+"* Режим обнаружения:\n"
+"Не воспроизводить композиции, которые Вы уже слушали. \n"
+"Для этого требуется подписка на Last.fm"
+
+#: ../src/uimisc-gtk.c:310 ../src/uimisc-hildon22.c:328
+msgid "Use HTTP proxy"
+msgstr "Использовать HTTP прокси-сервер"
+
+#: ../src/uimisc-gtk.c:311
+msgid "Proxy address:"
+msgstr "Адрес прокси-сервера:"
+
+#. Connection frame
+#: ../src/uimisc-gtk.c:330 ../src/uimisc-hildon22.c:321
+msgid "Connection"
+msgstr "Соединение"
+
+#. Set help
+#: ../src/uimisc-gtk.c:333
+msgid ""
+"* Use HTTP proxy:\n"
+"Enable this to use an HTTP proxy.\n"
+"\n"
+"* Proxy address:\n"
+"user:password@hostname:port\n"
+"Only the hostname (can be an IP address) is required."
+msgstr ""
+"* Использовать HTTP прокси-сервер:\n"
+"Включите опцию для использования HTTP прокси-сервера\n"
+"* Адрес прокси-сервера:\n"
+"имя пользователя:пароль@hostname:порт\n"
+"Требуется имя хоста (или IP адрес)."
+
+#: ../src/uimisc-gtk.c:350 ../src/uimisc.c:395
+msgid "Select download directory"
+msgstr "Выберите директорию для загрузки"
+
+#. Translators: keep this string short!!
+#: ../src/uimisc-gtk.c:351 ../src/uimisc-hildon22.c:363
+msgid "Automatically download free tracks"
+msgstr "Автоматически загружать бесплатные треки"
+
+#. Download frame
+#: ../src/uimisc-gtk.c:374 ../src/uimisc-hildon22.c:343
+msgid "Download"
+msgstr "Загрузить"
+
+#. Set help
+#: ../src/uimisc-gtk.c:377
+msgid ""
+"* Download directory:\n"
+"Where to download mp3 files. Note that you can only download those songs "
+"marked as freely downloadable by the server."
+msgstr ""
+"* Директория для загрузки:\n"
+"Место для загрузки mp3 файлов. Вы можете загружать только композиции,  "
+"доступные для свободной загрузки на Last.fm."
+
+#: ../src/uimisc-gtk.c:396
+msgid "IM message template:"
+msgstr "Шаблон IM-сообщения:"
+
+#: ../src/uimisc-gtk.c:397
+msgid "Update Pidgin status:"
+msgstr "Обновлять статус Pidgin:"
+
+#: ../src/uimisc-gtk.c:398
+msgid "Update Gajim status:"
+msgstr "Обновлять статус Gajim:"
+
+#: ../src/uimisc-gtk.c:399
+msgid "Update Gossip status:"
+msgstr "Обновлять статус Gossip:"
+
+#: ../src/uimisc-gtk.c:400
+msgid "Update Telepathy status:"
+msgstr "Обновлять статус Telepathy:"
+
+#. IM status frame
+#: ../src/uimisc-gtk.c:431 ../src/uimisc-hildon22.c:367
+#: ../src/uimisc-hildon22.c:378
+msgid "Update IM status"
+msgstr "Обновление статусов IM клиентов"
+
+#. Set help
+#: ../src/uimisc-gtk.c:434
+msgid ""
+"Vagalume can update the status message of your IM client each time a new "
+"song starts. The template can contain the following keywords:\n"
+"\n"
+"{artist}: Name of the artist\n"
+"{title}: Song title\n"
+"{station}: Radio station\n"
+"{version}: Vagalume version"
+msgstr ""
+"Vagalume может обновлять статус вашего IM клиента автоматически со стартом "
+"новой композиции. Шаблон статуса может содержать следующие поля:\n"
+"\n"
+"{artist}: Имя исполнителя\n"
+"{title}: Название композиции\n"
+"{station}: Радиостанция\n"
+"{version}: Версия Vagalume"
+
+#: ../src/uimisc-gtk.c:464
+msgid "Disable confirmation dialogs:"
+msgstr "Отключить диалоги подтверждения:"
+
+#: ../src/uimisc-gtk.c:474
+msgid ""
+"* Disable confirmation dialogs:\n"
+"Don't ask for confirmation when loving/banning tracks."
+msgstr ""
+"* Отключить диалоги подтверждения:\n"
+"Не запрашивать подтверждения при перемещении трека в \"Мои любимые треки\" "
+"или запрещении трека."
+
+#: ../src/uimisc-gtk.c:481
+msgid "Show playback notifications:"
+msgstr "Показывать уведомления о воспроизведении:"
+
+#: ../src/uimisc-gtk.c:491
+msgid ""
+"\n"
+"\n"
+"* Show playback notifications:\n"
+"Pop up a notification box each time a new song starts.\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"* Показывать уведомления о воспроизведении:\n"
+"Показывать окно уведомления при начале воспроизведения новой композиции.\n"
+"\n"
+
+#: ../src/uimisc-gtk.c:497
+msgid "Close to systray:"
+msgstr "Сворачивать в системный трей:"
+
+#: ../src/uimisc-gtk.c:507
+msgid ""
+"* Close to systray:\n"
+"Hide the Vagalume window when the close button is pressed."
+msgstr ""
+"* Close to systray:\n"
+"Скрывать окно Vagalume при нажатии кнопки \\\"Закрыть\\\"."
+
+#. Misc frame
+#: ../src/uimisc-gtk.c:514 ../src/uimisc-hildon22.c:396
+msgid "Misc"
+msgstr "Дополнительно"
+
+#. Create dialog
+#: ../src/uimisc-gtk.c:533 ../src/uimisc-hildon22.c:256
+msgid "User settings"
+msgstr "Параметры"
+
+#: ../src/uimisc-gtk.c:650 ../src/uimisc-hildon22.c:554
+msgid "Artist: "
+msgstr "Исполнитель: "
+
+#: ../src/uimisc-gtk.c:658 ../src/uimisc-hildon22.c:558
+msgid "Track: "
+msgstr "Трек: "
+
+#: ../src/uimisc-gtk.c:667 ../src/uimisc-hildon22.c:563
+msgid "Album: "
+msgstr "Альбом: "
+
+#. Dialog and basic settings
+#: ../src/uimisc-gtk.c:720 ../src/uimisc-hildon22.c:645
+msgid "Send a recommendation"
+msgstr "Отправить отзыв"
+
+#: ../src/uimisc-gtk.c:726 ../src/uimisc-hildon22.c:651
+msgid "Recommend this"
+msgstr "Рекомендовать"
+
+#: ../src/uimisc-gtk.c:749 ../src/uimisc-hildon22.c:655
+msgid "Send recommendation to"
+msgstr "Послать отзыв..."
+
+#. Message of the recommendation
+#: ../src/uimisc-gtk.c:757 ../src/uimisc-hildon22.c:662
+msgid "Recommendation message"
+msgstr "Отзыв"
+
+#: ../src/uimisc-gtk.c:938 ../src/uimisc-gtk.c:1003
+#: ../src/uimisc-hildon22.c:835 ../src/uimisc-hildon22.c:837
+msgid "retrieving..."
+msgstr "извлечение..."
+
+#. A treemodel for combos with no elements
+#: ../src/uimisc-gtk.c:1000
+msgid "(none)"
+msgstr "(нет)"
+
+#. Dialog and basic settings
+#: ../src/uimisc-gtk.c:1008 ../src/uimisc-hildon22.c:953
+msgid "Tagging"
+msgstr "Тегирование"
+
+#. Combo to select what to tag
+#: ../src/uimisc-gtk.c:1013 ../src/uimisc-hildon22.c:958
+msgid "Tag this"
+msgstr "Добавить тег"
+
+#. Text entry
+#: ../src/uimisc-gtk.c:1033
+msgid ""
+"Enter a comma-separated\n"
+"list of tags"
+msgstr ""
+"Введите список тегов,\n"
+"разделенных запятыми"
+
+#. Combo boxes
+#: ../src/uimisc-gtk.c:1039 ../src/uimisc-hildon22.c:966
+msgid "Your favourite tags"
+msgstr "Избранные теги"
+
+#: ../src/uimisc-gtk.c:1040 ../src/uimisc-hildon22.c:974
+msgid "Popular tags for this"
+msgstr "Популярные теги"
+
+#: ../src/uimisc-hildon22.c:276
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: ../src/uimisc-hildon22.c:287
+msgid "Password"
+msgstr "Пароль"
+
+#: ../src/uimisc-hildon22.c:304
+msgid "Service"
+msgstr "Ресурс"
+
+#: ../src/uimisc-hildon22.c:312
+msgid "Enable scrobbling"
+msgstr "Включить scrobbling"
+
+#: ../src/uimisc-hildon22.c:317
+msgid "Discovery mode"
+msgstr "Режим обнаружени"
+
+#: ../src/uimisc-hildon22.c:333
+msgid "Proxy address"
+msgstr "Адрес прокси-сервера"
+
+#: ../src/uimisc-hildon22.c:351
+msgid "Download directory"
+msgstr "Директория для загрузки"
+
+#: ../src/uimisc-hildon22.c:386
+msgid "IM message template"
+msgstr "Шаблон IM-сообщения"
+
+#: ../src/uimisc-hildon22.c:404
+msgid "Disable confirmation dialogs"
+msgstr "Отключить диалоги подтверждения"
+
+#: ../src/uimisc-hildon22.c:898 ../src/uimisc-hildon22.c:926
+#, c-format
+msgid "%d tags"
+msgstr "%d тегов"
+
+#. Text entry
+#: ../src/uimisc-hildon22.c:961
+msgid "Enter a comma-separated list of tags"
+msgstr "Введите список тегов, разделенных запятыми"
+
+#: ../src/uimisc.c:57
+msgid "Client for Last.fm and compatible services"
+msgstr "Клиент для радио Last.fm и совместимых сервисов"
+
+#: ../src/uimisc.c:170
+msgid "German"
+msgstr "Немецкий"
+
+#: ../src/uimisc.c:171
+msgid "Spanish"
+msgstr "Испанский"
+
+#: ../src/uimisc.c:171
+msgid "Finnish"
+msgstr "Финский"
+
+#: ../src/uimisc.c:172
+msgid "French"
+msgstr "Французский"
+
+#: ../src/uimisc.c:173
+msgid "Galician"
+msgstr "Галисийский"
+
+#: ../src/uimisc.c:173
+msgid "Italian"
+msgstr "Итальянский"
+
+#: ../src/uimisc.c:174
+msgid "Latvian"
+msgstr "Латвийский"
+
+#: ../src/uimisc.c:174
+msgid "Polish"
+msgstr "Польский"
+
+#: ../src/uimisc.c:175
+msgid "Portuguese"
+msgstr "Португальский"
+
+#: ../src/uimisc.c:176
+msgid "Russian"
+msgstr "Русский"
+
+#: ../src/uimisc.c:221
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#: ../src/uimisc.c:272
+msgid "Add bookmark"
+msgstr "Добавление"
+
+#: ../src/uimisc.c:272
+msgid "Edit bookmark"
+msgstr "Редактировать закладку"
+
+#: ../src/uimisc.c:273
+msgid "Bookmark name"
+msgstr "Название закладки"
+
+#: ../src/uimisc.c:274
+msgid "Last.fm radio address"
+msgstr "Адрес радио Last.fm"
+
+#: ../src/uimisc.c:304
+msgid "Invalid bookmark name"
+msgstr "Неверное имя закладки"
+
+#: ../src/uimisc.c:379
+msgid "Select server file to import"
+msgstr "Выберите файл серверов для импорта"
+
+#. Create all widgets
+#: ../src/uimisc.c:474
+msgid "Stop automatically"
+msgstr "Останавливать автоматически"
+
+#: ../src/uimisc.c:475
+msgid "When do you want to stop playback?"
+msgstr "Когда Вы хотите остановить воспроизведение?"
+
+#: ../src/uimisc.c:476
+msgid "minutes"
+msgstr "минут"
+
+#: ../src/uimisc.c:484
+msgid "Don't stop"
+msgstr "Не останавливать"
+
+#: ../src/uimisc.c:485
+msgid "Stop after this track"
+msgstr "Остановить после этого трека"
+
+#. Translators: the full text is "Stop after ____ minutes"
+#: ../src/uimisc.c:487
+msgid "Stop after"
+msgstr "Остановить после"
+
+#: ../src/uimisc.h:20
+msgid "_Recommend to..."
+msgstr "_Рекомендовать..."
+
+#: ../src/uimisc.h:21
+msgid "_Tags..."
+msgstr "_Теги..."
+
+#: ../src/uimisc.h:22
+msgid "_Add to playlist"
+msgstr "_Добавить в список воспроизведения"
+
+#: ../src/uimisc.h:23
+msgid "_Love this track"
+msgstr "_Поместить в \"Мои любимые треки\""
+
+#: ../src/uimisc.h:24
+msgid "_Ban this track"
+msgstr "_Запретить данный трек"
+
+#. Configure widgets
+#: ../src/vgl-bookmark-window.c:312 ../src/vgl-main-menu-hildon22.c:116
+#: ../src/vgl-main-menu-hildon22.c:422
+msgid "Bookmarks"
+msgstr "Закладки"
+
+#. Last.fm
+#: ../src/vgl-main-menu-gtk.c:195
+msgid "_Last.fm"
+msgstr "_Last.fm"
+
+#: ../src/vgl-main-menu-gtk.c:199
+msgid "_Import servers file..."
+msgstr "_Импортировать список серверов..."
+
+#. Radio
+#: ../src/vgl-main-menu-gtk.c:218
+msgid "Play _Radio"
+msgstr "Слушать _Радио"
+
+#: ../src/vgl-main-menu-gtk.c:220
+msgid "My radios"
+msgstr "Мои радиостанции"
+
+#: ../src/vgl-main-menu-gtk.c:222
+msgid "Others' radios"
+msgstr "Другие радиостанции"
+
+#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:343
+msgid "Group radio..."
+msgstr "Радиостанции группы..."
+
+#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:286
+#: ../src/vgl-main-menu-hildon22.c:341
+msgid "Music tagged..."
+msgstr "Музыка с тегом..."
+
+#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:342
+msgid "Artists similar to..."
+msgstr "Исполнитель схож с..."
+
+#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:350
+msgid "Enter URL..."
+msgstr "Введите URL..."
+
+#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:344
+msgid "My library"
+msgstr "Моя фонотека"
+
+#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:345
+msgid "My neighbours"
+msgstr "Мои соседи"
+
+#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:346
+msgid "My loved tracks"
+msgstr "Мои любимые треки"
+
+#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:347
+msgid "My playlist"
+msgstr "Мои списки воспроизведения"
+
+#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:348
+msgid "My recommendations"
+msgstr "Мои отзывы"
+
+#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:349
+msgid "My music tagged..."
+msgstr "Моя музыка с тегом..."
+
+#: ../src/vgl-main-menu-gtk.c:281
+msgid "Library..."
+msgstr "Фонотека..."
+
+#: ../src/vgl-main-menu-gtk.c:282
+msgid "Neighbours..."
+msgstr "Соседи..."
+
+#: ../src/vgl-main-menu-gtk.c:283
+msgid "Loved tracks..."
+msgstr "Мои любимые треки..."
+
+#: ../src/vgl-main-menu-gtk.c:284
+msgid "Playlist..."
+msgstr "Список произведения..."
+
+#: ../src/vgl-main-menu-gtk.c:285
+msgid "Recommendations..."
+msgstr "Отзывы..."
+
+#. Actions
+#: ../src/vgl-main-menu-gtk.c:313
+msgid "_Actions"
+msgstr "_Действия"
+
+#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:416
+msgid "Stop after..."
+msgstr "Остановить после..."
+
+#: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
+msgid "Download this track"
+msgstr "Загрузить данный трек"
+
+#: ../src/vgl-main-menu-gtk.c:372
+msgid "_Bookmarks"
+msgstr "_Закладки"
+
+#: ../src/vgl-main-menu-gtk.c:375
+msgid "Add bookmark..."
+msgstr "Добавить закладку..."
+
+#: ../src/vgl-main-menu-gtk.c:377 ../src/vgl-main-menu-hildon22.c:121
+msgid "Manage bookmarks..."
+msgstr "Управление закладками"
+
+#: ../src/vgl-main-menu-gtk.c:378 ../src/vgl-main-menu-hildon22.c:433
+msgid "Bookmark this artist..."
+msgstr "Добавить данного исполнителя в закладки..."
+
+#: ../src/vgl-main-menu-gtk.c:379 ../src/vgl-main-menu-hildon22.c:440
+msgid "Bookmark this track..."
+msgstr "Добавить данный трек в закладки..."
+
+#: ../src/vgl-main-menu-gtk.c:380 ../src/vgl-main-menu-hildon22.c:447
+msgid "Bookmark this radio..."
+msgstr "Добавить данную радиостанцию в закладки..."
+
+#. Help
+#: ../src/vgl-main-menu-gtk.c:406
+msgid "_Help"
+msgstr "_Помощь"
+
+#: ../src/vgl-main-menu-hildon22.c:222 ../src/vgl-main-menu-hildon22.c:339
+msgid "Select radio"
+msgstr "Выберите радио"
+
+#: ../src/vgl-main-menu-hildon22.c:224
+#, c-format
+msgid "%s's library"
+msgstr "Фонотека %s"
+
+#: ../src/vgl-main-menu-hildon22.c:226
+#, c-format
+msgid "%s's neighbours"
+msgstr "Соседи %s"
+
+#: ../src/vgl-main-menu-hildon22.c:228
+#, c-format
+msgid "%s's loved tracks"
+msgstr "любимые треки %s"
+
+#: ../src/vgl-main-menu-hildon22.c:230
+#, c-format
+msgid "%s's playlist"
+msgstr "Списки воспроизведения %s"
+
+#: ../src/vgl-main-menu-hildon22.c:232
+#, c-format
+msgid "%s's recommendations"
+msgstr "Рекомендации %s"
+
+#: ../src/vgl-main-menu-hildon22.c:234
+#, c-format
+msgid "%s's music tagged..."
+msgstr "Музыка с тегом, принадлежащая %s"
+
+#: ../src/vgl-main-menu-hildon22.c:261
+msgid "Type any user name"
+msgstr "Введите имя пользователя"
+
+#: ../src/vgl-main-menu-hildon22.c:401
+msgid "Import servers file"
+msgstr "Импортировать список серверов"
+
+#: ../src/vgl-main-menu-hildon22.c:406
+msgid "Play radio"
+msgstr "Слушать радио"
+
+#: ../src/vgl-main-menu-hildon22.c:411
+msgid "People"
+msgstr "Люди"
+
+#: ../src/vgl-main-window.c:81
+msgid "Start playing"
+msgstr "Начать воспроизведение"
+
+#: ../src/vgl-main-window.c:85
+msgid "Stop playing"
+msgstr "Остановить воспроизведение"
+
+#: ../src/vgl-main-window.c:89
+msgid "Skip this track"
+msgstr "Пропустить данный трек"
+
+#: ../src/vgl-main-window.c:93
+msgid "Mark as loved"
+msgstr "Поместить в \"Мои любимые треки\""
+
+#: ../src/vgl-main-window.c:97
+msgid "Ban this track"
+msgstr "Запретить данный трек"
+
+#: ../src/vgl-main-window.c:101
+msgid "Recommend this track"
+msgstr "Рекомендовать данный трек"
+
+#: ../src/vgl-main-window.c:109
+msgid "Edit tags for this track"
+msgstr "Изменить теги для данного трека"
+
+#: ../src/vgl-main-window.c:113
+msgid "Add this track to playlist"
+msgstr "Добавить данный трек в список воспроизведения"
+
+#: ../src/vgl-main-window.c:197
+msgid "<b>Artist:</b>\n"
+msgstr "<b>Исполнитель:</b>\n"
+
+#: ../src/vgl-main-window.c:203
+msgid "<b>Title:</b>\n"
+msgstr "<b>Название:</b>\n"
+
+#: ../src/vgl-main-window.c:210
+msgid "<b>Album:</b>\n"
+msgstr "<b>Альбом:</b>\n"
+
+#: ../src/vgl-main-window.c:219
+msgid "<b>Listening to <i>"
+msgstr "<b>Прослушивание: <i>"
+
+#: ../src/vgl-main-window.c:344 ../src/vgl-main-window.c:345
+msgid "Stopped"
+msgstr "Остановлено"
+
+#: ../src/vgl-main-window.c:369
+msgid "Playing..."
+msgstr "Воспроизведение..."
+
+#: ../src/vgl-main-window.c:384 ../src/vgl-main-window.c:385
+msgid "Connecting..."
+msgstr "Соединение..."
+
+#: ../src/vgl-main-window.c:404
+msgid "Disconnected"
+msgstr "Отключено"
+
+#: ../src/vgl-main-window.c:482
+#, c-format
+msgid "Volume: %d/100"
+msgstr "Громкость: %d/100"
+
+#: ../src/vgl-sb-plugin.c:34
+msgid "No artist"
+msgstr "Нет исполнителей"
+
+#: ../src/vgl-sb-plugin.c:35
+msgid "No track"
+msgstr "Нет треков"
+
+#: ../src/vgl-sb-plugin.c:36
+msgid "No album"
+msgstr "Нет альбомов"
+
+#: ../src/vgl-sb-plugin.c:38
+msgid "Play"
+msgstr "Играть"
+
+#: ../src/vgl-sb-plugin.c:39
+msgid "Stop"
+msgstr "Остановить"
+
+#: ../src/vgl-sb-plugin.c:40
+msgid "Skip"
+msgstr "Пропустить"
+
+#: ../src/vgl-sb-plugin.c:41
+msgid "Love"
+msgstr "Добавить в \"Мои любимые треки\""
+
+#: ../src/vgl-sb-plugin.c:42
+msgid "Ban"
+msgstr "Запретить"
+
+#: ../src/vgl-sb-plugin.c:43
+msgid "Show main window"
+msgstr "Показать главное окно"
+
+#: ../src/vgl-sb-plugin.c:44
+msgid "Close Vagalume"
+msgstr "Закрыть Vagalume"
+
+#: ../src/vgl-tray-icon.c:23
+msgid " Stopped "
+msgstr " Остановлено "
+
+#: ../src/vgl-tray-icon.c:24
+#, c-format
+msgid ""
+" Now playing: \n"
+" %s \n"
+"   by  %s "
+msgstr ""
+" Сейчас воспроизводится: \n"
+" %s \n"
+"   в исполнении %s "
+
+#: ../src/vgl-tray-icon.c:26
+#, c-format
+msgid " by <i>%s</i>"
+msgstr " в исполнении <i>%s</i>"
+
+#: ../src/vgl-tray-icon.c:27
+#, c-format
+msgid ""
+" by <i>%s</i>\n"
+" from <i>%s</i>"
+msgstr ""
+" в исполнении <i>%s</i>\n"
+" из <i>%s</i>"
