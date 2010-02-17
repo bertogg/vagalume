@@ -445,7 +445,7 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
         } else {
                 /* Fall back to the old streaming API if the new one
                  * doesn't work */
-                if (session->v1sess) {
+                if (session->v1sess && !session->subscriber) {
                         session->srv->old_str_api = TRUE;
                         return lastfm_ws_radio_tune (session, radio_url, lang);
                 }
@@ -494,6 +494,14 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                                              session->srv->free_streams);
                 g_mutex_unlock (session->mutex);
                 xmlFreeDoc (doc);
+        } else {
+                /* Fall back to the old streaming API if the new one
+                 * doesn't work */
+                if (session->v1sess && !session->subscriber) {
+                        session->srv->old_str_api = TRUE;
+                        return lastfm_ws_radio_get_playlist (
+                                session, discovery, scrobbling);
+                }
         }
 
         return pls;
