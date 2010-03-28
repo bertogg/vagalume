@@ -751,7 +751,7 @@ lastfm_ws_get_track_tags                (const LastfmWsSession  *session,
 
         lastfm_ws_http_request (session->srv, method,
                                 HTTP_REQUEST_GET, FALSE, &doc, &node,
-                                "artist", track->artist,
+                                "artist", artist,
                                 extraparam, extraparamvalue,
                                 NULL);
 
@@ -811,7 +811,7 @@ lastfm_ws_add_tags                      (const LastfmWsSession *session,
 
         lastfm_ws_http_request (session->srv, method, HTTP_REQUEST_POST,
                                 TRUE, &doc, &node,
-                                "artist", track->artist,
+                                "artist", artist,
                                 "sk", session->key,
                                 "tags", tags,
                                 extraparam, extraparamvalue,
@@ -863,7 +863,7 @@ lastfm_ws_remove_tag                    (const LastfmWsSession *session,
 
         lastfm_ws_http_request (session->srv, method, HTTP_REQUEST_POST,
                                 TRUE, &doc, &node,
-                                "artist", track->artist,
+                                "artist", artist,
                                 "sk", session->key,
                                 "tag", tag,
                                 extraparam, extraparamvalue,
