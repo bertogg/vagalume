@@ -75,7 +75,8 @@ static const char license[] =
 static const char translators_tpl[] =
 "%s (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
          "* Oskar Welzl <mail@welzl.info>\n\n"
-"%s (es)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n\n"
+"%s (es)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
+         "* Ricardo Mones <mones@debian.org>\n\n"
 "%s (fi)\n* Janne Mäkinen <janne.makinen@surffi.fi>\n"
          "* Mika Tapojärvi <mika.tapojarvi@sse.fi>\n"
          "* Tommi Franttila <tommif@gmail.com>\n\n"
