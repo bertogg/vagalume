@@ -1,3 +1,16 @@
+vagalume (0.8.3-2) unstable; urgency=low
+
+  * Switch to dpkg-source 3.0 (quilt) format
+  * Cherry-picked patches from upstream:
+    - 01-fall-back-old-api.diff (602e3f5f1d34beebfa195b27e20f542c97ba7d11)
+    - 02-fix-dead-assignment.diff (6b437ffedb30ed4b9aeee859ca47ed31e9abd8e4)
+    - 03-spanish-translation.diff (c73fd9dcd0b764bd8d033ded1a183dff3fc315ac)
+    - 04-portuguese-translation.diff (15348608cbd4f7a09138f7ccf3227d4c4f56a8cc)
+    - 05-russian-translation.diff (a7ae8b4fa64adb47f266d5aab09cb2b5516e82b2)
+    - 06-copyright-year.diff (953bdc9e15ff84b4fdf133bb98578d64176d6db2)
+
+ -- Alberto Garcia <agarcia@igalia.com>  Tue, 04 May 2010 13:43:35 +0100
+
 vagalume (0.8.3-1) unstable; urgency=low
 
   * New upstream release

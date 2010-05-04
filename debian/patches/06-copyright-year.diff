@@ -1,0 +1,13 @@
+Index: vagalume/src/uimisc.c
+===================================================================
+--- vagalume.orig/src/uimisc.c	2010-05-04 13:42:25.000000000 +0100
++++ vagalume/src/uimisc.c	2010-05-04 13:42:25.000000000 +0100
+@@ -55,7 +55,7 @@ static const char *artists[] = {
+ };
+ 
+ static const char appdescr[] = N_("Client for Last.fm and compatible services");
+-static const char copyright[] = "(c) 2007-2009 Igalia, S.L.";
++static const char copyright[] = "(c) 2007-2010 Igalia, S.L.";
+ static const char website[] = "http://vagalume.igalia.com/";
+ static const char license[] =
+ "Vagalume is free software: you can redistribute\n"
