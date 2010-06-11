@@ -457,5 +457,8 @@ vgl_main_menu_init                      (VglMainMenu *self)
 VglMainMenu *
 vgl_main_menu_new                       (GtkAccelGroup *accel)
 {
-        return g_object_new (VGL_TYPE_MAIN_MENU, NULL);
+        VglMainMenu *menu = g_object_new (VGL_TYPE_MAIN_MENU, NULL);
+        gtk_widget_add_accelerator (menu->settings, "activate", accel,
+                                    GDK_p, GDK_CONTROL_MASK, 0);
+        return menu;
 }

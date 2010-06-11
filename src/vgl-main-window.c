@@ -568,6 +568,31 @@ image_button_new                        (const button_data *data)
         return button;
 }
 
+#ifdef MAEMO5
+static void
+vgl_main_window_set_hildon22_accels     (VglMainWindow *win,
+                                         GtkAccelGroup *accel)
+{
+        VglMainWindowPrivate *p = win->priv;
+        gtk_widget_add_accelerator (p->playbutton, "activate", accel,
+                                    GDK_space, 0, 0);
+        gtk_widget_add_accelerator (p->stopbutton, "activate", accel,
+                                    GDK_space, 0, 0);
+        gtk_widget_add_accelerator (p->skipbutton, "activate", accel,
+                                    GDK_Right, GDK_CONTROL_MASK, 0);
+        gtk_widget_add_accelerator (p->banbutton, "activate", accel,
+                                    GDK_b, GDK_CONTROL_MASK, 0);
+        gtk_widget_add_accelerator (p->lovebutton, "activate", accel,
+                                    GDK_l, GDK_CONTROL_MASK, 0);
+        gtk_widget_add_accelerator (p->recommendbutton, "activate", accel,
+                                    GDK_r, GDK_CONTROL_MASK, 0);
+        gtk_widget_add_accelerator (p->tagbutton, "activate", accel,
+                                    GDK_t, GDK_CONTROL_MASK, 0);
+        gtk_widget_add_accelerator (p->addplbutton, "activate", accel,
+                                    GDK_a, GDK_CONTROL_MASK, 0);
+}
+#endif /* MAEMO5 */
+
 static void
 vgl_main_window_init                    (VglMainWindow *self)
 {
@@ -698,6 +723,7 @@ vgl_main_window_init                    (VglMainWindow *self)
 #ifdef MAEMO5
         hildon_window_set_app_menu (HILDON_WINDOW (win),
                                     HILDON_APP_MENU (priv->menu));
+        vgl_main_window_set_hildon22_accels (self, accel);
 #elif defined(USE_HILDON_WINDOW)
         hildon_window_set_menu (HILDON_WINDOW (win), GTK_MENU (priv->menu));
 #else
