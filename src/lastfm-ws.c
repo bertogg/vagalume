@@ -183,6 +183,7 @@ lastfm_ws_http_request                  (const VglServer  *srv,
                                          const char       *method,
                                          HttpRequestType   type,
                                          gboolean          add_api_sig,
+                                         gint             *error_code,
                                          xmlDoc          **doc,
                                          const xmlNode   **node,
                                          ...)
@@ -198,6 +199,9 @@ lastfm_ws_http_request                  (const VglServer  *srv,
 
         *doc  = NULL;
         *node = NULL;
+        if (error_code != NULL) {
+                *error_code = 0;
+        }
 
         /* Add all parameters to a list */
         va_start (args, node);
@@ -240,10 +244,24 @@ lastfm_ws_http_request                  (const VglServer  *srv,
                                                 status, (xmlChar *) "ok");
                                         xmlFree (status);
                                 }
+                                n = n->xmlChildrenNode;
+                                if (retvalue) {
+                                        *node = n;
+                                }
                         }
-                        if (retvalue) {
-                                *node = n->xmlChildrenNode;
-                        } else {
+                        if (!retvalue && error_code != NULL) {
+                                n = (xmlNode *) xml_find_node (n, "error");
+                                if (n != NULL) {
+                                        xmlChar *err;
+                                        err = xmlGetProp (n,(xmlChar *)"code");
+                                        if (err) {
+                                                *error_code =
+                                                        atol ((char *) err);
+                                                xmlFree (err);
+                                        }
+                                }
+                        }
+                        if (!retvalue) {
                                 xmlFreeDoc (*doc);
                                 *doc = NULL;
                         }
@@ -268,8 +286,8 @@ lastfm_ws_get_auth_token                (const VglServer  *srv,
 
         g_return_val_if_fail (srv, NULL);
 
-        lastfm_ws_http_request (srv, "auth.getToken",
-                                HTTP_REQUEST_GET, TRUE, &doc, &node, NULL);
+        lastfm_ws_http_request (srv, "auth.getToken", HTTP_REQUEST_GET,
+                                TRUE, NULL, &doc, &node, NULL);
 
         if (doc != NULL) {
                 xml_get_string (doc, node, "token", &retvalue);
@@ -304,7 +322,7 @@ lastfm_ws_get_session_from_token        (VglServer  *srv,
         g_return_val_if_fail (srv && token, NULL);
 
         lastfm_ws_http_request (srv, "auth.getSession", HTTP_REQUEST_GET,
-                                TRUE, &doc, &node, "token", token, NULL);
+                                TRUE, NULL, &doc, &node, "token", token, NULL);
 
         if (doc != NULL) {
                 node = xml_find_node (node, "session");
@@ -339,6 +357,7 @@ lastfm_ws_get_session                   (VglServer  *srv,
                                          LastfmErr  *err)
 {
         LastfmWsSession *retvalue = NULL;
+        int errcode;
         char *lcuser, *md5pw, *usermd5pw, *authtoken;
         xmlDoc *doc;
         const xmlNode *node;
@@ -351,7 +370,7 @@ lastfm_ws_get_session                   (VglServer  *srv,
         authtoken = get_md5_hash (usermd5pw);
 
         lastfm_ws_http_request (srv, "auth.getMobileSession",
-                                HTTP_REQUEST_GET, TRUE, &doc, &node,
+                                HTTP_REQUEST_GET, TRUE, &errcode, &doc, &node,
                                 "authToken", authtoken,
                                 "username", lcuser,
                                 NULL);
@@ -379,6 +398,7 @@ lastfm_ws_get_session                   (VglServer  *srv,
                                                        srv->free_streams);
         } else {
                 g_warning ("Unable to get session");
+                *err = errcode == 4 ? LASTFM_ERR_LOGIN : LASTFM_ERR_CONN;
         }
 
         g_free (lcuser);
@@ -425,7 +445,7 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
         }
 
         lastfm_ws_http_request (session->srv, "radio.tune",
-                                HTTP_REQUEST_POST, TRUE, &doc, &node,
+                                HTTP_REQUEST_POST, TRUE, NULL, &doc, &node,
                                 "sk", session->key,
                                 "station", radio_url,
                                 lang ? "lang" : NULL, lang,
@@ -482,7 +502,7 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
         }
 
         lastfm_ws_http_request (session->srv, "radio.getPlaylist",
-                                HTTP_REQUEST_GET, TRUE, &doc, &node,
+                                HTTP_REQUEST_GET, TRUE, NULL, &doc, &node,
                                 "discovery", discovery ? "1" : "0",
                                 "rtp", scrobbling ? "1" : "0",
                                 "sk", session->key,
@@ -520,7 +540,7 @@ lastfm_ws_get_friends                   (const VglServer  *srv,
         g_return_val_if_fail (srv && user && friendlist, FALSE);
 
         lastfm_ws_http_request (srv, "user.getFriends",
-                                HTTP_REQUEST_GET, FALSE, &doc, &node,
+                                HTTP_REQUEST_GET, FALSE, NULL, &doc, &node,
                                 "limit", "0",
                                 "recenttracks", "0",
                                 "user", user,
@@ -603,7 +623,8 @@ lastfm_ws_get_user_tags                 (const VglServer  *srv,
                               FALSE);
 
         lastfm_ws_http_request (srv, "user.getTopTags", HTTP_REQUEST_GET,
-                                FALSE, &doc, &node, "user", username, NULL);
+                                FALSE, NULL, &doc, &node,
+                                "user", username, NULL);
 
         if (doc != NULL) {
                 retvalue = parse_xml_tags (doc, node, "toptags", taglist);
@@ -655,7 +676,7 @@ lastfm_ws_get_user_track_tags           (const LastfmWsSession  *session,
         }
 
         lastfm_ws_http_request (session->srv, method, HTTP_REQUEST_GET,
-                                TRUE, &doc, &node, "artist", artist,
+                                TRUE, NULL, &doc, &node, "artist", artist,
                                 "sk", session->key,
                                 extraparam, extraparamvalue,
                                 NULL);
@@ -750,7 +771,7 @@ lastfm_ws_get_track_tags                (const LastfmWsSession  *session,
         }
 
         lastfm_ws_http_request (session->srv, method,
-                                HTTP_REQUEST_GET, FALSE, &doc, &node,
+                                HTTP_REQUEST_GET, FALSE, NULL, &doc, &node,
                                 "artist", artist,
                                 extraparam, extraparamvalue,
                                 NULL);
@@ -810,7 +831,7 @@ lastfm_ws_add_tags                      (const LastfmWsSession *session,
         }
 
         lastfm_ws_http_request (session->srv, method, HTTP_REQUEST_POST,
-                                TRUE, &doc, &node,
+                                TRUE, NULL, &doc, &node,
                                 "artist", artist,
                                 "sk", session->key,
                                 "tags", tags,
@@ -862,7 +883,7 @@ lastfm_ws_remove_tag                    (const LastfmWsSession *session,
         }
 
         lastfm_ws_http_request (session->srv, method, HTTP_REQUEST_POST,
-                                TRUE, &doc, &node,
+                                TRUE, NULL, &doc, &node,
                                 "artist", artist,
                                 "sk", session->key,
                                 "tag", tag,
@@ -911,7 +932,7 @@ lastfm_ws_share_track                   (const LastfmWsSession *session,
         }
 
         lastfm_ws_http_request (session->srv, method, HTTP_REQUEST_POST,
-                                TRUE, &doc, &node,
+                                TRUE, NULL, &doc, &node,
                                 "artist", track->artist,
                                 "message", text,
                                 "recipient", rcpt,
@@ -937,7 +958,7 @@ lastfm_ws_love_track                    (const LastfmWsSession *session,
         g_return_val_if_fail (session && track, FALSE);
 
         lastfm_ws_http_request (session->srv, "track.love",
-                                HTTP_REQUEST_POST, TRUE, &doc, &node,
+                                HTTP_REQUEST_POST, TRUE, NULL, &doc, &node,
                                 "artist", track->artist,
                                 "sk", session->key,
                                 "track", track->title,
@@ -961,7 +982,7 @@ lastfm_ws_ban_track                     (const LastfmWsSession *session,
         g_return_val_if_fail (session && track, FALSE);
 
         lastfm_ws_http_request (session->srv, "track.ban",
-                                HTTP_REQUEST_POST, TRUE, &doc, &node,
+                                HTTP_REQUEST_POST, TRUE, NULL, &doc, &node,
                                 "artist", track->artist,
                                 "sk", session->key,
                                 "track", track->title,
