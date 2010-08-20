@@ -390,7 +390,7 @@ lastfm_request_playlist                 (LastfmSession *s,
                 if (doc != NULL) {
                         pls = lastfm_parse_playlist (doc, pls_title,
                                                      s->free_streams);
-                        xmlFree (doc);
+                        xmlFreeDoc (doc);
                 } else {
                         g_warning ("Playlist is not an XML document");
                 }
@@ -426,7 +426,7 @@ lastfm_request_custom_playlist          (LastfmSession *s,
                 if (doc != NULL) {
                         pls = lastfm_parse_playlist (doc, NULL,
                                                      s->free_streams);
-                        xmlFree (doc);
+                        xmlFreeDoc (doc);
                 } else {
                         g_warning ("Playlist is not an XML document");
                 }
