@@ -180,14 +180,18 @@ user_radio_selected_cb                  (HildonPickerDialog *dialog,
                         (user, LASTFM_LOVEDTRACKS_RADIO);
                 break;
         case 3:
+                controller_play_others_radio_by_user
+                        (user, LASTFM_MIX_RADIO);
+                break;
+        case 4:
                 controller_play_others_radio_by_user (
                         user, LASTFM_USERPLAYLIST_RADIO);
                 break;
-        case 4:
+        case 5:
                 controller_play_others_radio_by_user
                         (user, LASTFM_RECOMMENDED_RADIO);
                 break;
-        case 5:
+        case 6:
                 controller_play_others_radio_by_user
                         (user, LASTFM_USERTAG_RADIO);
                 break;
@@ -226,6 +230,8 @@ user_selected_cb                        (GtkWidget           *dialog,
         g_string_printf (text, _("%s's neighbours"), user);
         hildon_touch_selector_append_text (sel, text->str);
         g_string_printf (text, _("%s's loved tracks"), user);
+        hildon_touch_selector_append_text (sel, text->str);
+        g_string_printf (text, _("%s's mix"), user);
         hildon_touch_selector_append_text (sel, text->str);
         g_string_printf (text, _("%s's playlist"), user);
         hildon_touch_selector_append_text (sel, text->str);
@@ -309,15 +315,18 @@ radio_selected_cb                       (GtkWidget           *dialog,
                 controller_play_radio (LASTFM_LOVEDTRACKS_RADIO);
                 break;
         case 6:
-                controller_play_radio (LASTFM_USERPLAYLIST_RADIO);
+                controller_play_radio (LASTFM_MIX_RADIO);
                 break;
         case 7:
-                controller_play_radio (LASTFM_RECOMMENDED_RADIO);
+                controller_play_radio (LASTFM_USERPLAYLIST_RADIO);
                 break;
         case 8:
-                controller_play_radio (LASTFM_USERTAG_RADIO);
+                controller_play_radio (LASTFM_RECOMMENDED_RADIO);
                 break;
         case 9:
+                controller_play_radio (LASTFM_USERTAG_RADIO);
+                break;
+        case 10:
                 controller_play_radio_ask_url ();
                 break;
         default:
@@ -344,6 +353,7 @@ play_radio_cb                           (GtkButton *button,
         hildon_touch_selector_append_text (sel, _("My library"));
         hildon_touch_selector_append_text (sel, _("My neighbours"));
         hildon_touch_selector_append_text (sel, _("My loved tracks"));
+        hildon_touch_selector_append_text (sel, _("My mix"));
         hildon_touch_selector_append_text (sel, _("My playlist"));
         hildon_touch_selector_append_text (sel, _("My recommendations"));
         hildon_touch_selector_append_text (sel, _("My music tagged..."));

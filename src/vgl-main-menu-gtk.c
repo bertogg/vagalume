@@ -183,8 +183,8 @@ vgl_main_menu_new                       (GtkAccelGroup *accel)
         GtkWidget *settings, *import, *quit;
         GtkWidget *play, *stop, *skip, *separ1, *separ2, *separ3;
         GtkWidget *stopafter, *love, *ban, *tag, *dorecomm, *addtopls, *dload;
-        GtkWidget *library, *neigh, *loved, *playlist, *recomm, *usertag;
-        GtkWidget *library2, *neigh2, *loved2, *playlist2, *recomm2, *usertag2;
+        GtkWidget *library, *neigh, *loved, *mix, *playlist, *recomm, *usertag;
+        GtkWidget *library2, *neigh2, *loved2, *mix2, *playlist2, *recomm2, *usertag2;
         GtkWidget *managebmk, *addbmk, *bmkartist, *bmktrack, *bmkradio;
         GtkWidget *about;
 
@@ -247,12 +247,14 @@ vgl_main_menu_new                       (GtkAccelGroup *accel)
         library = gtk_menu_item_new_with_label(_("My library"));
         neigh = gtk_menu_item_new_with_label(_("My neighbours"));
         loved = gtk_menu_item_new_with_label(_("My loved tracks"));
+        mix = gtk_menu_item_new_with_label(_("My mix"));
         playlist = gtk_menu_item_new_with_label(_("My playlist"));
         recomm = gtk_menu_item_new_with_label(_("My recommendations"));
         usertag = gtk_menu_item_new_with_label(_("My music tagged..."));
         gtk_menu_shell_append(usersub, library);
         gtk_menu_shell_append(usersub, neigh);
         gtk_menu_shell_append(usersub, loved);
+        gtk_menu_shell_append(usersub, mix);
         gtk_menu_shell_append(usersub, playlist);
         gtk_menu_shell_append(usersub, recomm);
         gtk_menu_shell_append(usersub, usertag);
@@ -265,6 +267,9 @@ vgl_main_menu_new                       (GtkAccelGroup *accel)
         g_signal_connect(G_OBJECT(loved), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_LOVEDTRACKS_RADIO));
+        g_signal_connect(G_OBJECT(mix), "activate",
+                         G_CALLBACK(radio_selected),
+                         GINT_TO_POINTER(LASTFM_MIX_RADIO));
         g_signal_connect(G_OBJECT(playlist), "activate",
                          G_CALLBACK(radio_selected),
                          GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));
@@ -281,12 +286,14 @@ vgl_main_menu_new                       (GtkAccelGroup *accel)
         library2 = gtk_menu_item_new_with_label(_("Library..."));
         neigh2 = gtk_menu_item_new_with_label(_("Neighbours..."));
         loved2 = gtk_menu_item_new_with_label(_("Loved tracks..."));
+        mix2 = gtk_menu_item_new_with_label(_("Mix..."));
         playlist2 = gtk_menu_item_new_with_label(_("Playlist..."));
         recomm2 = gtk_menu_item_new_with_label(_("Recommendations..."));
         usertag2 = gtk_menu_item_new_with_label(_("Music tagged..."));
         gtk_menu_shell_append(othersub, library2);
         gtk_menu_shell_append(othersub, neigh2);
         gtk_menu_shell_append(othersub, loved2);
+        gtk_menu_shell_append(othersub, mix2);
         gtk_menu_shell_append(othersub, playlist2);
         gtk_menu_shell_append(othersub, recomm2);
         gtk_menu_shell_append(othersub, usertag2);
@@ -299,6 +306,9 @@ vgl_main_menu_new                       (GtkAccelGroup *accel)
         g_signal_connect(G_OBJECT(loved2), "activate",
                          G_CALLBACK(others_radio_selected),
                          GINT_TO_POINTER(LASTFM_LOVEDTRACKS_RADIO));
+        g_signal_connect(G_OBJECT(mix2), "activate",
+                         G_CALLBACK(others_radio_selected),
+                         GINT_TO_POINTER(LASTFM_MIX_RADIO));
         g_signal_connect(G_OBJECT(playlist2), "activate",
                          G_CALLBACK(others_radio_selected),
                          GINT_TO_POINTER(LASTFM_USERPLAYLIST_RADIO));

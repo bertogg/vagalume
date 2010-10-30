@@ -3,7 +3,7 @@
 # A shell script for easily managing some of the
 # Vagalume features available via its D-Bus interface.
 #
-# Copyright (C) 2008 Igalia, S.L.
+# Copyright (C) 2008, 2010 Igalia, S.L.
 # Authors: Mario Sanchez Prada <msanchez@igalia.com>
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -58,6 +58,7 @@ print_usage ()
     echo "     artist <ARTIST>:   change to a 'similar artists' radio"
     echo "     group <GROUP>:     change to a 'last.fm group' radio"
     echo "     loved <USER>:      change to a 'loved' radio for a specific user"
+    echo "     mix <USER>:        change to a 'mix' radio for a specific user"
     echo "     neighbours <USER>: change to a 'neighbours' radio for a specific user"
     echo "     library <USER>:    change to a 'library' radio for a specific user"
     echo "     playlist <USER>:   change to a 'playlist' radio for a specific user"
@@ -130,6 +131,7 @@ elif [ $# -eq 2 ]; then
     "artist") URL="lastfm://artist/"${ENCODED_PARAM};;
     "group") URL="lastfm://group/"${ENCODED_PARAM};;
     "loved") URL="lastfm://user/"${ENCODED_PARAM}"/loved";;
+    "mix") URL="lastfm://user/"${ENCODED_PARAM}"/mix";;
     "neighbours") URL="lastfm://user/"${ENCODED_PARAM}"/neighbours";;
     "library") URL="lastfm://user/"${ENCODED_PARAM}"/personal";;
     "playlist") URL="lastfm://user/"${ENCODED_PARAM}"/playlist";;

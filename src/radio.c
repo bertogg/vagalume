@@ -1,7 +1,7 @@
 /*
  * radio.c -- Functions to build radio URLs
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2008, 2010 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -25,6 +25,8 @@ lastfm_radio_url                        (LastfmRadio  type,
                 return g_strconcat("lastfm://group/", data, NULL);
         case LASTFM_LOVEDTRACKS_RADIO:
                 return g_strconcat("lastfm://user/", data, "/loved", NULL);
+        case LASTFM_MIX_RADIO:
+                return g_strconcat("lastfm://user/", data, "/mix", NULL);
         case LASTFM_NEIGHBOURS_RADIO:
                 return g_strconcat("lastfm://user/", data,
                                    "/neighbours", NULL);

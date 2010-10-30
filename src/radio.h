@@ -1,7 +1,7 @@
 /*
  * radio.h -- Functions to build radio URLs
  *
- * Copyright (C) 2007-2008 Igalia, S.L.
+ * Copyright (C) 2007-2008, 2010 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -15,6 +15,7 @@ typedef enum {
         LASTFM_GLOBALTAG_RADIO = 0,
         LASTFM_GROUP_RADIO,
         LASTFM_LOVEDTRACKS_RADIO,
+        LASTFM_MIX_RADIO,
         LASTFM_NEIGHBOURS_RADIO,
         LASTFM_LIBRARY_RADIO,
         LASTFM_SIMILAR_ARTIST_RADIO,
