@@ -114,6 +114,7 @@ static const button_data addpl_button = {
 };
 
 static const char cover_background[] = APP_DATA_DIR "/cover.png";
+static GtkTooltips *tooltips = NULL;
 
 void
 vgl_main_window_run_app                 (void)
@@ -228,6 +229,10 @@ vgl_main_window_update_track_info       (VglMainWindow     *w,
         gtk_window_set_title(GTK_WINDOW(w), text->str);
 
         g_string_free(text, TRUE);
+
+        gtk_tooltips_set_tip (tooltips, priv->artist, t->artist, t->artist);
+        gtk_tooltips_set_tip (tooltips, priv->track, t->title, t->title);
+        gtk_tooltips_set_tip (tooltips, priv->album, t->album, t->album);
 }
 
 static void
@@ -547,7 +552,6 @@ image_button_new                        (const button_data *data)
         g_return_val_if_fail(data->icon_name && data->icon_size > 0, NULL);
         GtkWidget *button = compat_gtk_button_new();
         GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
-        static GtkTooltips *tooltips = NULL;
 
         g_object_set_data(G_OBJECT(button), "button_data", (gpointer)data);
 
@@ -560,7 +564,6 @@ image_button_new                        (const button_data *data)
                                     data->button_height);
 
         if (data->tooltip != NULL) {
-                if (tooltips == NULL) tooltips = gtk_tooltips_new();
                 gtk_tooltips_set_tip(tooltips, button,
                                      _(data->tooltip), _(data->tooltip));
         }
@@ -788,6 +791,7 @@ vgl_main_window_class_init              (VglMainWindowClass *klass)
         GObjectClass *obj_class = (GObjectClass *)klass;
         obj_class->finalize = vgl_main_window_finalize;
         g_type_class_add_private(obj_class, sizeof(VglMainWindowPrivate));
+        if (tooltips == NULL) tooltips = gtk_tooltips_new();
 }
 
 GtkWidget *
