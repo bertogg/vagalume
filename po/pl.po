@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.71\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 13:50+0100\n"
+"POT-Creation-Date: 2010-11-02 12:55+0100\n"
 "PO-Revision-Date: 2010-06-17 20:11+0100\n"
 "Last-Translator: Dawid Pakuła <zulus@w3des.net>\n"
 "Language-Team: Polish <zulus@w3des.net>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,15 +25,15 @@ msgstr "Vagalume Klient Last.fm"
 msgid "Error initializing internet connection manager"
 msgstr "Błąd inicjacji menadżera połączeń sieciowych"
 
-#: ../src/controller.c:487
+#: ../src/controller.c:488
 msgid "Server info imported correctly"
 msgstr "Informacje o serwerze zostało zaimportowane poprawnie"
 
-#: ../src/controller.c:491
+#: ../src/controller.c:492
 msgid "No server info found in that file"
 msgstr "Nie znaleziono informacji o serwerze w tym pliku"
 
-#: ../src/controller.c:537
+#: ../src/controller.c:538
 #, c-format
 msgid ""
 "Unable to login to %s\n"
@@ -41,11 +42,11 @@ msgstr ""
 "Nie można zalogować do %s\n"
 "Sprawdź login i hasło"
 
-#: ../src/controller.c:543
+#: ../src/controller.c:544
 msgid "Network connection error"
 msgstr "Błąd połączenia z internetem"
 
-#: ../src/controller.c:649
+#: ../src/controller.c:650
 msgid ""
 "You need to enter your\n"
 "username and password\n"
@@ -55,108 +56,108 @@ msgstr ""
 "login i hasło\n"
 "aby móc używać programu."
 
-#: ../src/controller.c:711
+#: ../src/controller.c:712
 msgid "No more content to play"
 msgstr "Koniec listy odtwarzania"
 
-#: ../src/controller.c:937
+#: ../src/controller.c:938
 #, c-format
 msgid "Downloaded %s - %s"
 msgstr "Pobrano %s - %s"
 
-#: ../src/controller.c:941
+#: ../src/controller.c:942
 #, c-format
 msgid "Error downloading %s - %s"
 msgstr "Błąd pobierania %s - %s"
 
-#: ../src/controller.c:981
+#: ../src/controller.c:982
 msgid "Track already being downloaded"
 msgstr "Utwór został pobrany"
 
-#: ../src/controller.c:986
+#: ../src/controller.c:987
 msgid "Download this track?"
 msgstr "Czy chcesz pobrać ten utwór?"
 
-#: ../src/controller.c:999
+#: ../src/controller.c:1000
 msgid "File exists. Overwrite?"
 msgstr "Plik istnieje. Nadpisać?"
 
-#: ../src/controller.c:1015
+#: ../src/controller.c:1016
 #, c-format
 msgid "Downloading %s - %s"
 msgstr "Pobieranie %s - %s"
 
-#: ../src/controller.c:1057
+#: ../src/controller.c:1058
 msgid "Artist added to bookmarks"
 msgstr "Wykonawca został dodany do zakładek"
 
-#: ../src/controller.c:1064
+#: ../src/controller.c:1065
 msgid "Track added to bookmarks"
 msgstr "Utwór został dodany do zakładek"
 
-#: ../src/controller.c:1070
+#: ../src/controller.c:1071
 msgid "Current radio added to bookmarks"
 msgstr "Aktualne radio zostało dodane do zakładek"
 
-#: ../src/controller.c:1073
+#: ../src/controller.c:1074
 msgid "Bookmark added"
 msgstr "Zakładka dodana"
 
-#: ../src/controller.c:1159
+#: ../src/controller.c:1160
 msgid "Really mark track as loved?"
 msgstr "Czy na pewno chce dodać do ulubionych?"
 
-#: ../src/controller.c:1163
+#: ../src/controller.c:1164
 msgid "Marking track as loved"
 msgstr "Dodaj do ulubionych"
 
-#: ../src/controller.c:1177
+#: ../src/controller.c:1178
 msgid "Really ban this track?"
 msgstr "Czy na pewno chcesz zablokować ten utwór?"
 
-#: ../src/controller.c:1181
+#: ../src/controller.c:1182
 msgid "Banning track"
 msgstr "Blokowanie utworu"
 
-#: ../src/controller.c:1220
+#: ../src/controller.c:1221
 msgid "Tags set correctly"
 msgstr "Tagi ustawione pomyślnie"
 
-#: ../src/controller.c:1220
+#: ../src/controller.c:1221
 msgid "Error tagging"
 msgstr "Błąd tagowania"
 
-#: ../src/controller.c:1264
+#: ../src/controller.c:1265
 msgid "You must type a list of tags"
 msgstr "Musisz wstawić listę tagów"
 
-#: ../src/controller.c:1293
+#: ../src/controller.c:1294
 msgid "Recommendation sent"
 msgstr "Rekomendację wysłano"
 
-#: ../src/controller.c:1294
+#: ../src/controller.c:1295
 msgid "Error sending recommendation"
 msgstr "Błąd wysyłania rekomendacji"
 
-#: ../src/controller.c:1338
+#: ../src/controller.c:1339
 msgid ""
 "You must type a user name\n"
 "and a recommendation message."
 msgstr "Podaj nazwę użytkownika i wiadomość."
 
-#: ../src/controller.c:1361
+#: ../src/controller.c:1362
 msgid "Track added to playlist"
 msgstr "Utwór dodany do listy odtwarzania"
 
-#: ../src/controller.c:1362
+#: ../src/controller.c:1363
 msgid "Error adding track to playlist"
 msgstr "Błąd dodawania do listy odtwarzania"
 
-#: ../src/controller.c:1410
+#: ../src/controller.c:1411
 msgid "Really add this track to the playlist?"
 msgstr "Czy na pewno chcesz dodać ten utwór do listy odtwarzania?"
 
-#: ../src/controller.c:1439
+#: ../src/controller.c:1440
 msgid ""
 "Invalid radio URL. Either\n"
 "this radio doesn't exist\n"
@@ -168,74 +169,71 @@ msgstr ""
 "lub jest dostępne tylko dla\n"
 "subskrybentów Last.fm"
 
-#: ../src/controller.c:1535
-#: ../src/controller.c:1676
-#: ../src/controller.c:1730
+#: ../src/controller.c:1536 ../src/controller.c:1677 ../src/controller.c:1731
 msgid "Enter tag"
 msgstr "Podaj tag"
 
-#: ../src/controller.c:1535
+#: ../src/controller.c:1536
 msgid "Enter one of your tags"
 msgstr "Podaj jeden z Twoich tagów"
 
-#: ../src/controller.c:1587
+#: ../src/controller.c:1588
 msgid "Enter user name"
 msgstr "Podaj nazwę użytkownika"
 
-#: ../src/controller.c:1588
+#: ../src/controller.c:1589
 msgid "Play this user's radio"
 msgstr "Odtwarzaj radio użytkownika"
 
-#: ../src/controller.c:1676
+#: ../src/controller.c:1677
 msgid "Enter a tag"
 msgstr "Wpisz tag"
 
-#: ../src/controller.c:1707
+#: ../src/controller.c:1708
 msgid "Enter group"
 msgstr "Podaj grupę"
 
-#: ../src/controller.c:1707
+#: ../src/controller.c:1708
 msgid "Enter group name"
 msgstr "Podaj nazwę grupy"
 
-#: ../src/controller.c:1730
+#: ../src/controller.c:1731
 msgid "Enter a global tag"
 msgstr "Podaj globalny tag"
 
-#: ../src/controller.c:1754
+#: ../src/controller.c:1755
 msgid "Enter artist"
 msgstr "Podaj wykonawcę"
 
-#: ../src/controller.c:1754
+#: ../src/controller.c:1755
 msgid "Enter an artist's name"
 msgstr "Podaj nazwę wykonawcy"
 
-#: ../src/controller.c:1776
+#: ../src/controller.c:1777
 msgid "Enter radio URL"
 msgstr "Podaj adres radia"
 
-#: ../src/controller.c:1777
+#: ../src/controller.c:1778
 msgid "Enter the URL of the Last.fm radio"
 msgstr "Podaj adres radia Last.fm"
 
-#: ../src/controller.c:1786
-#: ../src/uimisc.c:305
+#: ../src/controller.c:1787 ../src/uimisc.c:309
 msgid "Last.fm radio URLs must start with lastfm://"
 msgstr "Radio Last.fm musi zaczynać się od lastfm://"
 
-#: ../src/controller.c:1857
+#: ../src/controller.c:1858
 msgid "Unable to initialize DBUS"
 msgstr "Nie można uruchomić DBUS"
 
-#: ../src/controller.c:1890
+#: ../src/controller.c:1891
 msgid "Error reading the server list file"
 msgstr "Błąd przetwarzania listy serwerów"
 
-#: ../src/controller.c:1898
+#: ../src/controller.c:1899
 msgid "Error initializing audio system"
 msgstr "Nie można uruchomić systemu dżwięku"
 
-#: ../src/controller.c:1908
+#: ../src/controller.c:1909
 msgid "Unable to initialize OSSO context"
 msgstr "Nie można uruchomić OSSO"
 
@@ -302,47 +300,45 @@ msgstr "Użycie %s [adres radia lastfm]\n"
 msgid "(unknown radio)"
 msgstr "(nieznane radio)"
 
-#: ../src/uimisc-gtk.c:112
+#: ../src/uimisc-gtk.c:114
 msgid "User tag radio"
 msgstr "Radio tagów użytkownika"
 
-#: ../src/uimisc-gtk.c:113
-#: ../src/uimisc-gtk.c:234
+#: ../src/uimisc-gtk.c:115 ../src/uimisc-gtk.c:236
 msgid "Username:"
 msgstr "Login:"
 
-#: ../src/uimisc-gtk.c:114
+#: ../src/uimisc-gtk.c:116
 msgid "Tag:"
 msgstr "Tag:"
 
-#: ../src/uimisc-gtk.c:208
+#: ../src/uimisc-gtk.c:210
 msgid "No help available"
 msgstr "Brak dostępnej pomocy"
 
-#: ../src/uimisc-gtk.c:235
+#: ../src/uimisc-gtk.c:237
 msgid "Password:"
 msgstr "Hasło:"
 
-#: ../src/uimisc-gtk.c:236
+#: ../src/uimisc-gtk.c:238
 msgid "Service:"
 msgstr "Usługa:"
 
-#: ../src/uimisc-gtk.c:237
+#: ../src/uimisc-gtk.c:239
 msgid "Enable scrobbling:"
 msgstr "Włącz scrobbling:"
 
-#: ../src/uimisc-gtk.c:238
+#: ../src/uimisc-gtk.c:240
 msgid "Discovery mode:"
 msgstr "Tryb odkrywcy:"
 
 #. Account frame
-#: ../src/uimisc-gtk.c:285
-#: ../src/uimisc-hildon22.c:269
+#: ../src/uimisc-gtk.c:287 ../src/uimisc-hildon22.c:269
 msgid "Account"
 msgstr "Konto"
 
 #. Set help
-#: ../src/uimisc-gtk.c:288
+#: ../src/uimisc-gtk.c:290
 msgid ""
 "* Username and password:\n"
 "From your account.\n"
@@ -365,23 +361,21 @@ msgstr ""
 "* Tryb odkrywcy:\n"
 "Nie odtwarza muzyki którą już słuchałeś. Wymagana subskrypcja w Last.fm."
 
-#: ../src/uimisc-gtk.c:308
-#: ../src/uimisc-hildon22.c:328
+#: ../src/uimisc-gtk.c:310 ../src/uimisc-hildon22.c:328
 msgid "Use HTTP proxy"
 msgstr "Użyj HTTP proxy"
 
-#: ../src/uimisc-gtk.c:309
+#: ../src/uimisc-gtk.c:311
 msgid "Proxy address:"
 msgstr "Adres proxy:"
 
 #. Connection frame
-#: ../src/uimisc-gtk.c:328
-#: ../src/uimisc-hildon22.c:321
+#: ../src/uimisc-gtk.c:330 ../src/uimisc-hildon22.c:321
 msgid "Connection"
 msgstr "Połączenie"
 
 #. Set help
-#: ../src/uimisc-gtk.c:331
+#: ../src/uimisc-gtk.c:333
 msgid ""
 "* Use HTTP proxy:\n"
 "Enable this to use an HTTP proxy.\n"
@@ -397,93 +391,94 @@ msgstr ""
 "login:hasło@nazwaHosta:port\n"
 "Wymagana tylko nazwa hosta (może być adres IP)."
 
-#: ../src/uimisc-gtk.c:348
-#: ../src/uimisc.c:392
+#: ../src/uimisc-gtk.c:350 ../src/uimisc.c:396
 msgid "Select download directory"
 msgstr "Wybierz katalog do zapisu pobranych plików"
 
 #. Translators: keep this string short!!
-#: ../src/uimisc-gtk.c:349
-#: ../src/uimisc-hildon22.c:363
+#: ../src/uimisc-gtk.c:351 ../src/uimisc-hildon22.c:363
 msgid "Automatically download free tracks"
 msgstr "Automatycznie pobieraj darmowe utwory"
 
 #. Download frame
-#: ../src/uimisc-gtk.c:372
-#: ../src/uimisc-hildon22.c:343
+#: ../src/uimisc-gtk.c:374 ../src/uimisc-hildon22.c:343
 msgid "Download"
 msgstr "Pobieranie"
 
 #. Set help
-#: ../src/uimisc-gtk.c:375
+#: ../src/uimisc-gtk.c:377
 msgid ""
 "* Download directory:\n"
-"Where to download mp3 files. Note that you can only download those songs marked as freely downloadable by the server."
+"Where to download mp3 files. Note that you can only download those songs "
+"marked as freely downloadable by the server."
 msgstr ""
 "* Katalog zapisu:\n"
-"Gdzie pobierać pliki mp3. Pamiętaj, że możesz pobierać tylko pliki oznaczone jako darmowe w Last.fm."
+"Gdzie pobierać pliki mp3. Pamiętaj, że możesz pobierać tylko pliki oznaczone "
+"jako darmowe w Last.fm."
 
-#: ../src/uimisc-gtk.c:394
+#: ../src/uimisc-gtk.c:396
 msgid "IM message template:"
 msgstr "Szablon opisu"
 
-#: ../src/uimisc-gtk.c:395
+#: ../src/uimisc-gtk.c:397
 msgid "Update Pidgin status:"
 msgstr "Aktualizuj status Pidgin'a:"
 
-#: ../src/uimisc-gtk.c:396
+#: ../src/uimisc-gtk.c:398
 msgid "Update Gajim status:"
 msgstr "Aktualizuj status Gajim'a:"
 
-#: ../src/uimisc-gtk.c:397
+#: ../src/uimisc-gtk.c:399
 msgid "Update Gossip status:"
 msgstr "Aktualizuj staus Gossip'a:"
 
-#: ../src/uimisc-gtk.c:398
+#: ../src/uimisc-gtk.c:400
 msgid "Update Telepathy status:"
 msgstr "Aktualizuj status Telepathy:"
 
 #. IM status frame
-#: ../src/uimisc-gtk.c:429
-#: ../src/uimisc-hildon22.c:367
+#: ../src/uimisc-gtk.c:431 ../src/uimisc-hildon22.c:367
 #: ../src/uimisc-hildon22.c:378
 msgid "Update IM status"
 msgstr "Status komunikatora"
 
 #. Set help
-#: ../src/uimisc-gtk.c:432
+#: ../src/uimisc-gtk.c:434
 msgid ""
-"Vagalume can update the status message of your IM client each time a new song starts. The template can contain the following keywords:\n"
+"Vagalume can update the status message of your IM client each time a new "
+"song starts. The template can contain the following keywords:\n"
 "\n"
 "{artist}: Name of the artist\n"
 "{title}: Song title\n"
 "{station}: Radio station\n"
 "{version}: Vagalume version"
 msgstr ""
-"Vagalume może aktualizować status Twojego komunikatora na początku każdego utworu. Szablon może używać następujące tagi:\n"
+"Vagalume może aktualizować status Twojego komunikatora na początku każdego "
+"utworu. Szablon może używać następujące tagi:\n"
 "\n"
 "{artist}: Nazwa wykonawcy\n"
 "{title}: Tytuł utworu\n"
 "{station}: Stacja\n"
 "{version}: Wersja Vagalume"
 
-#: ../src/uimisc-gtk.c:462
+#: ../src/uimisc-gtk.c:464
 msgid "Disable confirmation dialogs:"
 msgstr "Wyłącz potwierdzanie:"
 
-#: ../src/uimisc-gtk.c:472
+#: ../src/uimisc-gtk.c:474
 msgid ""
 "* Disable confirmation dialogs:\n"
 "Don't ask for confirmation when loving/banning tracks."
 msgstr ""
 "* Wyłącz potwierdzanie:\n"
-"Program nie pyta o potwierdzenie gdy chcesz dodać do ulubionych lub zablokować utwór."
+"Program nie pyta o potwierdzenie gdy chcesz dodać do ulubionych lub "
+"zablokować utwór."
 
-#: ../src/uimisc-gtk.c:479
+#: ../src/uimisc-gtk.c:481
 msgid "Show playback notifications:"
 msgstr "Pokaż powiadomienia o odtwarzanych:"
 
-#: ../src/uimisc-gtk.c:489
+#: ../src/uimisc-gtk.c:491
 msgid ""
 "\n"
 "\n"
@@ -497,11 +492,11 @@ msgstr ""
 "Wyświetla info po zmianie utworu w pop up'ach.\n"
 "\n"
 
-#: ../src/uimisc-gtk.c:495
+#: ../src/uimisc-gtk.c:497
 msgid "Close to systray:"
 msgstr "Zamykaj do ikony w tray'u:"
 
-#: ../src/uimisc-gtk.c:505
+#: ../src/uimisc-gtk.c:507
 msgid ""
 "* Close to systray:\n"
 "Hide the Vagalume window when the close button is pressed."
@@ -510,93 +505,78 @@ msgstr ""
 "Chowa okno Vagalume kiedy naciśniesz przycisk zamknij."
 
 #. Misc frame
-#: ../src/uimisc-gtk.c:512
-#: ../src/uimisc-hildon22.c:396
+#: ../src/uimisc-gtk.c:514 ../src/uimisc-hildon22.c:396
 msgid "Misc"
 msgstr "Pozostałe"
 
 #. Create dialog
-#: ../src/uimisc-gtk.c:531
-#: ../src/uimisc-hildon22.c:256
+#: ../src/uimisc-gtk.c:533 ../src/uimisc-hildon22.c:256
 msgid "User settings"
 msgstr "Ustawienia użytkownika"
 
-#: ../src/uimisc-gtk.c:648
-#: ../src/uimisc-hildon22.c:548
+#: ../src/uimisc-gtk.c:650 ../src/uimisc-hildon22.c:554
 msgid "Artist: "
 msgstr "Wykonawca:"
 
-#: ../src/uimisc-gtk.c:656
-#: ../src/uimisc-hildon22.c:552
+#: ../src/uimisc-gtk.c:658 ../src/uimisc-hildon22.c:558
 msgid "Track: "
 msgstr "Utwór:"
 
-#: ../src/uimisc-gtk.c:665
-#: ../src/uimisc-hildon22.c:557
+#: ../src/uimisc-gtk.c:667 ../src/uimisc-hildon22.c:563
 msgid "Album: "
 msgstr "Album: "
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:718
-#: ../src/uimisc-hildon22.c:639
+#: ../src/uimisc-gtk.c:720 ../src/uimisc-hildon22.c:645
 msgid "Send a recommendation"
 msgstr "Poleć"
 
-#: ../src/uimisc-gtk.c:724
-#: ../src/uimisc-hildon22.c:645
+#: ../src/uimisc-gtk.c:726 ../src/uimisc-hildon22.c:651
 msgid "Recommend this"
 msgstr "Poleć utwór"
 
-#: ../src/uimisc-gtk.c:747
-#: ../src/uimisc-hildon22.c:649
+#: ../src/uimisc-gtk.c:749 ../src/uimisc-hildon22.c:655
 msgid "Send recommendation to"
 msgstr "Poleć użytkownikowi"
 
 #. Message of the recommendation
-#: ../src/uimisc-gtk.c:755
-#: ../src/uimisc-hildon22.c:656
+#: ../src/uimisc-gtk.c:757 ../src/uimisc-hildon22.c:662
 msgid "Recommendation message"
 msgstr "Wiadomość"
 
-#: ../src/uimisc-gtk.c:936
-#: ../src/uimisc-gtk.c:1001
-#: ../src/uimisc-hildon22.c:829
-#: ../src/uimisc-hildon22.c:831
+#: ../src/uimisc-gtk.c:938 ../src/uimisc-gtk.c:1003
+#: ../src/uimisc-hildon22.c:835 ../src/uimisc-hildon22.c:837
 msgid "retrieving..."
 msgstr "pobieranie..."
 
 #. A treemodel for combos with no elements
-#: ../src/uimisc-gtk.c:998
+#: ../src/uimisc-gtk.c:1000
 msgid "(none)"
 msgstr "(brak)"
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:1006
-#: ../src/uimisc-hildon22.c:947
+#: ../src/uimisc-gtk.c:1008 ../src/uimisc-hildon22.c:953
 msgid "Tagging"
 msgstr "Tagowanie"
 
 #. Combo to select what to tag
-#: ../src/uimisc-gtk.c:1011
-#: ../src/uimisc-hildon22.c:952
+#: ../src/uimisc-gtk.c:1013 ../src/uimisc-hildon22.c:958
 msgid "Tag this"
 msgstr "Otaguj"
 
 #. Text entry
-#: ../src/uimisc-gtk.c:1031
+#: ../src/uimisc-gtk.c:1033
 msgid ""
 "Enter a comma-separated\n"
 "list of tags"
 msgstr "Podaj listę tagów oddzielonych przecinkami"
 
 #. Combo boxes
-#: ../src/uimisc-gtk.c:1037
-#: ../src/uimisc-hildon22.c:960
+#: ../src/uimisc-gtk.c:1039 ../src/uimisc-hildon22.c:966
 msgid "Your favourite tags"
 msgstr "Twoje ulubione tagi"
 
-#: ../src/uimisc-gtk.c:1038
-#: ../src/uimisc-hildon22.c:968
+#: ../src/uimisc-gtk.c:1040 ../src/uimisc-hildon22.c:974
 msgid "Popular tags for this"
 msgstr "Popularne tagi"
 
@@ -636,14 +616,13 @@ msgstr "Szablon opisu w komunikatorze"
 msgid "Disable confirmation dialogs"
 msgstr "Wyłącz powiadamianie"
 
-#: ../src/uimisc-hildon22.c:892
-#: ../src/uimisc-hildon22.c:920
+#: ../src/uimisc-hildon22.c:898 ../src/uimisc-hildon22.c:926
 #, c-format
 msgid "%d tags"
 msgstr "%d tagi"
 
 #. Text entry
-#: ../src/uimisc-hildon22.c:955
+#: ../src/uimisc-hildon22.c:961
 msgid "Enter a comma-separated list of tags"
 msgstr "Podaj listę tagów oddzielonych przecinkami"
 
@@ -651,93 +630,97 @@ msgstr "Podaj listę tagów oddzielonych przecinkami"
 msgid "Client for Last.fm and compatible services"
 msgstr "Klient Last.fm i kompatybilnych usług"
 
-#: ../src/uimisc.c:168
+#: ../src/uimisc.c:171
 msgid "German"
 msgstr "Niemiecki"
 
-#: ../src/uimisc.c:169
+#: ../src/uimisc.c:172
 msgid "Spanish"
 msgstr "Hiszpański"
 
-#: ../src/uimisc.c:169
+#: ../src/uimisc.c:172
 msgid "Finnish"
 msgstr "Fiński"
 
-#: ../src/uimisc.c:170
+#: ../src/uimisc.c:173
 msgid "French"
 msgstr "Francuski"
 
-#: ../src/uimisc.c:171
+#: ../src/uimisc.c:174
 msgid "Galician"
 msgstr "Galisyjski"
 
-#: ../src/uimisc.c:171
+#: ../src/uimisc.c:174
 msgid "Italian"
 msgstr "Włoski"
 
-#: ../src/uimisc.c:172
+#: ../src/uimisc.c:175
 msgid "Latvian"
 msgstr "Łotewski"
 
-#: ../src/uimisc.c:172
+#: ../src/uimisc.c:175
 msgid "Polish"
 msgstr "Polski"
 
-#: ../src/uimisc.c:173
+#: ../src/uimisc.c:176
 msgid "Portuguese"
 msgstr "Portugalski"
 
-#: ../src/uimisc.c:218
+#: ../src/uimisc.c:177
+msgid "Russian"
+msgstr ""
+
+#: ../src/uimisc.c:222
 msgid "Confirmation"
 msgstr "Potwierdzenie"
 
-#: ../src/uimisc.c:269
+#: ../src/uimisc.c:273
 msgid "Add bookmark"
 msgstr "Dodaj zakładkę"
 
-#: ../src/uimisc.c:269
+#: ../src/uimisc.c:273
 msgid "Edit bookmark"
 msgstr "Edytuj zakładkę"
 
-#: ../src/uimisc.c:270
+#: ../src/uimisc.c:274
 msgid "Bookmark name"
 msgstr "Nazwa zakładki"
 
-#: ../src/uimisc.c:271
+#: ../src/uimisc.c:275
 msgid "Last.fm radio address"
 msgstr "Adres radia Last.fm"
 
-#: ../src/uimisc.c:301
+#: ../src/uimisc.c:305
 msgid "Invalid bookmark name"
 msgstr "Niepoprawna nazwa zakładki"
 
-#: ../src/uimisc.c:376
+#: ../src/uimisc.c:380
 msgid "Select server file to import"
 msgstr "Wybierz plik serwera do zaimportowania"
 
 #. Create all widgets
-#: ../src/uimisc.c:471
+#: ../src/uimisc.c:475
 msgid "Stop automatically"
 msgstr "Zatrzymaj automatycznie"
 
-#: ../src/uimisc.c:472
+#: ../src/uimisc.c:476
 msgid "When do you want to stop playback?"
 msgstr "Kiedy chcesz zatrzymać odtwarzanie?"
 
-#: ../src/uimisc.c:473
+#: ../src/uimisc.c:477
 msgid "minutes"
 msgstr "minuty"
 
-#: ../src/uimisc.c:481
+#: ../src/uimisc.c:485
 msgid "Don't stop"
 msgstr "Nie zatrzymuj"
 
-#: ../src/uimisc.c:482
+#: ../src/uimisc.c:486
 msgid "Stop after this track"
 msgstr "Zatrzymaj po tym utworze"
 
 #. Translators: the full text is "Stop after ____ minutes"
-#: ../src/uimisc.c:484
+#: ../src/uimisc.c:488
 msgid "Stop after"
 msgstr "Zatrzymaj po"
 
@@ -762,8 +745,8 @@ msgid "_Ban this track"
 msgstr "_Zablokuj"
 
 #. Configure widgets
-#: ../src/vgl-bookmark-window.c:312
-#: ../src/vgl-main-menu-hildon22.c:418
+#: ../src/vgl-bookmark-window.c:312 ../src/vgl-main-menu-hildon22.c:116
+#: ../src/vgl-main-menu-hildon22.c:432
 msgid "Bookmarks"
 msgstr "Zakładki"
 
@@ -789,173 +772,169 @@ msgstr "Moje radia"
 msgid "Others' radios"
 msgstr "Pozostałe radia"
 
-#: ../src/vgl-main-menu-gtk.c:223
-#: ../src/vgl-main-menu-hildon22.c:339
+#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:352
 msgid "Group radio..."
 msgstr "Radio grupy..."
 
-#: ../src/vgl-main-menu-gtk.c:224
-#: ../src/vgl-main-menu-gtk.c:286
-#: ../src/vgl-main-menu-hildon22.c:337
+#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:292
+#: ../src/vgl-main-menu-hildon22.c:350
 msgid "Music tagged..."
 msgstr "Tag..."
 
-#: ../src/vgl-main-menu-gtk.c:225
-#: ../src/vgl-main-menu-hildon22.c:338
+#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:351
 msgid "Artists similar to..."
 msgstr "Wykonawca podobny do..."
 
-#: ../src/vgl-main-menu-gtk.c:226
-#: ../src/vgl-main-menu-hildon22.c:346
+#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:360
 msgid "Enter URL..."
 msgstr "Podaj adres..."
 
-#: ../src/vgl-main-menu-gtk.c:247
-#: ../src/vgl-main-menu-hildon22.c:340
+#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:353
 msgid "My library"
 msgstr "Moja biblioteka"
 
-#: ../src/vgl-main-menu-gtk.c:248
-#: ../src/vgl-main-menu-hildon22.c:341
+#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:354
 msgid "My neighbours"
 msgstr "Moi sądziedzi"
 
-#: ../src/vgl-main-menu-gtk.c:249
-#: ../src/vgl-main-menu-hildon22.c:342
+#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:355
 msgid "My loved tracks"
 msgstr "Moje ulubione utwory"
 
-#: ../src/vgl-main-menu-gtk.c:250
-#: ../src/vgl-main-menu-hildon22.c:343
+#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
+msgid "My mix"
+msgstr ""
+
+#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
 msgstr "Moja lista odtwarzania"
 
-#: ../src/vgl-main-menu-gtk.c:251
-#: ../src/vgl-main-menu-hildon22.c:344
+#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:358
 msgid "My recommendations"
 msgstr "Moje propozycje"
 
-#: ../src/vgl-main-menu-gtk.c:252
-#: ../src/vgl-main-menu-hildon22.c:345
+#: ../src/vgl-main-menu-gtk.c:253 ../src/vgl-main-menu-hildon22.c:359
 msgid "My music tagged..."
 msgstr "Moje tagi..."
 
-#: ../src/vgl-main-menu-gtk.c:281
+#: ../src/vgl-main-menu-gtk.c:286
 msgid "Library..."
 msgstr "Biblioteka..."
 
-#: ../src/vgl-main-menu-gtk.c:282
+#: ../src/vgl-main-menu-gtk.c:287
 msgid "Neighbours..."
 msgstr "Sąsiedzi..."
 
-#: ../src/vgl-main-menu-gtk.c:283
+#: ../src/vgl-main-menu-gtk.c:288
 msgid "Loved tracks..."
 msgstr "Ulubione utwory..."
 
-#: ../src/vgl-main-menu-gtk.c:284
+#: ../src/vgl-main-menu-gtk.c:289
+msgid "Mix..."
+msgstr ""
+
+#: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
 msgstr "Lista odtwarzania..."
 
-#: ../src/vgl-main-menu-gtk.c:285
+#: ../src/vgl-main-menu-gtk.c:291
 msgid "Recommendations..."
 msgstr "Utwory polecone..."
 
 #. Actions
-#: ../src/vgl-main-menu-gtk.c:313
+#: ../src/vgl-main-menu-gtk.c:323
 msgid "_Actions"
 msgstr "_Odtwarzanie"
 
-#: ../src/vgl-main-menu-gtk.c:321
-#: ../src/vgl-main-menu-hildon22.c:412
+#: ../src/vgl-main-menu-gtk.c:331 ../src/vgl-main-menu-hildon22.c:426
 msgid "Stop after..."
 msgstr "Zatrzymaj po..."
 
-#: ../src/vgl-main-menu-gtk.c:329
-#: ../src/vgl-main-window.c:105
+#: ../src/vgl-main-menu-gtk.c:339 ../src/vgl-main-window.c:105
 msgid "Download this track"
 msgstr "Pobierz utwór"
 
-#: ../src/vgl-main-menu-gtk.c:372
+#: ../src/vgl-main-menu-gtk.c:382
 msgid "_Bookmarks"
 msgstr "_Zakładki"
 
-#: ../src/vgl-main-menu-gtk.c:375
+#: ../src/vgl-main-menu-gtk.c:385
 msgid "Add bookmark..."
 msgstr "Dodaj zakładkę..."
 
-#: ../src/vgl-main-menu-gtk.c:377
-#: ../src/vgl-main-menu-hildon22.c:120
+#: ../src/vgl-main-menu-gtk.c:387 ../src/vgl-main-menu-hildon22.c:121
 msgid "Manage bookmarks..."
 msgstr "Zarządzaj zakładkami..."
 
-#: ../src/vgl-main-menu-gtk.c:378
-#: ../src/vgl-main-menu-hildon22.c:429
+#: ../src/vgl-main-menu-gtk.c:388 ../src/vgl-main-menu-hildon22.c:443
 msgid "Bookmark this artist..."
 msgstr "Dodaj wykonawcę..."
 
-#: ../src/vgl-main-menu-gtk.c:379
-#: ../src/vgl-main-menu-hildon22.c:436
+#: ../src/vgl-main-menu-gtk.c:389 ../src/vgl-main-menu-hildon22.c:450
 msgid "Bookmark this track..."
 msgstr "Dodaj utwór..."
 
-#: ../src/vgl-main-menu-gtk.c:380
-#: ../src/vgl-main-menu-hildon22.c:443
+#: ../src/vgl-main-menu-gtk.c:390 ../src/vgl-main-menu-hildon22.c:457
 msgid "Bookmark this radio..."
 msgstr "Zapisz to radio..."
 
 #. Help
-#: ../src/vgl-main-menu-gtk.c:406
+#: ../src/vgl-main-menu-gtk.c:416
 msgid "_Help"
 msgstr "_Pomoc"
 
-#: ../src/vgl-main-menu-hildon22.c:221
-#: ../src/vgl-main-menu-hildon22.c:335
+#: ../src/vgl-main-menu-hildon22.c:226 ../src/vgl-main-menu-hildon22.c:348
 msgid "Select radio"
 msgstr "Wybierz radio"
 
-#: ../src/vgl-main-menu-hildon22.c:223
+#: ../src/vgl-main-menu-hildon22.c:228
 #, c-format
 msgid "%s's library"
 msgstr "Biblioteka użytkownika %s"
 
-#: ../src/vgl-main-menu-hildon22.c:225
+#: ../src/vgl-main-menu-hildon22.c:230
 #, c-format
 msgid "%s's neighbours"
 msgstr "Sąsiedzi %s"
 
-#: ../src/vgl-main-menu-hildon22.c:227
+#: ../src/vgl-main-menu-hildon22.c:232
 #, c-format
 msgid "%s's loved tracks"
 msgstr "Ulubione utwory %s"
 
-#: ../src/vgl-main-menu-hildon22.c:229
+#: ../src/vgl-main-menu-hildon22.c:234
+#, fuzzy, c-format
+msgid "%s's mix"
+msgstr "Biblioteka użytkownika %s"
+
+#: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
 msgid "%s's playlist"
 msgstr "Lista odtwarzania %s"
 
-#: ../src/vgl-main-menu-hildon22.c:231
+#: ../src/vgl-main-menu-hildon22.c:238
 #, c-format
 msgid "%s's recommendations"
 msgstr "Propozycje dla %s"
 
-#: ../src/vgl-main-menu-hildon22.c:233
+#: ../src/vgl-main-menu-hildon22.c:240
 #, c-format
 msgid "%s's music tagged..."
 msgstr "Tagi użytkownika %s"
 
-#: ../src/vgl-main-menu-hildon22.c:260
+#: ../src/vgl-main-menu-hildon22.c:267
 msgid "Type any user name"
 msgstr "Podaj login użytkownika"
 
-#: ../src/vgl-main-menu-hildon22.c:397
+#: ../src/vgl-main-menu-hildon22.c:411
 msgid "Import servers file"
 msgstr "Importuj pliki serwerów"
 
-#: ../src/vgl-main-menu-hildon22.c:402
+#: ../src/vgl-main-menu-hildon22.c:416
 msgid "Play radio"
 msgstr "Odtwórz radio"
 
-#: ../src/vgl-main-menu-hildon22.c:407
+#: ../src/vgl-main-menu-hildon22.c:421
 msgid "People"
 msgstr "Ludzie"
 
@@ -991,41 +970,39 @@ msgstr "Edytuj listę tagów dla utworu"
 msgid "Add this track to playlist"
 msgstr "Dodaj do listy odtwarzania"
 
-#: ../src/vgl-main-window.c:197
+#: ../src/vgl-main-window.c:198
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Wykonawca:</b>\n"
 
-#: ../src/vgl-main-window.c:203
+#: ../src/vgl-main-window.c:204
 msgid "<b>Title:</b>\n"
 msgstr "<b>Tytuł:</b>\n"
 
-#: ../src/vgl-main-window.c:210
+#: ../src/vgl-main-window.c:211
 msgid "<b>Album:</b>\n"
 msgstr "<b>Album:</b>\n"
 
-#: ../src/vgl-main-window.c:219
+#: ../src/vgl-main-window.c:220
 msgid "<b>Listening to <i>"
 msgstr "<b>Słuchasz <i>"
 
-#: ../src/vgl-main-window.c:344
-#: ../src/vgl-main-window.c:345
+#: ../src/vgl-main-window.c:349 ../src/vgl-main-window.c:350
 msgid "Stopped"
 msgstr "Zatrzymano"
 
-#: ../src/vgl-main-window.c:369
+#: ../src/vgl-main-window.c:374
 msgid "Playing..."
 msgstr "Odtwarzanie..."
 
-#: ../src/vgl-main-window.c:384
-#: ../src/vgl-main-window.c:385
+#: ../src/vgl-main-window.c:389 ../src/vgl-main-window.c:390
 msgid "Connecting..."
 msgstr "Łączenie..."
 
-#: ../src/vgl-main-window.c:404
+#: ../src/vgl-main-window.c:409
 msgid "Disconnected"
 msgstr "Rozłaczony"
 
-#: ../src/vgl-main-window.c:482
+#: ../src/vgl-main-window.c:487
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Głośność: %d/100"
@@ -1101,14 +1078,18 @@ msgstr ""
 
 #~ msgid "Stop after ..."
 #~ msgstr "Zatrzymaj po ..."
+
 #~ msgid "Invalid radio URL"
 #~ msgstr "Nie poprawny adres radia"
+
 #~ msgid "A Last.fm client for Gnome and Maemo"
 #~ msgstr "Klient Last.fm dla Gnome i Maemo"
+
 #~ msgid "Settings..."
 #~ msgstr "Ustawienia..."
+
 #~ msgid "Quit"
 #~ msgstr "Zamknij"
+
 #~ msgid "About..."
 #~ msgstr "O projekcie"
-

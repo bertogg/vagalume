@@ -7,10 +7,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.8.3-1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-13 00:24+0100\n"
+"POT-Creation-Date: 2010-11-02 12:55+0100\n"
 "PO-Revision-Date: 2010-02-13 00:36+0100\n"
-"Last-Translator: Sergei Ivanov <isn@vu.spb.ru>, Vitaly Petrov <vit.petrov@vu.spb.ru>\n"
+"Last-Translator: Sergei Ivanov <isn@vu.spb.ru>, Vitaly Petrov <vit.petrov@vu."
+"spb.ru>\n"
 "Language-Team: SUAI Maemo Team, St. Petersburg, Russia\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -216,7 +218,7 @@ msgstr "Ввод"
 msgid "Enter the URL of the Last.fm radio"
 msgstr "Введите URL радио Last.fm"
 
-#: ../src/controller.c:1787 ../src/uimisc.c:308
+#: ../src/controller.c:1787 ../src/uimisc.c:309
 msgid "Last.fm radio URLs must start with lastfm://"
 msgstr "URL для Last.fm должен начинаться с lastfm://"
 
@@ -392,7 +394,7 @@ msgstr ""
 "имя пользователя:пароль@hostname:порт\n"
 "Требуется имя хоста (или IP адрес)."
 
-#: ../src/uimisc-gtk.c:350 ../src/uimisc.c:395
+#: ../src/uimisc-gtk.c:350 ../src/uimisc.c:396
 msgid "Select download directory"
 msgstr "Выберите директорию для загрузки"
 
@@ -633,97 +635,97 @@ msgstr "Введите список тегов, разделенных запя�
 msgid "Client for Last.fm and compatible services"
 msgstr "Клиент для радио Last.fm и совместимых сервисов"
 
-#: ../src/uimisc.c:170
+#: ../src/uimisc.c:171
 msgid "German"
 msgstr "Немецкий"
 
-#: ../src/uimisc.c:171
+#: ../src/uimisc.c:172
 msgid "Spanish"
 msgstr "Испанский"
 
-#: ../src/uimisc.c:171
+#: ../src/uimisc.c:172
 msgid "Finnish"
 msgstr "Финский"
 
-#: ../src/uimisc.c:172
+#: ../src/uimisc.c:173
 msgid "French"
 msgstr "Французский"
 
-#: ../src/uimisc.c:173
+#: ../src/uimisc.c:174
 msgid "Galician"
 msgstr "Галисийский"
 
-#: ../src/uimisc.c:173
+#: ../src/uimisc.c:174
 msgid "Italian"
 msgstr "Итальянский"
 
-#: ../src/uimisc.c:174
+#: ../src/uimisc.c:175
 msgid "Latvian"
 msgstr "Латвийский"
 
-#: ../src/uimisc.c:174
+#: ../src/uimisc.c:175
 msgid "Polish"
 msgstr "Польский"
 
-#: ../src/uimisc.c:175
+#: ../src/uimisc.c:176
 msgid "Portuguese"
 msgstr "Португальский"
 
-#: ../src/uimisc.c:176
+#: ../src/uimisc.c:177
 msgid "Russian"
 msgstr "Русский"
 
-#: ../src/uimisc.c:221
+#: ../src/uimisc.c:222
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: ../src/uimisc.c:272
+#: ../src/uimisc.c:273
 msgid "Add bookmark"
 msgstr "Добавление"
 
-#: ../src/uimisc.c:272
+#: ../src/uimisc.c:273
 msgid "Edit bookmark"
 msgstr "Редактировать закладку"
 
-#: ../src/uimisc.c:273
+#: ../src/uimisc.c:274
 msgid "Bookmark name"
 msgstr "Название закладки"
 
-#: ../src/uimisc.c:274
+#: ../src/uimisc.c:275
 msgid "Last.fm radio address"
 msgstr "Адрес радио Last.fm"
 
-#: ../src/uimisc.c:304
+#: ../src/uimisc.c:305
 msgid "Invalid bookmark name"
 msgstr "Неверное имя закладки"
 
-#: ../src/uimisc.c:379
+#: ../src/uimisc.c:380
 msgid "Select server file to import"
 msgstr "Выберите файл серверов для импорта"
 
 #. Create all widgets
-#: ../src/uimisc.c:474
+#: ../src/uimisc.c:475
 msgid "Stop automatically"
 msgstr "Останавливать автоматически"
 
-#: ../src/uimisc.c:475
+#: ../src/uimisc.c:476
 msgid "When do you want to stop playback?"
 msgstr "Когда Вы хотите остановить воспроизведение?"
 
-#: ../src/uimisc.c:476
+#: ../src/uimisc.c:477
 msgid "minutes"
 msgstr "минут"
 
-#: ../src/uimisc.c:484
+#: ../src/uimisc.c:485
 msgid "Don't stop"
 msgstr "Не останавливать"
 
-#: ../src/uimisc.c:485
+#: ../src/uimisc.c:486
 msgid "Stop after this track"
 msgstr "Остановить после этого трека"
 
 #. Translators: the full text is "Stop after ____ minutes"
-#: ../src/uimisc.c:487
+#: ../src/uimisc.c:488
 msgid "Stop after"
 msgstr "Остановить после"
 
@@ -749,7 +751,7 @@ msgstr "_Запретить данный трек"
 
 #. Configure widgets
 #: ../src/vgl-bookmark-window.c:312 ../src/vgl-main-menu-hildon22.c:116
-#: ../src/vgl-main-menu-hildon22.c:422
+#: ../src/vgl-main-menu-hildon22.c:432
 msgid "Bookmarks"
 msgstr "Закладки"
 
@@ -775,156 +777,169 @@ msgstr "Мои радиостанции"
 msgid "Others' radios"
 msgstr "Другие радиостанции"
 
-#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:343
+#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:352
 msgid "Group radio..."
 msgstr "Радиостанции группы..."
 
-#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:286
-#: ../src/vgl-main-menu-hildon22.c:341
+#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:292
+#: ../src/vgl-main-menu-hildon22.c:350
 msgid "Music tagged..."
 msgstr "Музыка с тегом..."
 
-#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:342
+#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:351
 msgid "Artists similar to..."
 msgstr "Исполнитель схож с..."
 
-#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:350
+#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:360
 msgid "Enter URL..."
 msgstr "Введите URL..."
 
-#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:344
+#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:353
 msgid "My library"
 msgstr "Моя фонотека"
 
-#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:345
+#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:354
 msgid "My neighbours"
 msgstr "Мои соседи"
 
-#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:346
+#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:355
 msgid "My loved tracks"
 msgstr "Мои любимые треки"
 
-#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:347
+#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
+msgid "My mix"
+msgstr ""
+
+#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
 msgstr "Мои списки воспроизведения"
 
-#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:348
+#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:358
 msgid "My recommendations"
 msgstr "Мои отзывы"
 
-#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:349
+#: ../src/vgl-main-menu-gtk.c:253 ../src/vgl-main-menu-hildon22.c:359
 msgid "My music tagged..."
 msgstr "Моя музыка с тегом..."
 
-#: ../src/vgl-main-menu-gtk.c:281
+#: ../src/vgl-main-menu-gtk.c:286
 msgid "Library..."
 msgstr "Фонотека..."
 
-#: ../src/vgl-main-menu-gtk.c:282
+#: ../src/vgl-main-menu-gtk.c:287
 msgid "Neighbours..."
 msgstr "Соседи..."
 
-#: ../src/vgl-main-menu-gtk.c:283
+#: ../src/vgl-main-menu-gtk.c:288
 msgid "Loved tracks..."
 msgstr "Мои любимые треки..."
 
-#: ../src/vgl-main-menu-gtk.c:284
+#: ../src/vgl-main-menu-gtk.c:289
+msgid "Mix..."
+msgstr ""
+
+#: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
 msgstr "Список произведения..."
 
-#: ../src/vgl-main-menu-gtk.c:285
+#: ../src/vgl-main-menu-gtk.c:291
 msgid "Recommendations..."
 msgstr "Отзывы..."
 
 #. Actions
-#: ../src/vgl-main-menu-gtk.c:313
+#: ../src/vgl-main-menu-gtk.c:323
 msgid "_Actions"
 msgstr "_Действия"
 
-#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:416
+#: ../src/vgl-main-menu-gtk.c:331 ../src/vgl-main-menu-hildon22.c:426
 msgid "Stop after..."
 msgstr "Остановить после..."
 
-#: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
+#: ../src/vgl-main-menu-gtk.c:339 ../src/vgl-main-window.c:105
 msgid "Download this track"
 msgstr "Загрузить данный трек"
 
-#: ../src/vgl-main-menu-gtk.c:372
+#: ../src/vgl-main-menu-gtk.c:382
 msgid "_Bookmarks"
 msgstr "_Закладки"
 
-#: ../src/vgl-main-menu-gtk.c:375
+#: ../src/vgl-main-menu-gtk.c:385
 msgid "Add bookmark..."
 msgstr "Добавить закладку..."
 
-#: ../src/vgl-main-menu-gtk.c:377 ../src/vgl-main-menu-hildon22.c:121
+#: ../src/vgl-main-menu-gtk.c:387 ../src/vgl-main-menu-hildon22.c:121
 msgid "Manage bookmarks..."
 msgstr "Управление закладками"
 
-#: ../src/vgl-main-menu-gtk.c:378 ../src/vgl-main-menu-hildon22.c:433
+#: ../src/vgl-main-menu-gtk.c:388 ../src/vgl-main-menu-hildon22.c:443
 msgid "Bookmark this artist..."
 msgstr "Добавить данного исполнителя в закладки..."
 
-#: ../src/vgl-main-menu-gtk.c:379 ../src/vgl-main-menu-hildon22.c:440
+#: ../src/vgl-main-menu-gtk.c:389 ../src/vgl-main-menu-hildon22.c:450
 msgid "Bookmark this track..."
 msgstr "Добавить данный трек в закладки..."
 
-#: ../src/vgl-main-menu-gtk.c:380 ../src/vgl-main-menu-hildon22.c:447
+#: ../src/vgl-main-menu-gtk.c:390 ../src/vgl-main-menu-hildon22.c:457
 msgid "Bookmark this radio..."
 msgstr "Добавить данную радиостанцию в закладки..."
 
 #. Help
-#: ../src/vgl-main-menu-gtk.c:406
+#: ../src/vgl-main-menu-gtk.c:416
 msgid "_Help"
 msgstr "_Помощь"
 
-#: ../src/vgl-main-menu-hildon22.c:222 ../src/vgl-main-menu-hildon22.c:339
+#: ../src/vgl-main-menu-hildon22.c:226 ../src/vgl-main-menu-hildon22.c:348
 msgid "Select radio"
 msgstr "Выберите радио"
 
-#: ../src/vgl-main-menu-hildon22.c:224
+#: ../src/vgl-main-menu-hildon22.c:228
 #, c-format
 msgid "%s's library"
 msgstr "Фонотека %s"
 
-#: ../src/vgl-main-menu-hildon22.c:226
+#: ../src/vgl-main-menu-hildon22.c:230
 #, c-format
 msgid "%s's neighbours"
 msgstr "Соседи %s"
 
-#: ../src/vgl-main-menu-hildon22.c:228
+#: ../src/vgl-main-menu-hildon22.c:232
 #, c-format
 msgid "%s's loved tracks"
 msgstr "любимые треки %s"
 
-#: ../src/vgl-main-menu-hildon22.c:230
+#: ../src/vgl-main-menu-hildon22.c:234
+#, fuzzy, c-format
+msgid "%s's mix"
+msgstr "Фонотека %s"
+
+#: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
 msgid "%s's playlist"
 msgstr "Списки воспроизведения %s"
 
-#: ../src/vgl-main-menu-hildon22.c:232
+#: ../src/vgl-main-menu-hildon22.c:238
 #, c-format
 msgid "%s's recommendations"
 msgstr "Рекомендации %s"
 
-#: ../src/vgl-main-menu-hildon22.c:234
+#: ../src/vgl-main-menu-hildon22.c:240
 #, c-format
 msgid "%s's music tagged..."
 msgstr "Музыка с тегом, принадлежащая %s"
 
-#: ../src/vgl-main-menu-hildon22.c:261
+#: ../src/vgl-main-menu-hildon22.c:267
 msgid "Type any user name"
 msgstr "Введите имя пользователя"
 
-#: ../src/vgl-main-menu-hildon22.c:401
+#: ../src/vgl-main-menu-hildon22.c:411
 msgid "Import servers file"
 msgstr "Импортировать список серверов"
 
-#: ../src/vgl-main-menu-hildon22.c:406
+#: ../src/vgl-main-menu-hildon22.c:416
 msgid "Play radio"
 msgstr "Слушать радио"
 
-#: ../src/vgl-main-menu-hildon22.c:411
+#: ../src/vgl-main-menu-hildon22.c:421
 msgid "People"
 msgstr "Люди"
 
@@ -960,39 +975,39 @@ msgstr "Изменить теги для данного трека"
 msgid "Add this track to playlist"
 msgstr "Добавить данный трек в список воспроизведения"
 
-#: ../src/vgl-main-window.c:197
+#: ../src/vgl-main-window.c:198
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Исполнитель:</b>\n"
 
-#: ../src/vgl-main-window.c:203
+#: ../src/vgl-main-window.c:204
 msgid "<b>Title:</b>\n"
 msgstr "<b>Название:</b>\n"
 
-#: ../src/vgl-main-window.c:210
+#: ../src/vgl-main-window.c:211
 msgid "<b>Album:</b>\n"
 msgstr "<b>Альбом:</b>\n"
 
-#: ../src/vgl-main-window.c:219
+#: ../src/vgl-main-window.c:220
 msgid "<b>Listening to <i>"
 msgstr "<b>Прослушивание: <i>"
 
-#: ../src/vgl-main-window.c:344 ../src/vgl-main-window.c:345
+#: ../src/vgl-main-window.c:349 ../src/vgl-main-window.c:350
 msgid "Stopped"
 msgstr "Остановлено"
 
-#: ../src/vgl-main-window.c:369
+#: ../src/vgl-main-window.c:374
 msgid "Playing..."
 msgstr "Воспроизведение..."
 
-#: ../src/vgl-main-window.c:384 ../src/vgl-main-window.c:385
+#: ../src/vgl-main-window.c:389 ../src/vgl-main-window.c:390
 msgid "Connecting..."
 msgstr "Соединение..."
 
-#: ../src/vgl-main-window.c:404
+#: ../src/vgl-main-window.c:409
 msgid "Disconnected"
 msgstr "Отключено"
 
-#: ../src/vgl-main-window.c:482
+#: ../src/vgl-main-window.c:487
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Громкость: %d/100"

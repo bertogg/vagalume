@@ -9,10 +9,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-02 13:50+0100\n"
+"POT-Creation-Date: 2010-11-02 12:55+0100\n"
 "PO-Revision-Date: 2010-02-05 12:11+0000\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,15 +27,15 @@ msgstr "Vagalume Last.fm klients"
 msgid "Error initializing internet connection manager"
 msgstr "Kļūda inicializējot tīkla savienojumu pārvaldnieku"
 
-#: ../src/controller.c:487
+#: ../src/controller.c:488
 msgid "Server info imported correctly"
 msgstr "Serveru informācija veiksmīgi nolasīta"
 
-#: ../src/controller.c:491
+#: ../src/controller.c:492
 msgid "No server info found in that file"
 msgstr "Šajā failā netika atrasta serveru informācija"
 
-#: ../src/controller.c:537
+#: ../src/controller.c:538
 #, c-format
 msgid ""
 "Unable to login to %s\n"
@@ -43,11 +44,11 @@ msgstr ""
 "Neizdodas pieslēgties %s\n"
 "Pārbaudiet lietotājvārdu un paroli"
 
-#: ../src/controller.c:543
+#: ../src/controller.c:544
 msgid "Network connection error"
 msgstr "Tīkla savienojuma kļūda"
 
-#: ../src/controller.c:649
+#: ../src/controller.c:650
 msgid ""
 "You need to enter your\n"
 "username and password\n"
@@ -57,90 +58,90 @@ msgstr ""
 "lietotājvārdu un paroli lai varētu lietot\n"
 "šo programmu."
 
-#: ../src/controller.c:711
+#: ../src/controller.c:712
 msgid "No more content to play"
 msgstr "Nav vairāk ko spēlēt."
 
-#: ../src/controller.c:937
+#: ../src/controller.c:938
 #, c-format
 msgid "Downloaded %s - %s"
 msgstr "Lejupielādēts %s - %s"
 
-#: ../src/controller.c:941
+#: ../src/controller.c:942
 #, c-format
 msgid "Error downloading %s - %s"
 msgstr "Kļūda lejupielādējot %s - %s"
 
-#: ../src/controller.c:981
+#: ../src/controller.c:982
 msgid "Track already being downloaded"
 msgstr "Ieraksts jau tiek lejupielādēts"
 
-#: ../src/controller.c:986
+#: ../src/controller.c:987
 msgid "Download this track?"
 msgstr "Lejupielādēt šo ierakstu?"
 
-#: ../src/controller.c:999
+#: ../src/controller.c:1000
 msgid "File exists. Overwrite?"
 msgstr "Fails eksistē. Pārrakstīt?"
 
-#: ../src/controller.c:1015
+#: ../src/controller.c:1016
 #, c-format
 msgid "Downloading %s - %s"
 msgstr "Lejupielādē %s - %s"
 
-#: ../src/controller.c:1057
+#: ../src/controller.c:1058
 msgid "Artist added to bookmarks"
 msgstr "Pievienots grāmatzīmēm"
 
-#: ../src/controller.c:1064
+#: ../src/controller.c:1065
 msgid "Track added to bookmarks"
 msgstr "Ieraksts pievienots grāmatzīmēm"
 
-#: ../src/controller.c:1070
+#: ../src/controller.c:1071
 msgid "Current radio added to bookmarks"
 msgstr "Pašreizējais radio pievienots grāmatzīmēm"
 
-#: ../src/controller.c:1073
+#: ../src/controller.c:1074
 msgid "Bookmark added"
 msgstr "Grāmatzīme pievienota"
 
-#: ../src/controller.c:1159
+#: ../src/controller.c:1160
 msgid "Really mark track as loved?"
 msgstr "Tiešām atzīmēt ierakstu kā mīļu?"
 
-#: ../src/controller.c:1163
+#: ../src/controller.c:1164
 msgid "Marking track as loved"
 msgstr "Atzīmē ierakstu kā mīļu"
 
-#: ../src/controller.c:1177
+#: ../src/controller.c:1178
 msgid "Really ban this track?"
 msgstr "Tiešām aizliegt šo ierakstu?"
 
-#: ../src/controller.c:1181
+#: ../src/controller.c:1182
 msgid "Banning track"
 msgstr "Aizliedz ierakstu"
 
-#: ../src/controller.c:1220
+#: ../src/controller.c:1221
 msgid "Tags set correctly"
 msgstr "Tagi uzstādīti korekti"
 
-#: ../src/controller.c:1220
+#: ../src/controller.c:1221
 msgid "Error tagging"
 msgstr "Kļūda uzstādot tagus"
 
-#: ../src/controller.c:1264
+#: ../src/controller.c:1265
 msgid "You must type a list of tags"
 msgstr "Nepieciešams ievadīt tagu sarakstu"
 
-#: ../src/controller.c:1293
+#: ../src/controller.c:1294
 msgid "Recommendation sent"
 msgstr "Rekomendācija nosūtīta"
 
-#: ../src/controller.c:1294
+#: ../src/controller.c:1295
 msgid "Error sending recommendation"
 msgstr "Kļūda sūtot rekomendāciju"
 
-#: ../src/controller.c:1338
+#: ../src/controller.c:1339
 msgid ""
 "You must type a user name\n"
 "and a recommendation message."
@@ -148,19 +149,19 @@ msgstr ""
 "Nepieciešams norādīt lietotājvārdu\n"
 "un rekomendācijas ziņu."
 
-#: ../src/controller.c:1361
+#: ../src/controller.c:1362
 msgid "Track added to playlist"
 msgstr "Ieraksts pievienots repertuāram"
 
-#: ../src/controller.c:1362
+#: ../src/controller.c:1363
 msgid "Error adding track to playlist"
 msgstr "Kļūda pievienojot ierakstu repertuāram"
 
-#: ../src/controller.c:1410
+#: ../src/controller.c:1411
 msgid "Really add this track to the playlist?"
 msgstr "Tiešām pievienot šo ierakstu repertuāram?"
 
-#: ../src/controller.c:1439
+#: ../src/controller.c:1440
 msgid ""
 "Invalid radio URL. Either\n"
 "this radio doesn't exist\n"
@@ -172,71 +173,71 @@ msgstr ""
 "vai arī tā ir pieejama tikai\n"
 "Last.fm abonentiem"
 
-#: ../src/controller.c:1535 ../src/controller.c:1676 ../src/controller.c:1730
+#: ../src/controller.c:1536 ../src/controller.c:1677 ../src/controller.c:1731
 msgid "Enter tag"
 msgstr "Ievadiet tagu"
 
-#: ../src/controller.c:1535
+#: ../src/controller.c:1536
 msgid "Enter one of your tags"
 msgstr "Ievadiet kādu no saviem tagiem"
 
-#: ../src/controller.c:1587
+#: ../src/controller.c:1588
 msgid "Enter user name"
 msgstr "Ievadiet lietotājvārdu"
 
-#: ../src/controller.c:1588
+#: ../src/controller.c:1589
 msgid "Play this user's radio"
 msgstr "Spēlēt šī lietotāja radio"
 
-#: ../src/controller.c:1676
+#: ../src/controller.c:1677
 msgid "Enter a tag"
 msgstr "Ievadiet tagu"
 
-#: ../src/controller.c:1707
+#: ../src/controller.c:1708
 msgid "Enter group"
 msgstr "Ievadiet grupu"
 
-#: ../src/controller.c:1707
+#: ../src/controller.c:1708
 msgid "Enter group name"
 msgstr "Ievadiet grupas vārdu"
 
-#: ../src/controller.c:1730
+#: ../src/controller.c:1731
 msgid "Enter a global tag"
 msgstr "Ievadiet globālo tagu"
 
-#: ../src/controller.c:1754
+#: ../src/controller.c:1755
 msgid "Enter artist"
 msgstr "Ievadiet izpildītāju"
 
-#: ../src/controller.c:1754
+#: ../src/controller.c:1755
 msgid "Enter an artist's name"
 msgstr "Ievadiet izpildītāja vārdu"
 
-#: ../src/controller.c:1776
+#: ../src/controller.c:1777
 msgid "Enter radio URL"
 msgstr "Ievadiet radio adresi"
 
-#: ../src/controller.c:1777
+#: ../src/controller.c:1778
 msgid "Enter the URL of the Last.fm radio"
 msgstr "Ievadiet Last.fm radio adresi"
 
-#: ../src/controller.c:1786 ../src/uimisc.c:305
+#: ../src/controller.c:1787 ../src/uimisc.c:309
 msgid "Last.fm radio URLs must start with lastfm://"
 msgstr "Last.fm radio adresēm jāsākas ar lastfm://"
 
-#: ../src/controller.c:1857
+#: ../src/controller.c:1858
 msgid "Unable to initialize DBUS"
 msgstr "Neizdevās inicializēt DBUS"
 
-#: ../src/controller.c:1890
+#: ../src/controller.c:1891
 msgid "Error reading the server list file"
 msgstr "Kļūda lasot serveru saraksta failu"
 
-#: ../src/controller.c:1898
+#: ../src/controller.c:1899
 msgid "Error initializing audio system"
 msgstr "Neizdevās inicializēt audio sistēmu"
 
-#: ../src/controller.c:1908
+#: ../src/controller.c:1909
 msgid "Unable to initialize OSSO context"
 msgstr "Neizdevās inicializēt OSSO kontekstu"
 
@@ -304,45 +305,45 @@ msgstr "Lietošana: %s [lastfm radio adrese]\n"
 msgid "(unknown radio)"
 msgstr "(nezināms radio)"
 
-#: ../src/uimisc-gtk.c:112
+#: ../src/uimisc-gtk.c:114
 msgid "User tag radio"
 msgstr "Lietotāja iezīmes radio"
 
-#: ../src/uimisc-gtk.c:113 ../src/uimisc-gtk.c:234
+#: ../src/uimisc-gtk.c:115 ../src/uimisc-gtk.c:236
 msgid "Username:"
 msgstr "Lietotājvārds:"
 
-#: ../src/uimisc-gtk.c:114
+#: ../src/uimisc-gtk.c:116
 msgid "Tag:"
 msgstr "Pievienot iezīmi..."
 
-#: ../src/uimisc-gtk.c:208
+#: ../src/uimisc-gtk.c:210
 msgid "No help available"
 msgstr "Palīdzība nav pieejama"
 
-#: ../src/uimisc-gtk.c:235
+#: ../src/uimisc-gtk.c:237
 msgid "Password:"
 msgstr "Parole:"
 
-#: ../src/uimisc-gtk.c:236
+#: ../src/uimisc-gtk.c:238
 msgid "Service:"
 msgstr "Serviss:"
 
-#: ../src/uimisc-gtk.c:237
+#: ../src/uimisc-gtk.c:239
 msgid "Enable scrobbling:"
 msgstr "Aktivizēt atskaņoto dziemu reģistrēšanu:"
 
-#: ../src/uimisc-gtk.c:238
+#: ../src/uimisc-gtk.c:240
 msgid "Discovery mode:"
 msgstr "Atklājumu režīms:"
 
 #. Account frame
-#: ../src/uimisc-gtk.c:285 ../src/uimisc-hildon22.c:269
+#: ../src/uimisc-gtk.c:287 ../src/uimisc-hildon22.c:269
 msgid "Account"
 msgstr "Konts"
 
 #. Set help
-#: ../src/uimisc-gtk.c:288
+#: ../src/uimisc-gtk.c:290
 msgid ""
 "* Username and password:\n"
 "From your account.\n"
@@ -368,21 +369,21 @@ msgstr ""
 "* Atklājumu režīms:\n"
 "Nespēlēt mūziku, kas jau ir dzirdēta. Nepieciešams Last.fm abonements."
 
-#: ../src/uimisc-gtk.c:308 ../src/uimisc-hildon22.c:328
+#: ../src/uimisc-gtk.c:310 ../src/uimisc-hildon22.c:328
 msgid "Use HTTP proxy"
 msgstr "Lietot HTTP starpniekserveri"
 
-#: ../src/uimisc-gtk.c:309
+#: ../src/uimisc-gtk.c:311
 msgid "Proxy address:"
 msgstr "Starpniekservera adrese:"
 
 #. Connection frame
-#: ../src/uimisc-gtk.c:328 ../src/uimisc-hildon22.c:321
+#: ../src/uimisc-gtk.c:330 ../src/uimisc-hildon22.c:321
 msgid "Connection"
 msgstr "Savienojums"
 
 #. Set help
-#: ../src/uimisc-gtk.c:331
+#: ../src/uimisc-gtk.c:333
 msgid ""
 "* Use HTTP proxy:\n"
 "Enable this to use an HTTP proxy.\n"
@@ -398,22 +399,22 @@ msgstr ""
 "lietotājvārds:parole@adrese:ports\n"
 "Noteikti nepieciešama tikai adrese (var būt IP adrese)."
 
-#: ../src/uimisc-gtk.c:348 ../src/uimisc.c:392
+#: ../src/uimisc-gtk.c:350 ../src/uimisc.c:396
 msgid "Select download directory"
 msgstr "Izvēlieties lejupielāžu mapi"
 
 #. Translators: keep this string short!!
-#: ../src/uimisc-gtk.c:349 ../src/uimisc-hildon22.c:363
+#: ../src/uimisc-gtk.c:351 ../src/uimisc-hildon22.c:363
 msgid "Automatically download free tracks"
 msgstr "Automātiski lejupielādēt brīvos ierakstus"
 
 #. Download frame
-#: ../src/uimisc-gtk.c:372 ../src/uimisc-hildon22.c:343
+#: ../src/uimisc-gtk.c:374 ../src/uimisc-hildon22.c:343
 msgid "Download"
 msgstr "Lejupielādēt"
 
 #. Set help
-#: ../src/uimisc-gtk.c:375
+#: ../src/uimisc-gtk.c:377
 msgid ""
 "* Download directory:\n"
 "Where to download mp3 files. Note that you can only download those songs "
@@ -423,34 +424,34 @@ msgstr ""
 "Kur saglabāt mp3 failus. Ievērojiet, ka saglabāt var tikai tās dziesmas, "
 "kuras atzīmētas kā brīvi lejupielādējamas."
 
-#: ../src/uimisc-gtk.c:394
+#: ../src/uimisc-gtk.c:396
 msgid "IM message template:"
 msgstr "IM ziņas sagatave:"
 
-#: ../src/uimisc-gtk.c:395
+#: ../src/uimisc-gtk.c:397
 msgid "Update Pidgin status:"
 msgstr "Atjaunināt Pidgin statusu:"
 
-#: ../src/uimisc-gtk.c:396
+#: ../src/uimisc-gtk.c:398
 msgid "Update Gajim status:"
 msgstr "Atjaunināt Gajim statusu:"
 
-#: ../src/uimisc-gtk.c:397
+#: ../src/uimisc-gtk.c:399
 msgid "Update Gossip status:"
 msgstr "Atjaunināt Gossip statusu:"
 
-#: ../src/uimisc-gtk.c:398
+#: ../src/uimisc-gtk.c:400
 msgid "Update Telepathy status:"
 msgstr "Atjaunināt Telepathy statusu:"
 
 #. IM status frame
-#: ../src/uimisc-gtk.c:429 ../src/uimisc-hildon22.c:367
+#: ../src/uimisc-gtk.c:431 ../src/uimisc-hildon22.c:367
 #: ../src/uimisc-hildon22.c:378
 msgid "Update IM status"
 msgstr "Atjaunināt IM statusu"
 
 #. Set help
-#: ../src/uimisc-gtk.c:432
+#: ../src/uimisc-gtk.c:434
 msgid ""
 "Vagalume can update the status message of your IM client each time a new "
 "song starts. The template can contain the following keywords:\n"
@@ -468,11 +469,11 @@ msgstr ""
 "{station}: Radio stacija\n"
 "{version}: Vagalume versija"
 
-#: ../src/uimisc-gtk.c:462
+#: ../src/uimisc-gtk.c:464
 msgid "Disable confirmation dialogs:"
 msgstr "Atslēgt apstiprinājuma dialogus:"
 
-#: ../src/uimisc-gtk.c:472
+#: ../src/uimisc-gtk.c:474
 msgid ""
 "* Disable confirmation dialogs:\n"
 "Don't ask for confirmation when loving/banning tracks."
@@ -480,11 +481,11 @@ msgstr ""
 "* Atslēgt apstiprinājuma dialogus:\n"
 "Nejautāt apstiprinājumu atzīmējot dziesmu kā mīļu vai to aizliedzot."
 
-#: ../src/uimisc-gtk.c:479
+#: ../src/uimisc-gtk.c:481
 msgid "Show playback notifications:"
 msgstr "Rādīt atskaņošanas ziņas:"
 
-#: ../src/uimisc-gtk.c:489
+#: ../src/uimisc-gtk.c:491
 msgid ""
 "\n"
 "\n"
@@ -498,11 +499,11 @@ msgstr ""
 "Parāda darbvirsmā lodziņu katru reizi, kad sākas jauna dziesma.\n"
 "\n"
 
-#: ../src/uimisc-gtk.c:495
+#: ../src/uimisc-gtk.c:497
 msgid "Close to systray:"
 msgstr "Aizvērt uz sistēmas ikonu joslu:"
 
-#: ../src/uimisc-gtk.c:505
+#: ../src/uimisc-gtk.c:507
 msgid ""
 "* Close to systray:\n"
 "Hide the Vagalume window when the close button is pressed."
@@ -511,67 +512,67 @@ msgstr ""
 "Paslēpj Vagalume logu, kad tiek nospiesta aizvēršanas poga."
 
 #. Misc frame
-#: ../src/uimisc-gtk.c:512 ../src/uimisc-hildon22.c:396
+#: ../src/uimisc-gtk.c:514 ../src/uimisc-hildon22.c:396
 msgid "Misc"
 msgstr "Dažādi"
 
 #. Create dialog
-#: ../src/uimisc-gtk.c:531 ../src/uimisc-hildon22.c:256
+#: ../src/uimisc-gtk.c:533 ../src/uimisc-hildon22.c:256
 msgid "User settings"
 msgstr "Lietotāja uzstādījumi"
 
-#: ../src/uimisc-gtk.c:648 ../src/uimisc-hildon22.c:548
+#: ../src/uimisc-gtk.c:650 ../src/uimisc-hildon22.c:554
 msgid "Artist: "
 msgstr "Izpildītājs:"
 
-#: ../src/uimisc-gtk.c:656 ../src/uimisc-hildon22.c:552
+#: ../src/uimisc-gtk.c:658 ../src/uimisc-hildon22.c:558
 msgid "Track: "
 msgstr "Ieraksts:"
 
-#: ../src/uimisc-gtk.c:665 ../src/uimisc-hildon22.c:557
+#: ../src/uimisc-gtk.c:667 ../src/uimisc-hildon22.c:563
 msgid "Album: "
 msgstr "Albums :"
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:718 ../src/uimisc-hildon22.c:639
+#: ../src/uimisc-gtk.c:720 ../src/uimisc-hildon22.c:645
 msgid "Send a recommendation"
 msgstr "Nosūtīt rekomendāciju"
 
-#: ../src/uimisc-gtk.c:724 ../src/uimisc-hildon22.c:645
+#: ../src/uimisc-gtk.c:726 ../src/uimisc-hildon22.c:651
 msgid "Recommend this"
 msgstr "Rekomendēt šo"
 
-#: ../src/uimisc-gtk.c:747 ../src/uimisc-hildon22.c:649
+#: ../src/uimisc-gtk.c:749 ../src/uimisc-hildon22.c:655
 msgid "Send recommendation to"
 msgstr "Nosūtīt rekomendāciju"
 
 #. Message of the recommendation
-#: ../src/uimisc-gtk.c:755 ../src/uimisc-hildon22.c:656
+#: ../src/uimisc-gtk.c:757 ../src/uimisc-hildon22.c:662
 msgid "Recommendation message"
 msgstr "Rekomendācijas ziņa"
 
-#: ../src/uimisc-gtk.c:936 ../src/uimisc-gtk.c:1001
-#: ../src/uimisc-hildon22.c:829 ../src/uimisc-hildon22.c:831
+#: ../src/uimisc-gtk.c:938 ../src/uimisc-gtk.c:1003
+#: ../src/uimisc-hildon22.c:835 ../src/uimisc-hildon22.c:837
 msgid "retrieving..."
 msgstr "saņem..."
 
 #. A treemodel for combos with no elements
-#: ../src/uimisc-gtk.c:998
+#: ../src/uimisc-gtk.c:1000
 msgid "(none)"
 msgstr "(nekas)"
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:1006 ../src/uimisc-hildon22.c:947
+#: ../src/uimisc-gtk.c:1008 ../src/uimisc-hildon22.c:953
 msgid "Tagging"
 msgstr "Tagi"
 
 #. Combo to select what to tag
-#: ../src/uimisc-gtk.c:1011 ../src/uimisc-hildon22.c:952
+#: ../src/uimisc-gtk.c:1013 ../src/uimisc-hildon22.c:958
 msgid "Tag this"
 msgstr "Pievienot šim tagu"
 
 #. Text entry
-#: ../src/uimisc-gtk.c:1031
+#: ../src/uimisc-gtk.c:1033
 msgid ""
 "Enter a comma-separated\n"
 "list of tags"
@@ -580,11 +581,11 @@ msgstr ""
 "atdalītu sarakstu ar tagiem"
 
 #. Combo boxes
-#: ../src/uimisc-gtk.c:1037 ../src/uimisc-hildon22.c:960
+#: ../src/uimisc-gtk.c:1039 ../src/uimisc-hildon22.c:966
 msgid "Your favourite tags"
 msgstr "Jūsu iecienītākie tagi"
 
-#: ../src/uimisc-gtk.c:1038 ../src/uimisc-hildon22.c:968
+#: ../src/uimisc-gtk.c:1040 ../src/uimisc-hildon22.c:974
 msgid "Popular tags for this"
 msgstr "Populāri šī ieraksta tagi"
 
@@ -624,13 +625,13 @@ msgstr "IM ziņas sagatave"
 msgid "Disable confirmation dialogs"
 msgstr "Atslēgt apstiprinājuma dialogus"
 
-#: ../src/uimisc-hildon22.c:892 ../src/uimisc-hildon22.c:920
+#: ../src/uimisc-hildon22.c:898 ../src/uimisc-hildon22.c:926
 #, c-format
 msgid "%d tags"
 msgstr "%d tagi"
 
 #. Text entry
-#: ../src/uimisc-hildon22.c:955
+#: ../src/uimisc-hildon22.c:961
 msgid "Enter a comma-separated list of tags"
 msgstr "Ievadiet ar komatiem atdalītu sarakstu ar tagiem"
 
@@ -638,93 +639,97 @@ msgstr "Ievadiet ar komatiem atdalītu sarakstu ar tagiem"
 msgid "Client for Last.fm and compatible services"
 msgstr "Last.fm un savietojamu servisu klients"
 
-#: ../src/uimisc.c:168
+#: ../src/uimisc.c:171
 msgid "German"
 msgstr "Vācu"
 
-#: ../src/uimisc.c:169
+#: ../src/uimisc.c:172
 msgid "Spanish"
 msgstr "Spāņu"
 
-#: ../src/uimisc.c:169
+#: ../src/uimisc.c:172
 msgid "Finnish"
 msgstr "Somu"
 
-#: ../src/uimisc.c:170
+#: ../src/uimisc.c:173
 msgid "French"
 msgstr "Franču"
 
-#: ../src/uimisc.c:171
+#: ../src/uimisc.c:174
 msgid "Galician"
 msgstr "Galisiešu"
 
-#: ../src/uimisc.c:171
+#: ../src/uimisc.c:174
 msgid "Italian"
 msgstr "Itāļu"
 
-#: ../src/uimisc.c:172
+#: ../src/uimisc.c:175
 msgid "Latvian"
 msgstr "Latviešu"
 
-#: ../src/uimisc.c:172
+#: ../src/uimisc.c:175
 msgid "Polish"
 msgstr "Poļu"
 
-#: ../src/uimisc.c:173
+#: ../src/uimisc.c:176
 msgid "Portuguese"
 msgstr "Portugāļu"
 
-#: ../src/uimisc.c:218
+#: ../src/uimisc.c:177
+msgid "Russian"
+msgstr ""
+
+#: ../src/uimisc.c:222
 msgid "Confirmation"
 msgstr "Apstiprinājums"
 
-#: ../src/uimisc.c:269
+#: ../src/uimisc.c:273
 msgid "Add bookmark"
 msgstr "Pievienot grāmatzīmi"
 
-#: ../src/uimisc.c:269
+#: ../src/uimisc.c:273
 msgid "Edit bookmark"
 msgstr "Labot grāmatzīmi"
 
-#: ../src/uimisc.c:270
+#: ../src/uimisc.c:274
 msgid "Bookmark name"
 msgstr "Grāmatzīmes nosaukums"
 
-#: ../src/uimisc.c:271
+#: ../src/uimisc.c:275
 msgid "Last.fm radio address"
 msgstr "Last.fm radio adrese"
 
-#: ../src/uimisc.c:301
+#: ../src/uimisc.c:305
 msgid "Invalid bookmark name"
 msgstr "Nederīgs grāmatzīmes nosaukums"
 
-#: ../src/uimisc.c:376
+#: ../src/uimisc.c:380
 msgid "Select server file to import"
 msgstr "Izvēlieties serveru failu importēšanai"
 
 #. Create all widgets
-#: ../src/uimisc.c:471
+#: ../src/uimisc.c:475
 msgid "Stop automatically"
 msgstr "Apturēt atskaņošanu automātiski"
 
-#: ../src/uimisc.c:472
+#: ../src/uimisc.c:476
 msgid "When do you want to stop playback?"
 msgstr "Kad vēlaties apturēt atskaņošanu?"
 
-#: ../src/uimisc.c:473
+#: ../src/uimisc.c:477
 msgid "minutes"
 msgstr "minūtes"
 
-#: ../src/uimisc.c:481
+#: ../src/uimisc.c:485
 msgid "Don't stop"
 msgstr "Neapturēt"
 
-#: ../src/uimisc.c:482
+#: ../src/uimisc.c:486
 msgid "Stop after this track"
 msgstr "Apturēt atskaņošanu pēc šī ieraksta"
 
 #. Translators: the full text is "Stop after ____ minutes"
-#: ../src/uimisc.c:484
+#: ../src/uimisc.c:488
 msgid "Stop after"
 msgstr "Apturēt pēc"
 
@@ -749,7 +754,8 @@ msgid "_Ban this track"
 msgstr "Ai_zliegt šo ierakstu"
 
 #. Configure widgets
-#: ../src/vgl-bookmark-window.c:312 ../src/vgl-main-menu-hildon22.c:418
+#: ../src/vgl-bookmark-window.c:312 ../src/vgl-main-menu-hildon22.c:116
+#: ../src/vgl-main-menu-hildon22.c:432
 msgid "Bookmarks"
 msgstr "Grāmatzīmes"
 
@@ -775,156 +781,169 @@ msgstr "Mani radio"
 msgid "Others' radios"
 msgstr "Citu radio"
 
-#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:339
+#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:352
 msgid "Group radio..."
 msgstr "Grupu radio..."
 
-#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:286
-#: ../src/vgl-main-menu-hildon22.c:337
+#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:292
+#: ../src/vgl-main-menu-hildon22.c:350
 msgid "Music tagged..."
 msgstr "Mūzika ar tagiem..."
 
-#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:338
+#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:351
 msgid "Artists similar to..."
 msgstr "Izpildītājam līdzīga mūzika..."
 
-#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:346
+#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:360
 msgid "Enter URL..."
 msgstr "Ievadīt adresi..."
 
-#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:340
+#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:353
 msgid "My library"
 msgstr "Mana kolekcija"
 
-#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:341
+#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:354
 msgid "My neighbours"
 msgstr "Mani kaimiņi"
 
-#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:342
+#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:355
 msgid "My loved tracks"
 msgstr "Mani iemīļotie ieraksti"
 
-#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:343
+#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
+msgid "My mix"
+msgstr ""
+
+#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
 msgstr "Mans repertuārs"
 
-#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:344
+#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:358
 msgid "My recommendations"
 msgstr "Manas rekomendācijas"
 
-#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:345
+#: ../src/vgl-main-menu-gtk.c:253 ../src/vgl-main-menu-hildon22.c:359
 msgid "My music tagged..."
 msgstr "Mana mūzika ar tagiem..."
 
-#: ../src/vgl-main-menu-gtk.c:281
+#: ../src/vgl-main-menu-gtk.c:286
 msgid "Library..."
 msgstr "Kolekcija..."
 
-#: ../src/vgl-main-menu-gtk.c:282
+#: ../src/vgl-main-menu-gtk.c:287
 msgid "Neighbours..."
 msgstr "Kaimiņi..."
 
-#: ../src/vgl-main-menu-gtk.c:283
+#: ../src/vgl-main-menu-gtk.c:288
 msgid "Loved tracks..."
 msgstr "Iemīļotie ieraksti..."
 
-#: ../src/vgl-main-menu-gtk.c:284
+#: ../src/vgl-main-menu-gtk.c:289
+msgid "Mix..."
+msgstr ""
+
+#: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
 msgstr "Repertuārs..."
 
-#: ../src/vgl-main-menu-gtk.c:285
+#: ../src/vgl-main-menu-gtk.c:291
 msgid "Recommendations..."
 msgstr "Rekomendācijas..."
 
 #. Actions
-#: ../src/vgl-main-menu-gtk.c:313
+#: ../src/vgl-main-menu-gtk.c:323
 msgid "_Actions"
 msgstr "_Darbības"
 
-#: ../src/vgl-main-menu-gtk.c:321 ../src/vgl-main-menu-hildon22.c:412
+#: ../src/vgl-main-menu-gtk.c:331 ../src/vgl-main-menu-hildon22.c:426
 msgid "Stop after..."
 msgstr "Apturēt pēc ..."
 
-#: ../src/vgl-main-menu-gtk.c:329 ../src/vgl-main-window.c:105
+#: ../src/vgl-main-menu-gtk.c:339 ../src/vgl-main-window.c:105
 msgid "Download this track"
 msgstr "Lejupielādēt šo ierakstu"
 
-#: ../src/vgl-main-menu-gtk.c:372
+#: ../src/vgl-main-menu-gtk.c:382
 msgid "_Bookmarks"
 msgstr "_Grāmatzīmes"
 
-#: ../src/vgl-main-menu-gtk.c:375
+#: ../src/vgl-main-menu-gtk.c:385
 msgid "Add bookmark..."
 msgstr "Pievienot grāmatzīmi..."
 
-#: ../src/vgl-main-menu-gtk.c:377 ../src/vgl-main-menu-hildon22.c:120
+#: ../src/vgl-main-menu-gtk.c:387 ../src/vgl-main-menu-hildon22.c:121
 msgid "Manage bookmarks..."
 msgstr "Pārvaldīt grāmatzīmes..."
 
-#: ../src/vgl-main-menu-gtk.c:378 ../src/vgl-main-menu-hildon22.c:429
+#: ../src/vgl-main-menu-gtk.c:388 ../src/vgl-main-menu-hildon22.c:443
 msgid "Bookmark this artist..."
 msgstr "Pievienot šo izpildītāju grāmatzīmēm..."
 
-#: ../src/vgl-main-menu-gtk.c:379 ../src/vgl-main-menu-hildon22.c:436
+#: ../src/vgl-main-menu-gtk.c:389 ../src/vgl-main-menu-hildon22.c:450
 msgid "Bookmark this track..."
 msgstr "Pievienot šo ierakstu grāmatzīmēm..."
 
-#: ../src/vgl-main-menu-gtk.c:380 ../src/vgl-main-menu-hildon22.c:443
+#: ../src/vgl-main-menu-gtk.c:390 ../src/vgl-main-menu-hildon22.c:457
 msgid "Bookmark this radio..."
 msgstr "Pievienot šo radio grāmatzīmēm..."
 
 #. Help
-#: ../src/vgl-main-menu-gtk.c:406
+#: ../src/vgl-main-menu-gtk.c:416
 msgid "_Help"
 msgstr "_Palīdzība"
 
-#: ../src/vgl-main-menu-hildon22.c:221 ../src/vgl-main-menu-hildon22.c:335
+#: ../src/vgl-main-menu-hildon22.c:226 ../src/vgl-main-menu-hildon22.c:348
 msgid "Select radio"
 msgstr "Izvēlieties radio"
 
-#: ../src/vgl-main-menu-hildon22.c:223
+#: ../src/vgl-main-menu-hildon22.c:228
 #, c-format
 msgid "%s's library"
 msgstr "%s kolekcija"
 
-#: ../src/vgl-main-menu-hildon22.c:225
+#: ../src/vgl-main-menu-hildon22.c:230
 #, c-format
 msgid "%s's neighbours"
 msgstr "%s kaimiņi"
 
-#: ../src/vgl-main-menu-hildon22.c:227
+#: ../src/vgl-main-menu-hildon22.c:232
 #, c-format
 msgid "%s's loved tracks"
 msgstr "%s iemīļotie ieraksti"
 
-#: ../src/vgl-main-menu-hildon22.c:229
+#: ../src/vgl-main-menu-hildon22.c:234
+#, fuzzy, c-format
+msgid "%s's mix"
+msgstr "%s kolekcija"
+
+#: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
 msgid "%s's playlist"
 msgstr "%s repertuārs"
 
-#: ../src/vgl-main-menu-hildon22.c:231
+#: ../src/vgl-main-menu-hildon22.c:238
 #, c-format
 msgid "%s's recommendations"
 msgstr "%s rekomendācijas"
 
-#: ../src/vgl-main-menu-hildon22.c:233
+#: ../src/vgl-main-menu-hildon22.c:240
 #, c-format
 msgid "%s's music tagged..."
 msgstr "%s mūzika ar tagiem..."
 
-#: ../src/vgl-main-menu-hildon22.c:260
+#: ../src/vgl-main-menu-hildon22.c:267
 msgid "Type any user name"
 msgstr "Ievadiet lietotājvārdu"
 
-#: ../src/vgl-main-menu-hildon22.c:397
+#: ../src/vgl-main-menu-hildon22.c:411
 msgid "Import servers file"
 msgstr "Importēt serveru failu"
 
-#: ../src/vgl-main-menu-hildon22.c:402
+#: ../src/vgl-main-menu-hildon22.c:416
 msgid "Play radio"
 msgstr "Spēlēt radio"
 
-#: ../src/vgl-main-menu-hildon22.c:407
+#: ../src/vgl-main-menu-hildon22.c:421
 msgid "People"
 msgstr "Lietotāji"
 
@@ -960,39 +979,39 @@ msgstr "Labot tagus šim ierakstam"
 msgid "Add this track to playlist"
 msgstr "Pievienot šo ierakstu repertuāram"
 
-#: ../src/vgl-main-window.c:197
+#: ../src/vgl-main-window.c:198
 msgid "<b>Artist:</b>\n"
 msgstr "<b>Izpildītājs:</b>\n"
 
-#: ../src/vgl-main-window.c:203
+#: ../src/vgl-main-window.c:204
 msgid "<b>Title:</b>\n"
 msgstr "<b>Nosaukums:</b>\n"
 
-#: ../src/vgl-main-window.c:210
+#: ../src/vgl-main-window.c:211
 msgid "<b>Album:</b>\n"
 msgstr "<b>Albums:</b>\n"
 
-#: ../src/vgl-main-window.c:219
+#: ../src/vgl-main-window.c:220
 msgid "<b>Listening to <i>"
 msgstr "<b>Skan <i>"
 
-#: ../src/vgl-main-window.c:344 ../src/vgl-main-window.c:345
+#: ../src/vgl-main-window.c:349 ../src/vgl-main-window.c:350
 msgid "Stopped"
 msgstr "Apturēts"
 
-#: ../src/vgl-main-window.c:369
+#: ../src/vgl-main-window.c:374
 msgid "Playing..."
 msgstr "Spēlē..."
 
-#: ../src/vgl-main-window.c:384 ../src/vgl-main-window.c:385
+#: ../src/vgl-main-window.c:389 ../src/vgl-main-window.c:390
 msgid "Connecting..."
 msgstr "Pieslēdzas..."
 
-#: ../src/vgl-main-window.c:404
+#: ../src/vgl-main-window.c:409
 msgid "Disconnected"
 msgstr "Atvienots"
 
-#: ../src/vgl-main-window.c:482
+#: ../src/vgl-main-window.c:487
 #, c-format
 msgid "Volume: %d/100"
 msgstr "Skaļums: %d/100"
