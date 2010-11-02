@@ -16,3 +16,6 @@ List of features that need to be implemented (in no particular order):
 * Multi-user support
 * Save list of unsubmitted tracks
 * Desktop widget (for Maemo)
+* Read shoutbox messages ("shouts")
+* See events by artist or region. Attend events.
+* Complete migration to the new Last.fm API (http://www.last.fm/api)
