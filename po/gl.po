@@ -3,16 +3,16 @@
 # See the README file for more details.
 #
 # Ignacio Casal Quinteiro <nacho.resa@gmail.com>, 2008
-# Amador Loureiro Blanco <dorfun@adorfunteca.org>, 2008
+# Amador Loureiro Blanco <dorfun@adorfunteca.org>, 2008, 2009, 2010
 msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume en Galego 0.8.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-02-02 19:08+0100\n"
+"PO-Revision-Date: 2010-11-02 12:59+0100\n"
 "Last-Translator: Amador Loureiro Blanco <dofun@adorfunteca.org>\n"
 "Language-Team: Vagalume en Galego <dorfun@adorfunteca.org>\n"
-"Language: \n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -682,7 +682,7 @@ msgstr "Portugués"
 
 #: ../src/uimisc.c:177
 msgid "Russian"
-msgstr ""
+msgstr "Ruso"
 
 #: ../src/uimisc.c:222
 msgid "Confirmation"
@@ -817,7 +817,7 @@ msgstr "As miñas pistas favoritas"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr ""
+msgstr "A miña mestura"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -845,7 +845,7 @@ msgstr "Pistas favoritas..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr ""
+msgstr "Mestura..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
@@ -917,9 +917,9 @@ msgid "%s's loved tracks"
 msgstr "Pistas favoritas de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "Biblioteca de %s"
+msgstr "A mestura de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
@@ -1089,21 +1089,3 @@ msgid ""
 msgstr ""
 " por <i>%s</i>\n"
 " do <i>%s</i>"
-
-#~ msgid "Stop after ..."
-#~ msgstr "Parar despois..."
-
-#~ msgid "Invalid radio URL"
-#~ msgstr "O URL da radio non é correcto"
-
-#~ msgid "A Last.fm client for Gnome and Maemo"
-#~ msgstr "Un cliente de Last.fm para Gnome e Maemo"
-
-#~ msgid "Settings..."
-#~ msgstr "Configuración..."
-
-#~ msgid "Quit"
-#~ msgstr "Saír"
-
-#~ msgid "About..."
-#~ msgstr "Sobre..."
