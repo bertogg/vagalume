@@ -4,14 +4,14 @@
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
 #
-# Julien Duponchelle <julien@duponchelle.info>, 2008, 2009
+# Julien Duponchelle <julien@duponchelle.info>, 2008, 2009, 2010
 # Jean-Alexandre Angles d'Auriac <jeanalexandre.angles_dauriac@ens-lyon.fr>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-02-04 11:50+0100\n"
+"PO-Revision-Date: 2010-11-03 13:58+0100\n"
 "Last-Translator: Julien Duponchelle <julien@duponchelle.info>\n"
 "Language-Team:  <fr@li.org>\n"
 "Language: \n"
@@ -688,7 +688,7 @@ msgstr "Portugais"
 
 #: ../src/uimisc.c:177
 msgid "Russian"
-msgstr ""
+msgstr "Russe"
 
 #: ../src/uimisc.c:222
 msgid "Confirmation"
@@ -823,7 +823,7 @@ msgstr "Mes coups de cœur"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr ""
+msgstr "Ma radio Mix"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -851,7 +851,7 @@ msgstr "Pistes aimées..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr ""
+msgstr "Mix..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
@@ -923,9 +923,9 @@ msgid "%s's loved tracks"
 msgstr "Les coups de cœur de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "La bibliothèque de %s"
+msgstr "Le mix de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
@@ -1095,21 +1095,3 @@ msgid ""
 msgstr ""
 "par <i>%s</i>\n"
 "de <i>%s</i>"
-
-#~ msgid "Stop after ..."
-#~ msgstr "Arrêter après ..."
-
-#~ msgid "Invalid radio URL"
-#~ msgstr "URL de la radio invalide"
-
-#~ msgid "A Last.fm client for Gnome and Maemo"
-#~ msgstr "Un client Last.fm pour Gnome et Maemo"
-
-#~ msgid "Settings..."
-#~ msgstr "Réglages..."
-
-#~ msgid "Quit"
-#~ msgstr "Quitter"
-
-#~ msgid "About..."
-#~ msgstr "À propos de..."
