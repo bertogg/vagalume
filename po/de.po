@@ -2,13 +2,13 @@
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
 # Stephan Reichholf <stephan@reichholf.net>, 2008
-# Oskar Welzl <mail@welzl.info>, 2008
+# Oskar Welzl <mail@welzl.info>, 2008, 2009, 2010
 msgid ""
 msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-02-02 18:57+0100\n"
+"PO-Revision-Date: 2010-11-03 11:07+0100\n"
 "Last-Translator: Oskar Welzl <dev@welzl.info>\n"
 "Language-Team: German\n"
 "Language: \n"
@@ -673,7 +673,7 @@ msgstr "Portugiesisch"
 
 #: ../src/uimisc.c:177
 msgid "Russian"
-msgstr ""
+msgstr "Russisch"
 
 #: ../src/uimisc.c:222
 msgid "Confirmation"
@@ -808,7 +808,7 @@ msgstr "Meine Lieblingstitel"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr ""
+msgstr "Mein Mix"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -836,7 +836,7 @@ msgstr "Lieblingstitel..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr ""
+msgstr "Mix..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
@@ -908,9 +908,9 @@ msgid "%s's loved tracks"
 msgstr "Lieblingstitel von %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "Musiksammlung von %s"
+msgstr "Mix von %s"
 
 #: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
