@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-02-02 19:00+0100\n"
+"PO-Revision-Date: 2010-11-03 17:10+0100\n"
 "Last-Translator: Andrea Grandi <a.grandi@gmail.com>\n"
 "Language-Team: Italian <>\n"
 "Language: it\n"
@@ -681,7 +681,7 @@ msgstr "Portoghese"
 
 #: ../src/uimisc.c:177
 msgid "Russian"
-msgstr ""
+msgstr "Russo"
 
 #: ../src/uimisc.c:222
 msgid "Confirmation"
@@ -816,7 +816,7 @@ msgstr "Le mie tracce preferite"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr ""
+msgstr "Il mio mix"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -844,7 +844,7 @@ msgstr "Tracce preferite..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr ""
+msgstr "Mix..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
@@ -916,9 +916,9 @@ msgid "%s's loved tracks"
 msgstr "Tracce preferite da %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "Libreria di %s"
+msgstr "Mix di %s"
 
 #: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
@@ -1088,21 +1088,3 @@ msgid ""
 msgstr ""
 " di <i>%s</i>\n"
 " da <i>%s</i>"
-
-#~ msgid "Stop after ..."
-#~ msgstr "Ferma dopo ..."
-
-#~ msgid "Invalid radio URL"
-#~ msgstr "URL della radio non valido"
-
-#~ msgid "A Last.fm client for Gnome and Maemo"
-#~ msgstr "Un client Last.fm per Gnome e Maemo"
-
-#~ msgid "Settings..."
-#~ msgstr "Impostazioni..."
-
-#~ msgid "Quit"
-#~ msgstr "Esci"
-
-#~ msgid "About..."
-#~ msgstr "Info..."
