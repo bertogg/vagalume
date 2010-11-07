@@ -1,14 +1,14 @@
 # translation of Vagalume.
 # Copyright (C) 2009 Igalia, S.L.
 # This file is distributed under the same license as the Vagalume package.
-# Dawid Pakuła (ZuLuS) <zulus@w3des.net>, 2009.
+# Dawid Pakuła (ZuLuS) <zulus@w3des.net>, 2009, 2010
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.71\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-06-17 20:11+0100\n"
+"PO-Revision-Date: 2010-11-07 16:54+0100\n"
 "Last-Translator: Dawid Pakuła <zulus@w3des.net>\n"
 "Language-Team: Polish <zulus@w3des.net>\n"
 "Language: pl\n"
@@ -668,7 +668,7 @@ msgstr "Portugalski"
 
 #: ../src/uimisc.c:177
 msgid "Russian"
-msgstr ""
+msgstr "Rosyjski"
 
 #: ../src/uimisc.c:222
 msgid "Confirmation"
@@ -803,7 +803,7 @@ msgstr "Moje ulubione utwory"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr ""
+msgstr "Moje miksy"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -831,7 +831,7 @@ msgstr "Ulubione utwory..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr ""
+msgstr "Mix..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
@@ -903,9 +903,9 @@ msgid "%s's loved tracks"
 msgstr "Ulubione utwory %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "Biblioteka użytkownika %s"
+msgstr "%s mix"
 
 #: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
@@ -1075,21 +1075,3 @@ msgid ""
 msgstr ""
 "przez <i>%s</i>\n"
 "z <i>%s</i>"
-
-#~ msgid "Stop after ..."
-#~ msgstr "Zatrzymaj po ..."
-
-#~ msgid "Invalid radio URL"
-#~ msgstr "Nie poprawny adres radia"
-
-#~ msgid "A Last.fm client for Gnome and Maemo"
-#~ msgstr "Klient Last.fm dla Gnome i Maemo"
-
-#~ msgid "Settings..."
-#~ msgstr "Ustawienia..."
-
-#~ msgid "Quit"
-#~ msgstr "Zamknij"
-
-#~ msgid "About..."
-#~ msgstr "O projekcie"
