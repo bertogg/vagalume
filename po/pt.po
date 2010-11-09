@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-02-06 14:41+0100\n"
+"PO-Revision-Date: 2010-11-09 17:48+0100\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese <>\n"
 "Language: pt\n"
@@ -673,7 +673,7 @@ msgstr "Português"
 
 #: ../src/uimisc.c:177
 msgid "Russian"
-msgstr ""
+msgstr "Russo"
 
 #: ../src/uimisc.c:222
 msgid "Confirmation"
@@ -808,7 +808,7 @@ msgstr "As minhas músicas preferidas"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr ""
+msgstr "A minha rádio mix"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -836,7 +836,7 @@ msgstr "Músicas preferidas..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr ""
+msgstr "Mix..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
@@ -908,9 +908,9 @@ msgid "%s's loved tracks"
 msgstr "As músicas preferidas de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "A biblioteca de %s"
+msgstr "O mix de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
@@ -1080,21 +1080,3 @@ msgid ""
 msgstr ""
 " de <i>%s</i>\n"
 " do <i>%s</i>"
-
-#~ msgid "Stop after ..."
-#~ msgstr "Parar depois ..."
-
-#~ msgid "Invalid radio URL"
-#~ msgstr "URL de rádio inválido"
-
-#~ msgid "A Last.fm client for Gnome and Maemo"
-#~ msgstr "Um cliente do Last.fm para Gnome e Maemo"
-
-#~ msgid "Settings..."
-#~ msgstr "Opções..."
-
-#~ msgid "Quit"
-#~ msgstr "Sair"
-
-#~ msgid "About..."
-#~ msgstr "Sobre..."
