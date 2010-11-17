@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.8.3-1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-11-17 19:28+0100\n"
+"PO-Revision-Date: 2010-11-17 20:33+0100\n"
 "Last-Translator: Sergei Ivanov <isn@vu.spb.ru>, Vitaly Petrov <vit.petrov@vu."
 "spb.ru>\n"
 "Language-Team: SUAI Maemo Team, St. Petersburg, Russia\n"
@@ -808,7 +808,7 @@ msgstr "Мои любимые треки"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr "мой список"
+msgstr "Мой список"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -836,7 +836,7 @@ msgstr "Мои любимые треки..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr "микс..."
+msgstr "Микс..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
