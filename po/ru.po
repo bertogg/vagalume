@@ -8,11 +8,11 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.8.3-1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-02 12:55+0100\n"
-"PO-Revision-Date: 2010-02-13 00:36+0100\n"
+"PO-Revision-Date: 2010-11-17 19:28+0100\n"
 "Last-Translator: Sergei Ivanov <isn@vu.spb.ru>, Vitaly Petrov <vit.petrov@vu."
 "spb.ru>\n"
 "Language-Team: SUAI Maemo Team, St. Petersburg, Russia\n"
-"Language: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -808,7 +808,7 @@ msgstr "Мои любимые треки"
 
 #: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
 msgid "My mix"
-msgstr ""
+msgstr "мой список"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
 msgid "My playlist"
@@ -836,7 +836,7 @@ msgstr "Мои любимые треки..."
 
 #: ../src/vgl-main-menu-gtk.c:289
 msgid "Mix..."
-msgstr ""
+msgstr "микс..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Playlist..."
@@ -908,9 +908,9 @@ msgid "%s's loved tracks"
 msgstr "любимые треки %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "Фонотека %s"
+msgstr "Список %s"
 
 #: ../src/vgl-main-menu-hildon22.c:236
 #, c-format
