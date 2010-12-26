@@ -1,11 +1,23 @@
-vagalume (0.8.4-1) unstable; urgency=low
+vagalume (0.8.4-1fremantle1) unstable; urgency=low
 
   * New upstream release
-  * Updated watch file
+  * Add support for the new 'Mix' radio
+  * Add Russian translation
+  * Add keyboard shortcuts for all common actions
+  * Update watch file
 
  -- Alberto Garcia <agarcia@igalia.com>  Sun, 26 Dec 2010 17:39:33 +0100
 
-vagalume (0.8.3-1) unstable; urgency=low
+vagalume (0.8.3-1fremantle2) unstable; urgency=low
+
+  * Include upstream patch for #8882 (Music Tagged feature not working)
+  * Include upstream Portuguese translation
+  * Compile only for armel
+  * Update copyright year in about dialog
+
+ -- Alberto Garcia <agarcia@igalia.com>  Mon, 08 Feb 2010 13:23:08 +0100
+
+vagalume (0.8.3-1fremantle1) unstable; urgency=low
 
   * New upstream release
   * Updated package description in debian/control
