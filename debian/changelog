@@ -1,11 +1,20 @@
-vagalume (0.8.4-1) unstable; urgency=low
+vagalume (0.8.4-1diablo1) unstable; urgency=low
 
   * New upstream release
-  * Updated watch file
+  * Add support for the new 'Mix' radio
+  * Add Russian translation
+  * Update watch file
 
  -- Alberto Garcia <agarcia@igalia.com>  Sun, 26 Dec 2010 17:39:33 +0100
 
-vagalume (0.8.3-1) unstable; urgency=low
+vagalume (0.8.3-1diablo2) unstable; urgency=low
+
+  * Remove dependency on libgst0.10-dsp
+  * Change architecture from 'any' to 'armel'
+
+ -- Alberto Garcia <agarcia@igalia.com>  Sun, 07 Feb 2010 01:15:07 +0100
+
+vagalume (0.8.3-1diablo1) unstable; urgency=low
 
   * New upstream release
   * Updated package description in debian/control
