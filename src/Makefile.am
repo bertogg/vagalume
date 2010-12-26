@@ -26,7 +26,6 @@ vagalume_SOURCES = \
 	http.c http.h \
 	lastfm-ws.c lastfm-ws.h \
 	main.c \
-	marshal.c marshal.h \
 	playlist.c playlist.h \
 	protocol.c protocol.h \
 	radio.c radio.h \
@@ -43,6 +42,8 @@ vagalume_SOURCES = \
 	xmlrpc.c xmlrpc.h
 
 BUILT_SOURCES = marshal.c marshal.h
+nodist_vagalume_SOURCES = marshal.c marshal.h
+EXTRA_DIST = marshal.list
 
 marshal.h: marshal.list
 	glib-genmarshal --header \

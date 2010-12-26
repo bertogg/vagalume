@@ -1,7 +1,7 @@
 #
 # This file is part of Vagalume and is published under the GNU GPLv3.
 #
-# Copyright (C) 2007, 2008 Igalia, S.L.
+# Copyright (C) 2007-2010 Igalia, S.L.
 #
 # See the README file for more details.
 #
@@ -33,6 +33,25 @@ MAINTAINERCLEANFILES = \
 	ltmain.sh \
 	missing \
 	mkinstalldirs
+
+EXTRA_DIST = \
+	TRANSLATORS \
+	autogen.sh \
+	data/buttons \
+	data/cover \
+	data/icons \
+	data/servers.xml.in \
+	data/vagalume-rfs.sh.in \
+	data/vagalume-sb-plugin.desktop \
+	data/vagalume.conf.in \
+	data/vagalume.desktop.in.in \
+	data/vagalume.desktop.maemo \
+	data/vagalume.desktop.moblin \
+	data/vagalume.service.in \
+	mkinstalldirs \
+	scripts/vagalumectl \
+	vagalume.1 \
+	vagalumectl.1
 
 SUBDIRS = src po
 manpages = vagalume.1
