@@ -2,14 +2,14 @@ Source: vagalume
 Section: sound
 Priority: optional
 Maintainer: Alberto Garcia <agarcia@igalia.com>
-Build-Depends: debhelper (>= 4), pkg-config, libgtk2.0-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libcurl4-gnutls-dev, libxml2-dev, libnotify-dev, libdbus-glib-1-dev, intltool, cdbs
-Standards-Version: 3.8.0
-Homepage: http://vagalume.igalia.com/
+Build-Depends: debhelper (>= 7), pkg-config, libgtk2.0-dev, libgstreamer0.10-dev, libcurl4-gnutls-dev, libxml2-dev, libnotify-dev, libdbus-glib-1-dev, libgstreamer-plugins-base0.10-dev, intltool, cdbs
+Standards-Version: 3.9.1
 
 Package: vagalume
 Architecture: any
-Depends: ${shlibs:Depends}, librsvg2-common, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good, gstreamer0.10-plugins-ugly | gstreamer0.10-fluendo-mp3
+Depends: ${shlibs:Depends}, ${misc:Depends}, librsvg2-common, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good, gstreamer0.10-plugins-ugly | gstreamer0.10-fluendo-mp3
 Recommends: dbus
+Homepage: http://vagalume.igalia.com/
 Description: GTK+-based client for Last.fm and compatible radio services
  Vagalume is a Last.fm client designed for the GNOME desktop
  environment. It's small and provides the basic Last.fm features, such

@@ -2,44 +2,49 @@ vagalume (0.8.4-1) unstable; urgency=low
 
   * New upstream release
   * Updated watch file
+  * Drop all patches, since they are already included upstream
+  * Update Standards-Version to 3.9.1
 
  -- Alberto Garcia <agarcia@igalia.com>  Sun, 26 Dec 2010 17:39:33 +0100
+
+vagalume (0.8.3-2) unstable; urgency=low
+
+  * Switch to dpkg-source 3.0 (quilt) format
+  * Cherry-picked patches from upstream:
+    - 01-fall-back-old-api.diff (602e3f5f1d34beebfa195b27e20f542c97ba7d11)
+    - 02-fix-dead-assignment.diff (6b437ffedb30ed4b9aeee859ca47ed31e9abd8e4)
+    - 03-spanish-translation.diff (c73fd9dcd0b764bd8d033ded1a183dff3fc315ac)
+    - 04-portuguese-translation.diff (15348608cbd4f7a09138f7ccf3227d4c4f56a8cc)
+    - 05-russian-translation.diff (a7ae8b4fa64adb47f266d5aab09cb2b5516e82b2)
+    - 06-copyright-year.diff (953bdc9e15ff84b4fdf133bb98578d64176d6db2)
+
+ -- Alberto Garcia <agarcia@igalia.com>  Tue, 04 May 2010 13:43:35 +0100
 
 vagalume (0.8.3-1) unstable; urgency=low
 
   * New upstream release
-  * Updated package description in debian/control
-  * Added Homepage, XB-Bugtracker, XB-Maemo-Display-Name and
-    XB-Description-de_DE control fields
-
- -- Alberto Garcia <agarcia@igalia.com>  Fri, 05 Feb 2010 23:07:12 +0100
-
-vagalume (0.8.2-1) unstable; urgency=low
-
-  * New upstream release
-
- -- Alberto Garcia <agarcia@igalia.com>  Mon, 21 Dec 2009 14:24:20 +0100
-
-vagalume (0.8.1-1) unstable; urgency=low
-
-  * New upstream release
-
- -- Alberto Garcia <agarcia@igalia.com>  Wed, 16 Dec 2009 13:59:51 +0100
-
-vagalume (0.8-1) unstable; urgency=low
-
-  * New upstream release
   * Switched to cdbs
-  * Added watch file
-  * Added intltool and libgstreamer-plugins-base0.10-dev to Build-Depends
-  * Updated Standards-Version to 3.8.0
-  * Moved 'Homepage' field to source paragraph
-  * Use DEB_INSTALL_* variables instead of 'dirs' and 'docs' files
-  * Updated copyright file to reflect copyright holder change
-  * Run autogen.sh from debian/rules with NOCONFIGURE=1
+  * Added cdbs, intltool and libgstreamer-plugins-base0.10-dev to
+    Build-Depends
   * Updated package description in control file
+  * Update Standards-Version to 3.8.4
+  * Updated copyright file to reflect the new project home page and the
+    copyright holder change
+  * Run autogen.sh from debian/rules with NOCONFIGURE=1
+  * Removed control files for Maemo
 
- -- Alberto Garcia <agarcia@igalia.com>  Sun, 13 Dec 2009 23:41:44 +0100
+ -- Alberto Garcia <agarcia@igalia.com>  Sat, 06 Feb 2010 00:23:53 +0100
+
+vagalume (0.7.1-2) unstable; urgency=low
+
+  * Use dh_icons to update icon cache (Closes: #527321).
+  * Depend on debhelper >= 7
+  * Update Standards-Version to 3.8.1
+  * Add ${misc:Depends} to Depends:
+  * Use dh_prep instead of dh_clean -k
+  * Update copyright file
+
+ -- Alberto Garcia <agarcia@igalia.com>  Tue, 12 May 2009 11:00:36 +0200
 
 vagalume (0.7.1-1) unstable; urgency=low
 
