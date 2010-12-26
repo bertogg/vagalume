@@ -1,2 +1,2 @@
 version=3
-http://vagalume.igalia.com/files/source/vagalume_(\d+\.\d+)\.orig\.tar\.gz
+http://vagalume.igalia.com/files/source/vagalume[-_]([\d.]+)(?:\.orig)?\.tar\.gz
