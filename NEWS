@@ -1,3 +1,10 @@
+0.8.4 (26 Dec 2010)
+  * Add support for the new 'Mix' radio
+  * Add tooltips to artist, track and album labels
+  * Added Russian translation
+  * Add keyboard shortcuts for all common actions to the Maemo 5 version
+  * Other minor bugfixes
+
 0.8.3 (05 Feb 2010)
   * Hildon2.2-style UI for Maemo 5 (Nokia N900)
   * Play music also when in silent mode (Nokia N900)
