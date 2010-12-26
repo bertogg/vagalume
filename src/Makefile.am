@@ -6,9 +6,6 @@
 # See the README file for more details.
 #
 
-MAINTAINERCLEANFILES = \
-	Makefile.in
-
 bin_PROGRAMS = vagalume
 
 vagalume_LDADD = $(EXTRA_LIBS)

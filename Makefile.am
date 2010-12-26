@@ -6,34 +6,6 @@
 # See the README file for more details.
 #
 
-MAINTAINERCLEANFILES = \
-	Makefile.in \
-	aclocal.m4 \
-	compile \
-	config.guess \
-	config.guess.cdbs-orig \
-	config.h.in \
-	config.h.in~ \
-	config.sub \
-	config.sub.cdbs-orig \
-	configure \
-	data/servers.xml \
-	data/vagalume.desktop \
-	data/vagalume.desktop.in \
-	data/vagalume.service \
-	debian/files \
-	debian/stamp-autotools-files \
-	debian/stamp-makefile-build \
-	debian/vagalume.debhelper.log \
-	debian/vagalume.postinst.debhelper \
-	debian/vagalume.postrm.debhelper \
-	debian/vagalume.substvars \
-	depcomp \
-	install-sh \
-	ltmain.sh \
-	missing \
-	mkinstalldirs
-
 EXTRA_DIST = \
 	TRANSLATORS \
 	autogen.sh \
