@@ -1,0 +1,1094 @@
+# Catalan translations for Vagalume
+# Traduccions al català del paquet «vagalume».
+# Copyright (C) 2011 Igalia S.L.
+# This file is part of Vagalume and is published under the GNU GPLv3
+# See the README file for more details.
+#
+# Carles Muñoz Gorriz <carlesmu@internautas.org>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vagalume\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-18 00:01+0100\n"
+"PO-Revision-Date: 2011-01-18 00:06+0100\n"
+"Last-Translator: Carles Muñoz Gorriz <carlesmu@internautas.org>\n"
+"Language-Team: Catalan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Catalan\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../data/vagalume.desktop.in.in.h:1
+msgid "Vagalume Last.fm Client"
+msgstr "Client de Last.fm Vagalume"
+
+#: ../src/connection.c:58
+msgid "Error initializing internet connection manager"
+msgstr ""
+"S'ha produït un error al inicialitzar el gestor de la connexió a internet"
+
+#: ../src/controller.c:488
+msgid "Server info imported correctly"
+msgstr "S'ha importat la informació de servidors"
+
+#: ../src/controller.c:492
+msgid "No server info found in that file"
+msgstr "No hi ha informació de servidors en el fitxer"
+
+#: ../src/controller.c:538
+#, c-format
+msgid ""
+"Unable to login to %s\n"
+"Check username and password"
+msgstr ""
+"No s'ha pogut registrar a %s\n"
+"Comproveu el nom d'usuari i contrasenya"
+
+#: ../src/controller.c:544
+msgid "Network connection error"
+msgstr "S'ha produït un error en la connexió de xarxa"
+
+#: ../src/controller.c:650
+msgid ""
+"You need to enter your\n"
+"username and password\n"
+"to be able to use this program."
+msgstr ""
+"Heu d'introduir el vostre nom\n"
+"d'usuari i contrasenya per\n"
+"poder emprar aquest programa."
+
+#: ../src/controller.c:712
+msgid "No more content to play"
+msgstr "No hi ha més contingut per reproduir"
+
+#: ../src/controller.c:938
+#, c-format
+msgid "Downloaded %s - %s"
+msgstr "S'ha descarregat %s - %s"
+
+#: ../src/controller.c:942
+#, c-format
+msgid "Error downloading %s - %s"
+msgstr "S'ha produït un error al descarregar %s - %s"
+
+#: ../src/controller.c:982
+msgid "Track already being downloaded"
+msgstr "La peça ja s'està descarregant"
+
+#: ../src/controller.c:987
+msgid "Download this track?"
+msgstr "Voleu descarregar aquesta peça?"
+
+#: ../src/controller.c:1000
+msgid "File exists. Overwrite?"
+msgstr "El fitxer ja existeix. Voleu sobreescriure'l?"
+
+#: ../src/controller.c:1016
+#, c-format
+msgid "Downloading %s - %s"
+msgstr "Descarregant %s - %s"
+
+#: ../src/controller.c:1058
+msgid "Artist added to bookmarks"
+msgstr "S'ha afegit l'artista als preferits"
+
+#: ../src/controller.c:1065
+msgid "Track added to bookmarks"
+msgstr "S'ha afegit la peça als preferits"
+
+#: ../src/controller.c:1071
+msgid "Current radio added to bookmarks"
+msgstr "S'ha afegit l'emissora actual als preferits"
+
+#: ../src/controller.c:1074
+msgid "Bookmark added"
+msgstr "S'ha afegit el preferit"
+
+#: ../src/controller.c:1160
+msgid "Really mark track as loved?"
+msgstr "Veleu marcar la peça com que us agrada?"
+
+#: ../src/controller.c:1164
+msgid "Marking track as loved"
+msgstr "S'esta marcant la peça com que us agrada"
+
+#: ../src/controller.c:1178
+msgid "Really ban this track?"
+msgstr "Voleu excloure la peça?"
+
+#: ../src/controller.c:1182
+msgid "Banning track"
+msgstr "S'està excloent la peça"
+
+#: ../src/controller.c:1221
+msgid "Tags set correctly"
+msgstr "S'ha fixat l'etiqueta correctament"
+
+#: ../src/controller.c:1221
+msgid "Error tagging"
+msgstr "S'ha produït un error al etiquetar"
+
+#: ../src/controller.c:1265
+msgid "You must type a list of tags"
+msgstr "Heu d'introduir una llista d'etiquetes"
+
+#: ../src/controller.c:1294
+msgid "Recommendation sent"
+msgstr "S'ha enviar la recomanació"
+
+#: ../src/controller.c:1295
+msgid "Error sending recommendation"
+msgstr "S'ha produït un error al enviar la recomanació"
+
+#: ../src/controller.c:1339
+msgid ""
+"You must type a user name\n"
+"and a recommendation message."
+msgstr ""
+"Heu d'introduir un nom d'usuari\n"
+"i un missatge de recomanació."
+
+#: ../src/controller.c:1362
+msgid "Track added to playlist"
+msgstr "S'ha afegit la peça a la llista de reproducció"
+
+#: ../src/controller.c:1363
+msgid "Error adding track to playlist"
+msgstr "S'ha produït un error al afegir la peça a la llista de reproducció"
+
+#: ../src/controller.c:1411
+msgid "Really add this track to the playlist?"
+msgstr "Voleu afegir aquest peça a la llista de reproducció?"
+
+#: ../src/controller.c:1440
+msgid ""
+"Invalid radio URL. Either\n"
+"this radio doesn't exist\n"
+"or it is only available\n"
+"for Last.fm subscribers"
+msgstr ""
+"La URL de l'emissora no és\n"
+"vàlida. O no existeix l'emissora\n"
+"o només està disponible per\n"
+"subscriptors de Last.fm"
+
+#: ../src/controller.c:1536 ../src/controller.c:1677 ../src/controller.c:1731
+msgid "Enter tag"
+msgstr "Introduïu etiqueta"
+
+#: ../src/controller.c:1536
+msgid "Enter one of your tags"
+msgstr "Introduïu una de les vostres etiquetes"
+
+#: ../src/controller.c:1588
+msgid "Enter user name"
+msgstr "Introduïu nom d'usuari"
+
+#: ../src/controller.c:1589
+msgid "Play this user's radio"
+msgstr "Reprodueix aquesta emissora d'usuari"
+
+#: ../src/controller.c:1677
+msgid "Enter a tag"
+msgstr "Introduïu una etiqueta"
+
+#: ../src/controller.c:1708
+msgid "Enter group"
+msgstr "Introduïu grup"
+
+#: ../src/controller.c:1708
+msgid "Enter group name"
+msgstr "Introduïu el nom del grup"
+
+#: ../src/controller.c:1731
+msgid "Enter a global tag"
+msgstr "Introduïu una etiqueta global"
+
+#: ../src/controller.c:1755
+msgid "Enter artist"
+msgstr "Introduïu l'artista"
+
+#: ../src/controller.c:1755
+msgid "Enter an artist's name"
+msgstr "Introduïu un nom d'artista"
+
+#: ../src/controller.c:1777
+msgid "Enter radio URL"
+msgstr "Introduïu URL d'emissora"
+
+#: ../src/controller.c:1778
+msgid "Enter the URL of the Last.fm radio"
+msgstr "Introduïu la URL de l'emissora de Last.fm"
+
+#: ../src/controller.c:1787 ../src/uimisc.c:310
+msgid "Last.fm radio URLs must start with lastfm://"
+msgstr "Les URLs d'emissores de Last.fm han de començar per lastfm://"
+
+#: ../src/controller.c:1858
+msgid "Unable to initialize DBUS"
+msgstr "No s'ha pogut inicialitzar DBUS"
+
+#: ../src/controller.c:1891
+msgid "Error reading the server list file"
+msgstr "No s'ha pogut llegit el fitxer amb la llista de servidors"
+
+#: ../src/controller.c:1899
+msgid "Error initializing audio system"
+msgstr "No s'ha pogut inicialitzar el sistema d'àudio"
+
+#: ../src/controller.c:1909
+msgid "Unable to initialize OSSO context"
+msgstr "No es pot iniciar el context OSSO"
+
+#: ../src/dlwin.c:96
+msgid "Download complete!"
+msgstr "Descàrrega completada"
+
+#: ../src/dlwin.c:97
+msgid "Download error!"
+msgstr "Error al descarregar"
+
+#: ../src/dlwin.c:99
+msgid "C_lose"
+msgstr "_Tanca"
+
+#: ../src/dlwin.c:155
+#, c-format
+msgid "Downloading %s"
+msgstr "Descarregant «%s»"
+
+#: ../src/dlwin.c:158
+#, c-format
+msgid ""
+"Downloading file\n"
+"%s"
+msgstr ""
+"Descarregant fitxer\n"
+"«%s»"
+
+#: ../src/dlwin.c:163
+msgid "_Cancel"
+msgstr "_Canceŀla"
+
+#: ../src/main.c:83
+#, c-format
+msgid ""
+"Usage:\n"
+"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"\n"
+"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
+"  decoder:   GStreamer decoder (default: '%s')\n"
+"  mixer:     GStreamer mixer (default: '%s')\n"
+"  sink:      GStreamer sink (default: '%s')\n"
+msgstr ""
+"Ús:\n"
+"  %s [-c convertidor] [-d descodificador] [-m mesclador] [-s destí] [url "
+"emissora lastfm]\n"
+"\n"
+"  convertidor:    Convertidor de GStreamer («%s» per defecte i «none» per "
+"desactivar-lo)\n"
+"  descodificador: Descodificador de GStreamer («%s» per defecte)\n"
+"  mesclador:      Mesclador de GStreamer («%s» per defecte)\n"
+"  destí:          Destí «sink» de GStreamer de GStreamer («%s» per defecte)\n"
+
+#: ../src/main.c:102
+#, c-format
+msgid "Too many unrecognized options\n"
+msgstr "Massa opcions no reconegudes\n"
+
+#: ../src/main.c:111
+#, c-format
+msgid "Usage: %s [lastfm radio url]\n"
+msgstr "Ús: %s [url de l'emissora de lastfm]\n"
+
+#: ../src/protocol.c:246
+msgid "(unknown radio)"
+msgstr "(emissora desconeguda)"
+
+#: ../src/uimisc-gtk.c:114
+msgid "User tag radio"
+msgstr "Etiqueta d'emissora d'usuari"
+
+#: ../src/uimisc-gtk.c:115 ../src/uimisc-gtk.c:236
+msgid "Username:"
+msgstr "Nom d'usuari:"
+
+#: ../src/uimisc-gtk.c:116
+msgid "Tag:"
+msgstr "Etiqueta:"
+
+#: ../src/uimisc-gtk.c:210
+msgid "No help available"
+msgstr "No hi ha ajuda disponible"
+
+#: ../src/uimisc-gtk.c:237
+msgid "Password:"
+msgstr "Contrasenya:"
+
+#: ../src/uimisc-gtk.c:238
+msgid "Service:"
+msgstr "Servei:"
+
+#: ../src/uimisc-gtk.c:239
+msgid "Enable scrobbling:"
+msgstr "Habilita «scrobbling»:"
+
+#: ../src/uimisc-gtk.c:240
+msgid "Discovery mode:"
+msgstr "Mode de descoberta:"
+
+#. Account frame
+#: ../src/uimisc-gtk.c:287 ../src/uimisc-hildon22.c:269
+msgid "Account"
+msgstr "Compte"
+
+#. Set help
+#: ../src/uimisc-gtk.c:290
+msgid ""
+"* Username and password:\n"
+"From your account.\n"
+"\n"
+"* Service:\n"
+"Last.fm-compatible service to connect to.\n"
+"\n"
+"* Scrobbling:\n"
+"Display the music that you listen to on your profile.\n"
+"\n"
+"* Discovery mode:\n"
+"Don't play music you've already listened to. Requires a Last.fm subscription."
+msgstr ""
+"* Nom d'usuari i contrasenya:\n"
+"Del vostre compte.\n"
+"\n"
+"* Servei:Servei compatible amb Last.fm al que connectar-se.\n"
+"\b* «Scrobbling»:\n"
+"Mostra la música que escolteu en el vostre perfil.\n"
+"* Mode de descoberta:\n"
+"No reprodueixis músuca que ja heu escoltat. Cal que esteu subscrits a Last."
+"fm."
+
+#: ../src/uimisc-gtk.c:310 ../src/uimisc-hildon22.c:328
+msgid "Use HTTP proxy"
+msgstr "Empra un servidor intermediari HTTP"
+
+#: ../src/uimisc-gtk.c:311
+msgid "Proxy address:"
+msgstr "Dreça del servidor intermediari:"
+
+#. Connection frame
+#: ../src/uimisc-gtk.c:330 ../src/uimisc-hildon22.c:321
+msgid "Connection"
+msgstr "Connexió"
+
+#. Set help
+#: ../src/uimisc-gtk.c:333
+msgid ""
+"* Use HTTP proxy:\n"
+"Enable this to use an HTTP proxy.\n"
+"\n"
+"* Proxy address:\n"
+"user:password@hostname:port\n"
+"Only the hostname (can be an IP address) is required."
+msgstr ""
+"* Empreu un servidor intermediari HTTP:\n"
+"Habiliteu-lo per emprar un servidor intermediari HTTP.\n"
+"\n"
+"* Adreça del servidor intermediari:\n"
+"usuari:contrasenya@servidor:port\n"
+"Només el servidor, que pot ser una adreça IP, és obligatori."
+
+#: ../src/uimisc-gtk.c:350 ../src/uimisc.c:397
+msgid "Select download directory"
+msgstr "Seleccioneu el directori de descàrrega"
+
+#. Translators: keep this string short!!
+#: ../src/uimisc-gtk.c:351 ../src/uimisc-hildon22.c:363
+msgid "Automatically download free tracks"
+msgstr "Peces lliures, descàrrega automàtica"
+
+#. Download frame
+#: ../src/uimisc-gtk.c:374 ../src/uimisc-hildon22.c:343
+msgid "Download"
+msgstr "Descàrrega"
+
+#. Set help
+#: ../src/uimisc-gtk.c:377
+msgid ""
+"* Download directory:\n"
+"Where to download mp3 files. Note that you can only download those songs "
+"marked as freely downloadable by the server."
+msgstr ""
+"^Directori de descàrrega:\n"
+"On es descarreguen els fitxers «mp3». Noteu que només us podreu descarregar "
+"les cançons marcades com de lliure descàrrega en el servidor."
+
+#: ../src/uimisc-gtk.c:396
+msgid "IM message template:"
+msgstr "Plantilla de missatge MI:"
+
+#: ../src/uimisc-gtk.c:397
+msgid "Update Pidgin status:"
+msgstr "Actualitza l'estat de Pidgin:"
+
+#: ../src/uimisc-gtk.c:398
+msgid "Update Gajim status:"
+msgstr "Actualitza l'estat de Gajim:"
+
+#: ../src/uimisc-gtk.c:399
+msgid "Update Gossip status:"
+msgstr "Actualitza l'estat de Gossip:"
+
+#: ../src/uimisc-gtk.c:400
+msgid "Update Telepathy status:"
+msgstr "Actualitza l'estat de Telepathy:"
+
+#. IM status frame
+#: ../src/uimisc-gtk.c:431 ../src/uimisc-hildon22.c:367
+#: ../src/uimisc-hildon22.c:378
+msgid "Update IM status"
+msgstr "Actualitza l'estat de MI"
+
+#. Set help
+#: ../src/uimisc-gtk.c:434
+msgid ""
+"Vagalume can update the status message of your IM client each time a new "
+"song starts. The template can contain the following keywords:\n"
+"\n"
+"{artist}: Name of the artist\n"
+"{title}: Song title\n"
+"{station}: Radio station\n"
+"{version}: Vagalume version"
+msgstr ""
+"Vagalume pot actualitzar el missatge d'estat del vostre client MI "
+"(missatgeria instantània) cada cop que comença una nova cançó. La plantilla "
+"pot emprar les següents claus:\n"
+"\n"
+"{artist}: Nom de l'artista.\n"
+"{title}: Títol de la cançó.\n"
+"{station}: Emissora de ràdio.\n"
+"{version}: Versió de Vagalume."
+
+#: ../src/uimisc-gtk.c:464
+msgid "Disable confirmation dialogs:"
+msgstr "No mostris diàlegs de confirmació:"
+
+#: ../src/uimisc-gtk.c:474
+msgid ""
+"* Disable confirmation dialogs:\n"
+"Don't ask for confirmation when loving/banning tracks."
+msgstr ""
+"* No mostris diàlegs de confirmació:\n"
+"No demanis confirmació quan una peça us agrada o l'excloeu."
+
+#: ../src/uimisc-gtk.c:481
+msgid "Show playback notifications:"
+msgstr "Mostra notificacions de reproducció:"
+
+#: ../src/uimisc-gtk.c:491
+msgid ""
+"\n"
+"\n"
+"* Show playback notifications:\n"
+"Pop up a notification box each time a new song starts.\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"* Mostra notificacions de reproducció:\n"
+"Mostra una caixa emergent de notificació cada cop que \n"
+"comenci una cançó nova.\n"
+
+#: ../src/uimisc-gtk.c:497
+msgid "Close to systray:"
+msgstr "Tanca a la safata del sistema:"
+
+#: ../src/uimisc-gtk.c:507
+msgid ""
+"* Close to systray:\n"
+"Hide the Vagalume window when the close button is pressed."
+msgstr ""
+"* Tanca a la safata del sistema:\n"
+"Amaga la finestra de Vagalume quan es pitja el botó de tancar."
+
+#. Misc frame
+#: ../src/uimisc-gtk.c:514 ../src/uimisc-hildon22.c:396
+msgid "Misc"
+msgstr "Altres"
+
+#. Create dialog
+#: ../src/uimisc-gtk.c:533 ../src/uimisc-hildon22.c:256
+msgid "User settings"
+msgstr "Ajustaments d'usuari"
+
+#: ../src/uimisc-gtk.c:650 ../src/uimisc-hildon22.c:554
+msgid "Artist: "
+msgstr "Artista:"
+
+#: ../src/uimisc-gtk.c:658 ../src/uimisc-hildon22.c:558
+msgid "Track: "
+msgstr "Peça:"
+
+#: ../src/uimisc-gtk.c:667 ../src/uimisc-hildon22.c:563
+msgid "Album: "
+msgstr "Àlbum:"
+
+#. Dialog and basic settings
+#: ../src/uimisc-gtk.c:720 ../src/uimisc-hildon22.c:645
+msgid "Send a recommendation"
+msgstr "Envia una recomanació"
+
+#: ../src/uimisc-gtk.c:726 ../src/uimisc-hildon22.c:651
+msgid "Recommend this"
+msgstr "Recomaneu-lo"
+
+#: ../src/uimisc-gtk.c:749 ../src/uimisc-hildon22.c:655
+msgid "Send recommendation to"
+msgstr "Envia la recomanació a"
+
+#. Message of the recommendation
+#: ../src/uimisc-gtk.c:757 ../src/uimisc-hildon22.c:662
+msgid "Recommendation message"
+msgstr "Missatge de recomanació"
+
+#: ../src/uimisc-gtk.c:938 ../src/uimisc-gtk.c:1003
+#: ../src/uimisc-hildon22.c:835 ../src/uimisc-hildon22.c:837
+msgid "retrieving..."
+msgstr "s'estan recuperant…"
+
+#. A treemodel for combos with no elements
+#: ../src/uimisc-gtk.c:1000
+msgid "(none)"
+msgstr "(cap)"
+
+#. Dialog and basic settings
+#: ../src/uimisc-gtk.c:1008 ../src/uimisc-hildon22.c:953
+msgid "Tagging"
+msgstr "Afegint etiquetes"
+
+#. Combo to select what to tag
+#: ../src/uimisc-gtk.c:1013 ../src/uimisc-hildon22.c:958
+msgid "Tag this"
+msgstr "Etiqueteu-lo"
+
+#. Text entry
+#: ../src/uimisc-gtk.c:1033
+msgid ""
+"Enter a comma-separated\n"
+"list of tags"
+msgstr ""
+"Introduïu una llista separada\n"
+"per comes d'etiquetes"
+
+#. Combo boxes
+#: ../src/uimisc-gtk.c:1039 ../src/uimisc-hildon22.c:966
+msgid "Your favourite tags"
+msgstr "Les vostres etiquetes favorites"
+
+#: ../src/uimisc-gtk.c:1040 ../src/uimisc-hildon22.c:974
+msgid "Popular tags for this"
+msgstr "Les seves etiquetes populars"
+
+#: ../src/uimisc-hildon22.c:276
+msgid "Username"
+msgstr "Nom d'usuari"
+
+#: ../src/uimisc-hildon22.c:287
+msgid "Password"
+msgstr "Contrasenya"
+
+#: ../src/uimisc-hildon22.c:304
+msgid "Service"
+msgstr "Servei"
+
+#: ../src/uimisc-hildon22.c:312
+msgid "Enable scrobbling"
+msgstr "Mode «scrobbling»"
+
+#: ../src/uimisc-hildon22.c:317
+msgid "Discovery mode"
+msgstr "Mode de descoberta"
+
+#: ../src/uimisc-hildon22.c:333
+msgid "Proxy address"
+msgstr "Adreça del servidor intermediari"
+
+#: ../src/uimisc-hildon22.c:351
+msgid "Download directory"
+msgstr "Directori de descàrregues"
+
+#: ../src/uimisc-hildon22.c:386
+msgid "IM message template"
+msgstr "Plantilla de missatges MI"
+
+#: ../src/uimisc-hildon22.c:404
+msgid "Disable confirmation dialogs"
+msgstr "Deshabilita els diàlegs de confirmació"
+
+#: ../src/uimisc-hildon22.c:898 ../src/uimisc-hildon22.c:926
+#, c-format
+msgid "%d tags"
+msgstr "%d etiquetes"
+
+#. Text entry
+#: ../src/uimisc-hildon22.c:961
+msgid "Enter a comma-separated list of tags"
+msgstr "Introduïu una llista separada per comes d'etiquetes"
+
+#: ../src/uimisc.c:57
+msgid "Client for Last.fm and compatible services"
+msgstr "Client de Last.fm i serveis compatibles"
+
+#: ../src/uimisc.c:172
+msgid "Catalan"
+msgstr "Català"
+
+#: ../src/uimisc.c:173
+msgid "German"
+msgstr "Alemany"
+
+#: ../src/uimisc.c:173
+msgid "Spanish"
+msgstr "Castellà"
+
+#: ../src/uimisc.c:174
+msgid "Finnish"
+msgstr "Finès"
+
+#: ../src/uimisc.c:174
+msgid "French"
+msgstr "Francès"
+
+#: ../src/uimisc.c:175
+msgid "Galician"
+msgstr "Gallec"
+
+#: ../src/uimisc.c:175
+msgid "Italian"
+msgstr "Italià"
+
+#: ../src/uimisc.c:176
+msgid "Latvian"
+msgstr "Letó"
+
+#: ../src/uimisc.c:176
+msgid "Polish"
+msgstr "Polonès"
+
+#: ../src/uimisc.c:177
+msgid "Portuguese"
+msgstr "Portuguès"
+
+#: ../src/uimisc.c:178
+msgid "Russian"
+msgstr "Rus"
+
+#: ../src/uimisc.c:223
+msgid "Confirmation"
+msgstr "Confirmació"
+
+#: ../src/uimisc.c:274
+msgid "Add bookmark"
+msgstr "Afegeix preferit"
+
+#: ../src/uimisc.c:274
+msgid "Edit bookmark"
+msgstr "Edita preferit"
+
+#: ../src/uimisc.c:275
+msgid "Bookmark name"
+msgstr "Nom de preferit"
+
+#: ../src/uimisc.c:276
+msgid "Last.fm radio address"
+msgstr "Direcció d'emissora de Last.fm"
+
+#: ../src/uimisc.c:306
+msgid "Invalid bookmark name"
+msgstr "El nom de preferit no és vàlid"
+
+#: ../src/uimisc.c:381
+msgid "Select server file to import"
+msgstr "Seleccioneu el fitxer de servidors a immportar"
+
+#. Create all widgets
+#: ../src/uimisc.c:476
+msgid "Stop automatically"
+msgstr "Atura automaticament"
+
+#: ../src/uimisc.c:477
+msgid "When do you want to stop playback?"
+msgstr "Quan voleu aturar la reproducció"
+
+#: ../src/uimisc.c:478
+msgid "minutes"
+msgstr "minuts"
+
+#: ../src/uimisc.c:486
+msgid "Don't stop"
+msgstr "No aturis"
+
+#: ../src/uimisc.c:487
+msgid "Stop after this track"
+msgstr "Atura després d'aquesta peça"
+
+#. Translators: the full text is "Stop after ____ minutes"
+#: ../src/uimisc.c:489
+msgid "Stop after"
+msgstr "Atura en"
+
+#: ../src/uimisc.h:20
+msgid "_Recommend to..."
+msgstr "_Recomana a…"
+
+#: ../src/uimisc.h:21
+msgid "_Tags..."
+msgstr "_Etiquetes…"
+
+#: ../src/uimisc.h:22
+msgid "_Add to playlist"
+msgstr "Afegeix a la _llista de reproducció"
+
+#: ../src/uimisc.h:23
+msgid "_Love this track"
+msgstr "M'_agrada aquesta peça"
+
+#: ../src/uimisc.h:24
+msgid "_Ban this track"
+msgstr "_Exclou aquesta peça"
+
+#. Configure widgets
+#: ../src/vgl-bookmark-window.c:312 ../src/vgl-main-menu-hildon22.c:116
+#: ../src/vgl-main-menu-hildon22.c:432
+msgid "Bookmarks"
+msgstr "Preferits"
+
+#. Last.fm
+#: ../src/vgl-main-menu-gtk.c:195
+msgid "_Last.fm"
+msgstr "_Last.fm"
+
+#: ../src/vgl-main-menu-gtk.c:199
+msgid "_Import servers file..."
+msgstr "_Importa fitxer de servidors…"
+
+#. Radio
+#: ../src/vgl-main-menu-gtk.c:218
+msgid "Play _Radio"
+msgstr "Reprodueix _emissora"
+
+#: ../src/vgl-main-menu-gtk.c:220
+msgid "My radios"
+msgstr "Les meves emissores"
+
+#: ../src/vgl-main-menu-gtk.c:222
+msgid "Others' radios"
+msgstr "Unes altres emissores"
+
+#: ../src/vgl-main-menu-gtk.c:223 ../src/vgl-main-menu-hildon22.c:352
+msgid "Group radio..."
+msgstr "Emissora de grup…"
+
+#: ../src/vgl-main-menu-gtk.c:224 ../src/vgl-main-menu-gtk.c:292
+#: ../src/vgl-main-menu-hildon22.c:350
+msgid "Music tagged..."
+msgstr "Música etiquetada…"
+
+#: ../src/vgl-main-menu-gtk.c:225 ../src/vgl-main-menu-hildon22.c:351
+msgid "Artists similar to..."
+msgstr "Artista semblant a…"
+
+#: ../src/vgl-main-menu-gtk.c:226 ../src/vgl-main-menu-hildon22.c:360
+msgid "Enter URL..."
+msgstr "Introduïu una URL…"
+
+#: ../src/vgl-main-menu-gtk.c:247 ../src/vgl-main-menu-hildon22.c:353
+msgid "My library"
+msgstr "La meva biblioteca"
+
+#: ../src/vgl-main-menu-gtk.c:248 ../src/vgl-main-menu-hildon22.c:354
+msgid "My neighbours"
+msgstr "Els meus veïns"
+
+#: ../src/vgl-main-menu-gtk.c:249 ../src/vgl-main-menu-hildon22.c:355
+msgid "My loved tracks"
+msgstr "Les peces que m'agraden"
+
+#: ../src/vgl-main-menu-gtk.c:250 ../src/vgl-main-menu-hildon22.c:356
+msgid "My mix"
+msgstr "La meva mescla"
+
+#: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:357
+msgid "My playlist"
+msgstr "La meva llista de reproducció"
+
+#: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:358
+msgid "My recommendations"
+msgstr "Les meves recomanacions"
+
+#: ../src/vgl-main-menu-gtk.c:253 ../src/vgl-main-menu-hildon22.c:359
+msgid "My music tagged..."
+msgstr "La meva música etiquetada…"
+
+#: ../src/vgl-main-menu-gtk.c:286
+msgid "Library..."
+msgstr "Biblioteca…"
+
+#: ../src/vgl-main-menu-gtk.c:287
+msgid "Neighbours..."
+msgstr "Veïns…"
+
+#: ../src/vgl-main-menu-gtk.c:288
+msgid "Loved tracks..."
+msgstr "Peces que us agraden…"
+
+#: ../src/vgl-main-menu-gtk.c:289
+msgid "Mix..."
+msgstr "Mescla…"
+
+#: ../src/vgl-main-menu-gtk.c:290
+msgid "Playlist..."
+msgstr "Llista de reproducció…"
+
+#: ../src/vgl-main-menu-gtk.c:291
+msgid "Recommendations..."
+msgstr "Recomanacions…"
+
+#. Actions
+#: ../src/vgl-main-menu-gtk.c:323
+msgid "_Actions"
+msgstr "_Accions"
+
+#: ../src/vgl-main-menu-gtk.c:331 ../src/vgl-main-menu-hildon22.c:426
+msgid "Stop after..."
+msgstr "Para en…"
+
+#: ../src/vgl-main-menu-gtk.c:339 ../src/vgl-main-window.c:105
+msgid "Download this track"
+msgstr "Descarrega aquesta peça"
+
+#: ../src/vgl-main-menu-gtk.c:382
+msgid "_Bookmarks"
+msgstr "_Preferits"
+
+#: ../src/vgl-main-menu-gtk.c:385
+msgid "Add bookmark..."
+msgstr "Afegeix preferit…"
+
+#: ../src/vgl-main-menu-gtk.c:387 ../src/vgl-main-menu-hildon22.c:121
+msgid "Manage bookmarks..."
+msgstr "Gestiona els preferits…"
+
+#: ../src/vgl-main-menu-gtk.c:388 ../src/vgl-main-menu-hildon22.c:443
+msgid "Bookmark this artist..."
+msgstr "Afegeix l'artista com preferit…"
+
+#: ../src/vgl-main-menu-gtk.c:389 ../src/vgl-main-menu-hildon22.c:450
+msgid "Bookmark this track..."
+msgstr "Afegeix la peça com preferida…"
+
+#: ../src/vgl-main-menu-gtk.c:390 ../src/vgl-main-menu-hildon22.c:457
+msgid "Bookmark this radio..."
+msgstr "Afegeix l'emissora com preferida…"
+
+#. Help
+#: ../src/vgl-main-menu-gtk.c:416
+msgid "_Help"
+msgstr "A_juda"
+
+#: ../src/vgl-main-menu-hildon22.c:226 ../src/vgl-main-menu-hildon22.c:348
+msgid "Select radio"
+msgstr "Seleccioneu emissora"
+
+#: ../src/vgl-main-menu-hildon22.c:228
+#, c-format
+msgid "%s's library"
+msgstr "Biblioteca de %s"
+
+#: ../src/vgl-main-menu-hildon22.c:230
+#, c-format
+msgid "%s's neighbours"
+msgstr "Veïns de %s"
+
+#: ../src/vgl-main-menu-hildon22.c:232
+#, c-format
+msgid "%s's loved tracks"
+msgstr "Peces que agraden a %s"
+
+#: ../src/vgl-main-menu-hildon22.c:234
+#, c-format
+msgid "%s's mix"
+msgstr "Mescla de %s"
+
+#: ../src/vgl-main-menu-hildon22.c:236
+#, c-format
+msgid "%s's playlist"
+msgstr "Llista de reproducció de %s"
+
+#: ../src/vgl-main-menu-hildon22.c:238
+#, c-format
+msgid "%s's recommendations"
+msgstr "Recomanacions de %s"
+
+#: ../src/vgl-main-menu-hildon22.c:240
+#, c-format
+msgid "%s's music tagged..."
+msgstr "Música de %s etiquetada…"
+
+#: ../src/vgl-main-menu-hildon22.c:267
+msgid "Type any user name"
+msgstr "Introduïu un nom d'usuari"
+
+#: ../src/vgl-main-menu-hildon22.c:411
+msgid "Import servers file"
+msgstr "Importa el fitxer de servidors"
+
+#: ../src/vgl-main-menu-hildon22.c:416
+msgid "Play radio"
+msgstr "Reprodueix emissora"
+
+#: ../src/vgl-main-menu-hildon22.c:421
+msgid "People"
+msgstr "Gent"
+
+#: ../src/vgl-main-window.c:81
+msgid "Start playing"
+msgstr "Comença la reproducció"
+
+#: ../src/vgl-main-window.c:85
+msgid "Stop playing"
+msgstr "Atura la reproducció"
+
+#: ../src/vgl-main-window.c:89
+msgid "Skip this track"
+msgstr "Salta aquesta peça"
+
+#: ../src/vgl-main-window.c:93
+msgid "Mark as loved"
+msgstr "Marca'l com que m'agrada"
+
+#: ../src/vgl-main-window.c:97
+msgid "Ban this track"
+msgstr "Exclou aquesta peça"
+
+#: ../src/vgl-main-window.c:101
+msgid "Recommend this track"
+msgstr "Recomana aquesta peça"
+
+#: ../src/vgl-main-window.c:109
+msgid "Edit tags for this track"
+msgstr "Edita les etiquetes d'aquesta peça"
+
+#: ../src/vgl-main-window.c:113
+msgid "Add this track to playlist"
+msgstr "Afegeix aquesta peça a la llista de reproducció"
+
+#: ../src/vgl-main-window.c:198
+msgid "<b>Artist:</b>\n"
+msgstr "<b>Artista:</b>\n"
+
+#: ../src/vgl-main-window.c:204
+msgid "<b>Title:</b>\n"
+msgstr "<b>Títol:</b>\n"
+
+#: ../src/vgl-main-window.c:211
+msgid "<b>Album:</b>\n"
+msgstr "<b>Àlbum:</b>\n"
+
+#: ../src/vgl-main-window.c:220
+msgid "<b>Listening to <i>"
+msgstr "<b>Escoltant <i>"
+
+#: ../src/vgl-main-window.c:349 ../src/vgl-main-window.c:350
+msgid "Stopped"
+msgstr "Aturat"
+
+#: ../src/vgl-main-window.c:374
+msgid "Playing..."
+msgstr "S'està reproduint…"
+
+#: ../src/vgl-main-window.c:389 ../src/vgl-main-window.c:390
+msgid "Connecting..."
+msgstr "S'està connectant…"
+
+#: ../src/vgl-main-window.c:409
+msgid "Disconnected"
+msgstr "Desconnectat"
+
+#: ../src/vgl-main-window.c:487
+#, c-format
+msgid "Volume: %d/100"
+msgstr "Volum: %d/100"
+
+#: ../src/vgl-sb-plugin.c:34
+msgid "No artist"
+msgstr "Sense artista"
+
+#: ../src/vgl-sb-plugin.c:35
+msgid "No track"
+msgstr "Sense peça"
+
+#: ../src/vgl-sb-plugin.c:36
+msgid "No album"
+msgstr "Sense àlbum"
+
+#: ../src/vgl-sb-plugin.c:38
+msgid "Play"
+msgstr "Reprodueix"
+
+#: ../src/vgl-sb-plugin.c:39
+msgid "Stop"
+msgstr "Para"
+
+#: ../src/vgl-sb-plugin.c:40
+msgid "Skip"
+msgstr "Salta"
+
+#: ../src/vgl-sb-plugin.c:41
+msgid "Love"
+msgstr "M'agrada"
+
+#: ../src/vgl-sb-plugin.c:42
+msgid "Ban"
+msgstr "Exclou-lo"
+
+#: ../src/vgl-sb-plugin.c:43
+msgid "Show main window"
+msgstr "Mostra la finestra principal"
+
+#: ../src/vgl-sb-plugin.c:44
+msgid "Close Vagalume"
+msgstr "Tanca Vagalume"
+
+#: ../src/vgl-tray-icon.c:23
+msgid " Stopped "
+msgstr " Parat"
+
+#: ../src/vgl-tray-icon.c:24
+#, c-format
+msgid ""
+" Now playing: \n"
+" %s \n"
+"   by  %s "
+msgstr ""
+" Reproduint: \n"
+" %s \n"
+"  per   %s"
+
+#: ../src/vgl-tray-icon.c:26
+#, c-format
+msgid " by <i>%s</i>"
+msgstr " per <i>%s</i>"
+
+#: ../src/vgl-tray-icon.c:27
+#, c-format
+msgid ""
+" by <i>%s</i>\n"
+" from <i>%s</i>"
+msgstr ""
+" per <i>%s</i>\n"
+" de <i>%s</i>"

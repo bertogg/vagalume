@@ -1,7 +1,7 @@
 /*
  * uimisc.c -- Misc UI-related functions
  *
- * Copyright (C) 2007-2010 Igalia, S.L.
+ * Copyright (C) 2007-2011 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
@@ -73,6 +73,7 @@ static const char license[] =
 "Public License along with Vagalume. If not, see\n"
 "http://www.gnu.org/licenses/\n";
 static const char translators_tpl[] =
+"%s (ca)\n* Carles Muñoz Gorriz <carlesmu@internautas.org>\n\n"
 "%s (de)\n* Stephan Reichholf <stephan@reichholf.net>\n"
          "* Oskar Welzl <mail@welzl.info>\n\n"
 "%s (es)\n* Oscar A. Mata T. <omata_mac@yahoo.com>\n"
@@ -168,9 +169,9 @@ void
 ui_about_dialog                         (GtkWindow *parent)
 {
         GdkPixbuf *logo = gdk_pixbuf_new_from_file (APP_ICON_BIG, NULL);
-        char *translators = g_strdup_printf (translators_tpl, _("German"),
-                                             _("Spanish"), _("Finnish"),
-                                             _("French"),
+        char *translators = g_strdup_printf (translators_tpl, _("Catalan"),
+                                             _("German"), _("Spanish"),
+                                             _("Finnish"), _("French"),
                                              _("Galician"), _("Italian"),
                                              _("Latvian"), _("Polish"),
                                              _("Portuguese"), _("Portuguese"),
