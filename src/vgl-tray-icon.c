@@ -518,11 +518,18 @@ show_notification                       (VglTrayIcon *vti,
         /* Create the notification if not already created */
         if (priv->notification == NULL) {
                 priv->notification =
+#if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7)
                         notify_notification_new_with_status_icon (
                                 notification_summary,
                                 notification_body,
                                 NULL,
                                 priv->tray_icon);
+#else
+                        notify_notification_new (
+                                notification_summary,
+                                notification_body,
+                                NULL);
+#endif
         } else {
                 notify_notification_update (priv->notification,
                                             notification_summary,
