@@ -104,6 +104,7 @@ typedef struct {
 typedef struct {
         LastfmWsSession *session;
         gboolean discovery;
+        gboolean lowbitrate;
 } GetPlaylistData;
 
 typedef struct {
@@ -428,12 +429,14 @@ controller_open_usercfg                 (void)
         gboolean userchanged = FALSE;
         gboolean pwchanged = FALSE;
         gboolean srvchanged = FALSE;
+        gboolean bitratechanged = FALSE;
         gboolean changed;
         char *olduser = usercfg != NULL ? g_strdup(usercfg->username) :
                                           g_strdup("");
         char *oldpw = usercfg != NULL ? g_strdup(usercfg->password) :
                                         g_strdup("");
         VglServer *oldsrv = usercfg ? vgl_object_ref (usercfg->server) : NULL;
+        gboolean oldbitrate = usercfg ? usercfg->low_bitrate : FALSE;
 
         changed = ui_usercfg_window(
                 vgl_main_window_get_window(mainwin, FALSE), &usercfg);
@@ -443,9 +446,10 @@ controller_open_usercfg                 (void)
                 userchanged = strcmp(olduser, usercfg->username);
                 pwchanged = strcmp(oldpw, usercfg->password);
                 srvchanged = oldsrv != usercfg->server;
+                bitratechanged = oldbitrate != usercfg->low_bitrate;
                 apply_usercfg();
         }
-        if (userchanged || pwchanged || srvchanged) {
+        if (userchanged || pwchanged || srvchanged || bitratechanged) {
                 if (userchanged || srvchanged) {
                         set_friend_list(usercfg->username, NULL);
                         set_user_tag_list(usercfg->username, NULL);
@@ -733,7 +737,8 @@ start_playing_get_pls_thread            (gpointer data)
         LastfmPls *pls;
         g_return_val_if_fail (d != NULL && d->session != NULL, NULL);
 
-        pls = lastfm_ws_radio_get_playlist (d->session, d->discovery, TRUE);
+        pls = lastfm_ws_radio_get_playlist (d->session, d->discovery,
+                                            d->lowbitrate, TRUE);
         gdk_threads_add_idle (start_playing_get_pls_idle, pls);
 
         vgl_object_unref (d->session);
@@ -805,6 +810,7 @@ controller_start_playing_cb             (gpointer userdata)
                 GetPlaylistData *data = g_slice_new (GetPlaylistData);
                 data->session = vgl_object_ref (session);
                 data->discovery = usercfg->discovery_mode;
+                data->lowbitrate = usercfg->low_bitrate;
                 g_thread_create (start_playing_get_pls_thread,
                                  data, FALSE, NULL);
                 return;

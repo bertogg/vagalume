@@ -476,6 +476,7 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
 LastfmPls *
 lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                                          gboolean               discovery,
+                                         gboolean               low_bitrate,
                                          gboolean               scrobbling)
 {
         LastfmPls *pls = NULL;
@@ -506,6 +507,7 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                                 "discovery", discovery ? "1" : "0",
                                 "rtp", scrobbling ? "1" : "0",
                                 "sk", session->key,
+                                low_bitrate ? "bitrate" : NULL, "64",
                                 NULL);
 
         if (doc != NULL) {
@@ -520,7 +522,7 @@ lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                 if (session->v1sess && !session->subscriber) {
                         session->srv->old_str_api = TRUE;
                         return lastfm_ws_radio_get_playlist (
-                                session, discovery, scrobbling);
+                                session, discovery, low_bitrate, scrobbling);
                 }
         }
 

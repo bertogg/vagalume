@@ -47,6 +47,7 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
 LastfmPls *
 lastfm_ws_radio_get_playlist            (const LastfmWsSession *session,
                                          gboolean               discovery,
+                                         gboolean               low_bitrate,
                                          gboolean               scrobbling);
 
 gboolean

@@ -20,7 +20,7 @@ typedef struct {
         GtkNotebook *nb;
         GtkEntry *user, *pw, *proxy, *dlentry;
         GtkComboBox *srvcombo;
-        GtkWidget *dlbutton, *scrobble, *discovery, *useproxy;
+        GtkWidget *dlbutton, *scrobble, *discovery, *useproxy, *lowbitrate;
         GtkWidget *dlfreetracks;
         GtkWidget *disableconfdiags;
         GtkWidget *helpbtn;
@@ -302,15 +302,17 @@ usercfg_add_connection_settings         (usercfgwin *win,
 {
         g_return_if_fail(win != NULL && GTK_IS_NOTEBOOK(win->nb));
         GtkTable *table;
-        GtkWidget *useproxylabel, *proxylabel;
+        GtkWidget *useproxylabel, *proxylabel, *lowbitratelabel;
         const char *help;
 
         /* Create widgets */
-        table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
+        table = GTK_TABLE (gtk_table_new (3, 2, FALSE));
         useproxylabel = gtk_label_new(_("Use HTTP proxy"));
         proxylabel = gtk_label_new(_("Proxy address:"));
+        lowbitratelabel = gtk_label_new(_("Low bitrate stream"));
         win->proxy = GTK_ENTRY(gtk_entry_new());
         win->useproxy = gtk_check_button_new();
+        win->lowbitrate = gtk_check_button_new();
 
         /* Set widget properties */
         gtk_entry_set_activates_default(win->proxy, TRUE);
@@ -319,20 +321,26 @@ usercfg_add_connection_settings         (usercfgwin *win,
         gtk_entry_set_text(win->proxy, cfg->http_proxy);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->useproxy),
                                      cfg->use_proxy);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(win->lowbitrate),
+                                     cfg->low_bitrate);
 
         /* Pack widgets */
         gtk_table_attach(table, useproxylabel, 0, 1, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, proxylabel, 0, 1, 1, 2, 0, 0, 5, 5);
+        gtk_table_attach(table, lowbitratelabel, 0, 1, 2, 3, 0, 0, 5, 5);
         gtk_table_attach(table, win->useproxy, 1, 2, 0, 1, 0, 0, 5, 5);
         gtk_table_attach(table, GTK_WIDGET(win->proxy), 1, 2, 1, 2,
                          GTK_EXPAND | GTK_FILL, 0, 5, 5);
+        gtk_table_attach(table, win->lowbitrate, 1, 2, 2, 3, 0, 0, 5, 5);
         gtk_notebook_append_page(win->nb, GTK_WIDGET(table),
                                  gtk_label_new(_("Connection")));
 
         /* Set help */
         help = _("* Use HTTP proxy:\nEnable this to use an HTTP proxy.\n\n"
                  "* Proxy address:\nuser:password@hostname:port\n"
-                 "Only the hostname (can be an IP address) is required.");
+                 "Only the hostname (can be an IP address) is required.\n\n"
+                 "* Low bitrate stream: Try to get a low bitrate stream\n"
+                 "from the server to save bandwidth.");
         g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
 }
 
@@ -571,6 +579,8 @@ ui_usercfg_window                       (GtkWindow   *parent,
                         GTK_TOGGLE_BUTTON(win.discovery));
                 (*cfg)->use_proxy = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.useproxy));
+                (*cfg)->low_bitrate = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(win.lowbitrate));
                 (*cfg)->autodl_free_tracks = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.dlfreetracks));
 #ifdef SET_IM_STATUS

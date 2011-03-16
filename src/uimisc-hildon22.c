@@ -240,7 +240,8 @@ ui_usercfg_window                       (GtkWindow   *parent,
         GtkWidget *frame;
         GtkEntry *user, *pw, *proxy, *imtemplate;
         HildonButton *service, *dlbutton, *imbutton;
-        HildonCheckButton *scrob, *discov, *useproxy, *autodl, *nodiags;
+        HildonCheckButton *scrob, *discov, *useproxy;
+        HildonCheckButton *lowbitrate, *autodl, *nodiags;
         HildonTouchSelector *servicesel, *imsel;
         GtkBox *vbox, *hbox, *framebox;
         GtkSizeGroup *size_group;
@@ -339,6 +340,11 @@ ui_usercfg_window                       (GtkWindow   *parent,
         gtk_box_pack_start (hbox, GTK_WIDGET (proxy), TRUE, TRUE, 0);
         gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
 
+        /* Low bitrate stream */
+        lowbitrate = HILDON_CHECK_BUTTON (hildon_check_button_new (FINGER_SIZE));
+        gtk_button_set_label (GTK_BUTTON (lowbitrate), _("Low bitrate stream"));
+        gtk_box_pack_start (vbox, GTK_WIDGET (lowbitrate), FALSE, FALSE, 0);
+
         /* Download frame */
         frame = gtk_frame_new (_("Download"));
         vbox = GTK_BOX (gtk_vbox_new (TRUE, 0));
@@ -430,6 +436,7 @@ ui_usercfg_window                       (GtkWindow   *parent,
         hildon_check_button_set_active (scrob, (*cfg)->enable_scrobbling);
         hildon_check_button_set_active (discov, (*cfg)->discovery_mode);
         hildon_check_button_set_active (useproxy, (*cfg)->use_proxy);
+        hildon_check_button_set_active (lowbitrate, (*cfg)->low_bitrate);
         hildon_check_button_set_active (autodl, (*cfg)->autodl_free_tracks);
         hildon_check_button_set_active (nodiags,
                                         (*cfg)->disable_confirm_dialogs);
@@ -451,6 +458,8 @@ ui_usercfg_window                       (GtkWindow   *parent,
                         hildon_check_button_get_active (discov);
                 (*cfg)->use_proxy =
                         hildon_check_button_get_active (useproxy);
+                (*cfg)->low_bitrate =
+                        hildon_check_button_get_active (lowbitrate);
                 (*cfg)->autodl_free_tracks =
                         hildon_check_button_get_active (autodl);
                 vgl_user_cfg_set_imstatus_template (
