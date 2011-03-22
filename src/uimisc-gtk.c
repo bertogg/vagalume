@@ -122,7 +122,8 @@ ui_usertag_dialog                       (GtkWindow    *parent,
         gtk_table_attach_defaults (table, taglabel, 0, 1, 1, 2);
         gtk_table_attach_defaults (table, usercombo, 1, 2, 0, 1);
         gtk_table_attach_defaults (table, tagentry, 1, 2, 1, 2);
-        gtk_container_add (GTK_CONTAINER (dialog->vbox), GTK_WIDGET (table));
+        gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area(dialog)),
+                           GTK_WIDGET (table));
 
         gtk_entry_set_activates_default (
                 GTK_ENTRY (GTK_BIN (usercombo)->child), TRUE);
@@ -541,10 +542,11 @@ ui_usercfg_window                       (GtkWindow   *parent,
         win.dialog = ui_base_dialog(parent, _("User settings"));
         win.nb = GTK_NOTEBOOK(gtk_notebook_new());
         win.helpbtn = gtk_button_new_from_stock(GTK_STOCK_HELP);
-        gtk_box_pack_start(GTK_BOX(win.dialog->action_area), win.helpbtn,
-                           FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (gtk_dialog_get_action_area (win.dialog)),
+                            win.helpbtn, FALSE, FALSE, 0);
         gtk_button_box_set_child_secondary (
-                GTK_BUTTON_BOX (win.dialog->action_area), win.helpbtn, TRUE);
+                GTK_BUTTON_BOX (gtk_dialog_get_action_area (win.dialog)),
+                win.helpbtn, TRUE);
 
         usercfg_add_account_settings(&win, *cfg);
         usercfg_add_connection_settings(&win, *cfg);
@@ -552,8 +554,8 @@ ui_usercfg_window                       (GtkWindow   *parent,
         usercfg_add_imstatus_settings(&win, *cfg);
         usercfg_add_misc_settings(&win, *cfg);
 
-        gtk_box_pack_start(GTK_BOX((win.dialog)->vbox), GTK_WIDGET(win.nb),
-                           FALSE, FALSE, 10);
+        gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (win.dialog)),
+                            GTK_WIDGET (win.nb), FALSE, FALSE, 10);
 
         windata = g_slice_new(change_dir_selected_data);
         windata->win = GTK_WINDOW(win.dialog);
@@ -625,12 +627,14 @@ ui_input_dialog_with_list               (GtkWindow   *parent,
         GtkDialog *dialog;
         GtkWidget *label;
         GtkWidget *combo;
+        GtkBox *vbox;
         char *retvalue = NULL;
         dialog = ui_base_dialog(parent, title);
+        vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
         label = gtk_label_new(text);
         combo = ui_create_combo_box_entry(elems);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), combo, FALSE, FALSE, 10);
+        gtk_box_pack_start (vbox, label, FALSE, FALSE, 10);
+        gtk_box_pack_start (vbox, combo, FALSE, FALSE, 10);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (value != NULL) {
                 gtk_entry_set_text(GTK_ENTRY(GTK_BIN(combo)->child), value);
@@ -718,7 +722,7 @@ recommwin_run                           (GtkWindow             *parent,
         g_return_val_if_fail(user && message && track && type, FALSE);
         gboolean retval = FALSE;
         GtkDialog *dialog;
-        GtkBox *selbox, *userbox;
+        GtkBox *selbox, *userbox, *vbox;
         GtkWidget *sellabel;
         GtkComboBox *selcombo;
         GtkWidget *userlabel, *usercombo;
@@ -728,8 +732,9 @@ recommwin_run                           (GtkWindow             *parent,
 
         /* Dialog and basic settings */
         dialog = ui_base_dialog(parent, _("Send a recommendation"));
-        gtk_box_set_homogeneous(GTK_BOX(dialog->vbox), FALSE);
-        gtk_box_set_spacing(GTK_BOX(dialog->vbox), 5);
+        vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
+        gtk_box_set_homogeneous (vbox, FALSE);
+        gtk_box_set_spacing (vbox, 5);
 
         /* Combo to select what to recommend */
         selbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
@@ -778,14 +783,10 @@ recommwin_run                           (GtkWindow             *parent,
         gtk_container_add(GTK_CONTAINER(sw), GTK_WIDGET(textview));
 
         /* Widget packing */
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(selbox),
-                           FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(userbox),
-                           FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(textlabel),
-                           TRUE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(textframe),
-                           TRUE, TRUE, 0);
+        gtk_box_pack_start (vbox, GTK_WIDGET (selbox), FALSE, FALSE, 0);
+        gtk_box_pack_start (vbox, GTK_WIDGET (userbox), FALSE, FALSE, 0);
+        gtk_box_pack_start (vbox, GTK_WIDGET (textlabel), TRUE, TRUE, 0);
+        gtk_box_pack_start (vbox, GTK_WIDGET (textframe), TRUE, TRUE, 0);
 
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
@@ -1002,6 +1003,7 @@ tagwin_run                              (GtkWindow             *parent,
         GtkTreeModel *usermodel, *nonemodel, *retrmodel;
         GtkCellRenderer *userrender, *globalrender;
         GtkDialog *dialog;
+        GtkBox *vbox;
         GList *nonelist;
         GtkTable *table;
         GtkWidget *alig;
@@ -1016,8 +1018,9 @@ tagwin_run                              (GtkWindow             *parent,
 
         /* Dialog and basic settings */
         dialog = ui_base_dialog(parent, _("Tagging"));
-        gtk_box_set_homogeneous(GTK_BOX(dialog->vbox), FALSE);
-        gtk_box_set_spacing(GTK_BOX(dialog->vbox), 5);
+        vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
+        gtk_box_set_homogeneous (vbox, FALSE);
+        gtk_box_set_spacing (vbox, 5);
 
         /* Combo to select what to tag */
         sellabel = gtk_label_new(_("Tag this"));
@@ -1079,8 +1082,7 @@ tagwin_run                              (GtkWindow             *parent,
         table = GTK_TABLE(gtk_table_new(4, 2, FALSE));
         gtk_table_set_row_spacings(table, 5);
         gtk_table_set_col_spacings(table, 20);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), GTK_WIDGET(table),
-                           TRUE, TRUE, 5);
+        gtk_box_pack_start (vbox, GTK_WIDGET(table), TRUE, TRUE, 5);
 
         alig = gtk_alignment_new(1, 0.5, 0, 0);
         gtk_container_add(GTK_CONTAINER(alig), sellabel);

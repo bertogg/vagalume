@@ -222,7 +222,8 @@ ui_confirm_dialog                       (GtkWindow  *parent,
         gint response;
         GtkDialog *dialog = ui_base_dialog(parent, _("Confirmation"));
         GtkWidget *label = gtk_label_new(text);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
+        GtkBox *vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
+        gtk_box_pack_start (vbox, label, FALSE, FALSE, 10);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         response = gtk_dialog_run(dialog);
         gtk_widget_destroy(GTK_WIDGET(dialog));
@@ -238,17 +239,18 @@ ui_input_dialog                         (GtkWindow  *parent,
         GtkDialog *dialog;
         GtkWidget *label;
         GtkEntry *entry;
+        GtkBox *vbox;
         char *retvalue = NULL;
         dialog = ui_base_dialog(parent, title);
+        vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
         label = gtk_label_new(text);
 #ifdef MAEMO5
         entry = GTK_ENTRY(hildon_entry_new(FINGER_SIZE));
 #else
         entry = GTK_ENTRY(gtk_entry_new());
 #endif
-        gtk_box_pack_start(GTK_BOX(dialog->vbox), label, FALSE, FALSE, 10);
-        gtk_box_pack_start(GTK_BOX(dialog->vbox),
-                           GTK_WIDGET(entry), FALSE, FALSE, 10);
+        gtk_box_pack_start (vbox, label, FALSE, FALSE, 10);
+        gtk_box_pack_start (vbox, GTK_WIDGET (entry), FALSE, FALSE, 10);
         if (value != NULL) gtk_entry_set_text(entry, value);
         gtk_entry_set_activates_default(entry, TRUE);
         gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -285,7 +287,7 @@ ui_edit_bookmark_dialog                 (GtkWindow  *parent,
         if (*name != NULL) gtk_entry_set_text(nameentry, *name);
         if (*url != NULL) gtk_entry_set_text(urlentry, *url);
 
-        vbox = GTK_BOX (dialog->vbox);
+        vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
         gtk_box_pack_start(vbox, namelabel, FALSE, FALSE, 4);
         gtk_box_pack_start(vbox, GTK_WIDGET(nameentry), FALSE, FALSE, 4);
         gtk_box_pack_start(vbox, urllabel, FALSE, FALSE, 4);
@@ -536,7 +538,8 @@ ui_stop_after_dialog                    (GtkWindow     *parent,
         gtk_box_pack_start (GTK_BOX (vbox), radio2, FALSE, FALSE, 0);
         gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
         gtk_container_add (GTK_CONTAINER (alignment), vbox);
-        gtk_box_pack_start (GTK_BOX (dialog->vbox), alignment, TRUE, TRUE, 10);
+        gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (dialog)),
+                            alignment, TRUE, TRUE, 10);
 
         /* Fill StopAfterDialog struct */
         win.dialog = dialog;

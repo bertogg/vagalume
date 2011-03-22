@@ -13,6 +13,7 @@
 
 #include "vgl-main-menu.h"
 #include "controller.h"
+#include "compat.h"
 
 struct _VglMainMenu {
         HildonAppMenu parent;
@@ -108,15 +109,16 @@ static void
 bookmarks_selected_cb                   (GtkWidget   *widget,
                                          VglMainMenu *menu)
 {
-        GtkWidget *dialog, *table, *button;
+        GtkWidget *dialog, *table, *button, *vbox;
 
         dialog = gtk_dialog_new ();
+        vbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
         gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
         gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
         gtk_window_set_title (GTK_WINDOW (dialog), _("Bookmarks"));
 
         table = gtk_table_new (2, 2, TRUE);
-        gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), table);
+        gtk_container_add (GTK_CONTAINER (vbox), table);
 
         button = gtk_button_new_from_stock (_("Manage bookmarks..."));
         hildon_gtk_widget_set_theme_size (button, FINGER_SIZE);

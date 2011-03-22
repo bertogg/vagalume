@@ -48,4 +48,11 @@ gdk_threads_add_timeout                 (guint       interval,
 G_END_DECLS
 #endif /* HAVE_GDK_THREADS_ADD_API */
 
+#ifndef HAVE_GTK_DIALOG_GET_CONTENT_AREA
+
+#     define gtk_dialog_get_content_area(X) (((GtkDialog *) (X))->vbox)
+#     define gtk_dialog_get_action_area(X)  (((GtkDialog *) (X))->action_area)
+
+#endif /* HAVE_GTK_DIALOG_GET_CONTENT_AREA */
+
 #endif /* VGL_COMPAT_H */

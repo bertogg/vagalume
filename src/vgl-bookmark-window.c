@@ -12,6 +12,7 @@
 #include "vgl-bookmark-mgr.h"
 #include "controller.h"
 #include "uimisc.h"
+#include "compat.h"
 
 #include <glib/gi18n.h>
 #include <string.h>
@@ -362,8 +363,8 @@ vgl_bookmark_window_init                (VglBookmarkWindow *self)
         }
 
         /* Add widgets to window */
-        vbox = GTK_BOX(GTK_DIALOG(self)->vbox);
-        action_area = GTK_BOX(GTK_DIALOG(self)->action_area);
+        vbox = GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self)));
+        action_area = GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (self)));
         gtk_container_add(GTK_CONTAINER(scrwindow),
                           GTK_WIDGET(priv->treeview));
         gtk_box_pack_start(vbox, scrwindow, TRUE, TRUE, 0);

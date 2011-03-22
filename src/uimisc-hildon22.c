@@ -13,6 +13,7 @@
 
 #include "uimisc.h"
 #include "util.h"
+#include "compat.h"
 
 static const char pidgin_name[] = "Pidgin";
 static const char gajim_name[] = "Gajim";
@@ -413,7 +414,9 @@ ui_usercfg_window                       (GtkWindow   *parent,
         /* Pack everything else */
         hildon_pannable_area_add_with_viewport (HILDON_PANNABLE_AREA (panarea),
                                                 GTK_WIDGET (framebox));
-        gtk_container_add (GTK_CONTAINER (GTK_DIALOG (d)->vbox), panarea);
+        gtk_container_add (
+                GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (d))),
+                panarea);
 
         /* Connect signals */
         win.user = user;
@@ -642,7 +645,7 @@ recommwin_run                           (GtkWindow             *parent,
         gboolean retval = FALSE;
         GtkDialog *dialog;
         GtkWidget *panarea;
-        GtkBox *vbox;
+        GtkBox *vbox, *dvbox;
         GtkWidget *selbutton;
         GtkWidget *userbutton;
         GtkWidget *textlabel;
@@ -652,8 +655,9 @@ recommwin_run                           (GtkWindow             *parent,
 
         /* Dialog and basic settings */
         dialog = ui_base_dialog (parent, _("Send a recommendation"));
-        gtk_box_set_homogeneous (GTK_BOX (dialog->vbox), FALSE);
-        gtk_box_set_spacing (GTK_BOX (dialog->vbox), 5);
+        dvbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
+        gtk_box_set_homogeneous (dvbox, FALSE);
+        gtk_box_set_spacing (dvbox, 5);
 
         /* Picker button to select what to recommend */
         selbutton = artist_track_album_button_new (
@@ -680,7 +684,7 @@ recommwin_run                           (GtkWindow             *parent,
         gtk_box_pack_start (vbox, GTK_WIDGET (userbutton), FALSE, FALSE, 0);
         gtk_box_pack_start (vbox, GTK_WIDGET (textlabel), TRUE, TRUE, 0);
         gtk_box_pack_start (vbox, GTK_WIDGET (textview), TRUE, TRUE, 0);
-        gtk_box_pack_start (GTK_BOX (dialog->vbox), panarea, TRUE, TRUE, 0);
+        gtk_box_pack_start (dvbox, panarea, TRUE, TRUE, 0);
         hildon_pannable_area_add_with_viewport (
                 HILDON_PANNABLE_AREA (panarea), GTK_WIDGET (vbox));
 
@@ -953,6 +957,7 @@ tagwin_run                              (GtkWindow             *parent,
         GtkWidget *entrylabel, *entry, *userbutton, *globalbutton;
         HildonTouchSelector *sel;
         GtkDialog *dialog;
+        GtkBox *vbox;
 
         g_return_val_if_fail (ws_session && track && type &&
                               user && newtags, FALSE);
@@ -960,8 +965,9 @@ tagwin_run                              (GtkWindow             *parent,
         /* Dialog and basic settings */
         t = tagwin_create ();
         dialog = ui_base_dialog (parent, _("Tagging"));
-        gtk_box_set_homogeneous (GTK_BOX (dialog->vbox), FALSE);
-        gtk_box_set_spacing (GTK_BOX (dialog->vbox), 5);
+        vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
+        gtk_box_set_homogeneous (vbox, FALSE);
+        gtk_box_set_spacing (vbox, 5);
 
         /* Combo to select what to tag */
         selbutton = artist_track_album_button_new (_("Tag this"),track,*type);
@@ -991,12 +997,11 @@ tagwin_run                              (GtkWindow             *parent,
         }
 
         /* Widget packing */
-        gtk_box_pack_start (GTK_BOX (dialog->vbox), selbutton, TRUE, TRUE, 5);
-        gtk_box_pack_start (GTK_BOX (dialog->vbox), entrylabel, TRUE, TRUE, 5);
-        gtk_box_pack_start (GTK_BOX (dialog->vbox), entry, TRUE, TRUE, 5);
-        gtk_box_pack_start (GTK_BOX (dialog->vbox), userbutton, TRUE, TRUE, 5);
-        gtk_box_pack_start (GTK_BOX (dialog->vbox),
-                            globalbutton, TRUE, TRUE, 5);
+        gtk_box_pack_start (vbox, selbutton, TRUE, TRUE, 5);
+        gtk_box_pack_start (vbox, entrylabel, TRUE, TRUE, 5);
+        gtk_box_pack_start (vbox, entry, TRUE, TRUE, 5);
+        gtk_box_pack_start (vbox, userbutton, TRUE, TRUE, 5);
+        gtk_box_pack_start (vbox, globalbutton, TRUE, TRUE, 5);
 
         t->track = vgl_object_ref (track);
         t->ws_session = vgl_object_ref (ws_session);

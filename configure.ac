@@ -107,6 +107,8 @@ if $PKG_CONFIG --atleast-version=2.14 gtk+-2.0; then
    have_gtk_2_14="yes"
    AC_DEFINE([HAVE_GDK_THREADS_ADD_TIMEOUT_SECONDS],[1],
              [Defined if gdk_threads_add_timeout_seconds() exists])
+   AC_DEFINE([HAVE_GTK_DIALOG_GET_CONTENT_AREA],[1],
+             [Defined if gtk_dialog_get_content_area() exists])
 else
    have_gtk_2_14="no"
 fi
