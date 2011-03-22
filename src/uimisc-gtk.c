@@ -106,6 +106,7 @@ ui_usertag_dialog                       (GtkWindow    *parent,
         GtkDialog *dialog;
         GtkWidget *userlabel, *taglabel;
         GtkWidget *usercombo, *tagentry;
+        GtkEntry *comboentry;
         GtkTable *table;
 
         g_return_if_fail (parent == NULL || GTK_IS_WINDOW (parent));
@@ -115,6 +116,7 @@ ui_usertag_dialog                       (GtkWindow    *parent,
         userlabel = gtk_label_new (_("Username:"));
         taglabel = gtk_label_new (_("Tag:"));
         usercombo = ui_create_combo_box_entry (userlist);
+        comboentry = GTK_ENTRY (gtk_bin_get_child (GTK_BIN (usercombo)));
         tagentry = gtk_entry_new ();
         table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
 
@@ -125,8 +127,7 @@ ui_usertag_dialog                       (GtkWindow    *parent,
         gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area(dialog)),
                            GTK_WIDGET (table));
 
-        gtk_entry_set_activates_default (
-                GTK_ENTRY (GTK_BIN (usercombo)->child), TRUE);
+        gtk_entry_set_activates_default (comboentry, TRUE);
         gtk_entry_set_activates_default (GTK_ENTRY (tagentry), TRUE);
         gtk_misc_set_alignment (GTK_MISC (userlabel), 0, 0.5);
         gtk_misc_set_alignment (GTK_MISC (taglabel), 0, 0.5);
@@ -135,8 +136,7 @@ ui_usertag_dialog                       (GtkWindow    *parent,
         gtk_container_set_border_width (GTK_CONTAINER (table), 10);
 
         if (*user != NULL) {
-                gtk_entry_set_text (
-                        GTK_ENTRY (GTK_BIN (usercombo)->child), *user);
+                gtk_entry_set_text (comboentry, *user);
                 g_free (*user);
         }
         if (*tag != NULL) {
@@ -148,8 +148,7 @@ ui_usertag_dialog                       (GtkWindow    *parent,
         gtk_widget_show_all (GTK_WIDGET (dialog));
 
         if (gtk_dialog_run (dialog) == GTK_RESPONSE_ACCEPT) {
-                GtkEntry *entry = GTK_ENTRY (GTK_BIN (usercombo)->child);
-                *user = g_strstrip (g_strdup (gtk_entry_get_text (entry)));
+                *user = g_strstrip (g_strdup (gtk_entry_get_text(comboentry)));
                 *tag = g_strstrip (g_strdup (gtk_entry_get_text (
                                                      GTK_ENTRY (tagentry))));
         }
@@ -627,23 +626,23 @@ ui_input_dialog_with_list               (GtkWindow   *parent,
         GtkDialog *dialog;
         GtkWidget *label;
         GtkWidget *combo;
+        GtkEntry *entry;
         GtkBox *vbox;
         char *retvalue = NULL;
         dialog = ui_base_dialog(parent, title);
         vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
         label = gtk_label_new(text);
         combo = ui_create_combo_box_entry(elems);
+        entry = GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo)));
         gtk_box_pack_start (vbox, label, FALSE, FALSE, 10);
         gtk_box_pack_start (vbox, combo, FALSE, FALSE, 10);
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (value != NULL) {
-                gtk_entry_set_text(GTK_ENTRY(GTK_BIN(combo)->child), value);
+                gtk_entry_set_text (entry, value);
         }
-        gtk_entry_set_activates_default(GTK_ENTRY(GTK_BIN(combo)->child),
-                                        TRUE);
+        gtk_entry_set_activates_default (entry, TRUE);
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
-                GtkEntry *entry = GTK_ENTRY(GTK_BIN(combo)->child);
-                retvalue = g_strstrip(g_strdup(gtk_entry_get_text(entry)));
+                retvalue = g_strstrip (g_strdup (gtk_entry_get_text (entry)));
         }
         gtk_widget_destroy(GTK_WIDGET(dialog));
         return retvalue;
@@ -763,8 +762,8 @@ recommwin_run                           (GtkWindow             *parent,
         userbox = GTK_BOX(gtk_hbox_new(FALSE, 5));
         userlabel = gtk_label_new(_("Send recommendation to"));
         usercombo = ui_create_combo_box_entry(friends);
-        gtk_entry_set_activates_default(GTK_ENTRY(GTK_BIN(usercombo)->child),
-                                        TRUE);
+        gtk_entry_set_activates_default (
+                GTK_ENTRY (gtk_bin_get_child (GTK_BIN (usercombo))), TRUE);
         gtk_box_pack_start(userbox, userlabel, FALSE, FALSE, 0);
         gtk_box_pack_start(userbox, usercombo, TRUE, TRUE, 0);
 
@@ -790,7 +789,8 @@ recommwin_run                           (GtkWindow             *parent,
 
         gtk_widget_show_all(GTK_WIDGET(dialog));
         if (gtk_dialog_run(dialog) == GTK_RESPONSE_ACCEPT) {
-                GtkEntry *entry = GTK_ENTRY(GTK_BIN(usercombo)->child);
+                GtkEntry *entry = GTK_ENTRY (
+                        gtk_bin_get_child (GTK_BIN (usercombo)));
                 GtkTextIter start, end;
                 GtkTextBuffer *buf = gtk_text_view_get_buffer(textview);
                 gtk_text_buffer_get_bounds(buf, &start, &end);

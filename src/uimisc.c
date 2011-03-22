@@ -503,7 +503,7 @@ ui_stop_after_dialog                    (GtkWindow     *parent,
         /* Create combo box */
         combo = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (model), 0);
         g_object_unref (model);
-        entry = GTK_ENTRY (GTK_BIN (combo)->child);
+        entry = GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo)));
         gtk_entry_set_width_chars (entry, 4);
 #ifdef MAEMO
         hildon_gtk_entry_set_input_mode (entry, HILDON_GTK_INPUT_MODE_NUMERIC);
