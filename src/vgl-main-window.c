@@ -459,25 +459,25 @@ key_press_cb                            (GtkWidget     *widget,
         int volchange = 0;
         switch (event->keyval) {
 #ifdef MAEMO
-        case GDK_F6:
+        case GDK_KEY_F6:
                 if (win->priv->is_fullscreen) {
                         gtk_window_unfullscreen(GTK_WINDOW(win));
                 } else {
                         gtk_window_fullscreen(GTK_WINDOW(win));
                 }
                 break;
-        case GDK_F7:
+        case GDK_KEY_F7:
 #else
-        case GDK_KP_Add:
-        case GDK_plus:
+        case GDK_KEY_KP_Add:
+        case GDK_KEY_plus:
 #endif
                 volchange = 5;
                 break;
 #ifdef MAEMO
-        case GDK_F8:
+        case GDK_KEY_F8:
 #else
-        case GDK_KP_Subtract:
-        case GDK_minus:
+        case GDK_KEY_KP_Subtract:
+        case GDK_KEY_minus:
 #endif
                 volchange = -5;
                 break;
@@ -578,21 +578,21 @@ vgl_main_window_set_hildon22_accels     (VglMainWindow *win,
 {
         VglMainWindowPrivate *p = win->priv;
         gtk_widget_add_accelerator (p->playbutton, "activate", accel,
-                                    GDK_space, 0, 0);
+                                    GDK_KEY_space, 0, 0);
         gtk_widget_add_accelerator (p->stopbutton, "activate", accel,
-                                    GDK_space, 0, 0);
+                                    GDK_KEY_space, 0, 0);
         gtk_widget_add_accelerator (p->skipbutton, "activate", accel,
-                                    GDK_Right, GDK_CONTROL_MASK, 0);
+                                    GDK_KEY_Right, GDK_CONTROL_MASK, 0);
         gtk_widget_add_accelerator (p->banbutton, "activate", accel,
-                                    GDK_b, GDK_CONTROL_MASK, 0);
+                                    GDK_KEY_b, GDK_CONTROL_MASK, 0);
         gtk_widget_add_accelerator (p->lovebutton, "activate", accel,
-                                    GDK_l, GDK_CONTROL_MASK, 0);
+                                    GDK_KEY_l, GDK_CONTROL_MASK, 0);
         gtk_widget_add_accelerator (p->recommendbutton, "activate", accel,
-                                    GDK_r, GDK_CONTROL_MASK, 0);
+                                    GDK_KEY_r, GDK_CONTROL_MASK, 0);
         gtk_widget_add_accelerator (p->tagbutton, "activate", accel,
-                                    GDK_t, GDK_CONTROL_MASK, 0);
+                                    GDK_KEY_t, GDK_CONTROL_MASK, 0);
         gtk_widget_add_accelerator (p->addplbutton, "activate", accel,
-                                    GDK_a, GDK_CONTROL_MASK, 0);
+                                    GDK_KEY_a, GDK_CONTROL_MASK, 0);
 }
 #endif /* MAEMO5 */
 

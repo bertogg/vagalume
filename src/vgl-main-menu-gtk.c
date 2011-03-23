@@ -11,6 +11,7 @@
 #include "vgl-main-menu.h"
 #include "controller.h"
 #include "uimisc.h"
+#include "compat.h"
 
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
@@ -426,25 +427,25 @@ vgl_main_menu_new                       (GtkAccelGroup *accel)
 #endif
 
         /* Keyboard shortcuts */
-        gtk_widget_add_accelerator(play, "activate", accel, GDK_space,
+        gtk_widget_add_accelerator(play, "activate", accel, GDK_KEY_space,
                                    0, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(stop, "activate", accel, GDK_space,
+        gtk_widget_add_accelerator(stop, "activate", accel, GDK_KEY_space,
                                    0, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(skip, "activate", accel, GDK_Right,
+        gtk_widget_add_accelerator(skip, "activate", accel, GDK_KEY_Right,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(ban, "activate", accel, GDK_b,
+        gtk_widget_add_accelerator(ban, "activate", accel, GDK_KEY_b,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(love, "activate", accel, GDK_l,
+        gtk_widget_add_accelerator(love, "activate", accel, GDK_KEY_l,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(dorecomm, "activate", accel, GDK_r,
+        gtk_widget_add_accelerator(dorecomm, "activate", accel, GDK_KEY_r,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(tag, "activate", accel, GDK_t,
+        gtk_widget_add_accelerator(tag, "activate", accel, GDK_KEY_t,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(addtopls, "activate", accel, GDK_a,
+        gtk_widget_add_accelerator(addtopls, "activate", accel, GDK_KEY_a,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(settings, "activate", accel, GDK_p,
+        gtk_widget_add_accelerator(settings, "activate", accel, GDK_KEY_p,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-        gtk_widget_add_accelerator(quit, "activate", accel, GDK_q,
+        gtk_widget_add_accelerator(quit, "activate", accel, GDK_KEY_q,
                                    GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
         menu->play = play;
