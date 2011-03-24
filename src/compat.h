@@ -89,4 +89,12 @@ G_END_DECLS
 #        define gtk_widget_is_sensitive(X) GTK_WIDGET_IS_SENSITIVE(X)
 #endif /* GTK_WIDGET_IS_SENSITIVE */
 
+#ifndef GTK_TYPE_PROGRESS
+#        define gtk_progress_set_text_alignment(X,Y,Z)
+#endif /* GTK_TYPE_PROGRESS */
+
+#if !GTK_CHECK_VERSION(3,0,0)
+#        define gtk_progress_bar_set_show_text(X,Y)
+#endif /* !GTK_CHECK_VERSION(3,0,0) */
+
 #endif /* VGL_COMPAT_H */

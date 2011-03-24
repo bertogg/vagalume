@@ -673,6 +673,7 @@ vgl_main_window_init                    (VglMainWindow *self)
         priv->progressbar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
         gtk_progress_set_text_alignment(GTK_PROGRESS(priv->progressbar),
                                         0.5, 0.5);
+        gtk_progress_bar_set_show_text (priv->progressbar, TRUE);
 #ifdef MAEMO5
         gtk_widget_set_name ((GtkWidget *) priv->progressbar,
                              "small-progress-bar");
