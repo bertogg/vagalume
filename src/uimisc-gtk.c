@@ -962,7 +962,7 @@ tagwin_tagcombo_changed                 (GtkComboBox *combo,
                                          gpointer     data)
 {
         if (gtk_combo_box_get_active(combo) == -1 ||
-            !GTK_WIDGET_IS_SENSITIVE(combo)) return;
+            !gtk_widget_is_sensitive(GTK_WIDGET (combo))) return;
         tagwin *w = (tagwin *) data;
         g_return_if_fail(w != NULL && w->entry != NULL);
         char *current = g_strchomp(g_strdup(gtk_entry_get_text(w->entry)));

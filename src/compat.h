@@ -85,4 +85,8 @@ gtk_widget_set_tooltip_text             (GtkWidget   *widget,
 G_END_DECLS
 #endif /* HAVE_GTK_TOOLTIP */
 
+#ifdef GTK_WIDGET_IS_SENSITIVE
+#        define gtk_widget_is_sensitive(X) GTK_WIDGET_IS_SENSITIVE(X)
+#endif /* GTK_WIDGET_IS_SENSITIVE */
+
 #endif /* VGL_COMPAT_H */
