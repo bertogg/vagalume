@@ -19,7 +19,7 @@ typedef struct {
         GtkDialog *dialog;
         GtkNotebook *nb;
         GtkEntry *user, *pw, *proxy, *dlentry;
-        GtkComboBox *srvcombo;
+        GtkComboBoxText *srvcombo;
         GtkWidget *dlbutton, *scrobble, *discovery, *useproxy, *lowbitrate;
         GtkWidget *dlfreetracks;
         GtkWidget *disableconfdiags;
@@ -174,23 +174,23 @@ change_dir_selected                     (GtkWidget *widget,
         }
 }
 
-static GtkComboBox *
+static GtkComboBoxText *
 usercfg_create_server_combobox          (VglUserCfg *cfg)
 {
-        GtkComboBox *combo;
+        GtkComboBoxText *combo;
         const GList *srvlist, *iter;
         int i;
 
         g_return_val_if_fail (cfg != NULL, NULL);
 
-        combo = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+        combo = GTK_COMBO_BOX_TEXT (gtk_combo_box_text_new ());
 
         srvlist = vgl_server_list_get ();
         for (iter = srvlist, i = 0; iter != NULL; iter = iter->next, i++) {
                 const VglServer *srv = iter->data;
-                gtk_combo_box_append_text (combo, srv->name);
+                gtk_combo_box_text_append_text (combo, srv->name);
                 if (srv == cfg->server) {
-                        gtk_combo_box_set_active (combo, i);
+                        gtk_combo_box_set_active (GTK_COMBO_BOX (combo), i);
                 }
 
         }
@@ -573,7 +573,7 @@ ui_usercfg_window                       (GtkWindow   *parent,
                 vgl_user_cfg_set_download_dir(*cfg,
                                                 gtk_entry_get_text(win.dlentry));
                 vgl_user_cfg_set_server_name(
-                        *cfg, gtk_combo_box_get_active_text (win.srvcombo));
+                        *cfg, gtk_combo_box_text_get_active_text (win.srvcombo));
                 (*cfg)->enable_scrobbling = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(win.scrobble));
                 (*cfg)->discovery_mode = gtk_toggle_button_get_active(
@@ -966,7 +966,8 @@ tagwin_tagcombo_changed                 (GtkComboBox *combo,
         tagwin *w = (tagwin *) data;
         g_return_if_fail(w != NULL && w->entry != NULL);
         char *current = g_strchomp(g_strdup(gtk_entry_get_text(w->entry)));
-        const char *selected = gtk_combo_box_get_active_text(combo);
+        const char *selected =
+                gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT(combo));
         char *new;
         if (current[0] == '\0') {
                 new = g_strdup(selected);
@@ -1056,8 +1057,12 @@ tagwin_run                              (GtkWindow             *parent,
         } else {
                 usermodel = g_object_ref(nonemodel);
         }
-        usercombo = gtk_combo_box_new_with_model(usermodel);
-        globalcombo = gtk_combo_box_new_with_model(retrmodel);
+        usercombo = gtk_combo_box_text_new ();
+        gtk_combo_box_set_model (GTK_COMBO_BOX (usercombo), usermodel);
+        gtk_cell_layout_clear (GTK_CELL_LAYOUT (usercombo));
+        globalcombo = gtk_combo_box_text_new ();
+        gtk_combo_box_set_model (GTK_COMBO_BOX (globalcombo), retrmodel);
+        gtk_cell_layout_clear (GTK_CELL_LAYOUT (globalcombo));
         g_object_unref(G_OBJECT(usermodel));
         userrender = gtk_cell_renderer_text_new();
         globalrender = gtk_cell_renderer_text_new();

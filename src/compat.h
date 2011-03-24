@@ -97,4 +97,14 @@ G_END_DECLS
 #        define gtk_progress_bar_set_show_text(X,Y)
 #endif /* !GTK_CHECK_VERSION(3,0,0) */
 
+#ifndef GTK_TYPE_COMBO_BOX_TEXT
+#        define GtkComboBoxText GtkComboBox
+#        define GTK_COMBO_BOX_TEXT(X) GTK_COMBO_BOX(X)
+#        define gtk_combo_box_text_new gtk_combo_box_new_text
+#        define gtk_combo_box_text_append_text(X,Y) \
+                gtk_combo_box_append_text(X,Y)
+#        define gtk_combo_box_text_get_active_text(X) \
+                gtk_combo_box_get_active_text(X)
+#endif /* GTK_TYPE_COMBO_BOX_TEXT */
+
 #endif /* VGL_COMPAT_H */
