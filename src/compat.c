@@ -101,3 +101,21 @@ gdk_threads_add_timeout                 (guint       interval,
                                              interval, function, data, NULL);
 }
 #endif /* HAVE_GDK_THREADS_ADD_API */
+
+
+#ifndef HAVE_GTK_TOOLTIP
+void
+gtk_widget_set_tooltip_text             (GtkWidget   *widget,
+                                         const gchar *text)
+{
+        static GtkTooltips *tooltips = NULL;
+
+        if (G_UNLIKELY (tooltips == NULL)) {
+                tooltips = gtk_tooltips_new();
+        }
+
+        gtk_tooltips_set_tip (tooltips, widget, text, text);
+}
+
+#endif /* HAVE_GTK_TOOLTIP */
+

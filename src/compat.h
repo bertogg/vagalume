@@ -14,6 +14,7 @@
 #include "config.h"
 
 #include <glib.h>
+#include <gtk/gtk.h>
 
 #ifndef GDK_KEY_space
 #        define GDK_KEY_space GDK_space
@@ -73,5 +74,15 @@ G_END_DECLS
 #     define gtk_dialog_get_action_area(X)  (((GtkDialog *) (X))->action_area)
 
 #endif /* HAVE_GTK_DIALOG_GET_CONTENT_AREA */
+
+#ifndef HAVE_GTK_TOOLTIP
+G_BEGIN_DECLS
+
+void
+gtk_widget_set_tooltip_text             (GtkWidget   *widget,
+                                         const gchar *text);
+
+G_END_DECLS
+#endif /* HAVE_GTK_TOOLTIP */
 
 #endif /* VGL_COMPAT_H */
