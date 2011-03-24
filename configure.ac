@@ -34,10 +34,6 @@ EXTRA_LIBS=""
 #####################################
 ### Basic dependencies - Required ###
 #####################################
-PKG_CHECK_MODULES(Gtk2, gtk+-2.0)
-EXTRA_CFLAGS="$EXTRA_CFLAGS $Gtk2_CFLAGS"
-EXTRA_LIBS="$EXTRA_LIBS $Gtk2_LIBS"
-
 PKG_CHECK_MODULES(GStreamer, gstreamer-0.10)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $GStreamer_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $GStreamer_LIBS"
@@ -50,6 +46,27 @@ PKG_CHECK_MODULES(libcurl, libcurl)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $libcurl_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
 
+if $PKG_CONFIG --exists gtk+-2.0; then
+   DETECTEDGTK=2
+elif $PKG_CONFIG --exists gtk+-3.0; then
+   DETECTEDGTK=3
+else
+   AC_MSG_ERROR([This program requires either GTK+ 2 or GTK+ 3.])
+fi
+
+# Platform support
+AC_ARG_WITH(gtk-version, [
+Gtk+ version:
+  --with-gtk-version=2    Use GTK+ 2 (default if available)
+  --with-gtk-version=3    Use GTK+ 3],
+  GTKVERSION=$withval, GTKVERSION=$DETECTEDGTK)
+
+GTKMOD="gtk+-${GTKVERSION}.0"
+PKG_CHECK_MODULES(Gtk, $GTKMOD)
+EXTRA_CFLAGS="$EXTRA_CFLAGS $Gtk_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $Gtk_LIBS"
+
+echo "Compiling with GTK+ version $GTKVERSION"
 #####################################
 ### Other dependencies - Optional ###
 #####################################
@@ -64,6 +81,14 @@ PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
 PKG_CHECK_MODULES(Gst_mixer, gstreamer-interfaces-0.10,
                   [have_gst_mixer="yes"], [have_gst_mixer="no"])
 
+# Use libnotify only if it's linked against the same GTK+ version
+if test "$have_libnotify" = "yes"; then
+   if ! $PKG_CONFIG --print-requires libnotify | grep -q ^$GTKMOD ; then
+      echo "Disabling libnotify since it uses a different GTK+ version"
+      have_libnotify="no"
+   fi
+fi
+
 # D-BUS versions < 1.0 require DBUS_API_SUBJECT_TO_CHANGE
 if test "$have_dbus_glib" = "yes"; then
    if ! $PKG_CONFIG --atleast-version=1.0 dbus-1; then
@@ -73,8 +98,8 @@ fi
 
 # Tray icon support requires Gtk 2.10 and libnotify
 if test "$have_libnotify" = "yes"; then
-   echo -n "checking for Gtk2 >= 2.10... "
-   if $PKG_CONFIG --atleast-version=2.10 gtk+-2.0; then
+   echo -n "checking for GTK+ >= 2.10... "
+   if $PKG_CONFIG --atleast-version=2.10 "$GTKMOD"; then
       have_tray_icon="yes"
    else
       have_tray_icon="no"
@@ -83,8 +108,8 @@ if test "$have_libnotify" = "yes"; then
 fi
 
 # gtk_entry_completion_set_inline_selection requires gtk 2.12
-echo -n "checking for Gtk2 >= 2.12... "
-if $PKG_CONFIG --atleast-version=2.12 gtk+-2.0; then
+echo -n "checking for GTK+ >= 2.12... "
+if $PKG_CONFIG --atleast-version=2.12 "$GTKMOD"; then
    have_gtk_2_12="yes"
    AC_DEFINE([HAVE_ENTRY_COMPLETION_INLINE_SELECTION],[1],
              [Defined if gtk_entry_completion_set_inline_selection () exists])
@@ -100,8 +125,8 @@ fi
 echo $have_gtk_2_12
 
 # g_timeout_add_seconds requires gtk 2.14
-echo -n "checking for Gtk2 >= 2.14... "
-if $PKG_CONFIG --atleast-version=2.14 gtk+-2.0; then
+echo -n "checking for GTK+ >= 2.14... "
+if $PKG_CONFIG --atleast-version=2.14 "$GTKMOD"; then
    have_gtk_2_14="yes"
    AC_DEFINE([HAVE_GDK_THREADS_ADD_TIMEOUT_SECONDS],[1],
              [Defined if gdk_threads_add_timeout_seconds() exists])
@@ -113,8 +138,8 @@ fi
 echo $have_gtk_2_14
 
 # gtk_about_dialog_set_{url,email}_hook are deprecated in Gtk+ 2.18
-echo -n "checking for Gtk2 >= 2.18... "
-if $PKG_CONFIG --atleast-version=2.18 gtk+-2.0; then
+echo -n "checking for GTK+ >= 2.18... "
+if $PKG_CONFIG --atleast-version=2.18 "$GTKMOD"; then
    have_gtk_2_18="yes"
    have_gio="no"
 else
@@ -299,10 +324,10 @@ if test "$PLATFORM" = "maemo"; then
       PKG_CHECK_MODULES(dbus, dbus-1, [], [have_sb_plugin="no"])
 
       if test "$have_sb_plugin" = "yes"; then
-         SBPLUGIN_CFLAGS="$Gtk2_CFLAGS $hildon_CFLAGS $libosso_CFLAGS \
+         SBPLUGIN_CFLAGS="$Gtk_CFLAGS $hildon_CFLAGS $libosso_CFLAGS \
                           $hildondesktop_CFLAGS $hildonwm_CFLAGS \
                           $gconf2_CFLAGS $dbus_CFLAGS"
-         SBPLUGIN_LIBS="$Gtk2_LIBS $hildon_LIBS $libosso_LIBS \
+         SBPLUGIN_LIBS="$Gtk_LIBS $hildon_LIBS $libosso_LIBS \
                         $hildondesktop_LIBS $hildonwm_LIBS \
                         $gconf2_LIBS $dbus_LIBS"
          sbplugindesktopentrydir=`$PKG_CONFIG osso-af-settings \
@@ -528,6 +553,7 @@ echo "*** Vagalume is ready to be compiled ***"
 echo "****************************************"
 echo ""
 echo "Target platform: $PLATFORM $PLATFORMVERS"
+echo "GTK+ version: $GTKVERSION"
 echo "Method to compute MD5 sums: $md5_method"
 echo "\"Set IM status\" enabled: $set_im_status"
 if test "$PLATFORM" = "gnome"; then

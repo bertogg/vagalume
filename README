@@ -15,7 +15,7 @@ reported to work in other GNU/Linux distributions and it should work
 in any Unix-like system that meets the following requirements:
 
    * GStreamer 0.10
-   * GTK+ 2
+   * GTK+ 2 or 3
    * Gnome libxml2
    * libcurl
 
