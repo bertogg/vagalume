@@ -501,7 +501,8 @@ ui_stop_after_dialog                    (GtkWindow     *parent,
         }
 
         /* Create combo box */
-        combo = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (model), 0);
+        combo = gtk_combo_box_text_new_with_entry ();
+        gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL(model));
         g_object_unref (model);
         entry = GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo)));
         gtk_entry_set_width_chars (entry, 4);

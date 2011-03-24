@@ -79,7 +79,8 @@ ui_create_combo_box_entry               (const GList *elems)
         GtkTreeModel *model;
 
         model = ui_create_options_list (elems);
-        combo = gtk_combo_box_entry_new_with_model (model, 0);
+        combo = gtk_combo_box_text_new_with_entry ();
+        gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL(model));
 
         completion = gtk_entry_completion_new ();
         gtk_entry_completion_set_model (completion, model);

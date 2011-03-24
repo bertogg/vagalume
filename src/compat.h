@@ -105,6 +105,8 @@ G_END_DECLS
                 gtk_combo_box_append_text(X,Y)
 #        define gtk_combo_box_text_get_active_text(X) \
                 gtk_combo_box_get_active_text(X)
+#        define gtk_combo_box_text_new_with_entry() \
+                g_object_new(GTK_TYPE_COMBO_BOX_ENTRY, "text-column", 0, NULL)
 #endif /* GTK_TYPE_COMBO_BOX_TEXT */
 
 #endif /* VGL_COMPAT_H */
