@@ -603,8 +603,6 @@ vgl_main_window_init                    (VglMainWindow *self)
         GtkBox *image_box_holder, *image_box_holder2, *labelbox;
         GtkBox *buttonshbox, *secondary_bbox, *secondary_bar_vbox;
         GtkWidget* image_box;
-        GtkRcStyle* image_box_style;
-        char *image_box_bg;
         GtkAccelGroup *accel = gtk_accel_group_new();
         self->priv = priv;
         priv->progressbar_text = g_string_sized_new(30);
@@ -651,14 +649,29 @@ vgl_main_window_init                    (VglMainWindow *self)
         gtk_label_set_ellipsize(GTK_LABEL(priv->album), PANGO_ELLIPSIZE_END);
         /* Cover image */
         image_box = gtk_event_box_new();
-        image_box_style = gtk_rc_style_new();
-        image_box_bg = g_strdup(cover_background);
+        {
+#ifdef GTK_TYPE_CSS_PROVIDER
+        guint priority = GTK_STYLE_PROVIDER_PRIORITY_APPLICATION;
+        GtkStyleContext *ctx = gtk_widget_get_style_context (image_box);
+        GtkCssProvider *provider = gtk_css_provider_new ();
+        char *css = g_strdup_printf ("* { background-image: url(\"%s\") }",
+                                     cover_background);
+        gtk_css_provider_load_from_data (provider, css, -1, NULL);
+        gtk_style_context_add_provider (ctx, GTK_STYLE_PROVIDER (provider),
+                                        priority);
+        g_object_unref (provider);
+        g_free (css);
+#else
+        GtkRcStyle* image_box_style = gtk_rc_style_new();
+        char *image_box_bg = g_strdup(cover_background);
         image_box_style->bg_pixmap_name[GTK_STATE_NORMAL] = image_box_bg;
         image_box_style->bg_pixmap_name[GTK_STATE_ACTIVE] = image_box_bg;
         image_box_style->bg_pixmap_name[GTK_STATE_PRELIGHT] = image_box_bg;
         image_box_style->bg_pixmap_name[GTK_STATE_SELECTED] = image_box_bg;
         image_box_style->bg_pixmap_name[GTK_STATE_INSENSITIVE] = image_box_bg;
         gtk_widget_modify_style(image_box, image_box_style);
+#endif /* GTK_TYPE_CSS_PROVIDER */
+        }
         gtk_widget_set_size_request(GTK_WIDGET(image_box),
                                     COVER_FRAME_WIDTH, COVER_FRAME_HEIGHT);
         priv->album_cover = gtk_image_new();
