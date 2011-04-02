@@ -71,10 +71,6 @@ if test "$have_dbus_glib" = "yes"; then
    fi
 fi
 
-# Keep GIO optional until it's heavily used
-EXTRA_CFLAGS="$EXTRA_CFLAGS $GIO_CFLAGS"
-EXTRA_LIBS="$EXTRA_LIBS $GIO_LIBS"
-
 # Tray icon support requires Gtk 2.10 and libnotify
 if test "$have_libnotify" = "yes"; then
    echo -n "checking for Gtk2 >= 2.10... "
@@ -115,6 +111,16 @@ else
    have_gtk_2_14="no"
 fi
 echo $have_gtk_2_14
+
+# gtk_about_dialog_set_{url,email}_hook are deprecated in Gtk+ 2.18
+echo -n "checking for Gtk2 >= 2.18... "
+if $PKG_CONFIG --atleast-version=2.18 gtk+-2.0; then
+   have_gtk_2_18="yes"
+   have_gio="no"
+else
+   have_gtk_2_18="no"
+fi
+echo $have_gtk_2_18
 
 # GChecksum requires glib 2.16
 echo -n "checking for glib >= 2.16... "
@@ -465,9 +471,10 @@ if test "$have_sb_plugin" = "yes"; then
    AC_SUBST(sbplugindir)
 fi
 
-AM_CONDITIONAL(HAVE_GIO, test "$have_gio" = "yes")
 if test "$have_gio" = "yes"; then
    AC_DEFINE([HAVE_GIO], [1], [Defined if building with GIO support])
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $GIO_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $GIO_LIBS"
 fi
 
 AM_CONDITIONAL(HAVE_TRAY_ICON, test "$have_tray_icon" = "yes")
