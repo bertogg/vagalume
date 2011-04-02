@@ -113,7 +113,7 @@ static const button_data addpl_button = {
         N_("Add this track to playlist")
 };
 
-static const char cover_background[] = APP_DATA_DIR "/cover.png";
+static const char cover_bg[] = APP_DATA_DIR "/cover.png";
 
 void
 vgl_main_window_run_app                 (void)
@@ -655,21 +655,21 @@ vgl_main_window_init                    (VglMainWindow *self)
         GtkStyleContext *ctx = gtk_widget_get_style_context (image_box);
         GtkCssProvider *provider = gtk_css_provider_new ();
         char *css = g_strdup_printf ("* { background-image: url(\"%s\") }",
-                                     cover_background);
+                                     cover_bg);
         gtk_css_provider_load_from_data (provider, css, -1, NULL);
         gtk_style_context_add_provider (ctx, GTK_STYLE_PROVIDER (provider),
                                         priority);
         g_object_unref (provider);
         g_free (css);
 #else
-        GtkRcStyle* image_box_style = gtk_rc_style_new();
-        char *image_box_bg = g_strdup(cover_background);
-        image_box_style->bg_pixmap_name[GTK_STATE_NORMAL] = image_box_bg;
-        image_box_style->bg_pixmap_name[GTK_STATE_ACTIVE] = image_box_bg;
-        image_box_style->bg_pixmap_name[GTK_STATE_PRELIGHT] = image_box_bg;
-        image_box_style->bg_pixmap_name[GTK_STATE_SELECTED] = image_box_bg;
-        image_box_style->bg_pixmap_name[GTK_STATE_INSENSITIVE] = image_box_bg;
-        gtk_widget_modify_style(image_box, image_box_style);
+        GtkRcStyle *style = gtk_rc_style_new ();
+        style->bg_pixmap_name[GTK_STATE_NORMAL]      = g_strdup (cover_bg);
+        style->bg_pixmap_name[GTK_STATE_ACTIVE]      = g_strdup (cover_bg);
+        style->bg_pixmap_name[GTK_STATE_PRELIGHT]    = g_strdup (cover_bg);
+        style->bg_pixmap_name[GTK_STATE_SELECTED]    = g_strdup (cover_bg);
+        style->bg_pixmap_name[GTK_STATE_INSENSITIVE] = g_strdup (cover_bg);
+        gtk_widget_modify_style (image_box, style);
+        g_object_unref (style);
 #endif /* GTK_TYPE_CSS_PROVIDER */
         }
         gtk_widget_set_size_request(GTK_WIDGET(image_box),
