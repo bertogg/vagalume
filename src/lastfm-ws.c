@@ -1,7 +1,7 @@
 /*
  * lastfm-ws.c -- Last.fm Web Services v2.0
  *
- * Copyright (C) 2009 Igalia, S.L.
+ * Copyright (C) 2009-2011 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3

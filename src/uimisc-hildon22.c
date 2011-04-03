@@ -1,7 +1,7 @@
 /*
  * uimisc-hildon22.c -- Hildon 2.2 UI functions
  *
- * Copyright (C) 2010 Igalia, S.L.
+ * Copyright (C) 2010, 2011 Igalia, S.L.
  * Authors: Alberto Garcia <agarcia@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
