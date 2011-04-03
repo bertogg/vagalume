@@ -8,6 +8,7 @@ the following operating systems:
    * Internet Tablet OS 2006 (Nokia 770)
    * Internet Tablet OS 2007 (Nokia N800 and 770 using Hacker Edition)
    * Internet Tablet OS 2008 (Nokia N810 and updated N800)
+   * Maemo 5 (Nokia N900)
 
 Besides that, it also works in standard PCs. Vagalume has been tested
 and developed in a desktop PC running Debian GNU/Linux, but it is
@@ -44,7 +45,7 @@ Vagalume has the following features:
 
 --------------------------------------------------------
 
-Vagalume is (c) 2007-2010 Igalia, S.L.
+Vagalume is (c) 2007-2011 Igalia, S.L.
 http://vagalume.igalia.com/
 http://garage.maemo.org/projects/vagalume/
 
