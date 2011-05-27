@@ -15,6 +15,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #ifndef GDK_KEY_space
 #        define GDK_KEY_space GDK_space
