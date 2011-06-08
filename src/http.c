@@ -17,6 +17,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+static GStaticRWLock proxy_lock = G_STATIC_RW_LOCK_INIT;
+static char *proxy_url = NULL;
+
 /* HTTP connections will abort after this time */
 static const int http_timeout = 20;
 
@@ -33,11 +36,10 @@ typedef struct {
 void
 http_set_proxy                          (const char *proxy)
 {
-        if (proxy == NULL || *proxy == '\0') {
-                g_unsetenv("http_proxy");
-        } else {
-                g_setenv("http_proxy", proxy, 1);
-        }
+        g_static_rw_lock_writer_lock (&proxy_lock);
+        g_free (proxy_url);
+        proxy_url = g_strdup (proxy);
+        g_static_rw_lock_writer_unlock (&proxy_lock);
 }
 
 void
@@ -97,6 +99,24 @@ create_curl_handle                      (void)
         curl_easy_setopt (handle, CURLOPT_LOW_SPEED_LIMIT, 1);
         curl_easy_setopt (handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         curl_easy_setopt (handle, CURLOPT_CONNECTTIMEOUT, http_timeout);
+
+        g_static_rw_lock_reader_lock (&proxy_lock);
+        if (proxy_url != NULL) {
+                curl_easy_setopt (handle, CURLOPT_PROXY, proxy_url);
+                if (!g_str_equal (proxy_url, "direct://")) {
+                        curl_proxytype type = CURLPROXY_HTTP;
+                        if (g_str_has_prefix (proxy_url, "socks://") ||
+                            g_str_has_prefix (proxy_url, "socks5://")) {
+                                /* TODO: make socks:// fall back to Socks 4 */
+                                type = CURLPROXY_SOCKS5;
+                        } else if (g_str_has_prefix (proxy_url, "socks4://")) {
+                                type = CURLPROXY_SOCKS4;
+                        }
+                        curl_easy_setopt (handle, CURLOPT_PROXYTYPE, type);
+                }
+        }
+        g_static_rw_lock_reader_unlock (&proxy_lock);
+
         return handle;
 }
 

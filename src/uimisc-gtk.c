@@ -308,7 +308,7 @@ usercfg_add_connection_settings         (usercfgwin *win,
 
         /* Create widgets */
         table = GTK_TABLE (gtk_table_new (3, 2, FALSE));
-        useproxylabel = gtk_label_new(_("Use HTTP proxy"));
+        useproxylabel = gtk_label_new(_("Use proxy"));
         proxylabel = gtk_label_new(_("Proxy address:"));
         lowbitratelabel = gtk_label_new(_("Low bitrate stream"));
         win->proxy = GTK_ENTRY(gtk_entry_new());
@@ -337,9 +337,10 @@ usercfg_add_connection_settings         (usercfgwin *win,
                                  gtk_label_new(_("Connection")));
 
         /* Set help */
-        help = _("* Use HTTP proxy:\nEnable this to use an HTTP proxy.\n\n"
-                 "* Proxy address:\nuser:password@hostname:port\n"
-                 "Only the hostname (can be an IP address) is required.\n\n"
+        help = _("* Use proxy:\nEnable this to use a proxy.\n\n"
+                 "* Proxy address:\n[protocol://]user:password@hostname:port\n"
+                 "Only the hostname (can be an IP address) is required.\n"
+                 "Supported protocols: http, socks4, socks5.\n\n"
                  "* Low bitrate stream: Try to get a low bitrate stream\n"
                  "from the server to save bandwidth.");
         g_object_set_data(G_OBJECT(table), "help-message", (gpointer) help);
