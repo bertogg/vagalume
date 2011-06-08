@@ -19,7 +19,8 @@ typedef gboolean
                                          double   dlnow);
 
 void
-http_set_proxy                          (const char *proxy);
+http_set_proxy                          (const char *proxy,
+                                         gboolean    use_system_proxy);
 
 char *
 escape_url                              (const char *url,

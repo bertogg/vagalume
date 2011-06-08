@@ -185,6 +185,7 @@ vgl_user_cfg_new                        (void)
         cfg->server = vgl_server_get_default ();
         if (cfg->server) vgl_object_ref (cfg->server);
         cfg->use_proxy = FALSE;
+        cfg->use_system_proxy = FALSE;
         cfg->low_bitrate = FALSE;
         cfg->enable_scrobbling = TRUE;
         cfg->discovery_mode = FALSE;
@@ -354,6 +355,8 @@ vgl_user_cfg_read                       (void)
                         g_free (str);
                 }
                 xml_get_bool (doc, node, "use-proxy", &(cfg->use_proxy));
+                xml_get_bool (doc, node, "use-system-proxy",
+                              &(cfg->use_system_proxy));
                 xml_get_bool (doc, node, "low-bitrate", &(cfg->low_bitrate));
                 xml_get_bool (doc, node, "discovery-mode",
                               &(cfg->discovery_mode));
@@ -392,7 +395,7 @@ vgl_user_cfg_write                      (VglUserCfg *cfg)
         doc = xmlNewDoc ((xmlChar *) "1.0");
         root = xmlNewNode (NULL, (xmlChar *) "config");
         xmlSetProp (root, (xmlChar *) "version", (xmlChar *) "1");
-        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "4");
+        xmlSetProp (root, (xmlChar *) "revision", (xmlChar *) "5");
         xmlDocSetRootElement (doc, root);
 
         xml_add_string (root, "username", cfg->username);
@@ -403,6 +406,7 @@ vgl_user_cfg_write                      (VglUserCfg *cfg)
         xml_add_string (root, "download-dir", cfg->download_dir);
         xml_add_string (root, "imstatus-template", cfg->imstatus_template);
         xml_add_bool (root, "use-proxy", cfg->use_proxy);
+        xml_add_bool (root, "use-system-proxy", cfg->use_system_proxy);
         xml_add_bool (root, "low-bitrate", cfg->low_bitrate);
         xml_add_bool (root, "discovery-mode", cfg->discovery_mode);
         xml_add_bool (root, "enable-scrobbling", cfg->enable_scrobbling);

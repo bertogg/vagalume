@@ -81,6 +81,9 @@ PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
 PKG_CHECK_MODULES(Gst_mixer, gstreamer-interfaces-0.10,
                   [have_gst_mixer="yes"], [have_gst_mixer="no"])
 
+PKG_CHECK_MODULES(libproxy, libproxy-1.0,
+                  [have_libproxy="yes"], [have_libproxy="no"])
+
 # Use libnotify only if it's linked against the same GTK+ version
 if test "$have_libnotify" = "yes"; then
    if ! $PKG_CONFIG --print-requires libnotify | grep -q ^$GTKMOD ; then
@@ -229,6 +232,16 @@ AC_ARG_ENABLE(tray-icon, [
                           (Gnome only, default if available)
   --disable-tray-icon     Disable tray icon and libnotify support],
   enable_tray_icon=$enableval, enable_tray_icon=$have_tray_icon)
+
+AC_ARG_ENABLE(libproxy, [
+  --enable-libproxy       Enable system-wide proxy support
+                          (default if available)
+  --disable-libproxy      Disable system-wide proxy support],
+  use_libproxy=$enableval, use_libproxy=$have_libproxy)
+
+if test "$use_libproxy" = "yes" -a "$have_libproxy" = "no"; then
+   AC_MSG_ERROR([libproxy not found, install it or use --disable-libproxy])
+fi
 
 # Check whether to enable cast checks
 AC_ARG_ENABLE(cast-checks, [
@@ -497,6 +510,12 @@ if test "$have_sb_plugin" = "yes"; then
    AC_SUBST(sbplugindir)
 fi
 
+if test "$use_libproxy" = "yes"; then
+   EXTRA_CFLAGS="$EXTRA_CFLAGS $libproxy_CFLAGS"
+   EXTRA_LIBS="$EXTRA_LIBS $libproxy_LIBS"
+   AC_DEFINE([HAVE_LIBPROXY],[1],[Defined if using libproxy])
+fi
+
 if test "$have_gio" = "yes"; then
    AC_DEFINE([HAVE_GIO], [1], [Defined if building with GIO support])
    EXTRA_CFLAGS="$EXTRA_CFLAGS $GIO_CFLAGS"
@@ -557,6 +576,7 @@ echo "Target platform: $PLATFORM $PLATFORMVERS"
 echo "GTK+ version: $GTKVERSION"
 echo "Method to compute MD5 sums: $md5_method"
 echo "\"Set IM status\" enabled: $set_im_status"
+echo "System-wide proxy support: $use_libproxy"
 if test "$PLATFORM" = "gnome"; then
    echo "Tray icon and notifications enabled: $have_tray_icon"
 elif test "$PLATFORM" = "maemo"; then

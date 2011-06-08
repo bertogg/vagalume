@@ -23,6 +23,7 @@ typedef struct {
         char *imstatus_template; /* Never NULL */
         VglServer *server;
         gboolean use_proxy;
+        gboolean use_system_proxy;
         gboolean low_bitrate;
         gboolean discovery_mode;
         gboolean enable_scrobbling;

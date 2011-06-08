@@ -410,9 +410,10 @@ apply_usercfg                           (void)
 {
         g_return_if_fail(usercfg != NULL);
         if (usercfg->use_proxy) {
-                http_set_proxy(usercfg->http_proxy);
+                http_set_proxy (usercfg->http_proxy,
+                                usercfg->use_system_proxy);
         } else {
-                http_set_proxy(NULL);
+                http_set_proxy (NULL, FALSE);
         }
         g_signal_emit (vgl_controller, signals[USERCFG_CHANGED], 0, usercfg);
 }

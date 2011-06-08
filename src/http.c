@@ -11,11 +11,19 @@
 #include "http.h"
 #include "globaldefs.h"
 #include "util.h"
+#include "compat.h"
 #include <curl/curl.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#ifdef HAVE_LIBPROXY
+#    include <proxy.h>
+
+static pxProxyFactory *proxy_factory = NULL;
+static gboolean use_global_proxy = FALSE;
+#endif
 
 static GStaticRWLock proxy_lock = G_STATIC_RW_LOCK_INIT;
 static char *proxy_url = NULL;
@@ -33,12 +41,26 @@ typedef struct {
         gpointer userdata;
 } http_dl_progress_wrapper_data;
 
+static void
+update_proxy_url                        (const char *proxy)
+{
+        if (g_strcmp0 (proxy, proxy_url) != 0) {
+                g_free (proxy_url);
+                proxy_url = g_strdup (proxy);
+        }
+}
+
 void
-http_set_proxy                          (const char *proxy)
+http_set_proxy                          (const char *proxy,
+                                         gboolean    use_system_proxy)
 {
         g_static_rw_lock_writer_lock (&proxy_lock);
-        g_free (proxy_url);
-        proxy_url = g_strdup (proxy);
+#ifdef HAVE_LIBPROXY
+        use_global_proxy = use_system_proxy;
+        if (!use_global_proxy) update_proxy_url (proxy);
+#else
+        update_proxy_url (proxy);
+#endif
         g_static_rw_lock_writer_unlock (&proxy_lock);
 }
 
@@ -46,6 +68,9 @@ void
 http_init                               (void)
 {
         curl_global_init(CURL_GLOBAL_ALL);
+#ifdef HAVE_LIBPROXY
+        proxy_factory = px_proxy_factory_new ();
+#endif
 }
 
 char *
@@ -91,7 +116,7 @@ http_copy_buffer                        (void   *src,
 }
 
 static CURL *
-create_curl_handle                      (void)
+create_curl_handle                      (const char *url)
 {
         CURL *handle = curl_easy_init ();
         curl_easy_setopt (handle, CURLOPT_NOSIGNAL, 1);
@@ -99,6 +124,33 @@ create_curl_handle                      (void)
         curl_easy_setopt (handle, CURLOPT_LOW_SPEED_LIMIT, 1);
         curl_easy_setopt (handle, CURLOPT_LOW_SPEED_TIME, http_timeout);
         curl_easy_setopt (handle, CURLOPT_CONNECTTIMEOUT, http_timeout);
+
+#ifdef HAVE_LIBPROXY
+        if (use_global_proxy) {
+                char **proxies;
+                const char *found = NULL;
+                proxies = px_proxy_factory_get_proxies (proxy_factory,
+                                                        (char *) url);
+                if (proxies != NULL) {
+                        char **p;
+                        for (p = proxies; found == NULL && *p != NULL; p++) {
+                                if (g_str_has_prefix (*p, "direct://") ||
+                                    g_str_has_prefix (*p, "http://") ||
+                                    g_str_has_prefix (*p, "socks://") ||
+                                    g_str_has_prefix (*p, "socks4://") ||
+                                    g_str_has_prefix (*p, "socks5://")) {
+                                        found = *p;
+                                }
+                        }
+                }
+
+                g_static_rw_lock_writer_lock (&proxy_lock);
+                if (use_global_proxy) update_proxy_url (found);
+                g_static_rw_lock_writer_unlock (&proxy_lock);
+
+                g_strfreev (proxies);
+        }
+#endif
 
         g_static_rw_lock_reader_lock (&proxy_lock);
         if (proxy_url != NULL) {
@@ -144,7 +196,7 @@ http_get_to_fd                          (const char   *url,
                         hdrs = curl_slist_append(hdrs, iter->data);
                 }
         }
-        handle = create_curl_handle ();
+        handle = create_curl_handle (url);
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
@@ -200,7 +252,7 @@ http_download_file                      (const char                *url,
                 return FALSE;
         }
 
-        handle = create_curl_handle ();
+        handle = create_curl_handle (url);
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, f);
@@ -246,7 +298,7 @@ http_get_buffer                         (const char  *url,
                 g_debug("Requesting URL %spasswordmd5=<hidden>", newurl);
                 g_free(newurl);
         }
-        handle = create_curl_handle ();
+        handle = create_curl_handle (url);
         curl_easy_setopt(handle, CURLOPT_URL, url);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, http_copy_buffer);
         curl_easy_setopt(handle, CURLOPT_WRITEDATA, &dstbuf);
@@ -284,7 +336,7 @@ http_post_buffer                        (const char    *url,
         CURLcode retcode;
         CURL *handle;
         struct curl_slist *hdrs = NULL;
-        handle = create_curl_handle ();
+        handle = create_curl_handle (url);
 
         if (retbuf != NULL) {
                 curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION,
