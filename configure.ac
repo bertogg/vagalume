@@ -147,14 +147,14 @@ else
 fi
 echo $have_gtk_2_18
 
-# GChecksum requires glib 2.16
+# GChecksum and g_strcmp0 require glib 2.16
 echo -n "checking for glib >= 2.16... "
 if $PKG_CONFIG --atleast-version=2.16 glib-2.0; then
-   have_gchecksum="yes"
+   have_glib_2_16="yes"
 else
-   have_gchecksum="no"
+   have_glib_2_16="no"
 fi
-echo $have_gchecksum
+echo $have_glib_2_16
 
 # Check if we have getopt
 AC_CHECK_LIB(c, getopt,
@@ -457,9 +457,10 @@ AM_CONDITIONAL(MAEMO_PLATFORM, test "$PLATFORM" = "maemo")
 
 AM_CONDITIONAL(HILDON_2_2, test "$PLATFORM" = "maemo" -a "$PLATFORMVERS" = "5")
 
-AM_CONDITIONAL(USE_INTERNAL_MD5, test "x$have_gchecksum" != "xyes")
-if test "$have_gchecksum" = "yes"; then
+AM_CONDITIONAL(USE_INTERNAL_MD5, test "x$have_glib_2_16" != "xyes")
+if test "$have_glib_2_16" = "yes"; then
    AC_DEFINE([HAVE_GCHECKSUM],[1],[Defined if GLib has support for GChecksum])
+   AC_DEFINE([HAVE_GSTRCMP0],[1],[Defined if GLib has support for g_strcmp0])
    md5_method="glib"
 else
    md5_method="internal implementation"

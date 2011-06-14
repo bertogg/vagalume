@@ -98,6 +98,16 @@ G_END_DECLS
 #        define gtk_progress_bar_set_show_text(X,Y)
 #endif /* !GTK_CHECK_VERSION(3,0,0) */
 
+#ifndef HAVE_GSTRCMP0
+G_BEGIN_DECLS
+
+int
+g_strcmp0                               (const char *str1,
+                                         const char *str2);
+
+G_END_DECLS
+#endif
+
 #ifndef GTK_TYPE_COMBO_BOX_TEXT
 #        define GtkComboBoxText GtkComboBox
 #        define GTK_COMBO_BOX_TEXT(X) GTK_COMBO_BOX(X)

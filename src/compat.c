@@ -11,6 +11,7 @@
 #include "compat.h"
 
 #include <gdk/gdk.h>
+#include <string.h>
 
 #ifndef HAVE_GDK_THREADS_ADD_API
 typedef struct
@@ -118,4 +119,17 @@ gtk_widget_set_tooltip_text             (GtkWidget   *widget,
 }
 
 #endif /* HAVE_GTK_TOOLTIP */
+
+#ifndef HAVE_GSTRCMP0
+int
+g_strcmp0                               (const char *str1,
+                                         const char *str2)
+{
+        if (!str1)
+                return -(str1 != str2);
+        if (!str2)
+                return str1 != str2;
+        return strcmp (str1, str2);
+}
+#endif /* HAVE_GSTRCMP0 */
 
