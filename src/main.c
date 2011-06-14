@@ -63,6 +63,10 @@ main                                    (int    argc,
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
         textdomain (GETTEXT_PACKAGE);
 
+        if (g_getenv ("VAGALUME_DEBUG") == NULL) {
+                g_log_set_handler (NULL, G_LOG_LEVEL_DEBUG, gtk_true, NULL);
+        }
+
 #if defined(HAVE_GETOPT) && !defined(MAEMO)
         int opt;
         while ((opt = getopt(argc, argv, "c:d:m:s:h")) != -1) {
