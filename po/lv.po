@@ -3,14 +3,14 @@
 # Copyright (C) 2007,2008 Alberto Garcia Gonzalez
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
+# Pēteris Caune <cuu508@gmail.com>, 2008, 2010, 2011.
 #
-# Pēteris Caune <cuu508@gmail.com>, 2008, 200, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2010-02-05 12:11+0000\n"
+"PO-Revision-Date: 2011-06-15 20:34+0300\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
 "Language: lv\n"
@@ -370,9 +370,8 @@ msgstr ""
 "Nespēlēt mūziku, kas jau ir dzirdēta. Nepieciešams Last.fm abonements."
 
 #: ../src/uimisc-gtk.c:328
-#, fuzzy
 msgid "Use proxy"
-msgstr "Lietot HTTP starpniekserveri"
+msgstr "Lietot starpniekserveri"
 
 #: ../src/uimisc-gtk.c:329
 msgid "Proxy address:"
@@ -380,7 +379,7 @@ msgstr "Starpniekservera adrese:"
 
 #: ../src/uimisc-gtk.c:330 ../src/uimisc-hildon22.c:346
 msgid "Low bitrate stream"
-msgstr ""
+msgstr "Zema bitu ātruma plūsma"
 
 #: ../src/uimisc-gtk.c:352
 msgid ""
@@ -388,10 +387,13 @@ msgid ""
 "Enable this to use a proxy.\n"
 "\n"
 msgstr ""
+"* Lietot starpniekserveri:\n"
+"Aktivizējiet, lai lietot starpniekserveri.\n"
+"\n"
 
 #: ../src/uimisc-gtk.c:355
 msgid "Use system-wide proxy"
-msgstr ""
+msgstr "Lietot sistēmā definēto starpniekserveri"
 
 #: ../src/uimisc-gtk.c:369
 msgid ""
@@ -399,6 +401,9 @@ msgid ""
 "Use the system-wide proxy configuration.\n"
 "\n"
 msgstr ""
+"* Lietot sistēmā definēto starpniekserveri:\n"
+"Lietot sistēmā definēto starpniekservera konfigurāciju.\n"
+"\n"
 
 #. Connection frame
 #: ../src/uimisc-gtk.c:380 ../src/uimisc-hildon22.c:323
@@ -415,6 +420,13 @@ msgid ""
 "* Low bitrate stream: Try to get a low bitrate stream\n"
 "from the server to save bandwidth."
 msgstr ""
+"* Starpniekservera adrese:\n"
+"[protokols://]lietotājs:parole@resursdators:ports\n"
+"Nepieciešams tikai resursdators (var būt IP adrese).\n"
+"Uzturētie protokoli: http, socks4, socks5.\n"
+"\n"
+"* Zema bitu ātruma plūsma: mēģināt izmantot zema bitu ātruma datu plūsmu lai "
+"taupītu joslas platumu."
 
 #: ../src/uimisc-gtk.c:407 ../src/uimisc.c:399
 msgid "Select download directory"
@@ -662,7 +674,7 @@ msgstr "Last.fm un savietojamu servisu klients"
 
 #: ../src/uimisc.c:172
 msgid "Catalan"
-msgstr ""
+msgstr "Katalāņu"
 
 #: ../src/uimisc.c:173
 msgid "German"
@@ -702,7 +714,7 @@ msgstr "Portugāļu"
 
 #: ../src/uimisc.c:178
 msgid "Russian"
-msgstr ""
+msgstr "Krievu"
 
 #: ../src/uimisc.c:223
 msgid "Confirmation"
@@ -837,7 +849,7 @@ msgstr "Mani iemīļotie ieraksti"
 
 #: ../src/vgl-main-menu-gtk.c:251 ../src/vgl-main-menu-hildon22.c:358
 msgid "My mix"
-msgstr ""
+msgstr "Mans mikss"
 
 #: ../src/vgl-main-menu-gtk.c:252 ../src/vgl-main-menu-hildon22.c:359
 msgid "My playlist"
@@ -865,7 +877,7 @@ msgstr "Iemīļotie ieraksti..."
 
 #: ../src/vgl-main-menu-gtk.c:290
 msgid "Mix..."
-msgstr ""
+msgstr "Mikss..."
 
 #: ../src/vgl-main-menu-gtk.c:291
 msgid "Playlist..."
@@ -937,9 +949,9 @@ msgid "%s's loved tracks"
 msgstr "%s iemīļotie ieraksti"
 
 #: ../src/vgl-main-menu-hildon22.c:236
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "%s kolekcija"
+msgstr "%s mikss"
 
 #: ../src/vgl-main-menu-hildon22.c:238
 #, c-format
