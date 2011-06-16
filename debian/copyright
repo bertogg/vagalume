@@ -1,13 +1,13 @@
-This package was debianized by Alberto Garcia Gonzalez
-<agarcia@igalia.com> on Sun, 28 Oct 2007 19:35:19 +0100.
+This package was debianized by Alberto Garcia <agarcia@igalia.com>
+on Sun, 28 Oct 2007 19:35:19 +0100.
 
 It was downloaded from http://vagalume.igalia.com/
 
-Upstream Author: Alberto Garcia Gonzalez <agarcia@igalia.com>
+Upstream Author: Alberto Garcia <agarcia@igalia.com>
 
 See AUTHORS file for details on other contributors.
 
-Copyright (C) 2007-2010 Igalia, S.L.
+Copyright (C) 2007-2011 Igalia, S.L.
 
 Vagalume is licensed under the GNU General Public License v3:
 
@@ -60,6 +60,6 @@ Vagalume also contains a free MD5 implementation that is:
     L. Peter Deutsch
     ghost@aladdin.com
 
-The Debian packaging is Copyright (C) 2007-2010, Alberto Garcia
-<agarcia@igalia.com> and is licensed under the GPL, see
-`/usr/share/common-licenses/GPL'.
+The Debian packaging is Copyright (C) 2007-2011, Alberto Garcia
+<agarcia@igalia.com> and is licensed under the GPLv3, see
+`/usr/share/common-licenses/GPL-3'.
