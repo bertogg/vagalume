@@ -142,7 +142,8 @@ vgl_tray_icon_init                      (VglTrayIcon *vti)
 
         /* Set icon and tooltip */
         gtk_status_icon_set_from_file (priv->tray_icon, APP_ICON);
-        gtk_status_icon_set_tooltip(priv->tray_icon, TOOLTIP_DEFAULT_STRING);
+        gtk_status_icon_set_tooltip_text (priv->tray_icon,
+                                          TOOLTIP_DEFAULT_STRING);
         gtk_status_icon_set_visible(priv->tray_icon, TRUE);
 
         /* Init libnotify */
@@ -570,7 +571,8 @@ notify_playback_idle                    (gpointer userdata)
                 tooltip_string = g_strdup_printf (TOOLTIP_FORMAT_STRING,
                                                   d->track->title,
                                                   d->track->artist);
-                gtk_status_icon_set_tooltip(priv->tray_icon, tooltip_string);
+                gtk_status_icon_set_tooltip_text (priv->tray_icon,
+                                                  tooltip_string);
 
                 g_free (tooltip_string);
 
@@ -579,8 +581,8 @@ notify_playback_idle                    (gpointer userdata)
                         show_notification (d->vti, d->track);
                 }
         } else {
-                gtk_status_icon_set_tooltip (priv->tray_icon,
-                                             TOOLTIP_DEFAULT_STRING);
+                gtk_status_icon_set_tooltip_text (priv->tray_icon,
+                                                  TOOLTIP_DEFAULT_STRING);
         }
 
         /* Cleanup */
