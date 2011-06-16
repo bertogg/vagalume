@@ -86,10 +86,12 @@ PKG_CHECK_MODULES(libproxy, libproxy-1.0,
 
 # Use libnotify only if it's linked against the same GTK+ version
 if test "$have_libnotify" = "yes"; then
-   if ! $PKG_CONFIG --print-requires libnotify | grep -q ^$GTKMOD ; then
-      echo "Disabling libnotify since it uses a different GTK+ version"
-      have_libnotify="no"
-   fi
+   if $PKG_CONFIG --print-requires libnotify | grep -q '^gtk+-.\.0'; then
+     if ! $PKG_CONFIG --print-requires libnotify | grep -q ^$GTKMOD ; then
+        echo "Disabling libnotify since it uses a different GTK+ version"
+        have_libnotify="no"
+     fi
+  fi
 fi
 
 # D-BUS versions < 1.0 require DBUS_API_SUBJECT_TO_CHANGE
