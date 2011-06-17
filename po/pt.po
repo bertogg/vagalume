@@ -2,13 +2,14 @@
 # Copyright (C) 2007,2008 Alberto Garcia Gonzalez
 # This file is part of Vagalume and is published under the GNU GPLv3
 # See the README file for more details.
-# Marcos Garcia <marcosgg@gmail.com>, 2008, 2009, 2010.
+# Marcos Garcia <marcosgg@gmail.com>, 2008, 2009, 2010, 2011.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2010-11-09 17:48+0100\n"
+"PO-Revision-Date: 2011-06-17 10:21+0200\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese <>\n"
 "Language: pt\n"
@@ -367,9 +368,8 @@ msgstr ""
 "Não toca músicas que já foram ouvidas. Precisa ser assinante do Last.fm."
 
 #: ../src/uimisc-gtk.c:328
-#, fuzzy
 msgid "Use proxy"
-msgstr "Utilizar proxy HTTP"
+msgstr "Utilizar proxy"
 
 #: ../src/uimisc-gtk.c:329
 msgid "Proxy address:"
@@ -377,7 +377,7 @@ msgstr "Endereço do proxy"
 
 #: ../src/uimisc-gtk.c:330 ../src/uimisc-hildon22.c:346
 msgid "Low bitrate stream"
-msgstr ""
+msgstr "Stream de baixo bitrate"
 
 #: ../src/uimisc-gtk.c:352
 msgid ""
@@ -385,10 +385,13 @@ msgid ""
 "Enable this to use a proxy.\n"
 "\n"
 msgstr ""
+"* Utilizar proxy:\n"
+"Ativar isto para a utilização de proxy.\n"
+"\n"
 
 #: ../src/uimisc-gtk.c:355
 msgid "Use system-wide proxy"
-msgstr ""
+msgstr "Utilizar proxy do sistema"
 
 #: ../src/uimisc-gtk.c:369
 msgid ""
@@ -396,6 +399,9 @@ msgid ""
 "Use the system-wide proxy configuration.\n"
 "\n"
 msgstr ""
+"* Utilizar proxy do sistema:\n"
+"Utilizar as definições proxy do sistema.\n"
+"\n"
 
 #. Connection frame
 #: ../src/uimisc-gtk.c:380 ../src/uimisc-hildon22.c:323
@@ -412,6 +418,14 @@ msgid ""
 "* Low bitrate stream: Try to get a low bitrate stream\n"
 "from the server to save bandwidth."
 msgstr ""
+"* Endereço proxy:\n"
+"[protocolo://]utilizador:senha@hostname:port\n"
+"Só se requer o hostname (pode ser um endereço IP).\n"
+"Protocolos suportados: http:, socks4, socks5.\n"
+"\n"
+"* Stream de baixo bitrate: Tente arranjar um stream\n"
+"de baixo bitrate do servidor para poupar largo de\n"
+"banda."
 
 #: ../src/uimisc-gtk.c:407 ../src/uimisc.c:399
 msgid "Select download directory"
@@ -658,7 +672,7 @@ msgstr "Cliente para o Last.fm e serviços compatíveis"
 
 #: ../src/uimisc.c:172
 msgid "Catalan"
-msgstr ""
+msgstr "Catalão"
 
 #: ../src/uimisc.c:173
 msgid "German"
