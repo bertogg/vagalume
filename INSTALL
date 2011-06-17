@@ -26,7 +26,3 @@ In both cases the system should detect automatically if it's compiling
 for Maemo or for a standard computer. Type './configure --help' to see
 a list of configuration options. For Moblin you have to specify the
 platform name by hand (either 'moblin' or 'moblin2', see above).
-
-For rpm-based systems a vagalume.spec file is provided, thanks to
-the kind contribution of Tim Wegener. This file is known to work
-in the Fedora distribution.
