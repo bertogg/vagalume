@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2010-11-05 18:51+0100\n"
+"PO-Revision-Date: 2011-06-28 11:39+0300\n"
 "Last-Translator: Ricardo Mones <mones@debian.org>\n"
 "Language-Team: None\n"
 "Language: es\n"
@@ -368,9 +368,8 @@ msgstr ""
 "fm."
 
 #: ../src/uimisc-gtk.c:328
-#, fuzzy
 msgid "Use proxy"
-msgstr "Usar proxy HTTP"
+msgstr "Usar proxy"
 
 #: ../src/uimisc-gtk.c:329
 msgid "Proxy address:"
@@ -378,7 +377,7 @@ msgstr "Dirección del proxy:"
 
 #: ../src/uimisc-gtk.c:330 ../src/uimisc-hildon22.c:346
 msgid "Low bitrate stream"
-msgstr ""
+msgstr "Flujo de bajo bitrate"
 
 #: ../src/uimisc-gtk.c:352
 msgid ""
@@ -386,10 +385,13 @@ msgid ""
 "Enable this to use a proxy.\n"
 "\n"
 msgstr ""
+"* Usar proxy:\n"
+"Activa esto para usar un proxy.\n"
+"\n"
 
 #: ../src/uimisc-gtk.c:355
 msgid "Use system-wide proxy"
-msgstr ""
+msgstr "Usar el proxy del sistema"
 
 #: ../src/uimisc-gtk.c:369
 msgid ""
@@ -397,6 +399,9 @@ msgid ""
 "Use the system-wide proxy configuration.\n"
 "\n"
 msgstr ""
+"* Usar el proxy del sistema:\n"
+"Usar la configuración de proxy del sistema.\n"
+"\n"
 
 #. Connection frame
 #: ../src/uimisc-gtk.c:380 ../src/uimisc-hildon22.c:323
@@ -410,9 +415,18 @@ msgid ""
 "Only the hostname (can be an IP address) is required.\n"
 "Supported protocols: http, socks4, socks5.\n"
 "\n"
-"* Low bitrate stream: Try to get a low bitrate stream\n"
-"from the server to save bandwidth."
+"* Low bitrate stream:\n"
+"Try to get a low bitrate stream from the server\n"
+"to save bandwidth."
 msgstr ""
+"* Dirección del proxy:\n"
+"[protocolo://]usuario@contraseña@servidor:puerto\n"
+"Tal sólo el servidor (puede ser una dirección IP) es\n"
+"requerido. Protocolos soportados: http, socks4, socks5.\n"
+"\n"
+"* Flujo de bajo bitrate:\n"
+"Intenta obtener un flujo de bitrate bajo del servidor\n"
+"para ahorrar ancho de banda."
 
 #: ../src/uimisc-gtk.c:407 ../src/uimisc.c:399
 msgid "Select download directory"
@@ -663,7 +677,7 @@ msgstr "Cliente de Last.fm y servicios compatibles"
 
 #: ../src/uimisc.c:172
 msgid "Catalan"
-msgstr ""
+msgstr "Catalán"
 
 #: ../src/uimisc.c:173
 msgid "German"
