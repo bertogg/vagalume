@@ -386,8 +386,9 @@ usercfg_add_connection_settings         (usercfgwin *win,
                   "[protocol://]user:password@hostname:port\n"
                   "Only the hostname (can be an IP address) is required.\n"
                   "Supported protocols: http, socks4, socks5.\n\n"
-                  "* Low bitrate stream: Try to get a low bitrate stream\n"
-                  "from the server to save bandwidth."));
+                  "* Low bitrate stream:\n"
+                  "Try to get a low bitrate stream from the server\n"
+                  "to save bandwidth."));
 
         g_object_set_data_full (G_OBJECT (table), "help-message",
                                 g_string_free (help, FALSE), g_free);
