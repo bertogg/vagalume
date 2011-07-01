@@ -725,7 +725,7 @@ lastfm_ws_old_get_album_tags            (const LastfmTrack     *track,
         g_free (url);
         g_free (buffer);
 
-        return FALSE;
+        return found;
 }
 #endif /* VGL_USE_NEW_ALBUM_TAGS_API */
 
