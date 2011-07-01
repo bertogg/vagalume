@@ -64,7 +64,8 @@ main                                    (int    argc,
         textdomain (GETTEXT_PACKAGE);
 
         if (g_getenv ("VAGALUME_DEBUG") == NULL) {
-                g_log_set_handler (NULL, G_LOG_LEVEL_DEBUG, gtk_true, NULL);
+                g_log_set_handler (NULL, G_LOG_LEVEL_DEBUG,
+                                   (GLogFunc) gtk_true, NULL);
         }
 
 #if defined(HAVE_GETOPT) && !defined(MAEMO)
