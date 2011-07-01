@@ -1,19 +1,44 @@
 Source: vagalume
-Section: sound
+Section: user/multimedia
 Priority: optional
 Maintainer: Alberto Garcia <agarcia@igalia.com>
-Build-Depends: debhelper (>= 7), pkg-config, libgtk-3-dev | libgtk2.0-dev, libgstreamer0.10-dev, libcurl4-gnutls-dev, libxml2-dev, libnotify-dev, libdbus-glib-1-dev, libgstreamer-plugins-base0.10-dev, libproxy-dev, intltool, cdbs
-Standards-Version: 3.9.2
-Homepage: http://vagalume.igalia.com/
+Build-Depends: debhelper (>= 4), pkg-config, libgstreamer0.10-dev, libcurl3-dev, libxml2-dev, libosso-dev, libhildonfm2-dev, libconic0-dev, libhildondesktop-dev, libhildonwm-dev, osso-af-settings, intltool, cdbs
+Standards-Version: 3.7.3
+XB-Homepage: http://vagalume.igalia.com/
+XB-Bugtracker: https://bugs.maemo.org/enter_bug.cgi?product=Vagalume
 
 Package: vagalume
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, librsvg2-common, gstreamer0.10-plugins-base, gstreamer0.10-gconf | gstreamer0.10-plugins-good (<= 0.10.28-2), gstreamer0.10-alsa | gstreamer0.10-plugins-good, gstreamer0.10-plugins-ugly | gstreamer0.10-fluendo-mp3
-Recommends: dbus
-Description: GTK+-based client for Last.fm and compatible radio services
+Architecture: armel
+Depends: ${shlibs:Depends}
+Description: Client for Last.fm and compatible radio services
  Vagalume is a Last.fm client designed for the GNOME desktop
  environment. It's small and provides the basic Last.fm features, such
  as scrobbling, tags, recommendations, etc.
  .
  Vagalume also supports other Last.fm-compatible services such as
  Libre.fm
+XB-Maemo-Display-Name: Vagalume
+XB-Maemo-Icon-26:
+ iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAAB3RJ
+ TUUH2QwKExUn33ekdAAABItJREFUSImdlktsVFUYx3/33HMvM9PHlOkLtIS0oA20lIBogQasiUZQ
+ F8YNLhRxY0w00bhygzEhLowbEhcsUYSQqAmaKBFDkPqIWokJgrQWKKFA22ln2k4fM52Ze87nolNo
+ oW3a/pNvdb97/o/z3XOPc62pqSru6mOR2MrdVrnhSQeygODgI4QBD1AsHcaYTDo5dL7S4TXdi3Os
+ viL27ER8gDvGcsN1GVAKK1CBUGsC1lihGFk6mdZhW12191o88bkuisV25/v6uZPL0+55/OMo+nEQ
+ ByoEGgUCY6gzAZGlEuVy0NdPqLy8VYsiPJHP060Ul1zNVaVIK4UAoyIIELOWykDwAWc5ZK4KayvC
+ uAiDymFQKdzSEvbs2sGqVVXE+wboaPuVwWSWCSBq7dLjcxysCNqKYERAhOJoKQfeeZNotBSAjRvq
+ eWzLJro/PowkJzEFh0uCCFYEZa1FWUu5CWhpab5LMo3SlWWsbW3BMwZrLWYZZa2dchQxhpogIFVV
+ MaeoaGUlIWMQWLqjQnRKANdaYsZQ0ts3Z6/f149biHg5JYAy1oIInjHETp/BGUnNIsmnRgl+PLus
+ yIy1U2TWoqaHwYrgJZLEDh7CP3OWfM9tALq+PMXQ2DiTMK/ivAgZEUaBFDAB5GY8vzsMMxWQSBD5
+ 7DjBJ4fBWqKbG4grl3GBYA7FeWsZE6HH1fzr+VxesYIurYkrxYQI+bvDUFCKzN7mokSCsSudrN6y
+ mZvFRSRzOUImwJvRI0BGKXo8n27fJ6E9BAhjqc7nqctmqRLBAmo6w/vLNwZ7/hdczyOybSu9ymWc
+ 2a5yIiQchxtaE3c12hhKgoDACn1a0++6ZHAwImgpZHi/IwWE2//CZPaztmU7F9t+ozKfwzcGv9Az
+ 6TgMuC4Jz6NIKba2NFOypob0SIqe3//ESWewIogIenqPsPbBsZ5IM3aujdjze3DrH6Hn8hUiQUCZ
+ CVDAmKNIKhejFDvfe5vi9bUArADKnnuG9NHjqJ/aCKydPzpTODHcb75DjKF+79P0+h43fZ9hx2EU
+ SGqXYa1Z27yN4vW12K9P4e3bj3r/IPT1U/TG66gdzRgRlCzwoVkR/ESC7LmfqW7cSFljA9dDYTrC
+ Ea6Gw3SHQowql9qdT2DHxpCvTmGyWejsQn1wCAYGsQdeQUQWdmSsBWOQL05gx8fZ9vJL5Hyf7lCI
+ /8IR4tqjtChC2bo6zIW/cTKZe+fb8Ajy6RHwvClHdgFH06708Ai5YycJV1fR+uo+osYQMoaKbJam
+ x7eAUshvf/DAWhcvIR2dM34T8wzDLJz+gfzmTZS3bGeXWIa+/Z7IQ6uJvfgCtucW0n5hap37IKfP
+ YEVwTjZtksj1biQIFiYC8Dz8d99CP/XkvYVGUmQ//AjbdXXOVxzPI11Xi3OisUHCiyUqQNU/ituw
+ AYaGCdovIOn0vL2O1mTW1aGNsRlx3bDN5RZNZDs6CTo6FyfKdQmMyejhwURbtObhPdlbt2EJrhYF
+ rfHW1JAaTJ5zjhQXV2X80NFoeXmr0mrJN6qFYAObTiWT58tykwf+B5xjg+opaIC2AAAAAElFTkSu
+ QmCC
