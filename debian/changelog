@@ -1,10 +1,12 @@
-vagalume (0.8.5-1) unstable; urgency=low
+vagalume (0.8.5-1bora1) unstable; urgency=low
 
   * New upstream release.
+  * debian/copyright: update copyright years and use 'Alberto Garcia' in
+    all cases.
 
- -- Alberto Garcia <agarcia@igalia.com>  Thu, 30 Jun 2011 21:58:10 +0300
+ -- Alberto Garcia <agarcia@igalia.com>  Fri, 01 Jul 2011 16:05:27 +0300
 
-vagalume (0.8.4-1) unstable; urgency=low
+vagalume (0.8.4-1bora1) unstable; urgency=low
 
   * New upstream release
   * Updated watch file
