@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2011-06-28 11:32+0300\n"
+"POT-Creation-Date: 2011-11-28 08:32+0100\n"
+"PO-Revision-Date: 2011-11-28 08:34+0100\n"
 "Last-Translator: Julien Duponchelle <julien@duponchelle.info>\n"
 "Language-Team:  <fr@li.org>\n"
 "Language: \n"
@@ -23,6 +23,10 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 
 #: ../data/vagalume.desktop.in.in.h:1
+msgid "Last.fm Client"
+msgstr "Client pour Last.fm"
+
+#: ../data/vagalume.desktop.in.in.h:2
 msgid "Vagalume Last.fm Client"
 msgstr "Vagalume un client pour Last.fm"
 

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2011-06-28 11:33+0300\n"
+"POT-Creation-Date: 2011-11-28 08:32+0100\n"
+"PO-Revision-Date: 2011-11-28 08:34+0100\n"
 "Last-Translator: Andrea Grandi <a.grandi@gmail.com>\n"
 "Language-Team: Italian <>\n"
 "Language: it\n"
@@ -20,6 +20,10 @@ msgstr ""
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../data/vagalume.desktop.in.in.h:1
+msgid "Last.fm Client"
+msgstr "Client Last.fm"
+
+#: ../data/vagalume.desktop.in.in.h:2
 msgid "Vagalume Last.fm Client"
 msgstr "Vagalume Client Last.fm"
 

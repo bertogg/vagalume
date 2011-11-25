@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2011-06-28 11:39+0300\n"
+"POT-Creation-Date: 2011-11-28 08:32+0100\n"
+"PO-Revision-Date: 2011-11-28 08:33+0100\n"
 "Last-Translator: Ricardo Mones <mones@debian.org>\n"
 "Language-Team: None\n"
 "Language: es\n"
@@ -18,6 +18,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../data/vagalume.desktop.in.in.h:1
+msgid "Last.fm Client"
+msgstr "Cliente de Last.fm"
+
+#: ../data/vagalume.desktop.in.in.h:2
 msgid "Vagalume Last.fm Client"
 msgstr "Cliente de Last.fm Vagalume"
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.5.1-1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-28 11:42+0300\n"
-"PO-Revision-Date: 2009-10-15 20:30+0200\n"
+"POT-Creation-Date: 2011-11-28 08:32+0100\n"
+"PO-Revision-Date: 2011-11-28 08:35+0100\n"
 "Last-Translator: Rodrigo Flores <mail@rodrigoflores.org>\n"
 "Language-Team: Rodrigo Flores <mail@rodrigoflores.org>\n"
 "Language: \n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../data/vagalume.desktop.in.in.h:1
+msgid "Last.fm Client"
+msgstr "Cliente do Last.fm"
+
+#: ../data/vagalume.desktop.in.in.h:2
 msgid "Vagalume Last.fm Client"
 msgstr "Cliente do Last.fm Vagalume"
 

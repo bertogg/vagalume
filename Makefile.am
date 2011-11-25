@@ -74,12 +74,6 @@ data/vagalume.desktop.in: Makefile data/vagalume.desktop.in.in
 	if test -f "data/vagalume.desktop.$(PLATFORM)" ; then \
 	   cat "data/vagalume.desktop.$(PLATFORM)" >> data/vagalume.desktop.in ; \
 	fi
-	if test "x$(PLATFORM)" = "xmaemo" -a "x$(PLATFORMVERS)" = "x5"; then \
-	   rm -f data/vagalume.desktop.tmp ; \
-	   mv data/vagalume.desktop.in data/vagalume.desktop.tmp ; \
-	   sed s/^_Name=.*/Name=Vagalume/ data/vagalume.desktop.tmp > \
-		data/vagalume.desktop.in ; \
-	fi
 
 data/servers.xml: Makefile data/servers.xml.in
 	rm -f data/servers.xml

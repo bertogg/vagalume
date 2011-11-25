@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2011-06-28 11:30+0300\n"
+"POT-Creation-Date: 2011-11-28 08:32+0100\n"
+"PO-Revision-Date: 2011-11-28 08:33+0100\n"
 "Last-Translator: Janne Mäkinen <janne.makinen@surffi.fi>\n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -19,6 +19,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../data/vagalume.desktop.in.in.h:1
+msgid "Last.fm Client"
+msgstr "Last.fm Asiakasohjelma"
+
+#: ../data/vagalume.desktop.in.in.h:2
 msgid "Vagalume Last.fm Client"
 msgstr "Vagalume Last.fm Asiakasohjelma"
 

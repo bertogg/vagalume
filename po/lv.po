@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-14 12:01+0300\n"
-"PO-Revision-Date: 2011-06-28 11:34+0300\n"
+"POT-Creation-Date: 2011-11-28 08:32+0100\n"
+"PO-Revision-Date: 2011-11-28 08:35+0100\n"
 "Last-Translator: Pēteris Caune <cuu508@gmail.com>\n"
 "Language-Team: Latvian <en@li.org>\n"
 "Language: lv\n"
@@ -20,6 +20,10 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 
 #: ../data/vagalume.desktop.in.in.h:1
+msgid "Last.fm Client"
+msgstr "Last.fm klients"
+
+#: ../data/vagalume.desktop.in.in.h:2
 msgid "Vagalume Last.fm Client"
 msgstr "Vagalume Last.fm klients"
 
