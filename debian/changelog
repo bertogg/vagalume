@@ -1,3 +1,9 @@
+vagalume (0.8.5-1gregale2) unstable; urgency=low
+
+  * Fix streaming from libre.fm after recent changes in their service.
+
+ -- Alberto Garcia <agarcia@igalia.com>  Tue, 27 Dec 2011 19:09:56 +0100
+
 vagalume (0.8.5-1gregale1) unstable; urgency=low
 
   * New upstream release.
