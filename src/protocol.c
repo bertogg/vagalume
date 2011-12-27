@@ -265,8 +265,8 @@ lastfm_parse_track                      (xmlDoc     *doc,
         } else if (!track->artist || track->artist[0] == '\0') {
                 g_debug("Found track with no artist, discarding it");
         } else {
-                const char *oggparam = "streamencoding=ogg2";
-                const char *mp3param = "streamencoding=mp31";
+                const char *oggparam = "ogg2";
+                const char *mp3param = "mp31";
                 if (track->album_artist == NULL ||
                     !strcmp (track->artist, track->album_artist)) {
                         /* Don't waste memory */
