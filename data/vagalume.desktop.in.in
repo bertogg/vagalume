@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Categories=Audio;AudioVideo;GNOME;GTK;Application;Player;
+Categories=Audio;AudioVideo;GNOME;GTK;Player;
 Name=Vagalume
 _GenericName=Last.fm Client
 _X-GNOME-FullName=Vagalume Last.fm Client
