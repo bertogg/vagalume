@@ -53,19 +53,11 @@ enum {
 struct _VglTrayIconPrivate
 {
         GtkStatusIcon *tray_icon;
-
         gboolean now_playing;
-
         GtkWidget *ctxt_menu;
-
         GtkWidget *menu_item[N_MENU_ITEMS];
-        gulong menu_handler_id[N_MENU_ITEMS];
-
         gboolean show_notifications;
         NotifyNotification *notification;
-
-        gulong tray_icon_clicked_handler_id;
-        gulong tray_icon_popup_menu_handler_id;
 };
 
 /* Private */
@@ -122,7 +114,6 @@ vgl_tray_icon_init                      (VglTrayIcon *vti)
 
         for (i = 0; i < N_MENU_ITEMS; i++) {
                 priv->menu_item[i] = NULL;
-                priv->menu_handler_id[i] = 0;
         }
 
         priv->notification = NULL;
@@ -132,13 +123,10 @@ vgl_tray_icon_init                      (VglTrayIcon *vti)
         ctxt_menu_create (vti);
 
         /* Connect signals */
-        priv->tray_icon_clicked_handler_id =
-                g_signal_connect(G_OBJECT(priv->tray_icon), "activate",
-                                 G_CALLBACK(tray_icon_clicked), vti);
-        priv->tray_icon_popup_menu_handler_id =
-                g_signal_connect(G_OBJECT(priv->tray_icon),
-                                 "popup-menu",
-                                 G_CALLBACK(tray_icon_popup_menu), vti);
+        g_signal_connect (priv->tray_icon, "activate",
+                          G_CALLBACK (tray_icon_clicked), vti);
+        g_signal_connect (priv->tray_icon, "popup-menu",
+                          G_CALLBACK (tray_icon_popup_menu), vti);
 
         /* Set icon and tooltip */
         gtk_status_icon_set_from_file (priv->tray_icon, APP_ICON);
@@ -156,22 +144,11 @@ vgl_tray_icon_init                      (VglTrayIcon *vti)
 static void
 vgl_tray_icon_finalize                  (GObject* object)
 {
-        int i;
         VglTrayIcon *vti = VGL_TRAY_ICON (object);
         VglTrayIconPrivate *priv = vti->priv;
 
         /* Cleanup libnotify */
         cleanup_libnotify (vti);
-
-        /* Disconnect handlers */
-        for (i = 0; i < N_MENU_ITEMS; i++) {
-                g_signal_handler_disconnect (priv->menu_item[i],
-                                             priv->menu_handler_id[i]);
-        }
-        g_signal_handler_disconnect (priv->tray_icon,
-                                     priv->tray_icon_clicked_handler_id);
-        g_signal_handler_disconnect (priv->tray_icon,
-                                     priv->tray_icon_popup_menu_handler_id);
 
         /* Destroy local widgets */
         if (priv->ctxt_menu) {
@@ -270,39 +247,28 @@ ctxt_menu_create                        (VglTrayIcon *vti)
         gtk_menu_shell_append (ctxt_menu, priv->menu_item[QUIT_ITEM]);
 
         /* Connect signals */
-        priv->menu_handler_id[SETTINGS_ITEM] =
-                g_signal_connect(priv->menu_item[SETTINGS_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[ABOUT_ITEM] =
-                g_signal_connect(priv->menu_item[ABOUT_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[RECOMMEND_ITEM] =
-                g_signal_connect(priv->menu_item[RECOMMEND_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[TAG_ITEM] =
-                g_signal_connect(priv->menu_item[TAG_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[ADD_TO_PLS_ITEM] =
-                g_signal_connect(priv->menu_item[ADD_TO_PLS_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[LOVE_ITEM] =
-                g_signal_connect(priv->menu_item[LOVE_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[BAN_ITEM] =
-                g_signal_connect(priv->menu_item[BAN_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[PLAY_ITEM] =
-                g_signal_connect(priv->menu_item[PLAY_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[STOP_ITEM] =
-                g_signal_connect(priv->menu_item[STOP_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[NEXT_ITEM] =
-                g_signal_connect(priv->menu_item[NEXT_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
-        priv->menu_handler_id[QUIT_ITEM] =
-                g_signal_connect(priv->menu_item[QUIT_ITEM], "activate",
-                                 G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[SETTINGS_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[ABOUT_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[RECOMMEND_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[TAG_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[ADD_TO_PLS_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[LOVE_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[BAN_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[PLAY_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[STOP_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[NEXT_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
+        g_signal_connect (priv->menu_item[QUIT_ITEM], "activate",
+                          G_CALLBACK (ctxt_menu_item_activated), vti);
 
         /* Show widgets */
         gtk_widget_show_all (priv->ctxt_menu);
