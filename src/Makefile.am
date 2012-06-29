@@ -40,6 +40,7 @@ vagalume_SOURCES = \
 
 BUILT_SOURCES = marshal.c marshal.h
 nodist_vagalume_SOURCES = marshal.c marshal.h
+CLEANFILES = marshal.c marshal.h
 EXTRA_DIST = marshal.list
 
 marshal.h: marshal.list

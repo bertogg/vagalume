@@ -25,6 +25,11 @@ EXTRA_DIST = \
 	vagalume.1 \
 	vagalumectl.1
 
+CLEANFILES = data/servers.xml \
+	data/vagalume.desktop \
+	data/vagalume.desktop.in \
+	data/vagalume.service
+
 SUBDIRS = src po
 manpages = vagalume.1
 
