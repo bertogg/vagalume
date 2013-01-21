@@ -63,7 +63,8 @@ main                                    (int    argc,
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
         textdomain (GETTEXT_PACKAGE);
 
-        if (g_getenv ("VAGALUME_DEBUG") == NULL) {
+        if (g_getenv ("VAGALUME_DEBUG") == NULL &&
+            g_getenv ("G_MESSAGES_DEBUG") == NULL) {
                 g_log_set_handler (NULL, G_LOG_LEVEL_DEBUG,
                                    (GLogFunc) gtk_true, NULL);
         }
