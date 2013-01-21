@@ -409,15 +409,16 @@ lastfm_ws_get_session                   (VglServer  *srv,
         return retvalue;
 }
 
-gboolean
+LastfmErrorCode
 lastfm_ws_radio_tune                    (LastfmWsSession *session,
                                          const char      *radio_url,
                                          const char      *lang)
 {
         xmlDoc *doc;
         const xmlNode *node;
+        gint error_code;
 
-        g_return_val_if_fail (session && radio_url, FALSE);
+        g_return_val_if_fail (session && radio_url, LASTFM_NOT_FOUND);
 
         /* If this is a custom URL, store the playlist for later */
         if (session->v1sess) {
@@ -428,7 +429,7 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
                         lastfm_pls_destroy (session->v1sess->custom_pls);
                         session->v1sess->custom_pls = pls;
                         g_mutex_unlock (session->mutex);
-                        return (pls != NULL);
+                        return (pls != NULL) ? LASTFM_OK : LASTFM_NOT_FOUND;
                 } else if (session->v1sess->custom_pls) {
                         g_mutex_lock (session->mutex);
                         lastfm_pls_destroy (session->v1sess->custom_pls);
@@ -436,16 +437,19 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
                         g_mutex_unlock (session->mutex);
                 }
                 if (session->srv->old_str_api) {
+                        gboolean set;
                         g_free (session->radio_name);
                         session->radio_name = NULL;
-                        return lastfm_set_radio (session->v1sess,
-                                                 radio_url,
-                                                 &(session->radio_name));
+                        set = lastfm_set_radio (session->v1sess,
+                                                radio_url,
+                                                &(session->radio_name));
+                        return set ? LASTFM_OK : LASTFM_NOT_FOUND;
                 }
         }
 
         lastfm_ws_http_request (session->srv, "radio.tune",
-                                HTTP_REQUEST_POST, TRUE, NULL, &doc, &node,
+                                HTTP_REQUEST_POST, TRUE,
+                                &error_code, &doc, &node,
                                 "sk", session->key,
                                 "station", radio_url,
                                 lang ? "lang" : NULL, lang,
@@ -461,7 +465,6 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
                 xml_get_string (doc, node, "name", &(session->radio_name));
                 g_mutex_unlock (session->mutex);
                 xmlFreeDoc (doc);
-                return TRUE;
         } else {
                 /* Fall back to the old streaming API if the new one
                  * doesn't work */
@@ -469,8 +472,9 @@ lastfm_ws_radio_tune                    (LastfmWsSession *session,
                         session->srv->old_str_api = TRUE;
                         return lastfm_ws_radio_tune (session, radio_url, lang);
                 }
-                return FALSE;
         }
+
+        return error_code;
 }
 
 LastfmPls *

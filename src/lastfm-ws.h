@@ -19,6 +19,12 @@
 
 G_BEGIN_DECLS
 
+typedef enum {
+        LASTFM_OK,
+        LASTFM_NOT_FOUND = 25,
+        LASTFM_GEO_RESTRICTED = 28
+} LastfmErrorCode;
+
 /* Opaque type that represents a Last.fm Web Services session */
 typedef struct _LastfmWsSession         LastfmWsSession;
 
@@ -39,7 +45,7 @@ lastfm_ws_get_session                   (VglServer  *srv,
                                          const char *pass,
                                          LastfmErr  *err);
 
-gboolean
+LastfmErrorCode
 lastfm_ws_radio_tune                    (LastfmWsSession *session,
                                          const char      *radio_url,
                                          const char      *lang);

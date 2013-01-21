@@ -115,7 +115,7 @@ typedef struct {
 typedef struct {
         LastfmWsSession *session;
         char *url;
-        gboolean radio_set;
+        LastfmErrorCode error_code;
 } PlayRadioByUrlData;
 
 /*
@@ -1437,19 +1437,33 @@ static gboolean
 controller_play_radio_by_url_idle       (gpointer data)
 {
         PlayRadioByUrlData *d = data;
-        if (d->radio_set) {
+        const char *error_msg = NULL;
+
+        switch (d->error_code) {
+        case LASTFM_OK:
                 g_free (current_radio_url);
                 current_radio_url = d->url;
                 lastfm_pls_clear (playlist);
                 controller_skip_track ();
-        } else {
+                break;
+        case LASTFM_GEO_RESTRICTED:
+                error_msg = _("This radio is not available\n"
+                              "in your country.");
+                break;
+        default:
+                error_msg = _("Invalid radio URL. Either\n"
+                              "this radio doesn't exist\n"
+                              "or it is only available\n"
+                              "for Last.fm subscribers");
+                break;
+        }
+
+        if (error_msg != NULL) {
                 controller_stop_playing ();
-                controller_show_info (_("Invalid radio URL. Either\n"
-                                        "this radio doesn't exist\n"
-                                        "or it is only available\n"
-                                        "for Last.fm subscribers"));
+                controller_show_info (error_msg);
                 g_free (d->url);
         }
+
         vgl_object_unref (d->session);
         g_slice_free (PlayRadioByUrlData, d);
         return FALSE;
@@ -1468,8 +1482,8 @@ static gpointer
 controller_play_radio_by_url_thread     (gpointer data)
 {
         PlayRadioByUrlData *d = data;
-        d->radio_set = lastfm_ws_radio_tune (d->session, d->url,
-                                             get_language_code ());
+        d->error_code = lastfm_ws_radio_tune (d->session, d->url,
+                                              get_language_code ());
         gdk_threads_add_idle (controller_play_radio_by_url_idle, d);
         return NULL;
 }
