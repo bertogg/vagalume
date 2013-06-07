@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Vagalume 0.5.1-1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-28 08:32+0100\n"
-"PO-Revision-Date: 2011-11-28 08:35+0100\n"
+"PO-Revision-Date: 2013-06-07 19:12+0200\n"
 "Last-Translator: Rodrigo Flores <mail@rodrigoflores.org>\n"
 "Language-Team: Rodrigo Flores <mail@rodrigoflores.org>\n"
 "Language: \n"
@@ -191,9 +191,8 @@ msgid "Play this user's radio"
 msgstr "Reproduzir a rádio deste usuário"
 
 #: ../src/controller.c:1684
-#, fuzzy
 msgid "Enter a tag"
-msgstr "Digite a etiqueta"
+msgstr "Digite uma etiqueta"
 
 #: ../src/controller.c:1715
 msgid "Enter group"
@@ -373,9 +372,8 @@ msgstr ""
 "Não reproduz a música que você já ouviu. Requer uma conta do Last.fm."
 
 #: ../src/uimisc-gtk.c:328
-#, fuzzy
 msgid "Use proxy"
-msgstr "Utilizar proxy HTTP"
+msgstr "Utilizar proxy"
 
 #: ../src/uimisc-gtk.c:329
 msgid "Proxy address:"
@@ -611,53 +609,44 @@ msgid "Popular tags for this"
 msgstr "Etiquetas populares para esta"
 
 #: ../src/uimisc-hildon22.c:278
-#, fuzzy
 msgid "Username"
-msgstr "Nome de usuário:"
+msgstr "Nome de usuário"
 
 #: ../src/uimisc-hildon22.c:289
-#, fuzzy
 msgid "Password"
-msgstr "Senha:"
+msgstr "Senha"
 
 #: ../src/uimisc-hildon22.c:306
-#, fuzzy
 msgid "Service"
-msgstr "Serviço:"
+msgstr "Serviço"
 
 #: ../src/uimisc-hildon22.c:314
-#, fuzzy
 msgid "Enable scrobbling"
-msgstr "Habilitar scrobbling:"
+msgstr "Habilitar scrobbling"
 
 #: ../src/uimisc-hildon22.c:319
-#, fuzzy
 msgid "Discovery mode"
-msgstr "Modo de descoberta:"
+msgstr "Modo de descoberta"
 
 #: ../src/uimisc-hildon22.c:330
 msgid "Use HTTP proxy"
 msgstr "Utilizar proxy HTTP"
 
 #: ../src/uimisc-hildon22.c:335
-#, fuzzy
 msgid "Proxy address"
-msgstr "Endereço do Proxy:"
+msgstr "Endereço do Proxy"
 
 #: ../src/uimisc-hildon22.c:358
-#, fuzzy
 msgid "Download directory"
-msgstr "Escolher o diretório de download"
+msgstr "Diretório de download"
 
 #: ../src/uimisc-hildon22.c:393
-#, fuzzy
 msgid "IM message template"
-msgstr "Modelo de mensagem do MI:"
+msgstr "Modelo de mensagem do MI"
 
 #: ../src/uimisc-hildon22.c:411
-#, fuzzy
 msgid "Disable confirmation dialogs"
-msgstr "Desabilitar diálogos de confirmação:"
+msgstr "Desabilitar diálogos de confirmação"
 
 #: ../src/uimisc-hildon22.c:911 ../src/uimisc-hildon22.c:939
 #, c-format
@@ -666,7 +655,6 @@ msgstr ""
 
 #. Text entry
 #: ../src/uimisc-hildon22.c:976
-#, fuzzy
 msgid "Enter a comma-separated list of tags"
 msgstr ""
 "Digite uma lista de etiquetas\n"
@@ -897,7 +885,6 @@ msgid "_Actions"
 msgstr "_Ações"
 
 #: ../src/vgl-main-menu-gtk.c:332 ../src/vgl-main-menu-hildon22.c:428
-#, fuzzy
 msgid "Stop after..."
 msgstr "Parar depois ..."
 
@@ -935,58 +922,55 @@ msgid "_Help"
 msgstr "A_juda"
 
 #: ../src/vgl-main-menu-hildon22.c:228 ../src/vgl-main-menu-hildon22.c:350
-#, fuzzy
 msgid "Select radio"
-msgstr "Etiqueta de rádio do usuário"
+msgstr "Escolher rádio"
 
 #: ../src/vgl-main-menu-hildon22.c:230
-#, fuzzy, c-format
+#, c-format
 msgid "%s's library"
-msgstr "Minha biblioteca"
+msgstr "A biblioteca de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:232
-#, fuzzy, c-format
+#, c-format
 msgid "%s's neighbours"
-msgstr "Meus vizinhos"
+msgstr "Os vizinhos de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s's loved tracks"
-msgstr "Minhas faixas preferidas"
+msgstr "As faixas preferidas de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:236
-#, fuzzy, c-format
+#, c-format
 msgid "%s's mix"
-msgstr "Minha biblioteca"
+msgstr "O mix de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:238
-#, fuzzy, c-format
+#, c-format
 msgid "%s's playlist"
-msgstr "Minha lista de reprodução"
+msgstr "A lista de reprodução de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:240
-#, fuzzy, c-format
+#, c-format
 msgid "%s's recommendations"
-msgstr "Minhas recomendações"
+msgstr "As recomendações de %s"
 
 #: ../src/vgl-main-menu-hildon22.c:242
-#, fuzzy, c-format
+#, c-format
 msgid "%s's music tagged..."
-msgstr "Minhas músicas etiquetadas..."
+msgstr "As músicas etiquetadas de %s..."
 
 #: ../src/vgl-main-menu-hildon22.c:269
-#, fuzzy
 msgid "Type any user name"
-msgstr "Digite o nome de usuário"
+msgstr "Digite um nome de usuário"
 
 #: ../src/vgl-main-menu-hildon22.c:413
 msgid "Import servers file"
 msgstr ""
 
 #: ../src/vgl-main-menu-hildon22.c:418
-#, fuzzy
 msgid "Play radio"
-msgstr "Reproduzir _Rádio"
+msgstr "Reproduzir rádio"
 
 #: ../src/vgl-main-menu-hildon22.c:423
 msgid "People"

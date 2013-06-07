@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-28 08:32+0100\n"
-"PO-Revision-Date: 2011-11-28 08:33+0100\n"
+"PO-Revision-Date: 2013-06-07 19:01+0200\n"
 "Last-Translator: Carles Muñoz Gorriz <carlesmu@internautas.org>\n"
 "Language-Team: Catalan\n"
 "Language: ca\n"
@@ -377,9 +377,8 @@ msgstr ""
 "fm."
 
 #: ../src/uimisc-gtk.c:328
-#, fuzzy
 msgid "Use proxy"
-msgstr "Empra un servidor intermediari HTTP"
+msgstr "Empra un servidor intermediari"
 
 #: ../src/uimisc-gtk.c:329
 msgid "Proxy address:"
