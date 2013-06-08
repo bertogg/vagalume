@@ -2,7 +2,7 @@
  * scrobbler.c -- Audioscrobbler Realtime Submission Protocol
  *
  * Copyright (C) 2007-2009 Igalia, S.L.
- * Authors: Alberto Garcia <agarcia@igalia.com>
+ * Authors: Alberto Garcia <berto@igalia.com>
  *
  * Version 1.2 implemented, see here:
  * http://www.audioscrobbler.net/development/protocol/

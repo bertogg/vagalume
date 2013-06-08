@@ -1,7 +1,7 @@
 Source: vagalume
 Section: user/multimedia
 Priority: optional
-Maintainer: Alberto Garcia <agarcia@igalia.com>
+Maintainer: Alberto Garcia <berto@igalia.com>
 Build-Depends: debhelper (>= 4), pkg-config, libgstreamer0.10-dev, libcurl4-openssl-dev, libxml2-dev, libosso-dev, libhildonfm2-dev, libconic0-dev, libhildon1-dev, osso-af-settings, intltool, cdbs
 Standards-Version: 3.7.3
 XB-Homepage: http://vagalume.igalia.com/

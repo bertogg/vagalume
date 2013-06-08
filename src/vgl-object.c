@@ -2,7 +2,7 @@
  * vgl-object.c -- Very minimalist implementation of ref-counted objects
  *
  * Copyright (C) 2009, 2010 Igalia, S.L.
- * Authors: Alberto Garcia <agarcia@igalia.com>
+ * Authors: Alberto Garcia <berto@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
  * See the README file for more details.

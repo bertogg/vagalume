@@ -2,7 +2,7 @@
  * audio.c -- All the audio related stuff
  *
  * Copyright (C) 2007-2010 Igalia, S.L.
- * Authors: Alberto Garcia <agarcia@igalia.com>
+ * Authors: Alberto Garcia <berto@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3
  * See the README file for more details.

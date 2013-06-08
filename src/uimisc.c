@@ -2,7 +2,7 @@
  * uimisc.c -- Misc UI-related functions
  *
  * Copyright (C) 2007-2011 Igalia, S.L.
- * Authors: Alberto Garcia <agarcia@igalia.com>
+ * Authors: Alberto Garcia <berto@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
  * See the README file for more details.
@@ -45,7 +45,7 @@ typedef struct {
 } StopAfterDialog;
 
 static const char *authors[] = {
-        "Alberto Garcia Gonzalez\n<agarcia@igalia.com>\n",
+        "Alberto Garcia Gonzalez\n<berto@igalia.com>\n",
         "Mario Sanchez Prada\n<msanchez@igalia.com>",
         NULL
 };
@@ -55,7 +55,7 @@ static const char *artists[] = {
 };
 
 static const char appdescr[] = N_("Client for Last.fm and compatible services");
-static const char copyright[] = "(c) 2007-2011 Igalia, S.L.";
+static const char copyright[] = "(c) 2007-2013 Igalia, S.L.";
 static const char website[] = "http://vagalume.igalia.com/";
 static const char license[] =
 "Vagalume is free software: you can redistribute\n"

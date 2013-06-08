@@ -1,9 +1,9 @@
 /*
  * vgl-tray-icon.c -- Freedesktop tray icon
  *
- * Copyright (C) 2007-2009, 2011 Igalia, S.L.
+ * Copyright (C) 2007-2009, 2011-2012 Igalia, S.L.
  * Authors: Mario Sanchez Prada <msanchez@igalia.com>
- *          Alberto Garcia <agarcia@igalia.com>
+ *          Alberto Garcia <berto@igalia.com>
  *
  * This file is part of Vagalume and is published under the GNU GPLv3.
  * See the README file for more details.
