@@ -20,7 +20,6 @@ EXTRA_DIST = \
 	data/vagalume.desktop.maemo \
 	data/vagalume.desktop.moblin \
 	data/vagalume.service.in \
-	mkinstalldirs \
 	scripts/vagalumectl \
 	vagalume.1 \
 	vagalumectl.1
@@ -91,7 +90,7 @@ data/servers.xml: Makefile data/servers.xml.in
 
 install-exec-hook:
 	if test "$(PLATFORM)" = "maemo"; then \
-	   $(mkinstalldirs) "$(DESTDIR)/@CLEAR_DEVICE_SCRIPTS_DIR@" ; \
+	   $(MKDIR_P) "$(DESTDIR)/@CLEAR_DEVICE_SCRIPTS_DIR@" ; \
 	   $(LN_S) "@RESTORE_SETTINGS_SCRIPTS_DIR@/vagalume-rfs.sh" \
 	      "$(DESTDIR)/@CLEAR_DEVICE_SCRIPTS_DIR@/vagalume-cud.sh" ; \
 	   if test "x$(PLATFORMVERS)" = "x5"; then \
