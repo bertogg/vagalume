@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-28 08:32+0100\n"
+"POT-Creation-Date: 2013-06-07 18:58+0200\n"
 "PO-Revision-Date: 2013-06-07 19:01+0200\n"
 "Last-Translator: Carles Muñoz Gorriz <carlesmu@internautas.org>\n"
 "Language-Team: Catalan\n"
@@ -169,7 +169,13 @@ msgstr "S'ha produït un error al afegir la peça a la llista de reproducció"
 msgid "Really add this track to the playlist?"
 msgstr "Voleu afegir aquest peça a la llista de reproducció?"
 
-#: ../src/controller.c:1447
+#: ../src/controller.c:1450
+msgid ""
+"This radio is not available\n"
+"in your country."
+msgstr ""
+
+#: ../src/controller.c:1454
 msgid ""
 "Invalid radio URL. Either\n"
 "this radio doesn't exist\n"
@@ -181,71 +187,71 @@ msgstr ""
 "o només està disponible per\n"
 "subscriptors de Last.fm"
 
-#: ../src/controller.c:1543 ../src/controller.c:1684 ../src/controller.c:1738
+#: ../src/controller.c:1557 ../src/controller.c:1698 ../src/controller.c:1752
 msgid "Enter tag"
 msgstr "Introduïu etiqueta"
 
-#: ../src/controller.c:1543
+#: ../src/controller.c:1557
 msgid "Enter one of your tags"
 msgstr "Introduïu una de les vostres etiquetes"
 
-#: ../src/controller.c:1595
+#: ../src/controller.c:1609
 msgid "Enter user name"
 msgstr "Introduïu nom d'usuari"
 
-#: ../src/controller.c:1596
+#: ../src/controller.c:1610
 msgid "Play this user's radio"
 msgstr "Reprodueix aquesta emissora d'usuari"
 
-#: ../src/controller.c:1684
+#: ../src/controller.c:1698
 msgid "Enter a tag"
 msgstr "Introduïu una etiqueta"
 
-#: ../src/controller.c:1715
+#: ../src/controller.c:1729
 msgid "Enter group"
 msgstr "Introduïu grup"
 
-#: ../src/controller.c:1715
+#: ../src/controller.c:1729
 msgid "Enter group name"
 msgstr "Introduïu el nom del grup"
 
-#: ../src/controller.c:1738
+#: ../src/controller.c:1752
 msgid "Enter a global tag"
 msgstr "Introduïu una etiqueta global"
 
-#: ../src/controller.c:1762
+#: ../src/controller.c:1776
 msgid "Enter artist"
 msgstr "Introduïu l'artista"
 
-#: ../src/controller.c:1762
+#: ../src/controller.c:1776
 msgid "Enter an artist's name"
 msgstr "Introduïu un nom d'artista"
 
-#: ../src/controller.c:1784
+#: ../src/controller.c:1798
 msgid "Enter radio URL"
 msgstr "Introduïu URL d'emissora"
 
-#: ../src/controller.c:1785
+#: ../src/controller.c:1799
 msgid "Enter the URL of the Last.fm radio"
 msgstr "Introduïu la URL de l'emissora de Last.fm"
 
-#: ../src/controller.c:1794 ../src/uimisc.c:312
+#: ../src/controller.c:1808 ../src/uimisc.c:312
 msgid "Last.fm radio URLs must start with lastfm://"
 msgstr "Les URLs d'emissores de Last.fm han de començar per lastfm://"
 
-#: ../src/controller.c:1865
+#: ../src/controller.c:1879
 msgid "Unable to initialize DBUS"
 msgstr "No s'ha pogut inicialitzar DBUS"
 
-#: ../src/controller.c:1898
+#: ../src/controller.c:1912
 msgid "Error reading the server list file"
 msgstr "No s'ha pogut llegit el fitxer amb la llista de servidors"
 
-#: ../src/controller.c:1906
+#: ../src/controller.c:1920
 msgid "Error initializing audio system"
 msgstr "No s'ha pogut inicialitzar el sistema d'àudio"
 
-#: ../src/controller.c:1916
+#: ../src/controller.c:1930
 msgid "Unable to initialize OSSO context"
 msgstr "No es pot iniciar el context OSSO"
 
@@ -279,7 +285,7 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Canceŀla"
 
-#: ../src/main.c:83
+#: ../src/main.c:89
 #, c-format
 msgid ""
 "Usage:\n"
@@ -300,12 +306,12 @@ msgstr ""
 "  mesclador:      Mesclador de GStreamer («%s» per defecte)\n"
 "  destí:          Destí «sink» de GStreamer de GStreamer («%s» per defecte)\n"
 
-#: ../src/main.c:102
+#: ../src/main.c:108
 #, c-format
 msgid "Too many unrecognized options\n"
 msgstr "Massa opcions no reconegudes\n"
 
-#: ../src/main.c:111
+#: ../src/main.c:117
 #, c-format
 msgid "Usage: %s [lastfm radio url]\n"
 msgstr "Ús: %s [url de l'emissora de lastfm]\n"
@@ -423,22 +429,22 @@ msgid ""
 "to save bandwidth."
 msgstr ""
 
-#: ../src/uimisc-gtk.c:407 ../src/uimisc.c:399
+#: ../src/uimisc-gtk.c:408 ../src/uimisc.c:399
 msgid "Select download directory"
 msgstr "Seleccioneu el directori de descàrrega"
 
 #. Translators: keep this string short!!
-#: ../src/uimisc-gtk.c:408 ../src/uimisc-hildon22.c:370
+#: ../src/uimisc-gtk.c:409 ../src/uimisc-hildon22.c:370
 msgid "Automatically download free tracks"
 msgstr "Peces lliures, descàrrega automàtica"
 
 #. Download frame
-#: ../src/uimisc-gtk.c:431 ../src/uimisc-hildon22.c:350
+#: ../src/uimisc-gtk.c:432 ../src/uimisc-hildon22.c:350
 msgid "Download"
 msgstr "Descàrrega"
 
 #. Set help
-#: ../src/uimisc-gtk.c:434
+#: ../src/uimisc-gtk.c:435
 msgid ""
 "* Download directory:\n"
 "Where to download mp3 files. Note that you can only download those songs "
@@ -448,34 +454,34 @@ msgstr ""
 "On es descarreguen els fitxers «mp3». Noteu que només us podreu descarregar "
 "les cançons marcades com de lliure descàrrega en el servidor."
 
-#: ../src/uimisc-gtk.c:453
+#: ../src/uimisc-gtk.c:454
 msgid "IM message template:"
 msgstr "Plantilla de missatge MI:"
 
-#: ../src/uimisc-gtk.c:454
+#: ../src/uimisc-gtk.c:455
 msgid "Update Pidgin status:"
 msgstr "Actualitza l'estat de Pidgin:"
 
-#: ../src/uimisc-gtk.c:455
+#: ../src/uimisc-gtk.c:456
 msgid "Update Gajim status:"
 msgstr "Actualitza l'estat de Gajim:"
 
-#: ../src/uimisc-gtk.c:456
+#: ../src/uimisc-gtk.c:457
 msgid "Update Gossip status:"
 msgstr "Actualitza l'estat de Gossip:"
 
-#: ../src/uimisc-gtk.c:457
+#: ../src/uimisc-gtk.c:458
 msgid "Update Telepathy status:"
 msgstr "Actualitza l'estat de Telepathy:"
 
 #. IM status frame
-#: ../src/uimisc-gtk.c:488 ../src/uimisc-hildon22.c:374
+#: ../src/uimisc-gtk.c:489 ../src/uimisc-hildon22.c:374
 #: ../src/uimisc-hildon22.c:385
 msgid "Update IM status"
 msgstr "Actualitza l'estat de MI"
 
 #. Set help
-#: ../src/uimisc-gtk.c:491
+#: ../src/uimisc-gtk.c:492
 msgid ""
 "Vagalume can update the status message of your IM client each time a new "
 "song starts. The template can contain the following keywords:\n"
@@ -494,11 +500,11 @@ msgstr ""
 "{station}: Emissora de ràdio.\n"
 "{version}: Versió de Vagalume."
 
-#: ../src/uimisc-gtk.c:521
+#: ../src/uimisc-gtk.c:522
 msgid "Disable confirmation dialogs:"
 msgstr "No mostris diàlegs de confirmació:"
 
-#: ../src/uimisc-gtk.c:531
+#: ../src/uimisc-gtk.c:532
 msgid ""
 "* Disable confirmation dialogs:\n"
 "Don't ask for confirmation when loving/banning tracks."
@@ -506,11 +512,11 @@ msgstr ""
 "* No mostris diàlegs de confirmació:\n"
 "No demanis confirmació quan una peça us agrada o l'excloeu."
 
-#: ../src/uimisc-gtk.c:538
+#: ../src/uimisc-gtk.c:539
 msgid "Show playback notifications:"
 msgstr "Mostra notificacions de reproducció:"
 
-#: ../src/uimisc-gtk.c:548
+#: ../src/uimisc-gtk.c:549
 msgid ""
 "\n"
 "\n"
@@ -524,11 +530,11 @@ msgstr ""
 "Mostra una caixa emergent de notificació cada cop que \n"
 "comenci una cançó nova.\n"
 
-#: ../src/uimisc-gtk.c:554
+#: ../src/uimisc-gtk.c:555
 msgid "Close to systray:"
 msgstr "Tanca a la safata del sistema:"
 
-#: ../src/uimisc-gtk.c:564
+#: ../src/uimisc-gtk.c:565
 msgid ""
 "* Close to systray:\n"
 "Hide the Vagalume window when the close button is pressed."
@@ -537,67 +543,67 @@ msgstr ""
 "Amaga la finestra de Vagalume quan es pitja el botó de tancar."
 
 #. Misc frame
-#: ../src/uimisc-gtk.c:571 ../src/uimisc-hildon22.c:403
+#: ../src/uimisc-gtk.c:572 ../src/uimisc-hildon22.c:403
 msgid "Misc"
 msgstr "Altres"
 
 #. Create dialog
-#: ../src/uimisc-gtk.c:590 ../src/uimisc-hildon22.c:258
+#: ../src/uimisc-gtk.c:591 ../src/uimisc-hildon22.c:258
 msgid "User settings"
 msgstr "Ajustaments d'usuari"
 
-#: ../src/uimisc-gtk.c:716 ../src/uimisc-hildon22.c:566
+#: ../src/uimisc-gtk.c:717 ../src/uimisc-hildon22.c:566
 msgid "Artist: "
 msgstr "Artista:"
 
-#: ../src/uimisc-gtk.c:724 ../src/uimisc-hildon22.c:570
+#: ../src/uimisc-gtk.c:725 ../src/uimisc-hildon22.c:570
 msgid "Track: "
 msgstr "Peça:"
 
-#: ../src/uimisc-gtk.c:733 ../src/uimisc-hildon22.c:575
+#: ../src/uimisc-gtk.c:734 ../src/uimisc-hildon22.c:575
 msgid "Album: "
 msgstr "Àlbum:"
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:786 ../src/uimisc-hildon22.c:657
+#: ../src/uimisc-gtk.c:787 ../src/uimisc-hildon22.c:657
 msgid "Send a recommendation"
 msgstr "Envia una recomanació"
 
-#: ../src/uimisc-gtk.c:793 ../src/uimisc-hildon22.c:664
+#: ../src/uimisc-gtk.c:794 ../src/uimisc-hildon22.c:664
 msgid "Recommend this"
 msgstr "Recomaneu-lo"
 
-#: ../src/uimisc-gtk.c:816 ../src/uimisc-hildon22.c:668
+#: ../src/uimisc-gtk.c:817 ../src/uimisc-hildon22.c:668
 msgid "Send recommendation to"
 msgstr "Envia la recomanació a"
 
 #. Message of the recommendation
-#: ../src/uimisc-gtk.c:824 ../src/uimisc-hildon22.c:675
+#: ../src/uimisc-gtk.c:825 ../src/uimisc-hildon22.c:675
 msgid "Recommendation message"
 msgstr "Missatge de recomanació"
 
-#: ../src/uimisc-gtk.c:1002 ../src/uimisc-gtk.c:1069
+#: ../src/uimisc-gtk.c:1003 ../src/uimisc-gtk.c:1070
 #: ../src/uimisc-hildon22.c:848 ../src/uimisc-hildon22.c:850
 msgid "retrieving..."
 msgstr "s'estan recuperant…"
 
 #. A treemodel for combos with no elements
-#: ../src/uimisc-gtk.c:1066
+#: ../src/uimisc-gtk.c:1067
 msgid "(none)"
 msgstr "(cap)"
 
 #. Dialog and basic settings
-#: ../src/uimisc-gtk.c:1074 ../src/uimisc-hildon22.c:967
+#: ../src/uimisc-gtk.c:1075 ../src/uimisc-hildon22.c:967
 msgid "Tagging"
 msgstr "Afegint etiquetes"
 
 #. Combo to select what to tag
-#: ../src/uimisc-gtk.c:1080 ../src/uimisc-hildon22.c:973
+#: ../src/uimisc-gtk.c:1081 ../src/uimisc-hildon22.c:973
 msgid "Tag this"
 msgstr "Etiqueteu-lo"
 
 #. Text entry
-#: ../src/uimisc-gtk.c:1100
+#: ../src/uimisc-gtk.c:1101
 msgid ""
 "Enter a comma-separated\n"
 "list of tags"
@@ -606,11 +612,11 @@ msgstr ""
 "per comes d'etiquetes"
 
 #. Combo boxes
-#: ../src/uimisc-gtk.c:1106 ../src/uimisc-hildon22.c:981
+#: ../src/uimisc-gtk.c:1107 ../src/uimisc-hildon22.c:981
 msgid "Your favourite tags"
 msgstr "Les vostres etiquetes favorites"
 
-#: ../src/uimisc-gtk.c:1107 ../src/uimisc-hildon22.c:989
+#: ../src/uimisc-gtk.c:1108 ../src/uimisc-hildon22.c:989
 msgid "Popular tags for this"
 msgstr "Les seves etiquetes populars"
 
