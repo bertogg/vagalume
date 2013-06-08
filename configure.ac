@@ -47,10 +47,10 @@ PKG_CHECK_MODULES(libcurl, libcurl)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $libcurl_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
 
-if $PKG_CONFIG --exists gtk+-2.0; then
-   DETECTEDGTK=2
-elif $PKG_CONFIG --exists gtk+-3.0; then
+if $PKG_CONFIG --exists gtk+-3.0; then
    DETECTEDGTK=3
+elif $PKG_CONFIG --exists gtk+-2.0; then
+   DETECTEDGTK=2
 else
    AC_MSG_ERROR([This program requires either GTK+ 2 or GTK+ 3.])
 fi
@@ -58,8 +58,8 @@ fi
 # Platform support
 AC_ARG_WITH(gtk-version, [
 Gtk+ version:
-  --with-gtk-version=2    Use GTK+ 2 (default if available)
-  --with-gtk-version=3    Use GTK+ 3],
+  --with-gtk-version=2    Use GTK+ 2
+  --with-gtk-version=3    Use GTK+ 3 (default if available)],
   GTKVERSION=$withval, GTKVERSION=$DETECTEDGTK)
 
 GTKMOD="gtk+-${GTKVERSION}.0"
