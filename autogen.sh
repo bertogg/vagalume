@@ -2,12 +2,12 @@
 
 set -ex
 
-libtoolize --automake --copy --force
+libtoolize --copy --force --automake
 aclocal
 autoconf --force
 autoheader --force
-automake --add-missing --copy --force-missing --foreign
-glib-gettextize --force --copy
+automake --copy --force-missing --add-missing
+glib-gettextize --copy --force
 intltoolize --copy --force --automake
 
 if test x$NOCONFIGURE = x; then
