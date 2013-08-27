@@ -36,10 +36,6 @@ EXTRA_LIBS=""
 #####################################
 ### Basic dependencies - Required ###
 #####################################
-PKG_CHECK_MODULES(GStreamer, gstreamer-0.10)
-EXTRA_CFLAGS="$EXTRA_CFLAGS $GStreamer_CFLAGS"
-EXTRA_LIBS="$EXTRA_LIBS $GStreamer_LIBS"
-
 PKG_CHECK_MODULES(libxml2, libxml-2.0)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $libxml2_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $libxml2_LIBS"
@@ -47,6 +43,14 @@ EXTRA_LIBS="$EXTRA_LIBS $libxml2_LIBS"
 PKG_CHECK_MODULES(libcurl, libcurl)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $libcurl_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
+
+if $PKG_CONFIG --exists gstreamer-0.10; then
+   DETECTEDGST=0.10
+elif $PKG_CONFIG --exists gstreamer-1.0; then
+   DETECTEDGST=1.0
+else
+   AC_MSG_ERROR([This program requires either GStreamer 0.10 or 1.0.])
+fi
 
 if $PKG_CONFIG --exists gtk+-3.0; then
    DETECTEDGTK=3
@@ -69,6 +73,19 @@ EXTRA_CFLAGS="$EXTRA_CFLAGS $Gtk_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $Gtk_LIBS"
 
 echo "Compiling with GTK+ version $GTKVERSION"
+
+AC_ARG_WITH(gstreamer, [
+GStreamer version:
+  --with-gstreamer=1.0    Use GStreamer 1.0
+  --with-gstreamer=0.10   Use GStreamer 0.10 (default if available)],
+  GSTVERSION=$withval, GSTVERSION=$DETECTEDGST)
+
+GSTMOD="gstreamer-${GSTVERSION}"
+PKG_CHECK_MODULES(GStreamer, $GSTMOD)
+EXTRA_CFLAGS="$EXTRA_CFLAGS $GStreamer_CFLAGS"
+EXTRA_LIBS="$EXTRA_LIBS $GStreamer_LIBS"
+
+echo "Compiling with GStreamer version $GSTVERSION"
 #####################################
 ### Other dependencies - Optional ###
 #####################################
@@ -80,8 +97,12 @@ PKG_CHECK_MODULES(dbus_glib, dbus-glib-1, [have_dbus_glib="yes"],
 PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
                   [have_libnotify="yes"], [have_libnotify="no"])
 
-PKG_CHECK_MODULES(Gst_mixer, gstreamer-interfaces-0.10,
-                  [have_gst_mixer="yes"], [have_gst_mixer="no"])
+if test "$GSTVERSION" = "1.0"; then
+   have_gst_mixer="no"
+else
+   PKG_CHECK_MODULES(Gst_mixer, gstreamer-interfaces-0.10,
+                     [have_gst_mixer="yes"], [have_gst_mixer="no"])
+fi
 
 PKG_CHECK_MODULES(libproxy, libproxy-1.0,
                   [have_libproxy="yes"], [have_libproxy="no"])
@@ -578,6 +599,7 @@ echo "****************************************"
 echo ""
 echo "Target platform: $PLATFORM $PLATFORMVERS"
 echo "GTK+ version: $GTKVERSION"
+echo "GStreamer version: $GSTVERSION"
 echo "Method to compute MD5 sums: $md5_method"
 echo "\"Set IM status\" enabled: $set_im_status"
 echo "System-wide proxy support: $use_libproxy"

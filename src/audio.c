@@ -413,7 +413,11 @@ lastfm_audio_get_running_time           (void)
         g_return_val_if_fail(pipeline != NULL, 0);
         gint64 t;
         GstFormat format = GST_FORMAT_TIME;
+#if GST_CHECK_VERSION(1,0,0)
+        if (gst_element_query_position(pipeline, format, &t)) {
+#else
         if (gst_element_query_position(pipeline, &format, &t)) {
+#endif
                 /* Round to nearest integer */
                 t = (t + 500000000) / 1000000000;
                 return t;
