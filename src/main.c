@@ -46,7 +46,9 @@ main                                    (int    argc,
         char *radio = NULL;
 
         signal(SIGPIPE, SIG_IGN);
+#if !GLIB_CHECK_VERSION(2,32,0)
         g_thread_init (NULL);
+#endif
         gdk_threads_init ();
 #ifdef HAVE_DBUS_SUPPORT
         dbus_g_thread_init ();
