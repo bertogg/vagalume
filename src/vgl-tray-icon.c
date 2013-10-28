@@ -82,10 +82,6 @@ static void tray_icon_clicked (GtkStatusIcon *status_icon,
 static void tray_icon_popup_menu (GtkStatusIcon *status_icon, guint button,
                                   guint activate_time, gpointer data);
 
-static gboolean tray_icon_scroll_event (GtkWidget      *widget,
-                                        GdkEventScroll *event,
-                                        gpointer        data);
-
 static void ctxt_menu_item_activated (GtkWidget *item, gpointer data);
 
 static void vgl_tray_icon_notify_playback (VglTrayIcon *vti,
@@ -131,10 +127,6 @@ vgl_tray_icon_init                      (VglTrayIcon *vti)
                           G_CALLBACK (tray_icon_clicked), vti);
         g_signal_connect (priv->tray_icon, "popup-menu",
                           G_CALLBACK (tray_icon_popup_menu), vti);
-#if GTK_CHECK_VERSION(2,16,0)
-        g_signal_connect (priv->tray_icon, "scroll-event",
-                          G_CALLBACK (tray_icon_scroll_event), vti);
-#endif /* GTK_CHECK_VERSION(2,16,0) */
 
         /* Set icon and tooltip */
         gtk_status_icon_set_from_file (priv->tray_icon, APP_ICON);
@@ -333,21 +325,6 @@ tray_icon_popup_menu                    (GtkStatusIcon *status_icon,
                         button,
                         activate_time);
 }
-
-#if GTK_CHECK_VERSION(2,16,0)
-static gboolean
-tray_icon_scroll_event                  (GtkWidget      *widget,
-                                         GdkEventScroll *event,
-                                         gpointer        data)
-{
-        if (event->direction == GDK_SCROLL_UP) {
-                controller_increase_volume (1);
-        } else if (event->direction == GDK_SCROLL_DOWN) {
-                controller_increase_volume (-1);
-        }
-        return FALSE;
-}
-#endif /* GTK_CHECK_VERSION(2,16,0) */
 
 static void
 ctxt_menu_item_activated                (GtkWidget *item,
