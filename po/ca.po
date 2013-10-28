@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vagalume\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 18:58+0200\n"
-"PO-Revision-Date: 2013-06-07 19:01+0200\n"
+"POT-Creation-Date: 2013-10-28 20:38+0200\n"
+"PO-Revision-Date: 2013-10-28 20:38+0200\n"
 "Last-Translator: Carles Muñoz Gorriz <carlesmu@internautas.org>\n"
 "Language-Team: Catalan\n"
 "Language: ca\n"
@@ -285,33 +285,27 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Canceŀla"
 
-#: ../src/main.c:89
+#: ../src/main.c:85
 #, c-format
 msgid ""
 "Usage:\n"
-"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"  %s [-d decoder] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
 "  decoder:   GStreamer decoder (default: '%s')\n"
-"  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
 "Ús:\n"
-"  %s [-c convertidor] [-d descodificador] [-m mesclador] [-s destí] [url "
-"emissora lastfm]\n"
+"  %s [-d descodificador] [-s destí] [url emissora lastfm]\n"
 "\n"
-"  convertidor:    Convertidor de GStreamer («%s» per defecte i «none» per "
-"desactivar-lo)\n"
 "  descodificador: Descodificador de GStreamer («%s» per defecte)\n"
-"  mesclador:      Mesclador de GStreamer («%s» per defecte)\n"
 "  destí:          Destí «sink» de GStreamer de GStreamer («%s» per defecte)\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:98
 #, c-format
 msgid "Too many unrecognized options\n"
 msgstr "Massa opcions no reconegudes\n"
 
-#: ../src/main.c:117
+#: ../src/main.c:107
 #, c-format
 msgid "Usage: %s [lastfm radio url]\n"
 msgstr "Ús: %s [url de l'emissora de lastfm]\n"

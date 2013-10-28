@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume en Galego 0.8.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 18:58+0200\n"
-"PO-Revision-Date: 2013-06-08 17:29+0200\n"
+"POT-Creation-Date: 2013-10-28 20:38+0200\n"
+"PO-Revision-Date: 2013-10-28 20:42+0200\n"
 "Last-Translator: Amador Loureiro Blanco <dorfun@adorfunteca.org>\n"
 "Language-Team: Vagalume en Galego <dorfun@adorfunteca.org>\n"
 "Language: gl\n"
@@ -285,33 +285,27 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: ../src/main.c:89
+#: ../src/main.c:85
 #, c-format
 msgid ""
 "Usage:\n"
-"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"  %s [-d decoder] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
 "  decoder:   GStreamer decoder (default: '%s')\n"
-"  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
 "Uso:\n"
-"  %s [-c conversor] [-d decodificador] [-m misturador] [-s atenuador] [url "
-"da radio de lastfm]\n"
+"  %s [-d decodificador] [-s atenuador] [url da radio de lastfm]\n"
 "\n"
-"  conversor:  conversor GStreamer (por defecto: '%s', 'none' para "
-"desactivar)\n"
 "  decodificador: decodificador GStreamer (por defecto: '%s')\n"
-"  misturador: misturador GStreamer (por defecto: '%s')\n"
 "  atenuador:  atenuador do GStreamer (por defecto: '%s')\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:98
 #, c-format
 msgid "Too many unrecognized options\n"
 msgstr "Hai demasiadas opcións descoñecidas\n"
 
-#: ../src/main.c:117
+#: ../src/main.c:107
 #, c-format
 msgid "Usage: %s [lastfm radio url]\n"
 msgstr "Uso: %s [url da radio en lastfm]\n"

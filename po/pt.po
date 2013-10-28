@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 18:58+0200\n"
-"PO-Revision-Date: 2013-06-08 17:30+0200\n"
+"POT-Creation-Date: 2013-10-28 20:38+0200\n"
+"PO-Revision-Date: 2013-10-28 20:40+0200\n"
 "Last-Translator: Marcos Garcia <marcosgg@gmail.com>\n"
 "Language-Team: Portuguese <>\n"
 "Language: pt\n"
@@ -281,32 +281,27 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: ../src/main.c:89
+#: ../src/main.c:85
 #, c-format
 msgid ""
 "Usage:\n"
-"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"  %s [-d decoder] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
 "  decoder:   GStreamer decoder (default: '%s')\n"
-"  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
 "Utilização:\n"
-"  %s [-c conversor] [-d decodificdor] [-m mixer] [-s sink] [lastfm radio "
-"url]\n"
+"  %s [-d decodificdor] [-s sink] [lastfm radio url]\n"
 "\n"
-"  conversor: GStreamer converter (por defeito: '%s', 'none' para desligar)\n"
 "  decodificador:   GStreamer decoder (por defeito: '%s')\n"
-"  mixer:     GStreamer mixer (por defeito: '%s')\n"
 "  sink:      GStreamer sink (por defeito: '%s')\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:98
 #, c-format
 msgid "Too many unrecognized options\n"
 msgstr "Demasiadas opções desconhecidas\n"
 
-#: ../src/main.c:117
+#: ../src/main.c:107
 #, c-format
 msgid "Usage: %s [lastfm radio url]\n"
 msgstr "Utilização: %s [lastfm radio url]\n"

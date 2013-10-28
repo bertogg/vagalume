@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 18:58+0200\n"
-"PO-Revision-Date: 2013-06-08 17:59+0200\n"
+"POT-Creation-Date: 2013-10-28 20:38+0200\n"
+"PO-Revision-Date: 2013-10-28 20:39+0200\n"
 "Last-Translator: Julien Duponchelle <julien@duponchelle.info>\n"
 "Language-Team:  <fr@li.org>\n"
 "Language: \n"
@@ -288,32 +288,26 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Annuler"
 
-#: ../src/main.c:89
+#: ../src/main.c:85
 #, c-format
 msgid ""
 "Usage:\n"
-"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"  %s [-d decoder] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
 "  decoder:   GStreamer decoder (default: '%s')\n"
-"  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
-"Usage: %s [-c convertisseur] [-d décodeur]  [-m mixeur] [-s sink] [lastfm "
-"radio url]\n"
+"Usage: %s [-d décodeur] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: GStreamer convertisseur (par défaut: '%s', 'none' pour le "
-"désactiver)\n"
 "  decoder:   GStreamer décodeur (par défaut: '%s')\n"
-"  mixer:     GStreamer mixeur (par défaut: '%s')\n"
 "  sink:      GStreamer sink (par défaut: '%s')\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:98
 #, c-format
 msgid "Too many unrecognized options\n"
 msgstr "Trop d'options non reconnues\n"
 
-#: ../src/main.c:117
+#: ../src/main.c:107
 #, c-format
 msgid "Usage: %s [lastfm radio url]\n"
 msgstr "Usage: %s [url de la radio lastfm]\n"

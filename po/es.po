@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 18:58+0200\n"
-"PO-Revision-Date: 2013-06-08 17:28+0200\n"
+"POT-Creation-Date: 2013-10-28 20:38+0200\n"
+"PO-Revision-Date: 2013-10-28 20:39+0200\n"
 "Last-Translator: Ricardo Mones <mones@debian.org>\n"
 "Language-Team: None\n"
 "Language: es\n"
@@ -281,31 +281,27 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: ../src/main.c:89
+#: ../src/main.c:85
 #, c-format
 msgid ""
 "Usage:\n"
-"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"  %s [-d decoder] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
 "  decoder:   GStreamer decoder (default: '%s')\n"
-"  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
 "Uso:\n"
-"  %s [-c convertid] [-d decodif] [-m mezcl] [-s sink] [lastfm radio url]\n"
+"  %s [-d decodif] [-s sink] [lastfm radio url]\n"
 "\n"
-"  convertid: Convertidor GStreamer (por omisión: '%s', 'none' desactivar)\n"
 "  decodif:   Decodificador GStreamer (por omisión: '%s')\n"
-"  mezcl:     Mezclador GStreamer (por omisión: '%s')\n"
 "  sink:      «Sink» GStreamer (por omisión: '%s')\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:98
 #, c-format
 msgid "Too many unrecognized options\n"
 msgstr "Demasiadas opciones no reconocidas\n"
 
-#: ../src/main.c:117
+#: ../src/main.c:107
 #, c-format
 msgid "Usage: %s [lastfm radio url]\n"
 msgstr "Uso: %s [URL de radio lastfm]\n"

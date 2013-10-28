@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vagalume 0.8.3-1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 18:58+0200\n"
-"PO-Revision-Date: 2013-06-07 19:02+0200\n"
+"POT-Creation-Date: 2013-10-28 20:38+0200\n"
+"PO-Revision-Date: 2013-10-28 20:41+0200\n"
 "Last-Translator: Sergei Ivanov <isn@vu.spb.ru>, Vitaly Petrov <vit.petrov@vu."
 "spb.ru>\n"
 "Language-Team: SUAI Maemo Team, St. Petersburg, Russia\n"
@@ -278,31 +278,26 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Отмена"
 
-#: ../src/main.c:89
+#: ../src/main.c:85
 #, c-format
 msgid ""
 "Usage:\n"
-"  %s [-c converter] [-d decoder] [-m mixer] [-s sink] [lastfm radio url]\n"
+"  %s [-d decoder] [-s sink] [lastfm radio url]\n"
 "\n"
-"  converter: GStreamer converter (default: '%s', 'none' to disable)\n"
 "  decoder:   GStreamer decoder (default: '%s')\n"
-"  mixer:     GStreamer mixer (default: '%s')\n"
 "  sink:      GStreamer sink (default: '%s')\n"
 msgstr ""
-"Использование: %s [-c Converter] [-d Decoder] [-s Sink] [Last.fm Radio-URL]\n"
+"Использование: %s [-d Decoder] [-s Sink] [Last.fm Radio-URL]\n"
 "\n"
-"  Конвертер: GStreamer converter (по умолчанию: '%s', 'none' для "
-"отключения)\n"
 "  Декодер:   GStreamer decoder (по умолчанию: '%s')\n"
-"  Микшер:    GStreamer mixer (по умолчанию: '%s')\n"
 "  Источник:  GStreamer sink (по умолчанию: '%s')\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:98
 #, c-format
 msgid "Too many unrecognized options\n"
 msgstr "Слишком много нераспозранных опций\n"
 
-#: ../src/main.c:117
+#: ../src/main.c:107
 #, c-format
 msgid "Usage: %s [lastfm radio url]\n"
 msgstr "Использование: %s [URL радио Last.fm]\n"
