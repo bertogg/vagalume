@@ -15,7 +15,6 @@
 
 #define GST_DECODER_ENVVAR "VAGALUME_GST_DECODER"
 #define GST_SINK_ENVVAR "VAGALUME_GST_SINK"
-#define GST_CONVERT_ENVVAR "VAGALUME_GST_CONVERT"
 #define GST_MIXER_ENVVAR "VAGALUME_GST_MIXER"
 
 gboolean
@@ -46,9 +45,6 @@ lastfm_audio_clear                      (void);
 
 const char *
 lastfm_audio_default_decoder_name       (void);
-
-const char *
-lastfm_audio_default_convert_name       (void);
 
 const char *
 lastfm_audio_default_mixer_name         (void);

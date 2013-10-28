@@ -28,23 +28,14 @@
 #ifdef HAVE_DSPMP3SINK
 static const char *default_decoders[] = { NULL };
 static const char *default_sinks[] = { "dspmp3sink", NULL };
-static const char *default_converters[] = { NULL };
-#elif defined(MAEMO5)
-static const char *default_decoders[] = { "mp3parse", NULL };
-static const char *default_sinks[] = { "pulsesink", NULL };
-static const char *default_converters[] = { "nokiamp3dec", NULL };
 #else
-static const char *default_decoders[] = { "mad", "flump3dec", NULL };
-static const char *default_sinks[] = { "gconfaudiosink", NULL };
-static const char *default_converters[] = { "audioconvert", NULL };
+static const char *default_decoders[] = { "decodebin", NULL };
+static const char *default_sinks[] = { "autoaudiosink", NULL };
 #endif
 
 static GstElement *pipeline = NULL;
 static GstElement *source = NULL;
 static GstElement *decoder = NULL;
-#ifndef HAVE_DSPMP3SINK
-static GstElement *convert = NULL;
-#endif
 static GstElement *sink = NULL;
 
 #ifdef HAVE_GST_MIXER
@@ -212,10 +203,16 @@ audio_decoder_create                    (void)
         return audio_element_create(default_decoders, GST_DECODER_ENVVAR);
 }
 
-static GstElement *
-audio_convert_create                    (void)
+static void
+pad_added_cb                            (GstElement *decoder,
+                                         GstPad     *pad,
+                                         GstElement *sink)
 {
-        return audio_element_create(default_converters, GST_CONVERT_ENVVAR);
+        GstPad *sinkpad = gst_element_get_static_pad (sink, "sink");
+        if (!GST_PAD_IS_LINKED (sinkpad)) {
+                gst_pad_link (pad, sinkpad);
+        }
+        g_object_unref (sinkpad);
 }
 #endif
 
@@ -229,12 +226,6 @@ const char *
 lastfm_audio_default_sink_name          (void)
 {
         return default_sinks[0] ? default_sinks[0] : "none";
-}
-
-const char *
-lastfm_audio_default_convert_name       (void)
-{
-        return default_converters[0] ? default_converters[0] : "none";
 }
 
 const char *
@@ -318,7 +309,6 @@ lastfm_audio_init                       (void)
         decoder = source; /* Unused, this is only for the assertions */
 #else
         decoder = audio_decoder_create();
-        convert = audio_convert_create(); /* This is optional */
 #endif
         sink = audio_sink_create();
         if (!pipeline || !source || !decoder || !sink) {
@@ -334,15 +324,10 @@ lastfm_audio_init                       (void)
         gst_element_link_many (source, sink, NULL);
         lastfm_audio_set_volume(80);
 #else
-        if (convert != NULL) {
-                gst_bin_add_many (GST_BIN (pipeline), source, decoder,
-                                  convert, sink, NULL);
-                gst_element_link_many (source, decoder, convert, sink, NULL);
-        } else {
-                gst_bin_add_many (GST_BIN (pipeline), source, decoder,
-                                  sink, NULL);
-                gst_element_link_many (source, decoder, sink, NULL);
-        }
+        gst_bin_add_many (GST_BIN (pipeline), source, decoder, sink, NULL);
+        gst_element_link (source, decoder);
+        g_signal_connect (decoder, "pad-added",
+                          G_CALLBACK (pad_added_cb), sink);
 #endif
 
         return TRUE;
