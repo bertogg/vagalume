@@ -1,3 +1,13 @@
+0.8.6 (28 Oct 2013)
+  * Show an explicit error message if a radio is not available in the
+    user's country.
+  * Fixed Libre.fm support by making Vagalume decode OGG streams directly.
+  * Added GStreamer 1.0 support.
+  * Removed mixer support since the code is now broken.
+  * Registered vagalume as handler for lastfm:// URLs.
+  * Ignore VAGALUME_DEBUG if G_MESSAGES_DEBUG is set.
+  * Translation fixes.
+
 0.8.5 (01 Jul 2011)
   * Added support for system-wide proxy and SOCKS.
   * Added support for low bitrate streams.

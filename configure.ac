@@ -1,7 +1,7 @@
 #######################################
 ### Initialization and basic checks ###
 #######################################
-AC_INIT([vagalume], [0.8.5])
+AC_INIT([vagalume], [0.8.6])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST
