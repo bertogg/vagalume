@@ -44,10 +44,10 @@ PKG_CHECK_MODULES(libcurl, libcurl)
 EXTRA_CFLAGS="$EXTRA_CFLAGS $libcurl_CFLAGS"
 EXTRA_LIBS="$EXTRA_LIBS $libcurl_LIBS"
 
-if $PKG_CONFIG --exists gstreamer-0.10; then
-   DETECTEDGST=0.10
-elif $PKG_CONFIG --exists gstreamer-1.0; then
+if $PKG_CONFIG --exists gstreamer-1.0; then
    DETECTEDGST=1.0
+elif $PKG_CONFIG --exists gstreamer-0.10; then
+   DETECTEDGST=0.10
 else
    AC_MSG_ERROR([This program requires either GStreamer 0.10 or 1.0.])
 fi
@@ -76,8 +76,8 @@ echo "Compiling with GTK+ version $GTKVERSION"
 
 AC_ARG_WITH(gstreamer, [
 GStreamer version:
-  --with-gstreamer=1.0    Use GStreamer 1.0
-  --with-gstreamer=0.10   Use GStreamer 0.10 (default if available)],
+  --with-gstreamer=0.10   Use GStreamer 0.10
+  --with-gstreamer=1.0    Use GStreamer 1.0 (default if available)],
   GSTVERSION=$withval, GSTVERSION=$DETECTEDGST)
 
 GSTMOD="gstreamer-${GSTVERSION}"
