@@ -97,13 +97,6 @@ PKG_CHECK_MODULES(dbus_glib, dbus-glib-1, [have_dbus_glib="yes"],
 PKG_CHECK_MODULES(libnotify, libnotify >= 0.4.1,
                   [have_libnotify="yes"], [have_libnotify="no"])
 
-if test "$GSTVERSION" = "1.0"; then
-   have_gst_mixer="no"
-else
-   PKG_CHECK_MODULES(Gst_mixer, gstreamer-interfaces-0.10,
-                     [have_gst_mixer="yes"], [have_gst_mixer="no"])
-fi
-
 PKG_CHECK_MODULES(libproxy, libproxy-1.0,
                   [have_libproxy="yes"], [have_libproxy="no"])
 
@@ -288,9 +281,6 @@ if test "$PLATFORM" = "maemo"; then
 
    # Disable tray icon support on Maemo
    have_tray_icon="no"
-
-   # Disable GStreamer mixer
-   have_gst_mixer="no"
 
    # Disable GIO support
    have_gio="no"
@@ -552,13 +542,6 @@ if test "$have_tray_icon" = "yes"; then
    AC_DEFINE([HAVE_TRAY_ICON], [1], [Defined if building the FD tray icon])
 fi
 
-if test "$have_gst_mixer" = "yes"; then
-   enable_volume_key_handler="yes"
-   AC_DEFINE([HAVE_GST_MIXER], [1], [Defined if buiding with GStreamer mixer])
-   EXTRA_CFLAGS="$EXTRA_CFLAGS $Gst_mixer_CFLAGS"
-   EXTRA_LIBS="$EXTRA_LIBS $Gst_mixer_LIBS"
-fi
-
 if test "$enable_volume_key_handler" = "yes"; then
    AC_DEFINE([ENABLE_VOLUME_KEY_HANDLER], [1],
              [Defined if using a handler for volume keys])
@@ -610,7 +593,6 @@ elif test "$PLATFORM" = "maemo"; then
    echo "Libconic support: $have_conic"
 fi
 echo "D-Bus Support enabled:" $use_dbus_glib
-echo "Mixer support enabled:" $have_gst_mixer
 echo "Target display: $scr_resolution"
 echo ""
 echo "Type 'make' to compile Vagalume"

@@ -73,29 +73,23 @@ main                                    (int    argc,
 
 #if defined(HAVE_GETOPT) && !defined(MAEMO)
         int opt;
-        while ((opt = getopt(argc, argv, "d:m:s:h")) != -1) {
+        while ((opt = getopt(argc, argv, "d:s:h")) != -1) {
                 switch (opt) {
                 case 'd':
                         g_setenv(GST_DECODER_ENVVAR, optarg, TRUE);
-                        break;
-                case 'm':
-                        g_setenv(GST_MIXER_ENVVAR, optarg, TRUE);
                         break;
                 case 's':
                         g_setenv(GST_SINK_ENVVAR, optarg, TRUE);
                         break;
                 default:
                         g_print(_("Usage:\n  %s [-d decoder] "
-                                  "[-m mixer] [-s sink] [lastfm radio url]\n\n"
+                                  "[-s sink] [lastfm radio url]\n\n"
                                   "  decoder:   GStreamer decoder "
-                                  "(default: '%s')\n"
-                                  "  mixer:     GStreamer mixer "
                                   "(default: '%s')\n"
                                   "  sink:      GStreamer sink "
                                   "(default: '%s')\n"),
                                 argv[0],
                                 lastfm_audio_default_decoder_name(),
-                                lastfm_audio_default_mixer_name(),
                                 lastfm_audio_default_sink_name());
                         return -1;
                 }
