@@ -15,7 +15,7 @@ and developed in a desktop PC running Debian GNU/Linux, but it is
 reported to work in other GNU/Linux distributions and it should work
 in any Unix-like system that meets the following requirements:
 
-   * GStreamer 0.10
+   * GStreamer 0.10 or 1.0
    * GTK+ 2 or 3
    * Gnome libxml2
    * libcurl
